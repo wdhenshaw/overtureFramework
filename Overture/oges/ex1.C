@@ -1,182 +1,146 @@
-#ifdef PETSC_RCS_HEADER
-static char vcid[] = "$Id: ex1.C,v 1.3 1999/12/11 00:23:35 henshaw Exp $";
-#endif
 
-/* Program usage:  mpirun ex1 [-help] [all PETSc options] */
+static char help[] = "Tests solving linear system on 0 by 0 matrix, and KSPLSQR convergence test handling.\n\n";
 
-static char help[] = "Solves a tridiagonal linear system with SLES.\n\n";
+#include <petscksp.h>
 
-/*T
-   Concepts: SLES^Solving a system of linear equations (basic uniprocessor example);
-   Routines: SLESCreate(); SLESSetOperators(); SLESSetFromOptions();
-   Routines: SLESSolve(); SLESView(); SLESGetKSP(); SLESGetPC();
-   Routines: KSPSetTolerances(); PCSetType();
-   Processors: 1
-T*/
-
-/* 
-  Include "sles.h" so that we can use SLES solvers.  Note that this file
-  automatically includes:
-     petsc.h  - base PETSc routines   vec.h - vectors
-     sys.h    - system routines       mat.h - matrices
-     is.h     - index sets            ksp.h - Krylov subspace methods
-     viewer.h - viewers               pc.h  - preconditioners
-*/
-
-extern "C"
+static PetscErrorCode GetConvergenceTestName(PetscErrorCode (*converged)(KSP, PetscInt, PetscReal, KSPConvergedReason *, void *), char name[], size_t n)
 {
-#include "sles.h"
+  PetscFunctionBegin;
+  if (converged == KSPConvergedDefault) {
+    PetscCall(PetscStrncpy(name, "default", n));
+  } else if (converged == KSPConvergedSkip) {
+    PetscCall(PetscStrncpy(name, "skip", n));
+  } else if (converged == KSPLSQRConvergedDefault) {
+    PetscCall(PetscStrncpy(name, "lsqr", n));
+  } else {
+    PetscCall(PetscStrncpy(name, "other", n));
+  }
+  PetscFunctionReturn(0);
 }
 
-
-#undef __FUNC__
-#define __FUNC__ "main"
-int main(int argc,char **args)
+int main(int argc, char **args)
 {
-  Vec     x, b, u;      /* approx solution, RHS, exact solution */
-  Mat     A;            /* linear system matrix */
-  SLES    sles;         /* linear solver context */
-  PC      pc;           /* preconditioner context */
-  KSP     ksp;          /* Krylov subspace method context */
-  double  norm;         /* norm of solution error */
-  int     ierr, i, n = 10, col[3], its, flg, size;
-  Scalar  neg_one = -1.0, one = 1.0, value[3];
+  Mat       C;
+  PetscInt  N = 0;
+  Vec       u, b, x;
+  KSP       ksp;
+  PetscReal norm;
+  PetscBool flg = PETSC_FALSE;
 
-  PetscInitialize(&argc,&args,(char *)0,help);
-  MPI_Comm_size(PETSC_COMM_WORLD,&size);
-  if (size != 1) SETERRA(1,0,"This is a uniprocessor example only!");
-  ierr = OptionsGetInt(PETSC_NULL,"-n",&n,&flg); CHKERRA(ierr);
+  PetscFunctionBeginUser;
+  PetscCall(PetscInitialize(&argc, &args, (char *)0, help));
 
-  /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-         Compute the matrix and right-hand-side vector that define
-         the linear system, Ax = b.
-     - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+  /* create stiffness matrix */
+  PetscCall(MatCreate(PETSC_COMM_WORLD, &C));
+  PetscCall(MatSetSizes(C, PETSC_DECIDE, PETSC_DECIDE, N, N));
+  PetscCall(MatSetFromOptions(C));
+  PetscCall(MatSetUp(C));
+  PetscCall(MatAssemblyBegin(C, MAT_FINAL_ASSEMBLY));
+  PetscCall(MatAssemblyEnd(C, MAT_FINAL_ASSEMBLY));
 
-  /* 
-     Create matrix.  When using MatCreate(), the matrix format can
-     be specified at runtime.
+  /* create right hand side and solution */
+  PetscCall(VecCreate(PETSC_COMM_WORLD, &u));
+  PetscCall(VecSetSizes(u, PETSC_DECIDE, N));
+  PetscCall(VecSetFromOptions(u));
+  PetscCall(VecDuplicate(u, &b));
+  PetscCall(VecDuplicate(u, &x));
+  PetscCall(VecSet(u, 0.0));
+  PetscCall(VecSet(b, 0.0));
 
-     Performance tuning note:  For problems of substantial size,
-     preallocation of matrix memory is crucial for attaining good 
-     performance.  Since preallocation is not possible via the generic
-     matrix creation routine MatCreate(), we recommend for practical 
-     problems instead to use the creation routine for a particular matrix
-     format, e.g.,
-         MatCreateSeqAIJ() - sequential AIJ (compressed sparse row)
-         MatCreateSeqBAIJ() - block AIJ
-     See the matrix chapter of the users manual for details.
-  */
-  ierr = MatCreate(PETSC_COMM_WORLD,n,n,&A); CHKERRA(ierr);
+  PetscCall(VecAssemblyBegin(b));
+  PetscCall(VecAssemblyEnd(b));
 
-  /* 
-     Assemble matrix
-  */
-  value[0] = -1.0; value[1] = 2.0; value[2] = -1.0;
-  for (i=1; i<n-1; i++ ) {
-    col[0] = i-1; col[1] = i; col[2] = i+1;
-    ierr = MatSetValues(A,1,&i,3,col,value,INSERT_VALUES); CHKERRA(ierr);
+  /* solve linear system */
+  PetscCall(KSPCreate(PETSC_COMM_WORLD, &ksp));
+  PetscCall(KSPSetOperators(ksp, C, C));
+  PetscCall(KSPSetFromOptions(ksp));
+  PetscCall(KSPSolve(ksp, b, u));
+
+  /* test proper handling of convergence test by KSPLSQR */
+  PetscCall(PetscOptionsGetBool(NULL, NULL, "-test_lsqr", &flg, NULL));
+  if (flg) {
+    char     *type;
+    char      convtestname[16];
+    PetscBool islsqr;
+    PetscErrorCode (*converged)(KSP, PetscInt, PetscReal, KSPConvergedReason *, void *);
+    PetscErrorCode (*converged1)(KSP, PetscInt, PetscReal, KSPConvergedReason *, void *);
+    PetscErrorCode (*destroy)(void *), (*destroy1)(void *);
+    void *ctx, *ctx1;
+
+    {
+      const char *typeP;
+      PetscCall(KSPGetType(ksp, &typeP));
+      PetscCall(PetscStrallocpy(typeP, &type));
+    }
+    PetscCall(PetscStrcmp(type, KSPLSQR, &islsqr));
+    PetscCall(KSPGetConvergenceTest(ksp, &converged, &ctx, &destroy));
+    PetscCall(GetConvergenceTestName(converged, convtestname, 16));
+    PetscCall(PetscPrintf(PETSC_COMM_WORLD, "convergence test: %s\n", convtestname));
+    PetscCall(KSPSetType(ksp, KSPLSQR));
+    PetscCall(KSPGetConvergenceTest(ksp, &converged1, &ctx1, &destroy1));
+    PetscCheck(converged1 == KSPLSQRConvergedDefault, PETSC_COMM_WORLD, PETSC_ERR_PLIB, "convergence test should be KSPLSQRConvergedDefault");
+    PetscCheck(destroy1 == KSPConvergedDefaultDestroy, PETSC_COMM_WORLD, PETSC_ERR_PLIB, "convergence test destroy function should be KSPConvergedDefaultDestroy");
+    if (islsqr) {
+      PetscCheck(converged1 == converged, PETSC_COMM_WORLD, PETSC_ERR_PLIB, "convergence test should be kept");
+      PetscCheck(destroy1 == destroy, PETSC_COMM_WORLD, PETSC_ERR_PLIB, "convergence test destroy function should be kept");
+      PetscCheck(ctx1 == ctx, PETSC_COMM_WORLD, PETSC_ERR_PLIB, "convergence test context should be kept");
+    }
+    PetscCall(GetConvergenceTestName(converged1, convtestname, 16));
+    PetscCall(KSPViewFromOptions(ksp, NULL, "-ksp1_view"));
+    PetscCall(PetscPrintf(PETSC_COMM_WORLD, "convergence test: %s\n", convtestname));
+    PetscCall(KSPSetType(ksp, type));
+    PetscCall(KSPGetConvergenceTest(ksp, &converged1, &ctx1, &destroy1));
+    PetscCheck(converged1 == converged, PETSC_COMM_WORLD, PETSC_ERR_PLIB, "convergence test not reverted properly");
+    PetscCheck(destroy1 == destroy, PETSC_COMM_WORLD, PETSC_ERR_PLIB, "convergence test destroy function not reverted properly");
+    PetscCheck(ctx1 == ctx, PETSC_COMM_WORLD, PETSC_ERR_PLIB, "convergence test context not reverted properly");
+    PetscCall(GetConvergenceTestName(converged1, convtestname, 16));
+    PetscCall(KSPViewFromOptions(ksp, NULL, "-ksp2_view"));
+    PetscCall(PetscPrintf(PETSC_COMM_WORLD, "convergence test: %s\n", convtestname));
+    PetscCall(PetscFree(type));
   }
-  i = n - 1; col[0] = n - 2; col[1] = n - 1;
-  ierr = MatSetValues(A,1,&i,2,col,value,INSERT_VALUES); CHKERRA(ierr);
-  i = 0; col[0] = 0; col[1] = 1; value[0] = 2.0; value[1] = -1.0;
-  ierr = MatSetValues(A,1,&i,2,col,value,INSERT_VALUES); CHKERRA(ierr);
-  ierr = MatAssemblyBegin(A,MAT_FINAL_ASSEMBLY); CHKERRA(ierr);
-  ierr = MatAssemblyEnd(A,MAT_FINAL_ASSEMBLY); CHKERRA(ierr);
 
-  /* 
-     Create vectors.  Note that we form 1 vector from scratch and
-     then duplicate as needed.
-  */
-  ierr = VecCreate(PETSC_COMM_WORLD,PETSC_DECIDE,n,&x); CHKERRA(ierr);
-  ierr = VecSetFromOptions(x);CHKERRA(ierr);
-  ierr = VecDuplicate(x,&b); CHKERRA(ierr);
-  ierr = VecDuplicate(x,&u); CHKERRA(ierr);
+  PetscCall(MatMult(C, u, x));
+  PetscCall(VecAXPY(x, -1.0, b));
+  PetscCall(VecNorm(x, NORM_2, &norm));
 
-  /* 
-     Set exact solution; then compute right-hand-side vector.
-  */
-  ierr = VecSet(&one,u); CHKERRA(ierr);
-  ierr = MatMult(A,u,b); CHKERRA(ierr);
-
-  /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-                Create the linear solver and set various options
-     - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-  /* 
-     Create linear solver context
-  */
-  ierr = SLESCreate(PETSC_COMM_WORLD,&sles); CHKERRA(ierr);
-
-  /* 
-     Set operators. Here the matrix that defines the linear system
-     also serves as the preconditioning matrix.
-  */
-  ierr = SLESSetOperators(sles,A,A,DIFFERENT_NONZERO_PATTERN); CHKERRA(ierr);
-
-  /* 
-     Set linear solver defaults for this problem (optional).
-     - By extracting the KSP and PC contexts from the SLES context,
-       we can then directly call any KSP and PC routines to set
-       various options.
-     - The following four statements are optional; all of these
-       parameters could alternatively be specified at runtime via
-       SLESSetFromOptions();
-  */
-  ierr = SLESGetKSP(sles,&ksp); CHKERRA(ierr);
-  ierr = SLESGetPC(sles,&pc); CHKERRA(ierr);
-  ierr = PCSetType(pc,PCJACOBI); CHKERRA(ierr);
-  ierr = KSPSetTolerances(ksp,1.e-7,PETSC_DEFAULT,PETSC_DEFAULT,
-         PETSC_DEFAULT); CHKERRA(ierr);
-
-  /* 
-    Set runtime options, e.g.,
-        -ksp_type <type> -pc_type <type> -ksp_monitor -ksp_rtol <rtol>
-    These options will override those specified above as long as
-    SLESSetFromOptions() is called _after_ any other customization
-    routines.
-  */
-  ierr = SLESSetFromOptions(sles); CHKERRA(ierr);
- 
-  /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-                      Solve the linear system
-     - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-  /* 
-     Solve linear system
-  */
-  ierr = SLESSolve(sles,b,x,&its); CHKERRA(ierr); 
-
-  /* 
-     View solver info; we could instead use the option -sles_view to
-     print this info to the screen at the conclusion of SLESSolve().
-  */
-  ierr = SLESView(sles,VIEWER_STDOUT_WORLD); CHKERRA(ierr);
-
-  /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-                      Check solution and clean up
-     - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-  /* 
-     Check the error
-  */
-  ierr = VecAXPY(&neg_one,u,x); CHKERRA(ierr);
-  ierr  = VecNorm(x,NORM_2,&norm); CHKERRA(ierr);
-  if (norm > 1.e-12) 
-    PetscPrintf(PETSC_COMM_WORLD,"Norm of error %g, Iterations %d\n",norm,its);
-  else 
-    PetscPrintf(PETSC_COMM_WORLD,"Norm of error < 1.e-12, Iterations %d\n",its);
-
-  /* 
-     Free work space.  All PETSc objects should be destroyed when they
-     are no longer needed.
-  */
-  ierr = VecDestroy(x); CHKERRA(ierr); ierr = VecDestroy(u); CHKERRA(ierr);
-  ierr = VecDestroy(b); CHKERRA(ierr); ierr = MatDestroy(A); CHKERRA(ierr);
-  ierr = SLESDestroy(sles); CHKERRA(ierr);
-
-  /*
-     Always call PetscFinalize() before exiting a program.  This routine
-       - finalizes the PETSc libraries as well as MPI
-       - provides summary and diagnostic information if certain runtime
-         options are chosen (e.g., -log_summary).
-  */
-  PetscFinalize();
+  PetscCall(KSPDestroy(&ksp));
+  PetscCall(VecDestroy(&u));
+  PetscCall(VecDestroy(&x));
+  PetscCall(VecDestroy(&b));
+  PetscCall(MatDestroy(&C));
+  PetscCall(PetscFinalize());
   return 0;
 }
+
+/*TEST
+
+    test:
+      args:  -pc_type jacobi -ksp_monitor_short -ksp_gmres_cgs_refinement_type refine_always
+
+    test:
+      suffix: 2
+      nsize: 2
+      args: -pc_type jacobi -ksp_monitor_short -ksp_gmres_cgs_refinement_type refine_always
+
+    test:
+      suffix: 3
+      args: -pc_type sor -pc_sor_symmetric -ksp_monitor_short -ksp_gmres_cgs_refinement_type refine_always
+
+    test:
+      suffix: 5
+      args: -pc_type eisenstat -ksp_monitor_short -ksp_gmres_cgs_refinement_type refine_always
+
+    testset:
+      args: -test_lsqr -ksp{,1,2}_view -pc_type jacobi
+      filter: grep -E "(^  type:|preconditioning|norm type|convergence test:)"
+      test:
+        suffix: lsqr_0
+        args: -ksp_convergence_test {{default skip}separate output}
+      test:
+        suffix: lsqr_1
+        args: -ksp_type cg -ksp_convergence_test {{default skip}separate output}
+      test:
+        suffix: lsqr_2
+        args: -ksp_type lsqr
+
+TEST*/

@@ -111,6 +111,16 @@ CCFLAGSF= $(CC_INCLUDES) $(STD_OPT_FLAG)
 # things that need to be compiled with no optimization use the following
 CCFLAGSG= $(CC_INCLUDES) -g
 
+# gcc -dumpversion -> 11
+# gcc -dumpfullversion 11.3.0
+GCC_VERSION_GT_10 = $(shell gcc -dumpversion | awk -F. '$$1 > 10')
+ifneq ($(GCC_VERSION_GT_10),)
+  # stuff that requires gcc version > 10
+  # we need this for old style fortran: 
+  FF_FLAGS += -fallow-argument-mismatch
+endif
+
+
 # ubuntu: gfortran 11.3.0 : to compile ncarfft
 FF_FLAGS += -fallow-argument-mismatch
 

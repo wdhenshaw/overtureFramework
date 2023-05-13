@@ -158,8 +158,8 @@ main(int argc, char *argv[])
 
       FOR_3(i1,i2,i3,I1,I2,I3)
       {
-	vg(0,i1,i2,i3)=sin(.5*Pi*coord(i1,i2,i3,axis1));
-	vg(1,i1,i2,i3)=grid;
+        vg(0,i1,i2,i3)=sin(.5*Pi*coord(i1,i2,i3,axis1));
+        vg(1,i1,i2,i3)=grid;
       }
     }
     else if( cg.numberOfDimensions()==2 )
@@ -169,10 +169,10 @@ main(int argc, char *argv[])
       //     *cos(Pi*coord(I1,I2,I3,axis2))   // component grid
 
       ug(I1,I2,I3,0)=
-	sin(Pi*coord(I1,I2,I3,axis1))   // assign all interior points on this
-	*cos(Pi*coord(I1,I2,I3,axis2));   // component grid
+        sin(Pi*coord(I1,I2,I3,axis1))   // assign all interior points on this
+        *cos(Pi*coord(I1,I2,I3,axis2));   // component grid
       ug(I1,I2,I3,1)=cos(Pi*coord(I1,I2,I3,axis1))
-	*sin(Pi*coord(I1,I2,I3,axis2));
+        *sin(Pi*coord(I1,I2,I3,axis2));
 
 //      ug(I1,I2,I3,2)=1.;
 
@@ -181,29 +181,29 @@ main(int argc, char *argv[])
 
       FOR_3(i1,i2,i3,I1,I2,I3)
       {
-	vg(0,i1,i2,i3)=sin(.5*Pi*coord(i1,i2,i3,axis1))
-	  *cos(.5*Pi*coord(i1,i2,i3,axis2));
-	vg(1,i1,i2,i3)=grid;
+        vg(0,i1,i2,i3)=sin(.5*Pi*coord(i1,i2,i3,axis1))
+          *cos(.5*Pi*coord(i1,i2,i3,axis2));
+        vg(1,i1,i2,i3)=grid;
       }
     }
     else
     {
       ug(I1,I2,I3,0)=(2.+
-			   sin(.5*Pi*coord(I1,I2,I3,axis1))*  
-			   cos(.5*Pi*coord(I1,I2,I3,axis2))*
-			   cos(.5*Pi*coord(I1,I2,I3,axis3)));
-	ug(I1,I2,I3,1)=(cos(.5*Pi*coord(I1,I2,I3,axis1))*
-			     sin(.5*Pi*coord(I1,I2,I3,axis2))*
-			     cos(.5*Pi*coord(I1,I2,I3,axis3)));
+                           sin(.5*Pi*coord(I1,I2,I3,axis1))*  
+                           cos(.5*Pi*coord(I1,I2,I3,axis2))*
+                           cos(.5*Pi*coord(I1,I2,I3,axis3)));
+        ug(I1,I2,I3,1)=(cos(.5*Pi*coord(I1,I2,I3,axis1))*
+                             sin(.5*Pi*coord(I1,I2,I3,axis2))*
+                             cos(.5*Pi*coord(I1,I2,I3,axis3)));
       ug(I1,I2,I3,2)=(cos(.5*Pi*coord(I1,I2,I3,axis1))*
-			   cos(.5*Pi*coord(I1,I2,I3,axis2))*
-			   sin(.5*Pi*coord(I1,I2,I3,axis3)));
+                           cos(.5*Pi*coord(I1,I2,I3,axis2))*
+                           sin(.5*Pi*coord(I1,I2,I3,axis3)));
       FOR_3(i1,i2,i3,I1,I2,I3)
       {
-	vg(0,i1,i2,i3)=sin(.5*Pi*coord(i1,i2,i3,axis1))
-	  *cos(.5*Pi*coord(i1,i2,i3,axis2))
-	  *cos(.5*Pi*coord(i1,i2,i3,axis3));
-	vg(1,i1,i2,i3)=grid;
+        vg(0,i1,i2,i3)=sin(.5*Pi*coord(i1,i2,i3,axis1))
+          *cos(.5*Pi*coord(i1,i2,i3,axis2))
+          *cos(.5*Pi*coord(i1,i2,i3,axis3));
+        vg(1,i1,i2,i3)=grid;
       }
     }      
  
@@ -235,12 +235,12 @@ main(int argc, char *argv[])
   char buff[160];  // buffer for sprintf
   aString answer,answer2;
   aString menu[] = { "!PL test program",
-		    "contour",
-		    "contour v",
-		    "contour cell centred",
+                    "contour",
+                    "contour v",
+                    "contour cell centred",
                     "contour and wait",
-		    "stream lines",
-		    "plot a grid",
+                    "stream lines",
+                    "plot a grid",
                     "plot a mapping",
                     "plot a MappedGrid",
                     "contour a MappedGridFunction",
@@ -252,11 +252,11 @@ main(int argc, char *argv[])
                     "plot points",
                     "plot points with colour",
                     "plot spheres with colour",
-		    "plot grid quality",
+                    "plot grid quality",
                     "file output",
-		    "file name test",
-		    "erase",
-		    "exit",
+                    "file name test",
+                    "erase",
+                    "exit",
                     "" };
   aString menu2[]= { "params","plot","exit","" };
 
@@ -328,10 +328,10 @@ main(int argc, char *argv[])
     else if( answer=="plot a mapping" )
     {
       ps.inputString(answer2,sPrintF(buff,"Enter the Mapping number to plot, from 0 to %i",
-				     cg.numberOfComponentGrids()-1));
+                                     cg.numberOfComponentGrids()-1));
       int mapToPlot = 0;
       if( answer2!="" )
-	sScanF(answer2,"%i",&mapToPlot);
+        sScanF(answer2,"%i",&mapToPlot);
 
       psp.set(GI_TOP_LABEL,"My little mapping");  // set title
       PlotIt::plot(ps,cg[mapToPlot].mapping().getMapping(), psp);  
@@ -347,28 +347,28 @@ main(int argc, char *argv[])
       psp.set(GI_TOP_LABEL,"A mapped grid function");  // set title
       if( true )
       {
-	PlotIt::contour(ps,u[0], psp);  
+        PlotIt::contour(ps,u[0], psp);  
       }
       else
       { // Jeff Bank's bug
-	Mapping *phase_mapping;
+        Mapping *phase_mapping;
 
-	phase_mapping = new SquareMapping;
+        phase_mapping = new SquareMapping;
 //  phase_mapping->setGridDimensions(axis1,NX1);    // axis1==0, set no. of grid points
 //  phase_mapping->setGridDimensions(axis2,NX2);    // axis2==1, set no. of grid points
-	MappedGrid phase_mg(*phase_mapping);           
-	// phase_mg.update(MappedGrid::THEvertex | MappedGrid::THEcenter );
-	phase_mg.update(MappedGrid::THEvertex );
+        MappedGrid phase_mg(*phase_mapping);           
+        // phase_mg.update(MappedGrid::THEvertex | MappedGrid::THEcenter );
+        phase_mg.update(MappedGrid::THEvertex );
 
-	//realMappedGridFunction phase_function;
-	//phase_function.updateToMatchGrid(phase_mg,all,all,all,1);
-	realMappedGridFunction phase_function(phase_mg,all,all,all,1);
+        //realMappedGridFunction phase_function;
+        //phase_function.updateToMatchGrid(phase_mg,all,all,all,1);
+        realMappedGridFunction phase_function(phase_mg,all,all,all,1);
 
-	phase_function.setName("phase functions");
-	phase_function.setName("f",0);
+        phase_function.setName("phase functions");
+        phase_function.setName("f",0);
 
         phase_function=0.;
-	
+        
         PlotIt::contour(ps,phase_function, psp);  
       }
       
@@ -388,22 +388,22 @@ main(int argc, char *argv[])
 //       IntegerArray selection;
 //       for(;;) 
 //       {
-// 	const aString menu[]=
-// 	{
-// 	  "!PL select object test",
-// 	  "done",
+//      const aString menu[]=
+//      {
+//        "!PL select object test",
+//        "done",
 //           ""
-// 	};
+//      };
 //         int numberSelected=ps.getMenuItem(menu,answer,"pk: select objects with mouse",selection);
 //         cout << "pk: answer= " << answer << endl;
 //         if( answer=="done" )
-// 	{
-// 	  break;
-// 	}
-// 	else
-// 	{
-// 	  printf("pk: numberSelected=%i \n",numberSelected);
-// 	}
+//      {
+//        break;
+//      }
+//      else
+//      {
+//        printf("pk: numberSelected=%i \n",numberSelected);
+//      }
 //       }
 //       //      selectObject();
 //     }
@@ -424,23 +424,23 @@ main(int argc, char *argv[])
 //     {
 //       for(;;) 
 //       {
-// 	const aString menu[]=
-// 	{
-// 	  "!PL select point or region",
-// 	  "done",
+//      const aString menu[]=
+//      {
+//        "!PL select point or region",
+//        "done",
 //           ""
-// 	};
+//      };
 //         realArray pickRegion(2,2);
 //         int numberSelected=ps.getMenuItem(menu,answer,"select a point or region",pickRegion);
 //         if( answer=="done" )
-// 	{
-// 	  break;
-// 	}
-// 	else
-// 	{
-// 	  printf("pk: region selected = (%e,%e)X(%e,%e) \n",
+//      {
+//        break;
+//      }
+//      else
+//      {
+//        printf("pk: region selected = (%e,%e)X(%e,%e) \n",
 //              pickRegion(0,0),pickRegion(1,0),pickRegion(0,1),pickRegion(1,1));
-// 	}
+//      }
 //       }
 //     }
     else if( answer=="plot points" || answer=="plot points with colour" || answer=="plot spheres with colour" )
@@ -456,7 +456,7 @@ main(int argc, char *argv[])
         real theta=twoPi*i/(n+1.);
         points(i,axis1)=cos(theta)*radius;
         points(i,axis2)=sin(theta)*radius;
-	points(i,axis3)=cos(2.*theta)*radius;
+        points(i,axis3)=cos(2.*theta)*radius;
         value(i,0)= SQR(points(i,axis1))+SQR(points(i,axis2))+SQR(points(i,axis3));
 
         if( plotSpheres ) value(i,1)=.05; // radius for the sphere

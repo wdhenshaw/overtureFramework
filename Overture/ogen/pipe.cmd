@@ -82,12 +82,14 @@ $pi=4.*atan2(1.,1.);
 create mappings
 #
 $width=$radius*min(.5,.75/$factor) + $ds*($order-2);  # width of cylindrial grid in the radial direction
-if( $rgd eq "fixed" ){ $width=.5*$radius; }
+if( $rgd eq "fixed" ){ $width=.5*$radius + $ds*($order-2); }
+# pause
 #
 if( $per == 0 ){ $bc12 = "1 2"; }else{ $bc12="-1 -1"; }
 #
  box
-  $delta = $width - $ds*($order-2); 
+  # $delta = $width  - $ds*($order-2); 
+  $delta = $width  - $ds*($order); 
   if( $axial eq "x" ){ $xa=$sa; $xb=$sb; $ya=-$radius+$delta; $yb=$radius-$delta; $za=$ya; $zb=$yb; $bc="$bc12 0 0 0 0"; $share="1 2 0 0 0 0"; }
   if( $axial eq "y" ){ $ya=$sa; $yb=$sb; $za=-$radius+$delta; $zb=$radius-$delta; $xa=$za; $xb=$zb; $bc="0 0 $bc12 0 0"; $share="0 0 1 2 0 0"; }
   if( $axial eq "z" ){ $za=$sa; $zb=$sb; $xa=-$radius+$delta; $xb=$radius-$delta; $ya=$xa; $yb=$xb; $bc="0 0 0 0 $bc12"; $share="0 0 0 0 1 2";}

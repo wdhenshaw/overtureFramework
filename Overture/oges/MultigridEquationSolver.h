@@ -22,22 +22,22 @@ class MultigridEquationSolver : public EquationSolver
   virtual ~MultigridEquationSolver();
 
   virtual int solve(realCompositeGridFunction & u,
-		    realCompositeGridFunction & f);
+                    realCompositeGridFunction & f);
 
   // new way to set coefficients:
   virtual int setCoefficientsAndBoundaryConditions( realCompositeGridFunction & coeff,
                                                     const IntegerArray & boundaryConditions,
-					            const RealArray & bcData );
+                                                    const RealArray & bcData );
   
   // old way to set coefficients: 
   virtual int setCoefficientArray( realCompositeGridFunction & coeff,
-			           const IntegerArray & boundaryConditions=Overture::nullIntArray(),
+                                   const IntegerArray & boundaryConditions=Overture::nullIntArray(),
                                    const RealArray & bcData=Overture::nullRealArray() );
 
   virtual int setEquationAndBoundaryConditions( OgesParameters::EquationEnum equation, 
                                                 CompositeGridOperators & op,
                                                 const IntegerArray & boundaryConditions,
-						const RealArray & bcData, 
+                                                const RealArray & bcData, 
                                                 RealArray & constantCoeff = Overture::nullRealArray(),
                                                 realCompositeGridFunction *variableCoeff=NULL );
 

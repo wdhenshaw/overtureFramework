@@ -35,7 +35,10 @@ extern "C" {
 
 
 void Oges::
-generateMatrixError( const int nda0, const int ieqn )  
+generateMatrixError( const int nda0, const int ieqn ) 
+//=========================================================================================================
+/// \brief Output an error message during the call to generate matrix
+//=========================================================================================================
 {
   cerr << "ogesGenerateMatrix:ERROR: Not enough space to store Matrix"  << endl;
   cerr << " number of equations             " << numberOfEquations << endl;
@@ -51,15 +54,15 @@ void Oges::
 generateMatrix( int & errorNumber )
 {
 //=========================================================================================================
-// /Description:
-//   Create the sparse matrix representation (ia,ja,a) from the coefficient matrix 'coeff'.
-// There are two supported representations for the sparse format,
-// \begin{description}
-//  \item[uncompressed] {\tt (ia(i),ja(i),a(i)) i=0,1,...numberOfNonzeros} are the elements
-//     of the sparse matrix
-//  \item[compressedRow] {\tt (ia(k),ia(k+1)-1)} : number of entries in row k, {\tt k=0,1,...,numberOfEquations},
-//      {\tt (ja(i),a(i)) i=0,1,...numberOfNonzeros} are the column numbers and array
-//     elements. 
+/// \brief Create the sparse matrix representation (ia,ja,a) from the coefficient matrix 'coeff'.
+///  
+/// There are two supported representations for the sparse format,
+/// \begin{description}
+///  \item[uncompressed] {\tt (ia(i),ja(i),a(i)) i=0,1,...numberOfNonzeros} are the elements
+///     of the sparse matrix
+///  \item[compressedRow] {\tt (ia(k),ia(k+1)-1)} : number of entries in row k, {\tt k=0,1,...,numberOfEquations},
+///      {\tt (ja(i),a(i)) i=0,1,...numberOfNonzeros} are the column numbers and array
+///     elements. 
 // \end{description}
 //=========================================================================================================
   #ifdef USE_PPP

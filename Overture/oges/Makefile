@@ -6,13 +6,8 @@ SuperLU_Includes = -I$(SuperLU)/SRC
 SuperLU = /home/henshaw/software/SuperLU_DIST_2.0
 SuperLU_Includes = -I$(SuperLU)/src	
 
-CCFLAGS  += $(SuperLU_Includes)
-CCFLAGSG += $(SuperLU_Includes)
-CCFLAGSO += $(SuperLU_Includes)/src
 
-# over-ride:
-# FLIBS=   -L$(LAPACK) -llapack -lblas $(FORTRAN_LIBS) 
-FFLAGSO = $(FFLAGSG)
+
 
 #- # LAPACK_LIBRARIES = -Wl,-rpath,/nfs/apps/pgi/6.1-3/linux86-64/6.1/lib -L/nfs/apps/pgi/6.1-3/linux86-64/6.1/lib -llapack -lblas
 
@@ -32,10 +27,19 @@ usePPP = $(USE_PPP_FLAG)
 #-  PETSC_LIBS = -Wl,-rpath,$(PETSC_LIB) -L$(PETSC_LIB) -lpetscksp -lpetscdm -lpetscmat -lpetscvec -lpetsc -lmpiuni
 #- 
 #- endif
-# PETSC_INCLUDE =
+# PETSc serial needs
+# PETSC_INCLUDE = /home/henshw/software/petsc-3.18.2-serial/include/petsc/mpiuni
 
 # HYPRE = /home/henshaw.0/petsc/petsc-2.3.2-mpi/externalpackages/hypre-1.11.1b/linux-gnu-opt
 # HYPRE_LIBS -Wl,-rpath,$(HYPRE)/lib -L$(HYPRE)/lib -lHYPRE_DistributedMatrix -lHYPRE_DistributedMatrixPilutSolver -lHYPRE_Euclid -lHYPRE_IJ_mv -lHYPRE_LSI -lHYPRE_MatrixMatrix -lHYPRE_ParaSails -lHYPRE_krylov -lHYPRE_parcsr_ls -lHYPRE_parcsr_mv -lHYPRE_seq_mv -lHYPRE_sstruct_ls -lHYPRE_sstruct_mv -lHYPRE_struct_ls -lHYPRE_struct_mv
+
+CCFLAGS  += $(SuperLU_Includes) $(PETSC_INCLUDE) 
+CCFLAGSG += $(SuperLU_Includes) $(PETSC_INCLUDE)
+CCFLAGSO += $(SuperLU_Includes)/src $(PETSC_INCLUDE)
+
+# over-ride:
+# FLIBS=   -L$(LAPACK) -llapack -lblas $(FORTRAN_LIBS) 
+FFLAGSO = $(FFLAGSG)
 
 
 Oges = ../oges
@@ -98,9 +102,13 @@ PETScEquationSolver.o: PETScEquationSolver.C
 PETScSolver.o: PETScSolver.C
 	$(CC) $(CCFLAGSG) -c $<
 
-PETSC_SOLVER = PETScEquationSolver.o
+ifeq ($(strip $(usePPP)),)
+#	
+  PETSC_SOLVER = PETScEquationSolver.o
+else
 # parallel:
-# PETSC_SOLVER = PETScEquationSolver.o PETScSolver.o
+ PETSC_SOLVER = PETScEquationSolver.o PETScSolver.o
+endif
 
 # Tests Overlapping Grid Equation Solver: oges
 
@@ -128,6 +136,13 @@ subset: $(subset)
 	$(CC) $(CCFLAGS) -o subset \
         $(subset) $(CLIBS) $(GLIBS)
 
+# test routine for PETSc 
+testPetsc = testPetsc.o $(Oges)
+testPetsc: $(testPetsc)
+	$(CC) $(CCFLAGS) -o testPetsc \
+        $(testPetsc) $(CLIBS) $(PETSC_LIBS) $(FLIBS) $(GLIBS)
+
+# tcm3 is now in op/tests
 tcm3 = $(Oges) tcm3.o
 tcm3: $(tcm3)
 	$(CC) $(CCFLAGS) -o tcm3 \
@@ -263,6 +278,27 @@ matrixFree: $(matrixFree)
 
 
 
+# +++++  PETSc 3.18.2 ex50.C ++++++++++
+ex50 = ex50.o 
+ex50: $(ex50) 
+	$(CC) $(CCFLAGS) -o ex50 \
+        $(ex50) -L$(PETSC_LIB)  -lpetsc  \
+        $(CLIBS) $(FLIBS) -L/usr/local/lib -llapack $(GLIBS) -L$(PETSC_LIBS) 
+
+
+# +++++  PETSc 3.18.2 src/ksp/ksp/tutorials/ex5.C ++++++++++
+kspEx5 = kspEx5.o 
+kspEx5: $(kspEx5) 
+	$(CC) $(CCFLAGS) -o kspEx5 \
+        $(kspEx5) -L$(PETSC_LIB)  -lpetsc  \
+        $(CLIBS) $(FLIBS) -L/usr/local/lib -llapack $(GLIBS) -L$(PETSC_LIBS) 
+
+# Example using null space
+ex34 = ex34.o 
+ex34: $(ex34) 
+	$(CC) $(CCFLAGS) -o ex34 \
+        $(ex34) -L$(PETSC_LIB)  -lpetsc  \
+        $(CLIBS) $(FLIBS) -L/usr/local/lib -llapack $(GLIBS) -L$(PETSC_LIBS)         
 
 # PETSc ex1.C 
 ex1 = ex1.o 

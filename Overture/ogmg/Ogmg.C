@@ -1498,6 +1498,12 @@ solve( realCompositeGridFunction & u, realCompositeGridFunction & f)
 {
   real time=getCPU();
 
+  if( &u == &f )
+  {
+    printF("Ogmg::solve:ERROR: input u must be different from input f.\n");
+    OV_ABORT("Ogmg::ERROR");
+  }
+
   CompositeGrid & mgcg = multigridCompositeGrid();
   if( debug & 2 )
     printF(" ******** Ogmg::solve, solver=%s, grid=%s********\n",(const char*)solverName,(const char*)gridName);
@@ -1505,6 +1511,8 @@ solve( realCompositeGridFunction & u, realCompositeGridFunction & f)
   assert(parameters.gridDependentParametersInitialized);
 
   directSolver.setOgesParameters(parameters.ogesParameters);  // why is this done here ? do only once?
+  // if( debug & 4 )
+  //   directSolver.printSolverDescription( "Ogmg::solve:1509: Coarse grid solver:",stdout);
 
   // if( false )
   // {
@@ -1721,6 +1729,8 @@ solve( realCompositeGridFunction & u, realCompositeGridFunction & f)
 
     printF("Ogmg:WARNING: There is only one multigrid level on this grid! Using the direct solver instead"
            " with tol=%8.2e (maxIterationsCoarseGrid=%d)\n",tol,maxIterationsCoarseGrid);
+    // if( Ogmg::debug & 4 )
+    //   directSolver.printSolverDescription( "solve:1725: Coarse grid solver:",stdout);
   }
   
 
@@ -3438,6 +3448,9 @@ buildCoefficientArrays()
       cl.setOperators(op);
       timeForOperators+=getCPU()-time1;
 
+      // cl=0.; // **************************************** TESTING Jan 11, 2023 **********************
+
+
       // *************************************
       // **** Build the averaged operator ****
       // *************************************
@@ -3670,7 +3683,14 @@ buildCoefficientArrays()
   if( parameters.useDirectSolverOnCoarseGrid )
   {
     if( mgcg.numberOfMultigridLevels()>1 )
+    {
+      if( false )
+      {
+        cMG.multigridLevel[mgcg.numberOfMultigridLevels()-1].display("coeff on coarse grid");
+      }
+
       directSolver.setCoefficientArray( cMG.multigridLevel[mgcg.numberOfMultigridLevels()-1] );   
+    }
     else
       directSolver.setCoefficientArray( cMG );
   }

@@ -18,14 +18,18 @@
 
 #include "EquationSolver.h"
 
-// krb do not use extern "C" if PETSc is linked using BOPT=g_c++
-extern "C"
-{
-// *wdh* 2015/09/31  To avoid having PETSc include complex.h do this: 
-#include "petscconf.h"
-#undef PETSC_HAVE_CXX_COMPLEX
-#include "petscksp.h"
-}
+// Dec 17, 2022 -- convert to PETSc 3.18.2
+#include <petscksp.h>
+
+// PETSc 3.4.5
+// 3.4.5 // krb do not use extern "C" if PETSc is linked using BOPT=g_c++
+// 3.4.5 extern "C"
+// 3.4.5 {
+// 3.4.5 // *wdh* 2015/09/31  To avoid having PETSc include complex.h do this: 
+// 3.4.5 #include "petscconf.h"
+// 3.4.5 #undef PETSC_HAVE_CXX_COMPLEX
+// 3.4.5 #include "petscksp.h"
+// 3.4.5 }
 
 
 // Experimental Preconditioner from David Hysom (Summer 2000)
@@ -52,7 +56,7 @@ class PETScEquationSolver : public EquationSolver
 			       realCompositeGridFunction & u,
 			       realCompositeGridFunction & f);
 
-  virtual real sizeOf( FILE *file=NULL ); // return number of bytes allocated 
+  virtual Real sizeOf( FILE *file=NULL ); // return number of bytes allocated 
 
   MPI_Comm comm;
   KSP           ksp;      // Linear solver ConTeXt, Krylov Space solver ctx
@@ -60,17 +64,17 @@ class PETScEquationSolver : public EquationSolver
   Vec           xsol,brhs;
   Mat           Amx;
 
-  virtual real getMaximumResidual(); 
+  virtual Real getMaximumResidual(); 
 
   int getNumberOfIterations() const; 
 
   int allocateMatrix(int,int,int,int);
-  int setMatrixElement(int,int,int,real);
+  int setMatrixElement(int,int,int,Real);
   int displayMatrix();
 
 // So far a common data structure is used by all vector types, so there is no need to have these:
-//  void setRHSVectorElement(int,real);
-//  void setSolVectorElement(int,real);
+//  void setRHSVectorElement(int,Real);
+//  void setSolVectorElement(int,Real);
 
   int solvePETSc(realCompositeGridFunction & u,
 		 realCompositeGridFunction & f);
@@ -91,8 +95,8 @@ class PETScEquationSolver : public EquationSolver
   int setupPreconditioner(KSP ksp, Vec brhs, Vec xsol );
 
   //....Logging
-  real          timePrecond;
-  real          timeSolve;
+  Real          timePrecond;
+  Real          timeSolve;
 
   //private:
   //..The remaining data is essentially PRIVATE, 
@@ -106,12 +110,12 @@ class PETScEquationSolver : public EquationSolver
   bool          petscInitialized; // if tru PETSc has been initialized
 
   int           neqBuilt;     // size of CURRENT matrix & vectors
-  real          *aval;        // local POINTERS to the matrix in Oges
+  Real          *aval;        // local POINTERS to the matrix in Oges
   int           *ia_,*ja_;
   int           *iWorkRow;    // Workspace for CSORT(=sorts the columns of A)
   int           nWorkRow;
   int           *nzzAlloc;    // num. columns on each row--> for prealloc.
-  real          *dscale;      // Diagonal reSCALING to set rownorms==1
+  Real          *dscale;      // Diagonal reSCALING to set rownorms==1
 
   //END CRITICAL----------------------------------
 

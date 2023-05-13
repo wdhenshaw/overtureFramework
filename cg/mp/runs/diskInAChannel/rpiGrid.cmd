@@ -1,5 +1,5 @@
 #
-#   Solid objects in the shape of "R" "P" "I" in a fluid channel
+#   Hollow objects in the shape of "R" "P" "I" in a fluid channel
 #
 #
 # usage: ogen [noplot] rpiGrid -factor=<num> -order=[2/4/6/8] -interp=[e/i]

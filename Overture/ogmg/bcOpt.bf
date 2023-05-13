@@ -1892,7 +1892,7 @@ end do
         stop 5
       end if
 
-      if( orderOfACcuracy.eq.4 )then
+      if( orderOfAccuracy.eq.4 )then
         m11=1     
         m21=2     
         m31=3     

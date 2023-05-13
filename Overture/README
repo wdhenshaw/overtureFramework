@@ -1,6 +1,12 @@
-This is the Overture from the Sourceforge git repository
+This is the Overture from the Sourceforge git repository.
 
-  (0) Make sure sure that "." is in your path, many Overture and cg scripts assume this.
+o See INSTALL_UBUNTU for detailed installation instructions for Ubuntu (these are the latest instructions).
+
+o See overtureFramework/Overture/web/install.pdf for installation instructions for a Mac.
+
+
+
+(0) Make sure sure that "." is in your path, many Overture and cg scripts assume this.
       For example, I have the following in my .cshrc
        set path=(. $HOME/bin $path $MPI_ROOT/bin )
 

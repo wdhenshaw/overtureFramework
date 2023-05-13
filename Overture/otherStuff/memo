@@ -1,0 +1,35 @@
+********************************
+******* Sat Dec 2, 2022
+
+test degree=8
+
+tz -degreeX=8 square16.order2 -testPoly=1 -testTrig=0 -testPulse=0 -nComp=1 | more
+
+ ****************************************************************
+ **************** Maximum ERROR = 4.286281e-07 *******************
+ ***************************************************************
+
+
+
+********************************
+******* Fri Dec 2, 2022
+
+tz -degreeX=6 square16.order2 -testPoly=1 -testTrig=0 -testPulse=0 -nComp=1 | more
+
+tz -degreeX=6 square16.order2 > tz.output
+
+ ****************************************************************
+ **************** Maximum ERROR = 3.430918e-07 *******************
+ ***************************************************************
+
+
+********************************
+******* Fri Dec 2, 2022
+
+INCREASE Degree of poly's in OGPolyFunction to 8 
+
+OGPolyFunction.h
+
+
+Test routine: 
+   tz -degreeX=6 square16.order2 | more

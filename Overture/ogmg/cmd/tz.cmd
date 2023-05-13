@@ -248,7 +248,15 @@ $cmd
   Oges parameters
     # choose best direct solver
     # choose best iterative solver
+    # 
+    # Choose the PETSc solver if we have chosen a Krylov solver *wdh* Dec 23, 2022 (for testing direct solver at finest level)
+    # printf("[1] cgSolver=$cgSolver\n");
+    if( $cgSolver eq "gmres" || $cgSolver eq "bcgs" || $cgSolver eq "bi-conjugate gradient stabilized" ){ $cmd="PETSc"; }else{ $cmd="#"; }
+    $cmd
+    #
+     # printf("[2] cgSolver=$cgSolver\n");
      $cgSolver
+     #
      number of incomplete LU levels
       $ilucg
      incomplete LU expected fill

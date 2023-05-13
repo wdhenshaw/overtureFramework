@@ -12,6 +12,8 @@
 //   and use the command line arg -log_summary
 //   memory usage: -trmalloc_log 
 //
+// MG example: (Jan 2023)
+//  tcm3 square64.order2 -dirichlet -solver=mg -predefined
 // Parallel examples:
 //   mpirun -np 2 tcm3 square20.hdf -solver=petsc
 //   mpirun -np 2 tcm3 cic.hdf -solver=petsc 
@@ -438,7 +440,10 @@ main(int argc, char *argv[])
         else if( solverName=="slap" || solverName=="SLAP" )
           solverType=OgesParameters::SLAP;
         else if( solverName=="mg" || solverName=="multigrid" )
+        {
           solverType=OgesParameters::multigrid;
+          usePredefined=true;    // do this for now
+        }
         else
         {
           printF("Unknown solver=%s \n",(const char*)solverName);
@@ -681,8 +686,33 @@ main(int argc, char *argv[])
       // cout << "op.laplacianCoefficients().className: " << (op.laplacianCoefficients()).getClassName() << endl;
       // cout << "-op.laplacianCoefficients().className: " << (-op.laplacianCoefficients()).getClassName() << endl;
     
-      Oges solver( cg );                     // create a solver
+      // Old way
+      // Oges solver( cg );                     // create a solver
+
+      // --- do this for MG: set bc in grid
+      for( int grid=0; grid<cg.numberOfComponentGrids(); grid++ )
+      {
+        MappedGrid & mg = cg[grid];
+        const IntegerArray & bc = mg.boundaryCondition();
+        ForBoundary(side,axis)
+        {
+          if( bc(side,axis)>0 )
+            mg.setBoundaryCondition( side,axis,OgesParameters::dirichlet );
+        }
+      }
+
+      // -- do this to support multigrid ---
+      // Oges::debug=7;
+      Oges solver;
+      solver.set(OgesParameters::THEsolverType,solverType); 
       
+      // Is this needed? 
+      // MultigridCompositeGrid mgcg;
+      // solver.set(mgcg);  
+
+      
+      solver.setGrid( cg );  // this will build MG levels
+
       #ifdef USE_PPP
       if( solverType==OgesParameters::PETScNew )
       {
@@ -690,8 +720,6 @@ main(int argc, char *argv[])
         solver.setCommunicator( myComm );
       }
       #endif 
-      
-      solver.set(OgesParameters::THEsolverType,solverType); 
 
 
       if( usePredefined )
@@ -701,7 +729,11 @@ main(int argc, char *argv[])
         IntegerArray boundaryConditions(2,3,cg.numberOfComponentGrids());
         RealArray bcData(2,2,3,cg.numberOfComponentGrids());
         boundaryConditions=OgesParameters::dirichlet;
+
+
         bcData=0.;
+        if( Oges::debug & 1 )
+          printF(">>>>tcm3: call setEquationAndBoundaryConditions...\n");
         solver.setEquationAndBoundaryConditions( OgesParameters::laplaceEquation,op,boundaryConditions,bcData);
       }
       else
@@ -759,7 +791,13 @@ main(int argc, char *argv[])
       if( outputMatrix )
         solver.set(OgesParameters::THEkeepSparseMatrix,true);
       
-      if( solver.isSolverIterative() ) 
+      if( solverType==OgesParameters::multigrid )
+      {
+        printF(">>> tcm3: Set parameters for multigrid...\n");
+        solver.set(OgesParameters::THErelativeTolerance,max(tol,REAL_EPSILON*10.));
+        solver.set(OgesParameters::THEmaximumNumberOfIterations,10000);
+      }      
+      else if( solver.isSolverIterative() ) 
       {
         solver.setCommandLineArguments( argc,argv );
 
@@ -807,7 +845,8 @@ main(int argc, char *argv[])
         solver.set(OgesParameters::THEmaximumNumberOfIterations,10000);
         if( iluLevels>=0 )
           solver.set(OgesParameters::THEnumberOfIncompleteLULevels,iluLevels);
-      }    
+      }
+
 
       printF("\n === Solver:\n %s\n =====\n",(const char*)solver.parameters.getSolverName());
 
@@ -1033,7 +1072,10 @@ main(int argc, char *argv[])
 
         // if the problem is singular Oges will add an extra constraint equation to make the system nonsingular
         if( singularProblem )
+        {
+          // solver.setProblemIsSingular
           solver.set(OgesParameters::THEcompatibilityConstraint,TRUE);
+        }
 
         // Tell the solver to refactor the matrix since the coefficients have changed
         solver.setRefactor(TRUE);

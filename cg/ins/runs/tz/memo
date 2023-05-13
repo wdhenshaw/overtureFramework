@@ -1,3 +1,77 @@
+
+*********************************
+******* May 2, 2023
+
+TEST MG SOLVER
+
+BOX 4: IMPLICIT AND PRESSURE SOLVERS MG : **OK**
+cgins tz -g=box4.order2 -tz=trig -ts=im -solver=mg -psolver=mg -degreex=2 -degreet=1 -bcn=d -bc2=outflow -tp=.05 -tf=.2 -debug=3 -rtolp=1e-8 -atolp=1e-8 -rtol=1e-8 -atol=1e-8 -go=halt
+
+BOX2 : OK
+cgins tz -g=box2.order2 -tz=trig -ts=im -solver=mg -degreex=2 -degreet=1 -bcn=d -bc2=outflow -tp=.05 -tf=.2 -debug=3 -rtolp=1e-8 -atolp=1e-8 -rtol=1e-8 -atol=1e-8 -go=halt
+
+Implicit time stepping. IMEX AB-CN scheme. Order of predictor corrector=2
+   implicit factor = 0.50, (.5=Crank-Nicolson, 1.=Backward Euler)
+   Implicit solver =multigrid, solver=[iterative solver + ], rel-tol=1.00e-08, abs-tol=1.00e-08 max iterations=50 
+                         : convergence: max-defect < (rel-tol)*L2NormRHS + abs-tol.
+   Implicit time stepping with all grids time integrated implicitly.
+
+========================Ogmg Summary=========================
+
+                       Grid = unknown 
+ Equation: I + c0*Delta.
+ Boundary conditions explicitly specified = 1.
+ Equations are are not singular.
+ Convergence criteria: l2Norm(residual) < residualTolerance*l2Nnorm(f) + absoluteTolerance (residualTolerance=1.00e-08, absoluteTolerance=1.00e-08).
+ maximum number of iterations = 50.
+ order of accuracy = 2.
+ order of coarse level operators = 2.
+ number of levels = 3 (2 extra levels, max-extra-levels=10).
+ interpolate defect = 1
+ number of cycles per level= 1  1  1 
+ number of smooths (global) per level= [2,1]  [2,1]  [2,1] 
+ grid ordering in smooth is alternating.
+ auto sub-smooth determination is on (reference grid for sub-smooths=0).
+ use new red black smoother=1.
+ number of iterations for implicit interpolation is 3.
+ coarse to fine interpolation width=2.
+ fine to coarse transfer is full weighting.
+ operator averaging: do not average coarse grid equations.
+ operator averaging is ON for the very coarsest level.
+   boundary averaging option is imposeDirichlet (for a 'dirichlet BC') and partialWeighting (for a 'Neumann' BC)
+   ghost line averaging option is imposeExtrapolation (for a 'dirichlet BC') and partialWeighting (for a 'Neumann' BC)
+ boundary smoothing: number of layers=0, iterations=1, apply on 1 levels.
+ interp. boundary smoothing: layers=0, iterations=1, global-its=2, apply on 1 levels, combine-with-smooths=0.
+ assumeSparseStencilForRectangularGrids=1
+
+Coarse grid solver:
+   PETSc, solver=[bi-conjugate gradient stabilized + ILU(1)
+   + reverse Cuthill-McKee ordering]
+   relative tol.=1.00e-06, absolute tol.=1.00e-08, max number of iterations=0 (0=choose default)
+   average number of iterations per coarse grid solve =   9.0/cycle
+   coarse grid has 1000 grid points (6.4e+00 % of fine grid)
+   coarse grid averaging option: no averaging
+
+grid 0 : rb[2,1] rb[2,1] rb[2,1]  : box 
+         bc=[dirichlet,neumann] [dirichlet,dirichlet] [dirichlet,dirichlet] 
+         ave no. of subSmooths: l0= 1.0, l1= 1.0, l2= 0.0, 
+         gid=[0,20][0,20][0,20], gridPoints=15625 (100.00%).
+
+
+
+
+
+OK
+cgins tz -g=square16.order2 -tz=trig -ts=im -solver=mg -degreex=2 -degreet=1 -bcn=d -bc2=outflow -tp=.05 -tf=.2 -debug=3 -rtolp=1e-8 -atolp=1e-8 -rtol=1e-8 -atol=1e-8 -go=halt
+
+YALE:
+cgins tz -g=square16.order2 -tz=poly -ts=im -degreex=2 -degreet=1 -bcn=d -tp=.05 -tf=.01 -debug=3 -go=halt
+
+ ************** ims.bC fixupUnusedPoints ************
+     t    err(p)   err(u)   err(v)    div       uMax     dt       cpu    (2 steps)
+   0.010 1.05e-15 1.55e-15 1.55e-15 1.69e-14  4.02e+00 5.00e-03 7.22e+00 
+
+
 *********************************
 ******* Jan 14, 2019
 

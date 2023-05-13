@@ -59,34 +59,34 @@
     {
       if( !isRectangular )
       {
-	// (an1,an2,an3) = outward normal 
-	an1 = RX(i1,i2,i3,axis,0);
-	an2 = RX(i1,i2,i3,axis,1);
-	if( numberOfDimensions==2 )
-	{
-	  aNormi = (-is)/sqrt(an1*an1+an2*an2);
-	  an1=an1*aNormi;
-	  an2=an2*aNormi;
-	}
-	else
-	{
-	  an3 = RX(i1,i2,i3,axis,2);
-	  aNormi = (-is)/sqrt(an1*an1+an2*an2+an3*an3);
-	  an1=an1*aNormi;
-	  an2=an2*aNormi;
-	  an3=an3*aNormi;
-	}
-	if( numberOfDimensions==2 )
-	{
-	  t0=  a1*(an1*RX(i1,i2,i3,0,0)+an2*RX(i1,i2,i3,0,1))/(2.*dr(0));
-	  t1 = a1*(an1*RX(i1,i2,i3,1,0)+an2*RX(i1,i2,i3,1,1))/(2.*dr(1));
-	}
-	else
-	{
-	  t0 = a1*(an1*RX(i1,i2,i3,0,0)+an2*RX(i1,i2,i3,0,1)+an3*RX(i1,i2,i3,0,2))/(2.*dr(0));
-	  t1 = a1*(an1*RX(i1,i2,i3,1,0)+an2*RX(i1,i2,i3,1,1)+an3*RX(i1,i2,i3,1,2))/(2.*dr(1));
-	  t2 = a1*(an1*RX(i1,i2,i3,2,0)+an2*RX(i1,i2,i3,2,1)+an3*RX(i1,i2,i3,2,2))/(2.*dr(2));
-	}
+        // (an1,an2,an3) = outward normal 
+        an1 = RX(i1,i2,i3,axis,0);
+        an2 = RX(i1,i2,i3,axis,1);
+        if( numberOfDimensions==2 )
+        {
+          aNormi = (-is)/sqrt(an1*an1+an2*an2);
+          an1=an1*aNormi;
+          an2=an2*aNormi;
+        }
+        else
+        {
+          an3 = RX(i1,i2,i3,axis,2);
+          aNormi = (-is)/sqrt(an1*an1+an2*an2+an3*an3);
+          an1=an1*aNormi;
+          an2=an2*aNormi;
+          an3=an3*aNormi;
+        }
+        if( numberOfDimensions==2 )
+        {
+          t0=  a1*(an1*RX(i1,i2,i3,0,0)+an2*RX(i1,i2,i3,0,1))/(2.*dr(0));
+          t1 = a1*(an1*RX(i1,i2,i3,1,0)+an2*RX(i1,i2,i3,1,1))/(2.*dr(1));
+        }
+        else
+        {
+          t0 = a1*(an1*RX(i1,i2,i3,0,0)+an2*RX(i1,i2,i3,0,1)+an3*RX(i1,i2,i3,0,2))/(2.*dr(0));
+          t1 = a1*(an1*RX(i1,i2,i3,1,0)+an2*RX(i1,i2,i3,1,1)+an3*RX(i1,i2,i3,1,2))/(2.*dr(1));
+          t2 = a1*(an1*RX(i1,i2,i3,2,0)+an2*RX(i1,i2,i3,2,1)+an3*RX(i1,i2,i3,2,2))/(2.*dr(2));
+        }
       }
     
 
@@ -112,11 +112,11 @@
 
       if( numberOfDimensions==3 )
       {
-	coeffLocal(5,ig1,ig2,ig3)=-t2;
-	coeffLocal(6,ig1,ig2,ig3)= t2;
+        coeffLocal(5,ig1,ig2,ig3)=-t2;
+        coeffLocal(6,ig1,ig2,ig3)= t2;
 
-	coeff.sparse->setCoefficientIndex(5, ee,ig1,ig2,ig3, ee,i1  ,i2  ,i3-1);
-	coeff.sparse->setCoefficientIndex(6, ee,ig1,ig2,ig3, ee,i1  ,i2  ,i3+1);
+        coeff.sparse->setCoefficientIndex(5, ee,ig1,ig2,ig3, ee,i1  ,i2  ,i3-1);
+        coeff.sparse->setCoefficientIndex(6, ee,ig1,ig2,ig3, ee,i1  ,i2  ,i3+1);
       }
       // Indicate that the second-ghost line has an equation in it: 
       coeff.sparse->setClassify(SparseRepForMGF::ghost1,ig1,ig2,ig3,ee);
@@ -144,11 +144,11 @@
 
       if( numberOfDimensions==3 )
       {
-	coeffLocal(5,ig1,ig2,ig3)=-t2*.5;
-	coeffLocal(6,ig1,ig2,ig3)= t2*.5;
+        coeffLocal(5,ig1,ig2,ig3)=-t2*.5;
+        coeffLocal(6,ig1,ig2,ig3)= t2*.5;
 
-	coeff.sparse->setCoefficientIndex(5, ee,ig1,ig2,ig3, ee,i1  ,i2  ,i3-2);
-	coeff.sparse->setCoefficientIndex(6, ee,ig1,ig2,ig3, ee,i1  ,i2  ,i3+2);
+        coeff.sparse->setCoefficientIndex(5, ee,ig1,ig2,ig3, ee,i1  ,i2  ,i3-2);
+        coeff.sparse->setCoefficientIndex(6, ee,ig1,ig2,ig3, ee,i1  ,i2  ,i3+2);
       }
 
       // Indicate that the second-ghost line has an equation in it: 
@@ -181,7 +181,7 @@ assignBoundaryConditionCoefficients( realMappedGridFunction & coeff, int grid, i
 
   if( debug & 4 )
     fPrintF(debugFile,"\n ++++++++ assignBoundaryConditionCoefficients level=%i grid=%i (side,axis)=(%i,%i) ++++++\n",
-	    level,grid,sideToCheck,axisToCheck);
+            level,grid,sideToCheck,axisToCheck);
   
   CompositeGrid & mgcg = multigridCompositeGrid();
   MappedGrid & mg = mgcg.multigridLevel[level][grid];
@@ -224,163 +224,163 @@ assignBoundaryConditionCoefficients( realMappedGridFunction & coeff, int grid, i
     for( int side=sideStart; side<=sideEnd; side++ )
     {
       if( mg.boundaryCondition(side,axis)<=0 )
-	continue;
-	
-	
+        continue;
+        
+        
       if( bc(side,axis,grid)==OgmgParameters::dirichlet )
       {
 //            if( orderOfAccuracy==2 || 
-//  	      // *wdh* 030521 level==(mgcg.numberOfMultigridLevels()-1) ||
+//            // *wdh* 030521 level==(mgcg.numberOfMultigridLevels()-1) ||
 //                 parameters.fourthOrderBoundaryConditionOption==0 ||
 //                 (orderOfAccuracy==4 && level!=0 && !parameters.useEquationForDirichletOnLowerLevels) )
 
-	bool useEquationOnGhost = useEquationOnGhostLineForDirichletBC(mg,level);
+        bool useEquationOnGhost = useEquationOnGhostLineForDirichletBC(mg,level);
 
-	// Nor now we can only use the equation on the ghost line for the laplace eqn: 
+        // Nor now we can only use the equation on the ghost line for the laplace eqn: 
         useEquationOnGhost = useEquationOnGhost && equationToSolve==OgesParameters::laplaceEquation;
 
-	if( orderOfThisLevel==2 || !useEquationOnGhost )
-	{
-	  coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::boundary(side,axis),extrapParams);
-	}
-	else
-	{
-	  // === Use the equation to 2nd order on the boundary ===
+        if( orderOfThisLevel==2 || !useEquationOnGhost )
+        {
+          coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::boundary(side,axis),extrapParams);
+        }
+        else
+        {
+          // === Use the equation to 2nd order on the boundary ===
 
-	  if( equationToSolve==OgesParameters::laplaceEquation )
-	  {
-	    op.setOrderOfAccuracy(2);
-	    getBoundaryIndex(mg.gridIndexRange(),side,axis,I1,I2,I3);
+          if( equationToSolve==OgesParameters::laplaceEquation )
+          {
+            op.setOrderOfAccuracy(2);
+            getBoundaryIndex(mg.gridIndexRange(),side,axis,I1,I2,I3);
             int includeGhost=0;
             bool ok = ParallelUtility::getLocalArrayBounds(mask,maskLocal,I1,I2,I3,includeGhost);
             if( !ok )
-	    {
-	      op.setOrderOfAccuracy(4); // reset 
-	      continue;  // is this ok ?
-	    }
-	    
-	    // ***this is wrong*** --> corners
-	    // ** op.coefficients(MappedGridOperators::laplacianOperator,coeff,I1,I2,I3); // efficient version
+            {
+              op.setOrderOfAccuracy(4); // reset 
+              continue;  // is this ok ?
+            }
+            
+            // ***this is wrong*** --> corners
+            // ** op.coefficients(MappedGridOperators::laplacianOperator,coeff,I1,I2,I3); // efficient version
 
            
-	    // ***** 030606: to fix: what if there are interp points on the edge --> we need to extrap points
-	    // adjacent to them *****
+            // ***** 030606: to fix: what if there are interp points on the edge --> we need to extrap points
+            // adjacent to them *****
 
 
-	    realSerialArray tempCoeff(coeff.dimension(0),I1,I2,I3);
-	    op.assignCoefficients(MappedGridOperators::laplacianOperator,tempCoeff,I1,I2,I3); // efficient version
+            realSerialArray tempCoeff(coeff.dimension(0),I1,I2,I3);
+            op.assignCoefficients(MappedGridOperators::laplacianOperator,tempCoeff,I1,I2,I3); // efficient version
 
 
-	    op.setOrderOfAccuracy(4); // reset 
-	    getGhostIndex(mg.gridIndexRange(),side,axis,Ig1,Ig2,Ig3);  // keep full Range in parallel
+            op.setOrderOfAccuracy(4); // reset 
+            getGhostIndex(mg.gridIndexRange(),side,axis,Ig1,Ig2,Ig3);  // keep full Range in parallel
               
-	    const int m3b= mg.numberOfDimensions()==2 ? -1 : 1;
-	    const int ee=0; 
-	    int i1,i2,i3;
-	    is1=is2=is3=0;
-	    isv[axis]=1-2*side;
-	      
-	    FOR_M()
-	    {
-	      // copy the second order equation into the correct positions of the 4th order stencil
-	      const int index2=(m1+1)+3*(m2+1+3*(m3+1));  // stencil width=3
+            const int m3b= mg.numberOfDimensions()==2 ? -1 : 1;
+            const int ee=0; 
+            int i1,i2,i3;
+            is1=is2=is3=0;
+            isv[axis]=1-2*side;
+              
+            FOR_M()
+            {
+              // copy the second order equation into the correct positions of the 4th order stencil
+              const int index2=(m1+1)+3*(m2+1+3*(m3+1));  // stencil width=3
 
-	      int index4=mg.numberOfDimensions()==2 ? (m1+2)+5*(m2+2)          :        // stencil width==4
-		(m1+2)+5*(m2+2+5*(m3+2));
-	      // remember we are shifted to the ghost line :
-	      index4 += axis==0 ? 1-2*side : axis==1 ? 5*(1-2*side) : 25*(1-2*side);
-		
-	      FOR_3D(i1,i2,i3,I1,I2,I3)
-	      {
-		int ig1=i1-is1, ig2=i2-is2, ig3=i3-is3;
-		coeffLocal(index4,ig1,ig2,ig3)=tempCoeff(index2,i1,i2,i3);
-		// *wdh* 100111 coeff.sparse->setClassify(SparseRepForMGF::ghost1,ig1,ig2,ig3,ee);
-	      }
+              int index4=mg.numberOfDimensions()==2 ? (m1+2)+5*(m2+2)          :        // stencil width==4
+                (m1+2)+5*(m2+2+5*(m3+2));
+              // remember we are shifted to the ghost line :
+              index4 += axis==0 ? 1-2*side : axis==1 ? 5*(1-2*side) : 25*(1-2*side);
+                
+              FOR_3D(i1,i2,i3,I1,I2,I3)
+              {
+                int ig1=i1-is1, ig2=i2-is2, ig3=i3-is3;
+                coeffLocal(index4,ig1,ig2,ig3)=tempCoeff(index2,i1,i2,i3);
+                // *wdh* 100111 coeff.sparse->setClassify(SparseRepForMGF::ghost1,ig1,ig2,ig3,ee);
+              }
               coeff.sparse->setClassify(SparseRepForMGF::ghost1,Ig1,Ig2,Ig3,ee);  // *wdh* 100111
-	    }
+            }
 
-	    if( debug & 64 )
-	    {
-	      printF("\n>>>>>>>>>>>>>assignBoundaryConditionCoefficients: \n"
-		     " Dirichlet: fill in 2nd-order equation on the ghost points : level=%i, grid=%i side=%i "
-		     "axis=%i\n",level,grid,side,axis);
+            if( debug & 64 )
+            {
+              printF("\n>>>>>>>>>>>>>assignBoundaryConditionCoefficients: \n"
+                     " Dirichlet: fill in 2nd-order equation on the ghost points : level=%i, grid=%i side=%i "
+                     "axis=%i\n",level,grid,side,axis);
               Range all;
-	      ::display(coeff(all,Ig1,Ig2,Ig3),"Eqn to 2nd order on the boundary (BEFORE)","%5.2f ");
-	    }
-	      
-	    // **** end points on dirichlet sides: use extrapolation (otherwise the same eqn appears twice!)
+              ::display(coeff(all,Ig1,Ig2,Ig3),"Eqn to 2nd order on the boundary (BEFORE)","%5.2f ");
+            }
+              
+            // **** end points on dirichlet sides: use extrapolation (otherwise the same eqn appears twice!)
 
-	    for( int dir=0; dir<mg.numberOfDimensions()-1; dir++ )
-	    {
-	      const int axisp = (axis+dir+1) % mg.numberOfDimensions(); // adjacent side
-	      for( int side2=0; side2<=1; side2++ )
-	      {
-		if( bc(side2,axisp,grid)==OgmgParameters::dirichlet )
-		{
-		  if( mg.boundaryCondition(side2,axisp)<=0 )
-		  {
-		    display(bc,"bc");
-		    display(mg.boundaryCondition(),"mg.boundaryCondition()");
-		    Overture::abort("Unexpected Error");
-		  }
-		    
-		  J1=Ig1, J2=Ig2, J3=Ig3;
-		  Jv[axisp]= side2==0 ? Jv[axisp].getBase() : Jv[axisp].getBound();
-		  // extrapolate points  coeff(.,J1,J2,J3) in the direction axis
+            for( int dir=0; dir<mg.numberOfDimensions()-1; dir++ )
+            {
+              const int axisp = (axis+dir+1) % mg.numberOfDimensions(); // adjacent side
+              for( int side2=0; side2<=1; side2++ )
+              {
+                if( bc(side2,axisp,grid)==OgmgParameters::dirichlet )
+                {
+                  if( mg.boundaryCondition(side2,axisp)<=0 )
+                  {
+                    display(bc,"bc");
+                    display(mg.boundaryCondition(),"mg.boundaryCondition()");
+                    Overture::abort("Unexpected Error");
+                  }
+                    
+                  J1=Ig1, J2=Ig2, J3=Ig3;
+                  Jv[axisp]= side2==0 ? Jv[axisp].getBase() : Jv[axisp].getBound();
+                  // extrapolate points  coeff(.,J1,J2,J3) in the direction axis
                   // printF(" assignBCCoeff:: Eqn2: extrap edges: axis=%i dir=%i axisp=%i side2=%i "
                   //        "Ig1=[%i,%i] Ig2=[%i,%i] Ig3=[%i,%i]\n",axis,dir,axisp,side2,
-		  //	 Ig1.getBase(),Ig1.getBound(), Ig2.getBase(),Ig2.getBound(),Ig3.getBase(),Ig3.getBound());
+                  //     Ig1.getBase(),Ig1.getBound(), Ig2.getBase(),Ig2.getBound(),Ig3.getBase(),Ig3.getBound());
                   //printF(" assignBCCoeff:: Eqn2: extrap edges: J1=[%i,%i] J2=[%i,%i] J3=[%i,%i]\n",
-		  //	 J1.getBase(),J1.getBound(), J2.getBase(),J2.getBound(),J3.getBase(),J3.getBound());
-		  
-		  op.setExtrapolationCoefficients(coeff,ee,J1,J2,J3,orderOfExtrapolation); // in GenericMGOP
-		}
-	      }
-	    }
-	      
-	    if( debug & 64 )
-	    {
-	      printF("\n>>>>>>>>>>>>>assignBoundaryConditionCoefficients: \n"
-		     " Dirichlet: fill in 2nd-order equation on the ghost points : level=%i, grid=%i side=%i "
-		     "axis=%i\n",level,grid,side,axis);
+                  //     J1.getBase(),J1.getBound(), J2.getBase(),J2.getBound(),J3.getBase(),J3.getBound());
+                  
+                  op.setExtrapolationCoefficients(coeff,ee,J1,J2,J3,orderOfExtrapolation); // in GenericMGOP
+                }
+              }
+            }
+              
+            if( debug & 64 )
+            {
+              printF("\n>>>>>>>>>>>>>assignBoundaryConditionCoefficients: \n"
+                     " Dirichlet: fill in 2nd-order equation on the ghost points : level=%i, grid=%i side=%i "
+                     "axis=%i\n",level,grid,side,axis);
               Range all; 
-	      ::display(coeff(all,Ig1,Ig2,Ig3),"Eqn to 2nd order on the boundary (AFTER)","%5.2f ");
-	    }
+              ::display(coeff(all,Ig1,Ig2,Ig3),"Eqn to 2nd order on the boundary (AFTER)","%5.2f ");
+            }
 
-	  }
-	  else
-	  {
-	    OV_ABORT("error");
-	    
-	  }
-	    
-	}
+          }
+          else
+          {
+            OV_ABORT("error");
+            
+          }
+            
+        }
 
-	coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::dirichlet,BCTypes::boundary(side,axis));
-	if( orderOfThisLevel==4 )
-	{
-	  extrapParams.ghostLineToAssign=2;
-	  coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::boundary(side,axis),extrapParams); 
-	  extrapParams.ghostLineToAssign=1;
-	}
+        coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::dirichlet,BCTypes::boundary(side,axis));
+        if( orderOfThisLevel==4 )
+        {
+          extrapParams.ghostLineToAssign=2;
+          coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::boundary(side,axis),extrapParams); 
+          extrapParams.ghostLineToAssign=1;
+        }
       }
       else if( bc(side,axis,grid)==OgmgParameters::extrapolate )
       {
         if( true || level==0 )
-	  extrapParams.orderOfExtrapolation=int( boundaryConditionData(0,side,axis,grid) +.5 );
-	assert( extrapParams.orderOfExtrapolation>0 && extrapParams.orderOfExtrapolation<100 );
+          extrapParams.orderOfExtrapolation=int( boundaryConditionData(0,side,axis,grid) +.5 );
+        assert( extrapParams.orderOfExtrapolation>0 && extrapParams.orderOfExtrapolation<100 );
 
-	coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::boundary(side,axis),extrapParams);
+        coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::boundary(side,axis),extrapParams);
 
-	if( orderOfThisLevel==4 )
-	{
+        if( orderOfThisLevel==4 )
+        {
           extrapParams.ghostLineToAssign=2; // extrap 2nd ghost line
           coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::boundary(side,axis),extrapParams);
           extrapParams.ghostLineToAssign=1; // reset 
-	}
+        }
 
-	extrapParams.orderOfExtrapolation=orderOfExtrapolation;   // reset
-	
+        extrapParams.orderOfExtrapolation=orderOfExtrapolation;   // reset
+        
 
       }
       else if( orderOfThisLevel==4 && level>0 && 
@@ -389,105 +389,105 @@ assignBoundaryConditionCoefficients( realMappedGridFunction & coeff, int grid, i
       {
         // *new* *wdh* 100705 
 
-	// ******************************************************************************************
-	// *********** Neumann or Mixed 4th-order Boundary Condition for lower levels ****************
-	// ******************************************************************************************
+        // ******************************************************************************************
+        // *********** Neumann or Mixed 4th-order Boundary Condition for lower levels ****************
+        // ******************************************************************************************
 
         real a0=0., a1=1.;
-	if( bc(side,axis,grid)==OgmgParameters::mixed )
-	{
-	  a0=boundaryConditionData(0,side,axis,grid);  // coeff of u
-	  a1=boundaryConditionData(1,side,axis,grid);  // coeff of du/dn
-	}
-	
+        if( bc(side,axis,grid)==OgmgParameters::mixed )
+        {
+          a0=boundaryConditionData(0,side,axis,grid);  // coeff of u
+          a1=boundaryConditionData(1,side,axis,grid);  // coeff of du/dn
+        }
+        
         if( Ogmg::debug & 4 )
-  	  printF("=====> applyBCCoeff: neumann/mixed BC (order=4): level=%i, a0=%e a1=%e \n",level,a0,a1);
-	  
-	getBoundaryIndex(mg.gridIndexRange(),side,axis,I1,I2,I3);
+          printF("=====> applyBCCoeff: neumann/mixed BC (order=4): level=%i, a0=%e a1=%e \n",level,a0,a1);
+          
+        getBoundaryIndex(mg.gridIndexRange(),side,axis,I1,I2,I3);
               
-	// don't apply on end points if adjacent face is a dirichlet BC
-	for( int dir=0; dir<numberOfDimensions; dir++ )
-	{
-	  if( dir!=axis )
-	  {
-	    int na=Iv[dir].getBase();
-	    int nb=Iv[dir].getBound();
+        // don't apply on end points if adjacent face is a dirichlet BC
+        for( int dir=0; dir<numberOfDimensions; dir++ )
+        {
+          if( dir!=axis )
+          {
+            int na=Iv[dir].getBase();
+            int nb=Iv[dir].getBound();
 
-	    if( mg.boundaryCondition(0,dir)>0  && boundaryCondition(0,dir,grid)==OgmgParameters::extrapolate ) na++;
-	    if( mg.boundaryCondition(1,dir)>0  && boundaryCondition(1,dir,grid)==OgmgParameters::extrapolate ) nb--;
-	    Iv[dir]=Range(na,nb);
-	  }
-	}
+            if( mg.boundaryCondition(0,dir)>0  && boundaryCondition(0,dir,grid)==OgmgParameters::extrapolate ) na++;
+            if( mg.boundaryCondition(1,dir)>0  && boundaryCondition(1,dir,grid)==OgmgParameters::extrapolate ) nb--;
+            Iv[dir]=Range(na,nb);
+          }
+        }
 
-	const int ee=0;  // "equation" number 
+        const int ee=0;  // "equation" number 
 
-	int includeGhost=0;
-	bool ok = ParallelUtility::getLocalArrayBounds(mask,maskLocal,I1,I2,I3,includeGhost);
+        int includeGhost=0;
+        bool ok = ParallelUtility::getLocalArrayBounds(mask,maskLocal,I1,I2,I3,includeGhost);
 
 
-	if( ok )
-	{
-	  int i1,i2,i3;
-	  is1=is2=is3=0;
-	  isv[axis]=1-2*side;
+        if( ok )
+        {
+          int i1,i2,i3;
+          is1=is2=is3=0;
+          isv[axis]=1-2*side;
          
-	  real pdx[3]={1.,1.,1.};//
-	  real pdr[3]={1.,1.,1.};//
+          real pdx[3]={1.,1.,1.};//
+          real pdr[3]={1.,1.,1.};//
           #define dx(axis) pdx[axis]
           #define dr(axis) pdr[axis]
-	  const bool isRectangular = mg.isRectangular();
-	  if( isRectangular )
-	  {
-	    mg.getDeltaX(pdx);
-	  }
-	  else
-	  {
-	    dr(0)=mg.gridSpacing(0);
-	    dr(1)=mg.gridSpacing(1);
-	    dr(2)=mg.gridSpacing(2);
-	  }
-	  
-	  const realArray & rsxy = isRectangular ? coeff : mg.inverseVertexDerivative();
-	  OV_GET_SERIAL_ARRAY_CONST(real,rsxy,rsxyLocal);
+          const bool isRectangular = mg.isRectangular();
+          if( isRectangular )
+          {
+            mg.getDeltaX(pdx);
+          }
+          else
+          {
+            dr(0)=mg.gridSpacing(0);
+            dr(1)=mg.gridSpacing(1);
+            dr(2)=mg.gridSpacing(2);
+          }
+          
+          const realArray & rsxy = isRectangular ? coeff : mg.inverseVertexDerivative();
+          OV_GET_SERIAL_ARRAY_CONST(real,rsxy,rsxyLocal);
 
           #define RX(i1,i2,i3,m,n) rsxyLocal(i1,i2,i3,(m)+numberOfDimensions*(n))
 
-	  fillCoeffMixedToSecondOrder();
+          fillCoeffMixedToSecondOrder();
 
           #undef RX
           #undef dx
           #undef dr
-	}
-	
-	// **** end points on dirichlet sides: use extrapolation (otherwise the same eqn appears twice!)
-	getBoundaryIndex(mg.gridIndexRange(),side,axis,I1,I2,I3);
-	for( int dir=0; dir<numberOfDimensions-1; dir++ )
-	{
-	  const int axisp = (axis+dir+1) % numberOfDimensions; // adjacent side
-	  for( int side2=0; side2<=1; side2++ )
-	  {
-	    if( boundaryCondition(side2,axisp,grid)==OgmgParameters::extrapolate ) // bc(side2,axisp,grid)==dirichlet )
-	    {
-	      if( mg.boundaryCondition(side2,axisp)<=0 )
-	      {
-		display(bc,"bc");
-		display(mg.boundaryCondition(),"mg.boundaryCondition()");
-		Overture::abort("Unexpected Error");
-	      }
-		    
-	      J1=I1, J2=I2, J3=I3;
-	      Jv[axisp]= side2==0 ? Jv[axisp].getBase() : Jv[axisp].getBound();
-	      for( int ghost=1; ghost<=2; ghost++ )
-	      {
-		Jv[axis]=Iv[axis]-ghost*isv[axis];
+        }
+        
+        // **** end points on dirichlet sides: use extrapolation (otherwise the same eqn appears twice!)
+        getBoundaryIndex(mg.gridIndexRange(),side,axis,I1,I2,I3);
+        for( int dir=0; dir<numberOfDimensions-1; dir++ )
+        {
+          const int axisp = (axis+dir+1) % numberOfDimensions; // adjacent side
+          for( int side2=0; side2<=1; side2++ )
+          {
+            if( boundaryCondition(side2,axisp,grid)==OgmgParameters::extrapolate ) // bc(side2,axisp,grid)==dirichlet )
+            {
+              if( mg.boundaryCondition(side2,axisp)<=0 )
+              {
+                display(bc,"bc");
+                display(mg.boundaryCondition(),"mg.boundaryCondition()");
+                Overture::abort("Unexpected Error");
+              }
+                    
+              J1=I1, J2=I2, J3=I3;
+              Jv[axisp]= side2==0 ? Jv[axisp].getBase() : Jv[axisp].getBound();
+              for( int ghost=1; ghost<=2; ghost++ )
+              {
+                Jv[axis]=Iv[axis]-ghost*isv[axis];
 
-		// extrapolate points  coeff(.,J1,J2,J3) in the direction axis
-		op.setExtrapolationCoefficients(coeff,ee,J1,J2,J3,orderOfExtrapolation); // in GenericMGOP
+                // extrapolate points  coeff(.,J1,J2,J3) in the direction axis
+                op.setExtrapolationCoefficients(coeff,ee,J1,J2,J3,orderOfExtrapolation); // in GenericMGOP
 
-	      }
-	    }
-	  }
-	}
+              }
+            }
+          }
+        }
 
       }
       else if( bc(side,axis,grid)==OgmgParameters::neumann )
@@ -497,251 +497,251 @@ assignBoundaryConditionCoefficients( realMappedGridFunction & coeff, int grid, i
         // *******************************************************
 
         mg.update(MappedGrid::THEvertexBoundaryNormal);
-	
+        
 
         if( orderOfThisLevel==4 &&
-	    level>0 && parameters.lowerLevelNeumannFirstGhostLineBC==OgmgParameters::useEquationToSecondOrder )
-	{
+            level>0 && parameters.lowerLevelNeumannFirstGhostLineBC==OgmgParameters::useEquationToSecondOrder )
+        {
           // -- this case now done above
           OV_ABORT("error");
 
-	  // apply symmetry on two lines since this corresponds to the homogeneous Neumann BC to second order
+          // apply symmetry on two lines since this corresponds to the homogeneous Neumann BC to second order
           if( Ogmg::debug & 4 )
-	    printF(" ****** assignBCCoeff: level=%i use double symmetry for neuman BC *****\n",level);
-	  
-	  extrapParams.ghostLineToAssign=1;
-          coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::evenSymmetry,BCTypes::boundary(side,axis),extrapParams); 
-	  extrapParams.ghostLineToAssign=2;
-	  coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::evenSymmetry,BCTypes::boundary(side,axis),extrapParams); 
-	  // **  coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::boundary(side,axis),extrapParams); 
+            printF(" ****** assignBCCoeff: level=%i use double symmetry for neuman BC *****\n",level);
+          
           extrapParams.ghostLineToAssign=1;
-	}
-	else
-	{
-	  coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::neumann,BCTypes::boundary(side,axis));
+          coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::evenSymmetry,BCTypes::boundary(side,axis),extrapParams); 
+          extrapParams.ghostLineToAssign=2;
+          coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::evenSymmetry,BCTypes::boundary(side,axis),extrapParams); 
+          // **  coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::boundary(side,axis),extrapParams); 
+          extrapParams.ghostLineToAssign=1;
+        }
+        else
+        {
+          coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::neumann,BCTypes::boundary(side,axis));
 
-	  // if( Ogmg::debug & 4 )
-	  //  displayCoeff(coeff,sPrintF("Ogmg::assignBCCoeff:after fill Neumann order 4: coeff for grid %i",grid));
+          // if( Ogmg::debug & 4 )
+          //  displayCoeff(coeff,sPrintF("Ogmg::assignBCCoeff:after fill Neumann order 4: coeff for grid %i",grid));
 
-	  if( orderOfThisLevel==4 )
-	  {
-	    bool useEquationOnGhost = useEquationOnGhostLineForNeumannBC(mg,level);
-	    if( useEquationOnGhost && numberOfUseEquationOnGhostWarnings<5 )
-	    {
-	      numberOfUseEquationOnGhostWarnings++;
-	      printF(" ***Ogmg::assignBoundaryConditionCoefficients: WARNING: not using eqn on 2nd ghost for neumann BC"
-		     " at level =%i (use even symmetry)******\n",level);
-	    }
-	    else if( numberOfUseEquationOnGhostWarnings==5 )
-	    {
-	      printF(" ***Ogmg:: Too many of the following warnings. I will not print any more:\n"
+          if( orderOfThisLevel==4 )
+          {
+            bool useEquationOnGhost = useEquationOnGhostLineForNeumannBC(mg,level);
+            if( useEquationOnGhost && numberOfUseEquationOnGhostWarnings<5 )
+            {
+              numberOfUseEquationOnGhostWarnings++;
+              printF(" ***Ogmg::assignBoundaryConditionCoefficients: WARNING: not using eqn on 2nd ghost for neumann BC"
+                     " at level =%i (use even symmetry)******\n",level);
+            }
+            else if( numberOfUseEquationOnGhostWarnings==5 )
+            {
+              printF(" ***Ogmg:: Too many of the following warnings. I will not print any more:\n"
                      " ***Ogmg::assignBoundaryConditionCoefficients: WARNING: not using eqn on 2nd ghost for neumann BC"
                      " at level =%i (use even symmetry)******\n",level);
-	      numberOfUseEquationOnGhostWarnings++;
-	    }
-	    
-	    extrapParams.ghostLineToAssign=2;
-	    if( false )
-	    {
-	      coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::boundary(side,axis),extrapParams); 
-	    }
-	    else
-	    {
-	      coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::evenSymmetry,BCTypes::boundary(side,axis),extrapParams); 
-	    }
-	  }
-	}
-	extrapParams.ghostLineToAssign=1; // reset
+              numberOfUseEquationOnGhostWarnings++;
+            }
+            
+            extrapParams.ghostLineToAssign=2;
+            if( false )
+            {
+              coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::boundary(side,axis),extrapParams); 
+            }
+            else
+            {
+              coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::evenSymmetry,BCTypes::boundary(side,axis),extrapParams); 
+            }
+          }
+        }
+        extrapParams.ghostLineToAssign=1; // reset
 
-	// getGhostIndex(mg.gridIndexRange(),side,axis,I1,I2,I3);
+        // getGhostIndex(mg.gridIndexRange(),side,axis,I1,I2,I3);
 
-	// Range all;
-	// display(coeff(all,I1,I2,I3),"coeff on ghost line after adding a neumann BC",debugFile,"%8.2e ");
-	  
+        // Range all;
+        // display(coeff(all,I1,I2,I3),"coeff on ghost line after adding a neumann BC",debugFile,"%8.2e ");
+          
       }
       else if( bc(side,axis,grid)==OgmgParameters::mixed )
       {
-	a(0)=boundaryConditionData(0,side,axis,grid);  // coeff of u
-	a(1)=boundaryConditionData(1,side,axis,grid);  // coeff of du/dn
+        a(0)=boundaryConditionData(0,side,axis,grid);  // coeff of u
+        a(1)=boundaryConditionData(1,side,axis,grid);  // coeff of du/dn
 
         mg.update(MappedGrid::THEvertexBoundaryNormal);
 
-	// printF(" predefined: mixed BC: a0=%e a1=%e \n",a(0),a(1));
-	  
-	if( orderOfThisLevel==4 &&
-	    level>0 && parameters.lowerLevelNeumannFirstGhostLineBC==OgmgParameters::useEquationToSecondOrder )
-	{
+        // printF(" predefined: mixed BC: a0=%e a1=%e \n",a(0),a(1));
+          
+        if( orderOfThisLevel==4 &&
+            level>0 && parameters.lowerLevelNeumannFirstGhostLineBC==OgmgParameters::useEquationToSecondOrder )
+        {
           // -- this case now done above
           OV_ABORT("error");
 
-	  // apply mixed BC to second order -- this will reduce to an even symmetry condition if mixed==neumann
+          // apply mixed BC to second order -- this will reduce to an even symmetry condition if mixed==neumann
           if( Ogmg::debug & 4 )
             printF(" ****** assignBCCoeff: level=%i use mixedSecondOrder for mixed BC *****\n",level);
-	  
-	  getBoundaryIndex(mg.gridIndexRange(),side,axis,I1,I2,I3);
+          
+          getBoundaryIndex(mg.gridIndexRange(),side,axis,I1,I2,I3);
               
           // don't apply on end points if adjacent face is a dirichlet BC
           int dir;
-	  for( dir=0; dir<numberOfDimensions; dir++ )
-	  {
-	    if( dir!=axis )
-	    {
-	      int na=Iv[dir].getBase();
-	      int nb=Iv[dir].getBound();
+          for( dir=0; dir<numberOfDimensions; dir++ )
+          {
+            if( dir!=axis )
+            {
+              int na=Iv[dir].getBase();
+              int nb=Iv[dir].getBound();
 
-	      if( mg.boundaryCondition(0,dir)>0  && boundaryCondition(0,dir,grid)==OgmgParameters::extrapolate ) na++;
-	      if( mg.boundaryCondition(1,dir)>0  && boundaryCondition(1,dir,grid)==OgmgParameters::extrapolate ) nb--;
-	      Iv[dir]=Range(na,nb);
-	    }
-	  }
+              if( mg.boundaryCondition(0,dir)>0  && boundaryCondition(0,dir,grid)==OgmgParameters::extrapolate ) na++;
+              if( mg.boundaryCondition(1,dir)>0  && boundaryCondition(1,dir,grid)==OgmgParameters::extrapolate ) nb--;
+              Iv[dir]=Range(na,nb);
+            }
+          }
 
           const real a0=a(0);
-	  const real a1=a(1);
+          const real a1=a(1);
 
-	  const int ee=0; 
-	  int i1,i2,i3;
-	  is1=is2=is3=0;
-	  isv[axis]=1-2*side;
+          const int ee=0; 
+          int i1,i2,i3;
+          is1=is2=is3=0;
+          isv[axis]=1-2*side;
          
           real dx[3]={1.,1.,1.};//
           real dr[3]={1.,1.,1.};//
           real t1;
           const bool isRectangular = mg.isRectangular();
-	  if( isRectangular )
-	  {
-	    mg.getDeltaX(dx);
-	    t1=(2.*dx[axis]*(a0/a1));
-	  }
-	  else
-	  {
-	    dr[0]=mg.gridSpacing(0);
-	    dr[1]=mg.gridSpacing(1);
-	    dr[2]=mg.gridSpacing(2);
-	  }
-	  
+          if( isRectangular )
+          {
+            mg.getDeltaX(dx);
+            t1=(2.*dx[axis]*(a0/a1));
+          }
+          else
+          {
+            dr[0]=mg.gridSpacing(0);
+            dr[1]=mg.gridSpacing(1);
+            dr[2]=mg.gridSpacing(2);
+          }
+          
           const realArray & rsxy = isRectangular ? coeff : mg.inverseVertexDerivative();
 #define RX(i1,i2,i3,m,n) rsxy(i1,i2,i3,(m)+numberOfDimensions*(n))
 
-	  FOR_3D(i1,i2,i3,I1,I2,I3) // **** could optimise this loop *****
-	  {
+          FOR_3D(i1,i2,i3,I1,I2,I3) // **** could optimise this loop *****
+          {
             if( !isRectangular )
-	    {
-	      if( numberOfDimensions==2 )
-	      {
+            {
+              if( numberOfDimensions==2 )
+              {
                 t1=2.*dr[axis]*(a0/(a1*sqrt(SQR(RX(i1,i2,i3,axis,0))+ SQR(RX(i1,i2,i3,axis,1)) )));
-	      }
-	      else 
-	      {
+              }
+              else 
+              {
                 t1=2.*dr[axis]*(a0/(a1*sqrt(SQR(RX(i1,i2,i3,axis,0))+ 
                                             SQR(RX(i1,i2,i3,axis,1))+
                                             SQR(RX(i1,i2,i3,axis,2)) )));
-	      }
-	    }
-#undef RX	    
+              }
+            }
+#undef RX           
 //      u(i1-  is1,i2-  is2,i3-  is3)=u(i1+  is1,i2+  is2,i3+  is3)-   t1
 //      u(i1-2*is1,i2-2*is2,i3-2*is3)=u(i1+2*is1,i2+2*is2,i3+2*is3)-2.*t1
 
             // first ghost line
-	    int ig1=i1-is1, ig2=i2-is2, ig3=i3-is3;
-	    coeff(0,ig1,ig2,ig3)= 1.;
-	    coeff(1,ig1,ig2,ig3)= t1;
-	    coeff(2,ig1,ig2,ig3)=-1.;
-	    coeff.sparse->setCoefficientIndex(0, ee,ig1,ig2,ig3, ee,ig1,ig2,ig3);
-	    coeff.sparse->setCoefficientIndex(1, ee,ig1,ig2,ig3, ee,i1,i2,i3);
-	    coeff.sparse->setCoefficientIndex(2, ee,ig1,ig2,ig3, ee,i1+is1,i2+is2,i3+is3);
+            int ig1=i1-is1, ig2=i2-is2, ig3=i3-is3;
+            coeff(0,ig1,ig2,ig3)= 1.;
+            coeff(1,ig1,ig2,ig3)= t1;
+            coeff(2,ig1,ig2,ig3)=-1.;
+            coeff.sparse->setCoefficientIndex(0, ee,ig1,ig2,ig3, ee,ig1,ig2,ig3);
+            coeff.sparse->setCoefficientIndex(1, ee,ig1,ig2,ig3, ee,i1,i2,i3);
+            coeff.sparse->setCoefficientIndex(2, ee,ig1,ig2,ig3, ee,i1+is1,i2+is2,i3+is3);
 
             // second ghost line
             ig1=i1-2*is1, ig2=i2-2*is2, ig3=i3-2*is3;
-	    coeff(0,ig1,ig2,ig3)= 1.;
-	    coeff(1,ig1,ig2,ig3)= 2.*t1;
-	    coeff(2,ig1,ig2,ig3)=-1.;
-	    coeff.sparse->setCoefficientIndex(0, ee,ig1,ig2,ig3, ee,ig1,ig2,ig3);
-	    coeff.sparse->setCoefficientIndex(1, ee,ig1,ig2,ig3, ee,i1,i2,i3);
-	    coeff.sparse->setCoefficientIndex(2, ee,ig1,ig2,ig3, ee,i1+2*is1,i2+2*is2,i3+2*is3);
-	  }
+            coeff(0,ig1,ig2,ig3)= 1.;
+            coeff(1,ig1,ig2,ig3)= 2.*t1;
+            coeff(2,ig1,ig2,ig3)=-1.;
+            coeff.sparse->setCoefficientIndex(0, ee,ig1,ig2,ig3, ee,ig1,ig2,ig3);
+            coeff.sparse->setCoefficientIndex(1, ee,ig1,ig2,ig3, ee,i1,i2,i3);
+            coeff.sparse->setCoefficientIndex(2, ee,ig1,ig2,ig3, ee,i1+2*is1,i2+2*is2,i3+2*is3);
+          }
 
-	  // **** end points on dirichlet sides: use extrapolation (otherwise the same eqn appears twice!)
+          // **** end points on dirichlet sides: use extrapolation (otherwise the same eqn appears twice!)
           getBoundaryIndex(mg.gridIndexRange(),side,axis,I1,I2,I3);
-	  for( int dir=0; dir<numberOfDimensions-1; dir++ )
-	  {
-	    const int axisp = (axis+dir+1) % numberOfDimensions; // adjacent side
-	    for( int side2=0; side2<=1; side2++ )
-	    {
-	      if( boundaryCondition(side2,axisp,grid)==OgmgParameters::extrapolate ) // bc(side2,axisp,grid)==dirichlet )
-	      {
-		if( mg.boundaryCondition(side2,axisp)<=0 )
-		{
-		  display(bc,"bc");
-		  display(mg.boundaryCondition(),"mg.boundaryCondition()");
-		  Overture::abort("Unepected Error");
-		}
-		    
+          for( int dir=0; dir<numberOfDimensions-1; dir++ )
+          {
+            const int axisp = (axis+dir+1) % numberOfDimensions; // adjacent side
+            for( int side2=0; side2<=1; side2++ )
+            {
+              if( boundaryCondition(side2,axisp,grid)==OgmgParameters::extrapolate ) // bc(side2,axisp,grid)==dirichlet )
+              {
+                if( mg.boundaryCondition(side2,axisp)<=0 )
+                {
+                  display(bc,"bc");
+                  display(mg.boundaryCondition(),"mg.boundaryCondition()");
+                  Overture::abort("Unepected Error");
+                }
+                    
                 J1=I1, J2=I2, J3=I3;
-      	        Jv[axisp]= side2==0 ? Jv[axisp].getBase() : Jv[axisp].getBound();
+                Jv[axisp]= side2==0 ? Jv[axisp].getBase() : Jv[axisp].getBound();
                 for( int ghost=1; ghost<=2; ghost++ )
-		{
-		  Jv[axis]=Iv[axis]-ghost*isv[axis];
+                {
+                  Jv[axis]=Iv[axis]-ghost*isv[axis];
 
-		  // extrapolate points  coeff(.,J1,J2,J3) in the direction axis
-		  op.setExtrapolationCoefficients(coeff,ee,J1,J2,J3,orderOfExtrapolation); // in GenericMGOP
+                  // extrapolate points  coeff(.,J1,J2,J3) in the direction axis
+                  op.setExtrapolationCoefficients(coeff,ee,J1,J2,J3,orderOfExtrapolation); // in GenericMGOP
 
-		}
-	      }
-	    }
-	  }
+                }
+              }
+            }
+          }
 
 
 
-	}
-	else
-	{
-	  if( false )
-	    printF(" ******assignBoundaryConditionCoefficients: fill in mixed BC (side,axis,grid,level)=(%i,%i,%i,%i)\n",
-		   side,axis,grid,level);
-	  
+        }
+        else
+        {
+          if( false )
+            printF(" ******assignBoundaryConditionCoefficients: fill in mixed BC (side,axis,grid,level)=(%i,%i,%i,%i)\n",
+                   side,axis,grid,level);
+          
 
-	  coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::mixed,BCTypes::boundary(side,axis),bcParams);
+          coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::mixed,BCTypes::boundary(side,axis),bcParams);
 
-	  if( orderOfThisLevel==4 )
-	  {
-	    bool useEquationOnGhost = useEquationOnGhostLineForNeumannBC(mg,level);
-	    if( useEquationOnGhost && numberOfUseEquationOnGhostWarnings<5 )
-	    {
-	      // *** fix this *** use mixedToSecondOrder instead of the neumann condition above and the symmetry below
+          if( orderOfThisLevel==4 )
+          {
+            bool useEquationOnGhost = useEquationOnGhostLineForNeumannBC(mg,level);
+            if( useEquationOnGhost && numberOfUseEquationOnGhostWarnings<5 )
+            {
+              // *** fix this *** use mixedToSecondOrder instead of the neumann condition above and the symmetry below
               numberOfUseEquationOnGhostWarnings++;
-	      printF(" ******assignBoundaryConditionCoefficients: WARNING: not using eqn on ghost for mixed BC"
-		     " at level =%i ******\n",level);
-	    }
-	    else if( numberOfUseEquationOnGhostWarnings==5 )
-	    {
-	      printF(" ***Ogmg:: Too many of the following warnings. I will print any more:\n"
+              printF(" ******assignBoundaryConditionCoefficients: WARNING: not using eqn on ghost for mixed BC"
+                     " at level =%i ******\n",level);
+            }
+            else if( numberOfUseEquationOnGhostWarnings==5 )
+            {
+              printF(" ***Ogmg:: Too many of the following warnings. I will print any more:\n"
                      " ******assignBoundaryConditionCoefficients: WARNING: not using eqn on ghost for mixed BC"
-		     " at level =%i ******\n",level);
-	      numberOfUseEquationOnGhostWarnings++;
-	    }
+                     " at level =%i ******\n",level);
+              numberOfUseEquationOnGhostWarnings++;
+            }
 
-	    extrapParams.ghostLineToAssign=2;
-	    if( level==0 || !parameters.useSymmetryForNeumannOnLowerLevels ) 
-	    {
-	      // extrapParams.orderOfExtrapolation=4; // *wdh* 100118 
+            extrapParams.ghostLineToAssign=2;
+            if( level==0 || !parameters.useSymmetryForNeumannOnLowerLevels ) 
+            {
+              // extrapParams.orderOfExtrapolation=4; // *wdh* 100118 
               extrapParams.orderOfExtrapolation= getOrderOfExtrapolation(level);  // 100118 
-	      coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::boundary(side,axis),extrapParams); 
-	    }
-	    else
-	    {
-	      coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::evenSymmetry,BCTypes::boundary(side,axis),extrapParams); 
-	    }
-	  }
-	}
-	
-	extrapParams.ghostLineToAssign=1;
-	  
+              coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::boundary(side,axis),extrapParams); 
+            }
+            else
+            {
+              coeff.applyBoundaryConditionCoefficients(0,0,BCTypes::evenSymmetry,BCTypes::boundary(side,axis),extrapParams); 
+            }
+          }
+        }
+        
+        extrapParams.ghostLineToAssign=1;
+          
       }
       else if( bc(side,axis,grid)>0 )
       {
-	printF("Ogmg::assignBoundaryConditionCoefficients:ERROR: unknown bc=%i for grid=%i side=%i axis=%i\n",
-	       bc(side,axis,grid),grid,side,axis);
-	OV_ABORT("error");
+        printF("Ogmg::assignBoundaryConditionCoefficients:ERROR: unknown bc=%i for grid=%i side=%i axis=%i\n",
+               bc(side,axis,grid),grid,side,axis);
+        OV_ABORT("error");
       }
     }
   }

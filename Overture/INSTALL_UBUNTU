@@ -1,0 +1,248 @@
+
+Here are the instructions for installing Overture on a Linux Desktop running 
+    Ubuntu 22.04.01
+and 
+   gcc/gfortran 11.3.0
+
+
+
+========================================================================================================
+STAGE 1 : Setup Ubuntu packages (hopefully I remembered everything)
+
+
+sudo apt install libxt-dev                        (for missing X11 include files)
+sudo apt install libx11-dev                       (for X11 header files)
+sudo apt install libxext-dev                      (for XShm.h in Mesa)   
+sudo apt install git                              (git)
+sudo apt-get install libblas-dev liblapack-dev    (lapack)
+
+sudo apt-get install gfortran                     (gfortran)
+
+sudo apt-get install libmotif-dev                 (OpenMotif for Overture GUI)
+
+sudo apt install libperl-dev libxi-dev            (perl include files, missing libxi)
+
+sudo apt install libjpeg62-dev                    (needed by hdf ?)
+
+sudo apt install mpich                            (MPI, for parallel version only)
+
+sudo apt install autoconf                         (Needed by A++)
+
+========================================================================================================
+Stage 2. Get Overture from the overtureFramework git repo on sourceForge.net. 
+  The overtureFramework/packages folder has the versions of Mesa, HDF, A++ and PETSc used in Stage 3.
+
+Goto 
+   https://sourceforge.net/projects/overtureframework
+
+and clone a version of the OvertureFramework repo:
+
+  git clone https://git.code.sf.net/p/overtureframework/code overtureFramework
+
+OR if you have an account on sourceForge you can use
+
+  git clone ssh://USERNAME@git.code.sf.net/p/overtureframework/code overtureFramework
+
+where USERNAME is your sourceForge account name.
+
+
+
+========================================================================================================
+STAGE 3 : Install supporting packages
+
+
+--- 2.1  Mesa 7.2 : (this is an old version of Mesa but needed for off-screen rendering for hardcopies)
+   Available in: 
+       overtureFramework/packages/MesaLib-7.2.tar.gz
+       overtureFramework/packages/MesaDemos-7.2.tar.gz
+
+tar xzf MesaLib-7.2.tar.gz
+tar xzf MesaDemos-7.2.tar.gz  (optional)
+cd Mesa-7.2/
+make linux-x86-64             (Make fails near end in building tests, but libraries are built ok)
+
+
+--- 2.2  HDF (serial)
+  Available in
+    overtureFramework/packages/hdf5-1.8.15-patch1.tar.gz
+
+tar xzf hdf5-1.8.15-patch1.tar.gz
+mv hdf5-1.8.15-patch1 hdf5-1.8.15-gcc7.4.0
+
+cd hdf5-1.8.15-gcc7.4.0
+unsetenv CC
+unsetenv cc
+setenv CC gcc
+ ./configure --prefix=`pwd` 
+make
+make install
+
+--- 2.3  HDF parallel (for parallel version of Overture, if needed)
+
+tar xzf hdf5-1.8.15-patch1.tar.gz
+mv hdf5-1.8.15-patch1 hdf5-1.8.15-parallel
+cd hdf5-1.8.15-parallel
+unsetenv CC
+unsetenv cc
+setenv CC /usr/bin/mpicc
+./configure --prefix=`pwd` --enable-parallel
+make
+make install
+
+
+--- 2.4 A++ (serial version)
+
+  Available in 
+    overtureFramework/packages/AP-0.8.3.tar.gz  
+
+mv A++P++-0.8.3 AppPpp-0.8.3
+cd AppPpp-0.8.3
+configure --enable-SHARED_LIBS --prefix=`pwd`
+make -j24
+make install
+ 
+
+--- 2.5 P++  (parallel version, if needed)
+
+tar xzf AP-0.8.3.tar.gz
+mv A++P++-0.8.3 AppPpp-0.8.3-parallel
+cd AppPpp-0.8.3-parallel
+configure --enable-PXX --prefix=`pwd` --enable-SHARED_LIBS --with-mpi-include=-I${MPI_ROOT}/include/x86_64-linux-gnu/mpich --with-mpi-lib-dirs="-L${MPI_ROOT}/lib" --with-mpi-libs="-lmpich -lmpl -lc -lm" --with-mpirun=${MPI_ROOT}/bin/mpiexec --without-PADRE --disable-mpirun-check 
+make -j36
+make install
+
+
+--- 2.6  PETSC 3.18.2 : serial version (optional, used for solving linear systems such as by cgins)
+
+Available in 
+  overtureFramework/packages/petsc-3.18.2.tar.gz  
+
+tar xzf petsc-3.18.2.tar.gz
+mv petsc-3.18.2 petsc-3.18.2-serial
+setenv PETSC_DIR /home/henshw/software/petsc-3.18.2-serial   [FIX THIS FOR YOUR LOCATION]
+cd petsc-3.18.2-serial
+
+configure --with-cc=gcc --with-fc=gfortran --PETSC_ARCH=linux-gnu-opt --with-debugging=0 --with-fortran=0 --with-matlab=0 --with-mpi=0 --with-shared-libraries=1
+make 
+
+--- 2.7  PETSC 3.18.2 parallel version with Hypre (parallel version used by parallel version of Overture, Hypre is optional)
+
+tar xzf petsc-3.18.2.tar.gz
+mv petsc-3.18.2 petsc-3.18.2-parallel-hypre
+setenv PETSC_DIR /home/henshw/software/petsc-3.18.2-parallel-hypre   [FIX THIS FOR YOUR LOCATION]
+cd petsc-3.18.2-parallel-hypre
+unsetenv CC
+unsetenv FC 
+# NOTE: Hypre needs fortran support
+configure --with-hypre=1 --download-hypre=yes --with-clanguage=c CC=mpicc --with-cxx=mpicxx --with-cc=mpicc --with-fc=mpif90 --with-debugging=0 --with-fortran=1 --with-matlab=0 --with-shared-libraries=1 
+make
+
+
+
+========================================================================================================
+Stage 4. Build an Overture distribution and compile Overture
+
+ (0) Make sure sure that "." is in your path, many Overture and cg scripts assume this.
+      For example, I have the following in my .cshrc
+       set path=(. $HOME/bin $path $MPI_ROOT/bin )
+
+To build a distribution of Overture:
+
+  (1) Define the environmental variable $OvertureBuild to be
+      the directory where you want to build the distribution.
+      For example,
+         setenv OvertureBuild /home/henshaw/Overture.g   (for serial version)
+      OR
+         setenv OvertureBuild /home/henshaw/Overture.p   (for parallel version)
+
+  (2) type 
+         buildOverture
+
+      This will create the $OvertureBuild directory and copy files into it.
+      The buildOverture script will call a 'build' script in each sub-directory
+      (for example mapping/build or grid/build) to copy files from that sub-directory into 
+       the $OvertureBuild directory.
+
+  (3) Set environmental variables in $OvertureBuild/defenv (e.g. /home/henshaw/Overture.g/defenv) file. 
+
+     (The comments below assume you are using the csh or tcsh shell, bash users will need to adjust accordingly,
+      or temporarily change to tcsh)
+
+     Overture needs a collection of environment variables to be set. These variables tell Overture
+     where to look for other libraries. You can edit the file Overture/defenv to define these variables 
+     and then type ``source defenv'' to actually set the variables.
+
+     Alternatively, you might want to add them to your .cshrc so they get assigned when you open a terminal window (shell).
+
+    Here is a description of some of the variables in the defenv file:
+
+    setenv XLIBS XXXX :  Directory holding the include and lib directories for the X window system. 
+       For example you might type ``setenv XLIBS /usr''.
+       If you then type "ls \$XLIBS/lib" you should see the X libraries such as libX11.so or libX11.a 
+
+     setenv OpenGL XXXX 
+        If you type "ls $OpenGL/lib} you should see the OpenGL libraries
+          such as libGL.so} (libGL.a), or libMesaGL.so (libMesaGL.a) if you use Mesa.
+     setenv MOTIF  XXXX  
+          If you type "ls $MOTIF/lib" you should see the Motif library libXm.so or libXm.a
+     setenv HDF XXXX  
+        If you type "ls \$HDF" you should see the HDF directories including
+        include} and lib.
+     setenv APlusPlus XXXX
+        If you type "ls \$APlusPlus" you should see the A++ directories include and lib; 
+        if you type "ls \$APlusPlus/lib" you should see the A++ libraries and 
+        if you type "ls \$APlusPlus/include" you should see the A++ includefiles. Here is an example:
+           setenv APlusPlus /home/henshw/software/AppPpp-0.8.3/A++/install
+     setenv Overture XXXX
+         Location of the Overture directory that we are just going to install. Here is an example :
+          setenv Overture /home/henshaw/Overture.g
+     setenv CG XXXX
+          If you install the CG solvers this is the location of the CG source directory.
+          Here is an example : 
+               setenv CG /home/henshw/overtureFramework/cg
+     setenv CGBUILDPREFIX XXXX
+         This is the location of the CG executable and object files. You 
+         can make this the same as {\tt CG} or choose a different directory location. This option is used
+         to compile multiple versions of CG (e.g. serial and parallel) from the same source tree. 
+            Here is an example : 
+               setenv CGBUILDPREFIX /home/henshaw/cg.g
+     setenv LAPACK XXXX
+         Overture and CG need the LAPACK and BLAS libraries. This env variable is the
+          directory that holds the liblapack.a and libblas.a libraries. 
+          Example: 
+             setenv LAPACK /usr/lib/x86_64-linux-gnu
+
+
+  (4) Go to the $OvertureBuild directory and configure and make: 
+      (3.1) Serial version:
+            configure 
+            make       (or "make -j8" for a parallel make)
+    OR
+      (3.2) Parallel version:
+            configure parallel
+            make       (or make -j8)            
+
+
+========================================================================================================
+Stage 5. Build the CG solvers. 
+   Unlike Overture, which has a separate serial and parallel distributions, there is just one location
+   for the CG source files from which the serial and/or parallel versions can be complied.
+   After setting the environmental variables in Stage 4 to point to the serial versions of packages:
+
+   Goto 
+       overtureFramework/cg
+   and type
+       make  
+
+  The object files and executables will be created in the directory defined by CGBUILDPREFIX
+
+  WARNING: Running a parallel make, such as "make -j4", may cause the Make system to get confused, and you may have 
+  to repeat the make command to really compile all the files.
+
+  To make the parallel version too, just change the environmental variables (e.g. to point to the parallel versions of HDF, PETSc and P++)
+  and repeat the above step. The object files and executables will be created in the new directory CGBUILDPREFIX 
+             
+
+
+
+

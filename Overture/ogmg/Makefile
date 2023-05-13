@@ -10,6 +10,8 @@ all = ogmgt
 # compile everything with optimization: (setenv compile opt)
 ifeq ($(compile),opt)
 CCFLAGS= $(CCFLAGSF)
+FFLAGSO= -O3 $(FF_FLAGS)   $(OvertureFortranPrecision)  $(FLAGS) $(Include) 
+FFLAGSF= -O3 $(FF_FLAGS)   $(OvertureFortranPrecision)  $(FLAGS) $(Include) 
 else
 # compile without opt:
 CCFLAGSF= $(CCFLAGSG)

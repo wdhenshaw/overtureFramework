@@ -19,7 +19,7 @@ typedef MatOrderingType MatReorderingType;
 extern "C" 
 {
   extern int PetscSetUseTrMalloc_Private(void);
-  int OVCSORT(int &n, real &a, int &ja, int &ia, int &iwork);
+  int OVCSORT(int &n, Real &a, int &ja, int &ia, int &iwork);
 }
 
 
@@ -66,12 +66,10 @@ initPETSc()
 
 #undef __FUNC__
 #define __FUNC__ "PETScEquationSolver::PETScEquationSolver"
-//\begin{>>PETScEquationSolverInclude.tex}{\subsection{constructor}} 
 PETScEquationSolver::
 PETScEquationSolver(Oges & oges_) : EquationSolver(oges_) 
 //==================================================================================
-// /Description:
-//\end{PETScEquationSolverInclude.tex} 
+/// \brief Constructor for the Oges interface to PETSc : SERIAL version
 //==================================================================================
 {
 //  PetscFunctionBegin;
@@ -137,6 +135,9 @@ PETScEquationSolver(Oges & oges_) : EquationSolver(oges_)
 #define __FUNC__ "PETScEquationSolver::~PETScEquationSolver"
 PETScEquationSolver::
 ~PETScEquationSolver()
+//==================================================================================
+/// \brief Destructor for the Oges interface to PETSc : SERIAL version
+//==================================================================================
 {
 //  PetscFunctionBegin;
   
@@ -174,15 +175,17 @@ PETScEquationSolver::
 
 #undef __FUNC__
 #define __FUNC__ "PETScEquationSolver::sizeOf"
-real PETScEquationSolver::
+Real PETScEquationSolver::
 sizeOf( FILE *file /* =NULL */  )
-// return number of bytes allocated 
+//==================================================================================
+/// \brief Return the number of bytes allocated
+//==================================================================================
 {
 //  PetscFunctionBegin;
 
   FILE *outputFile = file==NULL ? stdout : file;
   
-  real size=0.;  
+  Real size=0.;  
   MatInfo matInfo;
   if( Amx!=NULL )
   {
@@ -243,7 +246,12 @@ static char _p_ov_help[]="PETSc being used by the Overture `Oges' equation solve
 #define __FUNC__ "PETScEquationSolver::initializePetscKSP"
 int PETScEquationSolver::
 initializePetscKSP()
-//..Initialize Petsc linear solver from local options
+//==================================================================================
+/// \brief Initialize Petsc linear solver from local options
+///
+/// This function calls PetscInitialize using oges.argc and oges.argc. It also 
+/// sets PETSc options from oges.parameters.petscOptions
+//==================================================================================
 {
 //  PetscFunctionBegin;
   #ifdef USE_PPP
@@ -298,8 +306,9 @@ initializePetscKSP()
 
       ierr =  PetscMemoryGetMaximumUsage(&space);   CHKERRQ(ierr);
       printF("Max process memory %i M\n",(int)(space/(1024.*1024.)));                   
-      ierr = PetscMallocDumpLog(stdout); CHKERRQ( ierr );
-      //ierr =  PetscMallocDump(stdout);          CHKERRQ(ierr);
+      // 3.4.5 ierr = PetscMallocDumpLog(stdout); CHKERRQ( ierr );
+      // 3.18.2
+      ierr =  PetscMallocDump(stdout);          CHKERRQ(ierr);
     }
 
   }
@@ -316,17 +325,21 @@ initializePetscKSP()
   for(iter = petscOptions.begin(); iter!=petscOptions.end(); iter++ )
   {
     ShowFileParameter & param = *iter;
-    aString name; ShowFileParameter::ParameterType type; int ivalue; real rvalue; aString stringValue;
+    aString name; ShowFileParameter::ParameterType type; int ivalue; Real rvalue; aString stringValue;
     param.get( name, type, ivalue, rvalue, stringValue );
 
     if( type==ShowFileParameter::stringParameter )
     {
       printF("PETScSolver::buildSolver: INFO: adding option=[%s] value=[%s]\n",(const char*)name,(const char*)stringValue);
-      PetscOptionsSetValue(name,stringValue);
+      // 3.4.5 PetscOptionsSetValue(name,stringValue);
+      // 3.18.2
+      // PetscErrorCode PetscOptionsSetValue(PetscOptions options, const char name[], const char value[])
+      // options - options database, use NULL for the default global database
+      PetscOptionsSetValue(NULL,name,stringValue);
     }
     else
     {
-      Overture::abort("error"); 
+      OV_ABORT("error"); 
     }
   }
 
@@ -355,6 +368,10 @@ initializePetscKSP()
 #define __FUNC__ "PETScEquationSolver::setPetscParameters"
 int PETScEquationSolver::
 setPetscParameters() 
+//==================================================================================
+/// \brief Set PETSc parameters from values in the OgesParameters object "parameters"
+///
+//==================================================================================
   //....Solver options (from PETSc, see the documentation, Chap. 4)
   // KSP Options:
   //   KSPRICHARDSON   = Richardson iter.
@@ -561,7 +578,7 @@ setPetscParameters()
 
   double rtol=parameters.relativeTolerance>0. ? parameters.relativeTolerance : REAL_EPSILON*1000.;
   double atol=parameters.absoluteTolerance>0. ? parameters.absoluteTolerance : 
-              max( real(numberOfEquations),500.)*REAL_EPSILON;
+              max( Real(numberOfEquations),500.)*REAL_EPSILON;
   double dtol=parameters.maximumAllowableIncreaseInResidual;
   int maxits = parameters.maximumNumberOfIterations > 0 ?  parameters.maximumNumberOfIterations : 900;
   
@@ -603,6 +620,11 @@ setPetscParameters()
 
 int PETScEquationSolver::
 setPetscRunTimeParameters() 
+//==================================================================================
+/// \brief Set PETSc runtime parameters such as relativeTolerance 
+///  from values in the OgesParameters object "parameters"
+///
+//==================================================================================
 {
   const int myid=Communication_Manager::My_Process_Number;
 
@@ -617,7 +639,7 @@ setPetscRunTimeParameters()
 
   double rtol=parameters.relativeTolerance>0. ? parameters.relativeTolerance : REAL_EPSILON*1000.;
   double atol=parameters.absoluteTolerance>0. ? parameters.absoluteTolerance : 
-              max( real(numberOfEquations),500.)*REAL_EPSILON;
+              max( Real(numberOfEquations),500.)*REAL_EPSILON;
   double dtol=parameters.maximumAllowableIncreaseInResidual;
   int maxits = parameters.maximumNumberOfIterations > 0 ?  parameters.maximumNumberOfIterations : 900;
   
@@ -635,8 +657,12 @@ setPetscRunTimeParameters()
 
 #undef __FUNC__
 #define __FUNC__ "PETScEquationSolver::getMaximumResidual"
-real PETScEquationSolver::
+Real PETScEquationSolver::
 getMaximumResidual()
+//==================================================================================
+/// \brief Return the maximum residual from the last solve.
+///
+//==================================================================================
 {
 //  PetscFunctionBegin;
   double rnorm;
@@ -646,11 +672,12 @@ getMaximumResidual()
   return maximumResidual;  //  PetscFunctionReturn(maximumResidual);
 }
 
-// =====================================================================================
-// \brief Return the number of iterations used in the last solve.
-// =====================================================================================
+
 int PETScEquationSolver::
 getNumberOfIterations() const
+// =====================================================================================
+/// \brief Return the number of iterations used in the last solve.
+// =====================================================================================
 {
   return oges.numberOfIterations;
 } 
@@ -665,7 +692,8 @@ solve(realCompositeGridFunction & u,
 /// \brief Solve the equations. 
 // ======================================================================================================
 {
-//  PetscFunctionBegin;
+  //  PetscFunctionBegin;
+  // printF("PETScEquationSolver (v.18.2)::solve called ...\n");
 
   shouldUpdateMatrix=oges.refactor==TRUE;
 
@@ -678,7 +706,7 @@ solve(realCompositeGridFunction & u,
     shouldUpdateMatrix=TRUE;  // is this correct?
   }
   
-  real timeBuild=getCPU();
+  Real timeBuild=getCPU();
 
 //   // set any parameters that have changed
 //   setPetscParameters();
@@ -696,27 +724,42 @@ solve(realCompositeGridFunction & u,
     buildPetscMatrix();
 
     if( Oges::debug & 2 ) cout << "...Set operators\n";
+
+    // --- for 3.18.2 --- Dec 2022
+    ierr = KSPSetOperators(ksp,Amx,Amx);  CHKERRQ(ierr);
+
     if ( oges.recomputePreconditioner )
     {
-      // *v3.4.5 
-      ierr = KSPSetOperators(ksp,Amx,Amx,DIFFERENT_NONZERO_PATTERN);  CHKERRQ(ierr);
-      // *** FIX ME: 3.6.1 is not working yet
-      // *v3.6.1: 
-      // printF(" --PETSC-- KSPSetOperators ksp=%i\n",ksp);
-      // ierr = KSPSetReusePreconditioner(ksp,PETSC_FALSE);  CHKERRQ(ierr);
-      // ierr = KSPSetOperators(ksp,Amx,Amx);  CHKERRQ(ierr);
+      ierr = KSPSetReusePreconditioner(ksp,PETSC_TRUE);  CHKERRQ(ierr);
     }
     else
     {
-      // *wdh* v2.3.2 
-      ierr = KSPSetOperators(ksp,Amx,Amx,SAME_PRECONDITIONER);  CHKERRQ(ierr);
-
-      // *** FIX ME: 3.6.1 is not working yet
-      // reuse the current preconditioner:
-      // ierr = KSPSetReusePreconditioner(ksp,PETSC_TRUE);  CHKERRQ(ierr);
-      // ierr = KSPSetOperators(ksp,Amx,Amx);  CHKERRQ(ierr);
-
+      ierr = KSPSetReusePreconditioner(ksp,PETSC_FALSE);  CHKERRQ(ierr);
     }
+
+//     if ( oges.recomputePreconditioner )
+//     {
+//       // *v3.4.5 
+
+// // *FIXME 3.18.12      ierr = KSPSetOperators(ksp,Amx,Amx,DIFFERENT_NONZERO_PATTERN);  CHKERRQ(ierr);
+
+//       // *** FIX ME: 3.6.1 is not working yet
+//       // *v3.6.1: 
+//       // printF(" --PETSC-- KSPSetOperators ksp=%i\n",ksp);
+//       // ierr = KSPSetReusePreconditioner(ksp,PETSC_FALSE);  CHKERRQ(ierr);
+//       // ierr = KSPSetOperators(ksp,Amx,Amx);  CHKERRQ(ierr);
+//     }
+//     else
+//     {
+//       // *wdh* v2.3.2 
+// // *FIXME 3.18.12          ierr = KSPSetOperators(ksp,Amx,Amx,SAME_PRECONDITIONER);  CHKERRQ(ierr);
+
+//       // *** FIX ME: 3.6.1 is not working yet
+//       // reuse the current preconditioner:
+//       // ierr = KSPSetReusePreconditioner(ksp,PETSC_TRUE);  CHKERRQ(ierr);
+//       // ierr = KSPSetOperators(ksp,Amx,Amx);  CHKERRQ(ierr);
+
+//     }
 
     if( parameters.rescaleRowNorms && matrixFormat==Oges::other ) 
     {
@@ -740,7 +783,7 @@ solve(realCompositeGridFunction & u,
   PetscBool flg=PETSC_TRUE;  // the initial guess is non-zero
   ierr = KSPSetInitialGuessNonzero(ksp,flg); CHKERRQ(ierr); 
 
-  real time0=getCPU();
+  Real time0=getCPU();
   if( Oges::debug & 2 ) cout << "...Preconditioner\n";
   ierr = setupPreconditioner( ksp,brhs,xsol );  CHKERRQ(ierr); // see below for this routine
 
@@ -775,8 +818,9 @@ solve(realCompositeGridFunction & u,
 
     ierr =  PetscMemoryGetMaximumUsage(&space);   CHKERRQ(ierr);
     printF("Max process memory %i M\n",(int)(space/(1024.*1024.)));                   
-    ierr = PetscMallocDumpLog(stdout);            CHKERRQ(ierr);
-    //ierr =  PetscMallocDump(stdout);          CHKERRQ(ierr);
+    // 3.4.5 ierr = PetscMallocDumpLog(stdout);            CHKERRQ(ierr);
+    // 3.18.2
+    ierr =  PetscMallocDump(stdout);          CHKERRQ(ierr);
   }
 
   KSPConvergedReason reason;
@@ -800,8 +844,19 @@ solve(realCompositeGridFunction & u,
     //               KSP_DIVERGED_INDEFINITE_PC       = -8,
     //               KSP_DIVERGED_NAN                 = -9,
     //               KSP_DIVERGED_INDEFINITE_MAT      = -10,
+    //               KSP_DIVERGED_PC_FAILED           = -11,
     //  
     //               KSP_CONVERGED_ITERATING          =  0} KSPConvergedReason;
+
+     // KSP_CONVERGED_RTOL_NORMAL     = 1,
+     // KSP_CONVERGED_ATOL_NORMAL     = 9,
+     // KSP_CONVERGED_RTOL            = 2,
+     // KSP_CONVERGED_ATOL            = 3,
+     // KSP_CONVERGED_ITS             = 4,
+     // KSP_CONVERGED_CG_NEG_CURVE    = 5,
+     // KSP_CONVERGED_CG_CONSTRAINED  = 6,
+     // KSP_CONVERGED_STEP_LENGTH     = 7,
+     // KSP_CONVERGED_HAPPY_BREAKDOWN = 8,
 
     printF("PETScEquationSolver:ERROR: Solution diverged! reason=%i: \n",(int)reason);
     printF("     KSP_DIVERGED_NULL                = -2,\n"
@@ -811,8 +866,9 @@ solve(realCompositeGridFunction & u,
            "     KSP_DIVERGED_BREAKDOWN_BICG      = -6,\n"
            "     KSP_DIVERGED_NONSYMMETRIC        = -7,\n"
            "     KSP_DIVERGED_INDEFINITE_PC       = -8,\n"
-           "     KSP_DIVERGED_NAN                  = -9,\n"
-           "     KSP_DIVERGED_INDEFINITE_MAT      = -10\n");
+           "     KSP_DIVERGED_NAN                 = -9,\n"
+           "     KSP_DIVERGED_INDEFINITE_MAT      = -10\n"
+           "     KSP_DIVERGED_PC_FAILED           = -11\n");
     printF("NOTE 1: to see more information turn on the '-info' PETSc option (e.g. in your .petscrc)\n");
     printF("NOTE 2: to avoid the divergence error '-4' you can set the Oges option 'maximum allowable increase in the residual' \n");
     // OV_ABORT("error");
@@ -897,7 +953,7 @@ solve(realCompositeGridFunction & u,
   PetscScalar *soln;
   if( copyOfSolutionNeeded || (matrixFormat!=Oges::other && parameters.rescaleRowNorms)  )
   {
-    real *ovSol;
+    Real *ovSol;
     int i;
     ierr=VecGetArray(xsol,&soln);     CHKERRQ(ierr);
     ovSol= oges.sol.getDataPointer();
@@ -969,6 +1025,11 @@ getCsortWorkspace(int nWorkSpace00)
 #define __FUNC__ "PETScEquationSolver::buildPetscMatrix" 
 int PETScEquationSolver::
 buildPetscMatrix()
+// =================================================================================
+/// \brief Construct the PETSc Matrix
+///    Allocate the PETSc matrix (e.g. using MatCreateSeqAIJ) if it has not been allocated,
+///  and  fill in the matrix entries.
+// =================================================================================
 {
 //  PetscFunctionBegin;
 
@@ -1042,9 +1103,13 @@ buildPetscMatrix()
 
       while ( numberOfEquations%parameters.blockSize != 0 ) parameters.blockSize--;
 
+
+
       PetscInt blockSize=parameters.blockSize;
       PetscBool optionWasSet;
-      PetscOptionsGetInt(PETSC_NULL,"-mat_block_size",&blockSize,&optionWasSet);
+      // 3.4.5. PetscOptionsGetInt(PETSC_NULL,"-mat_block_size",&blockSize,&optionWasSet);
+      // 3.18.2 : PetscErrorCode PetscOptionsGetInt(PetscOptions options, const char pre[], const char name[], PetscInt *ivalue, PetscBool *set)
+      PetscOptionsGetInt(PETSC_NULL,PETSC_NULL,"-mat_block_size",&blockSize,&optionWasSet);
       if( optionWasSet )
       {
         if( Oges::debug & 2 ) printF("PETScEquationSolver:Using -mat_block_size option: block size = %i\n"
@@ -1101,18 +1166,20 @@ buildPetscMatrix()
     //..Loop through the Overture matrix to build it in Petsc
     computeDiagScaling();
     int irowm1, j,jcolm1;
-    real dsc;
+    Real dsc;
     PetscScalar  v;
-    // real rownorm;
+    // Real rownorm;
 
-    const real coeffScale=1.;  // fix this 
-    real eps= parameters.rescaleRowNorms ? coeffScale*REAL_EPSILON*100. : 0.;  // cutoff tolerance for keeping coefficients
+    const Real coeffScale=1.;  // fix this 
+    Real eps= parameters.rescaleRowNorms ? coeffScale*REAL_EPSILON*100. : 0.;  // cutoff tolerance for keeping coefficients
 
     if( Oges::debug & 2 )
       cout << "+++(PetscOverture)Building the Petsc matrix...\n";
-    for( irowm1=0; irowm1<neq; irowm1++ ) {
+    for( irowm1=0; irowm1<neq; irowm1++ ) 
+    {
       dsc=dscale[irowm1];
       // rownorm=0.0;
+      bool diagonalAssigned=false; // keep track if the diagonal entry is assigned
       for( j=ia_[irowm1]; j<=ia_[irowm1+1]-1; j++ ) 
       {
         v=dsc*aval[ j-1 ];
@@ -1122,7 +1189,15 @@ buildPetscMatrix()
         // rownorm = rownorm+ fabs(v);
         // To matrix Amx, Insert row=irow, col=jcol, INSERT (NEW) VALUE 
         ierr=MatSetValues(Amx,1,&irowm1,1,&jcolm1,&v,insrtOrAdd); CHKERRQ(ierr);
+
+        if( irowm1==jcolm1 ) diagonalAssigned=true;
       } 
+      if( !diagonalAssigned )
+      { // PETSc now needs the diagonal entry assigned, even if zero, for the ILU PC
+        // printF("Oges::PETSc: no diagonal entry, add it for irow=%d\n",irowm1);
+        v=0.; 
+        PetscCall(MatSetValues(Amx,1,&irowm1,1,&irowm1,&v,insrtOrAdd));
+      }
     }
     //..Finish up Matrix Assembly, set updateMX flag
     ierr = MatAssemblyBegin(Amx,MAT_FINAL_ASSEMBLY); CHKERRQ(ierr);
@@ -1152,7 +1227,9 @@ buildPetscMatrix()
     printf("Saving matrix in matlab format file=`petscMatrix.m'\n");
     PetscViewer viewer;
     PetscViewerASCIIOpen(PETSC_COMM_WORLD,"petscMatrix.m",&viewer);
-    PetscViewerSetFormat(viewer,PETSC_VIEWER_ASCII_MATLAB);
+    // 3.4.5 PetscViewerSetFormat(viewer,PETSC_VIEWER_ASCII_MATLAB);
+    // 3.18.2
+    PetscViewerPushFormat(viewer,PETSC_VIEWER_ASCII_MATLAB);
     ierr = MatView(Amx,viewer);CHKERRQ(ierr);
       
   }
@@ -1164,9 +1241,9 @@ buildPetscMatrix()
 void PETScEquationSolver::
 preallocRowStorage(int blockSize)
 // ===================================================================================================
-// Determine the number of entries in each row so that we can tell petsc how much space is needed
-//
-// If the blockSize>1 then we need to determine how many blocks are needed in the row-blocks
+/// \brief Determine the number of entries in each row so that we can tell petsc how much space is needed
+///
+/// If the blockSize>1 then we need to determine how many blocks are needed in the row-blocks
 // ===================================================================================================
 {
   int i,j;
@@ -1188,6 +1265,23 @@ preallocRowStorage(int blockSize)
     {
       assert( (ia_[i]<=nnz+1) && (ia_[i+1]<=nnz+1) );
       nzzAlloc[i]=ia_[i+1]-ia_[i];
+
+      // *wdh* Dec 24, 2022:
+      bool diagonalAssigned=false; // keep track if the diagonal entry is assigned
+      for( j=ia_[i]; j<=ia_[i+1]-1; j++ ) 
+      {
+        int jcolm1 =ja_[ j-1 ]-1;  // column number Minus 1
+        if( i==jcolm1 )
+        {  
+          diagonalAssigned=true;
+          break;
+        }
+      }       
+      if( !diagonalAssigned ) 
+      {
+        // printF("Oges::PETSc: diagonal missing for row i=%d (allocate 1 extra space...)\n",i);
+        nzzAlloc[i]++;  // add one for missing diagonal entry
+      }
     }
   }
   else
@@ -1231,18 +1325,20 @@ preallocRowStorage(int blockSize)
   
 }
 
-//..Allocate space for diag scaling, set to 1 if no scaling,
-//   or 1/rownorms otherwise
+
 void PETScEquationSolver::
 computeDiagScaling()
+// =================================================================================
+/// \brief Compute the diagonal scaling if parameters.rescaleRowNorms==true
+// =================================================================================
 {
   int i,j;
-  real rownorm;
+  Real rownorm;
   int & neq=numberOfEquations; // shorthand
   int & nnz=numberOfNonzeros;  
 
   delete [] dscale;
-  dscale = new real [neq]; assert( dscale != NULL );
+  dscale = new Real [neq]; assert( dscale != NULL );
 
   if (!parameters.rescaleRowNorms) 
   {     //..... don't scale the rows in the Matrix
@@ -1295,7 +1391,7 @@ buildRhsAndSolVector(realCompositeGridFunction & u,
     ierr=oges.formRhsAndSolutionVectors(u,f); assert(ierr==0);
   }
   
-  real *ovSol, *ovRhs; // Overture solution and rhs
+  Real *ovSol, *ovRhs; // Overture solution and rhs
   ovSol= oges.sol.getDataPointer();
   ovRhs= oges.rhs.getDataPointer();
 
@@ -1377,6 +1473,9 @@ buildRhsAndSolVector(realCompositeGridFunction & u,
 #define __FUNC__ "PETScEquationSolver::allocateMatrix"
 int PETScEquationSolver::
 allocateMatrix(int ndia,int ndja,int nda,int N)
+// ===============================================================
+/// \brief Is this function used anymore?
+// ===============================================================
 {
 //  PetscFunctionBegin;
   
@@ -1405,7 +1504,10 @@ allocateMatrix(int ndia,int ndja,int nda,int N)
 #undef __FUNC__
 #define __FUNC__ "PETScEquationSolver::setMatrixElement"
 int PETScEquationSolver::
-setMatrixElement(int nzcounter,int i,int j,real val)
+setMatrixElement(int nzcounter,int i,int j,Real val)
+// ===============================================================
+/// \brief Is this function used anymore?
+// ===============================================================
 {
 //  PetscFunctionBegin;
 
@@ -1460,7 +1562,7 @@ saveBinaryMatrix(aString filename00,
     shouldUpdateMatrix=TRUE;  // is this correct?
   }
   
-  real timeBuild=getCPU();
+  Real timeBuild=getCPU();
 
   // optionsChanged = preconditioner!=oges.parameters.preconditioner || 
   //                    matrixOrdering!=oges.parameters.matrixOrdering;
@@ -1474,10 +1576,11 @@ saveBinaryMatrix(aString filename00,
     if( Oges::debug & 2 ) cout << "...Build Matrix\n";
     buildPetscMatrix();
     if( Oges::debug & 2 ) cout << "...Set operators\n";
-    ierr = KSPSetOperators(ksp,Amx,Amx,DIFFERENT_NONZERO_PATTERN);
+    // *FIXME 3.18.12        ierr = KSPSetOperators(ksp,Amx,Amx,DIFFERENT_NONZERO_PATTERN);
     // *v3.6.1: 
-    // ierr = KSPSetOperators(ksp,Amx,Amx);
-    CHKERRQ(ierr);
+
+    // -- 3.18.2 -- Dec 2022
+    ierr = KSPSetOperators(ksp,Amx,Amx);  CHKERRQ(ierr);
 
     oges.initialized=TRUE;
     oges.shouldBeInitialized=FALSE;

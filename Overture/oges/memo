@@ -1,5 +1,507 @@
 NOTE: FOR UBUNTU -- MOVE laplack libs to end to avoid problems with openGL
 
+
+**************************************
+******* Sat Dec 24, 2022
+
+
+tcm3 square8.order2 -solver=petsc -neumann -ksp_monitor_short
+
+
+[0]PETSC ERROR: --------------------- Error Message --------------------------------------------------------------
+[0]PETSC ERROR: Object is in wrong state
+[0]PETSC ERROR: Matrix is missing diagonal entry 168
+
+
+**************************************
+******* Thurs Dec 22, 2022
+
+*BUGS FIXED***
+
+>>> new serial version: OK, but Neumann solution is slower than parallel version ?!
+
+tcm3 square8.order2 -solver=petsc -ksp_monitor_short
+
+
+>>>>>>>>>> TEST SINGULAR PROBLEMS IN PARALLEL <<<<<<<<<<<<<<<<<
+
+--> this now works: 
+mpirun -np 2 
+mpirun -np 2 tcm3 square8.order2 -solver=petsc -ksp_monitor_short
+
+
+NEW: 3.18.2
+[0]PETSC ERROR: Object is in wrong state
+[0]PETSC ERROR: Matrix is missing diagonal entry 168
+
+**************************************
+******* Wed Dec 21, 2022
+
++++++++++++++++++++++++++++++++++++++++++++++++++++
+TEST HYPRE -- DIRICHLET:
+
+--> OK: 
+tcm3 cice16.order2 -dirichlet -solver=petsc -ksp_view -ksp_monitor_short
+tcm3 cice8.order2 -dirichlet -solver=petsc -ksp_view -ksp_monitor_short
+
+
+tcm3 square32.order2 -dirichlet -solver=petsc -ksp_view -ksp_monitor_short
+
+
+*** max residual=2.40e-08, time for 1st solve of the Dirichlet problem = 7.06e-03 (iterations=5) ***
+  0 KSP Residual norm 182.656 
+  1 KSP Residual norm 21.4767 
+  2 KSP Residual norm 0.107197 
+  3 KSP Residual norm 0.00224512 
+  4 KSP Residual norm 5.09495e-06 
+  5 KSP Residual norm 2.40026e-08 
+KSP Object: 1 MPI process
+  type: bcgs
+  maximum iterations=10000, nonzero initial guess
+  tolerances:  relative=1e-08, absolute=1.11022e-13, divergence=100000.
+  left preconditioning
+  using PRECONDITIONED norm type for convergence test
+PC Object: 1 MPI process
+  type: hypre
+    HYPRE BoomerAMG preconditioning
+      Cycle type V
+      Maximum number of levels 25
+      Maximum number of iterations PER hypre call 1
+      Convergence tolerance PER hypre call 0.
+      Threshold for strong coupling 0.25
+      Interpolation truncation factor 0.
+      Interpolation: max elements per row 0
+      Number of levels of aggressive coarsening 0
+      Number of paths for aggressive coarsening 1
+      Maximum row sums 0.9
+      Sweeps down         1
+      Sweeps up           1
+      Sweeps on coarse    1
+      Relax down          symmetric-SOR/Jacobi
+      Relax up            symmetric-SOR/Jacobi
+      Relax on coarse     Gaussian-elimination
+      Relax weight  (all)      1.
+      Outer relax weight (all) 1.
+      Using CF-relaxation
+      Not using more complex smoothers.
+      Measure type        local
+      Coarsen type        Falgout
+      Interpolation type  classical
+      SpGEMM type         cusparse
+  linear system matrix = precond matrix:
+  Mat Object: 1 MPI process
+    type: seqaij
+    rows=1369, cols=1369
+    total: nonzeros=5621, allocated nonzeros=5621
+    total number of mallocs used during MatSetValues calls=0
+      not using I-node routines
+
+*** max residual=2.40e-08, time for 2nd solve of the Dirichlet problem = 1.57e-03 (iterations=5) ***
+
+.....solver: size = 2.18e+05 (bytes), grid-pts=1369, reals/grid-pt=19.90 
+
+==== memory/proc: [min=62.6016,ave=62.6016,max=62.6016](Mb), max-recorded=0 (Mb), total=62.6016 (Mb), 5993.7 reals/(grid-pt)
+ ==== memInit=44.8867 M, total - memInit for libs) = 17.7148 (Mb), 1696.1 reals/(grid-pt)
+ grid=0 (square) max. rel. err=3.492316e-10 (3.492316e-10 with ghost)
+Maximum relative error with dirichlet bc's= 3.492316e-10 (3.492316e-10 with ghost)
+
+
+
+
+
+>>>>>>>>>> TEST SINGULAR PROBLEMS
+
+--> this runs but gives the wrong answer
+tcm3 square8.order2 -neumann -solver=petsc
+
+
+tcm3 square16.order2 -neumann -solver=petsc
+
+
+
+mpirun -np 2 ex34 -ksp_monitor_short -log_view -ksp_view
+
+mpirun -np 2 ex34 -da_grid_x 50 -da_grid_y 50 -da_grid_z 50
+
+
+>>>>>>  CHANGED PETScSolver.{h,C}
+
++++ TEST PARALLEL
+
+mpirun -np 2 tcm3 cice2.order2 -solver=petsc
+
+valgrind tcm3 cice2.order2 -solver=petsc
+
+
+==== memory/proc: [min=64.5508,ave=64.5508,max=64.5508](Mb), max-recorded=0 (Mb), total=64.5508 (Mb), 1034.1 reals/(grid-pt)
+ ==== memInit=45.6367 M, total - memInit for libs) = 18.9141 (Mb), 303.0 reals/(grid-pt)
+ grid=0 (square) max. rel. err=8.966894e-06 (8.966894e-06 with ghost)
+ grid=1 (Annulus) max. rel. err=3.647624e-05 (3.647624e-05 with ghost)
+Maximum relative error with dirichlet bc's= 3.647624e-05 (3.647624e-05 with ghost)
+petsc/cice2.order2///dirichlet: error                                                       : err = 3.65e-05, cpu=7.7e-03(s)  
+PETScSolver::findExtraEquations: initialized=1, skipping...
+[0]PETSC ERROR: ------------------------------------------------------------------------
+[0]PETSC ERROR: Caught signal number 11 SEGV: Segmentation Violation, probably memory access out of range
+
+
+
+>>>>>>  CHANGED PETScEquationSolver.C
+
+
+tcm3 cice2.order2 -solver=petsc
+
+tcm3 cice2.order2 -solver=yale
+
+*** max residual=0.00e+00, time for 1st solve of the Dirichlet problem = 1.23e-02 (iterations=0) ***
+
+*** max residual=0.00e+00, time for 2nd solve of the Dirichlet problem = 3.27e-04 (iterations=0) ***
+
+.....solver: size = 3.88e+06 (bytes), grid-pts=8182, reals/grid-pt=59.26 
+
+==== memory/proc: [min=41.9258,ave=41.9258,max=41.9258](Mb), max-recorded=0 (Mb), total=41.9258 (Mb), 671.6 reals/(grid-pt)
+ ==== memInit=27.4609 M, total - memInit for libs) = 14.4648 (Mb), 231.7 reals/(grid-pt)
+ grid=0 (square) max. rel. err=8.956345e-06 (8.956345e-06 with ghost)
+ grid=1 (Annulus) max. rel. err=3.662300e-05 (3.662300e-05 with ghost)
+Maximum relative error with dirichlet bc's= 3.662300e-05 (3.662300e-05 with ghost)
+yale/cice2.order2///dirichlet: error                                                        : err = 3.66e-05, cpu=3.3e-04(s)  
+--OGES--WARNING : setExtraEquationValues called (old way) use setExtraEquationRightHandSideValues instead.
+Oges::allocateWorkSpace: numberOfNonzeros=48702 fillinRatio=2.000000e+01
+allocateWorkSpace: numberOfEquations=8182, nsp = 974040, fillinRatio= 20, numberOfNonzeros = 48702
+
+*** residual=0.00e+00, time for 1st solve of the neumann problem = 1.86e-01 (iterations=0)
+
+*** residual=0.00e+00, time for 2nd solve of the neumann problem = 3.19e-04 (iterations=0)
+
+ grid=0 (square) max. rel. err=2.948329e-05 (2.948329e-05 with ghost)
+ grid=1 (Annulus) max. rel. err=1.493239e-04 (1.493239e-04 with ghost)
+Maximum relative error with neumann bc's= 1.493239e-04
+yale/cice2.order2///neumann: error                                                          : err = 1.49e-04, cpu=3.2e-04(s)  
+
+
+
+
+
+testPetsc -m 400 -n 400 -ksp_type bcgs -pc_type ilu -pc_factor_levels 10
+
++++++ reuse 
+testPetsc start...
+Time to solve (1a) = 8.164e-01 (s)
+Time to solve (1b) = 5.344e-01 (s), setup=2.820e-01(s)
+Norm of error 4.95661e-05 iterations 28
+Set reuse PC true
+Time to solve (2a) = 5.303e-01 (s)
+Time to solve (2b) = 5.332e-01 (s), setup=-2.884e-03(s)
+Norm of error 4.95691e-05 iterations 28
+testPetsc done.
+
+
+++++++++ NO reuse
+testPetsc start...
+Time to solve (1a) = 8.124e-01 (s)
+Time to solve (1b) = 5.277e-01 (s), setup=2.847e-01(s)
+Norm of error 4.95661e-05 iterations 28
+Time to solve (2a) = 5.886e-01 (s)
+Time to solve (2b) = 5.250e-01 (s), setup=6.361e-02(s)
+Norm of error 4.95798e-05 iterations 28
+testPetsc done.
+
+
+
+testPetsc -m 400 -n 400 -ksp_type bcgs -pc_type ilu -pc_factor_levels 3 
+
++++++++++++ reuse PC: 
+testPetsc start...
+Time to solve (1a) = 6.854e-01 (s)
+Time to solve (1b) = 6.263e-01 (s), setup=5.908e-02(s)
+Norm of error 0.000748528 iterations 76
+Set reuse PC true
+Time to solve (2a) = 6.316e-01 (s)
+Time to solve (2b) = 6.333e-01 (s), setup=-1.644e-03(s)
+Norm of error 0.000491857 iterations 77
+
++++++++++++++
+Time to solve (1a) = 6.745e-01 (s)
+Time to solve (1b) = 6.137e-01 (s), setup=6.082e-02(s)
+Norm of error 0.000748528 iterations 76
+Time to solve (2a) = 6.335e-01 (s)
+Time to solve (2b) = 6.237e-01 (s), setup=9.808e-03(s)
+Norm of error 0.000735715 iterations 77
+
+
+testPetsc -m 400 -n 400 -ksp_monitor_short -ksp_type bcgs -log_view -pc_type ilu -pc_factor_levels 3 -ksp_view
+
+
+**************************************
+******* Tues Dec 20, 2022
+
+#  bi-cg-stab: 
+# -ksp_type bcgs
+-ksp_type gmres
+# -pc_type lu 
+-ksp_view
+-mat_view
+
+>> solve 2D 
+
+testPetsc -m 400 -n 400 -ksp_monitor_short -ksp_type bcgs -log_view -pc_type ilu -pc_factor_levels 3 -ksp_view
+
+
+
+>>> init version:
+
+testPetsc -m 100 -ksp_monitor_short -pc_type sor
+
+
+ testPetsc -m 100 -ksp_monitor_short
+m=100, n=2, num-proc=size=1
+  0 KSP Residual norm 1291.94 
+  1 KSP Residual norm 41.295 
+  2 KSP Residual norm 2.6218 
+  3 KSP Residual norm 0.221749 
+  4 KSP Residual norm 0.0202375 
+  5 KSP Residual norm 0.00122344 
+Relative norm of the residual 8.1028e-07, Iterations 5
+Solve again, adjust entries in the matrix...
+  0 KSP Residual norm 1540.58 
+  1 KSP Residual norm 9.02072 
+  2 KSP Residual norm 0.123026 
+  3 KSP Residual norm 0.00320214 
+Relative norm of the residual 1.87071e-06, Iterations 3
+
+
+
+
+**************************************
+******* Mon Dec 19, 2022
+
+Petsc 3.18.2 -- test solve with reuse or not of preconditioner
+
+
+kspEx5 -m=100
+
+
+
+**************************************
+******* Sat Dec 17, 2022
+
+
+PETSC CHANGE LOG
+
+>>>>>>>>>>> 3.5
+KSP:
+
+KSPSkipConverged() renamed to KSPConvergedSkip().
+KSPSetOperators() no longer has the MatStructure argument. The Mat objects now track that information themselves. Use KSP/PCSetReusePreconditioner() to prevent the recomputation of the preconditioner if the operator changed in the way that SAME_PRECONDITIONER did with KSPSetOperators()
+KSPDefaultConverged(), KSPDefaultConvergedDestroy(), KSPDefaultConvergedCreate(), KSPDefaultConvergedSetUIRNorm(), and KSPDefaultConvergedSetUMIRNorm() are now KSPConvergedDefault(), KSPConvergedDefaultDestroy(), KSPConvergedDefaultCreate(), KSPConvergedDefaultSetUIRNorm(), and KSPConvergedDefaultSetUMIRNorm(). for consistency.
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+
+++++++++ 3.4.5
+grep "DIFFERENT_NONZERO_PATTERN" */*/*/*.c
+grep "DIFFERENT_NONZERO_PATTERN" */*/*/*/*.c
+
+
+mat/examples/tests/ex101.c:  ierr = MatAXPY(C,-1.0,mC,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+mat/examples/tests/ex124.c:  ierr = MatAXPY(B,-1.0,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+mat/examples/tests/ex132.c:  ierr = PetscPrintf(PETSC_COMM_WORLD," MatAXPY(C1,2.0,C,DIFFERENT_NONZERO_PATTERN)...\n");
+mat/examples/tests/ex132.c:  ierr = MatAXPY(C1,2.0,C,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+mat/examples/tests/ex2.c:    ierr  = MatAXPY(tmat,alpha,mat,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+mat/examples/tests/ex2.c:    ierr = MatAYPX(tmat,alpha,mat,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+mat/examples/tests/ex37.c:  ierr = MatCopy(C,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+mat/examples/tests/ex37.c:  if (!flg) SETERRQ(PETSC_COMM_SELF,1,"MatCopy(C,A,DIFFERENT_NONZERO_PATTERN): Matrices are NOT equal");
+mat/examples/tests/ex37.c:  ierr = PetscPrintf(PETSC_COMM_WORLD,"A is obtained with MatCopy(,,DIFFERENT_NONZERO_PATTERN):\n");CHKERRQ(ierr);
+mat/examples/tests/ex49.c:    ierr = MatAXPY(tmat,alpha,mat,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+mat/examples/tests/ex91.c:  ierr = MatAXPY(A,one,Atrans,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+mat/examples/tests/ex92.c:  ierr = MatAXPY(A,one,Atrans,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+mat/examples/tests/ex93.c:  ierr = MatAXPY(D,none,C,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+mat/examples/tests/ex93.c:  ierr = MatAXPY(D,none,C,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+mat/examples/tests/ex94.c:      ierr = MatAXPY(C1,-1.0,C,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+mat/examples/tests/ex94.c:        ierr = MatAXPY(RARt,-1.0,C,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr); /* RARt = -RARt + C */
+mat/examples/tests/ex99.c:    ierr = MatAXPY(A,sigma,B,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);   /* A <- sigma*B + A */
+mat/impls/composite/mcomposite.c:      ierr = MatAXPY(tmat,1.0,next->mat,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+snes/examples/tests/ex11.c:  ierr = KSPSetOperators(user.ksp_coarse,user.coarse.J,user.coarse.J,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+snes/examples/tests/ex11.c:  ierr = KSPSetOperators(user.ksp_fine,user.fine.J,user.fine.J,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+snes/examples/tests/ex1.c:        successive linear solves, then the flag DIFFERENT_NONZERO_PATTERN
+snes/examples/tests/ex1.c:        structure has changed or not, use the flag DIFFERENT_NONZERO_PATTERN.
+snes/examples/tests/ex5.c:        successive linear solves, then the flag DIFFERENT_NONZERO_PATTERN
+snes/examples/tests/ex5.c:        structure has changed or not, use the flag DIFFERENT_NONZERO_PATTERN.
+snes/examples/tutorials/ex10.c:  *mstr = DIFFERENT_NONZERO_PATTERN;
+snes/examples/tutorials/ex14.c:        successive linear solves, then the flag DIFFERENT_NONZERO_PATTERN
+snes/examples/tutorials/ex14.c:        structure has changed or not, use the flag DIFFERENT_NONZERO_PATTERN.
+snes/examples/tutorials/ex28.c:  *mstr = DIFFERENT_NONZERO_PATTERN;
+snes/examples/tutorials/ex53.c:  ierr = MatCopy(user->M,*jac,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+snes/examples/tutorials/ex70.c:  ierr = KSPSetOperators(ksp, s.A, s.A, DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+snes/impls/ksponly/ksponly.c:  MatStructure       flg = DIFFERENT_NONZERO_PATTERN;
+snes/impls/ls/ls.c:  MatStructure        flg = DIFFERENT_NONZERO_PATTERN;
+snes/impls/multiblock/multiblock.c:      ierr = KSPSetOperators(jac->kspschur,jac->schur,FieldSplitSchurPre(jac),DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+snes/impls/nasm/nasm.c:  MatStructure   flg = DIFFERENT_NONZERO_PATTERN;
+snes/impls/ncg/snesncg.c:  MatStructure   flg = DIFFERENT_NONZERO_PATTERN;
+snes/impls/qn/qn.c:  MatStructure        flg = DIFFERENT_NONZERO_PATTERN;
+snes/impls/test/snestest.c:    ierr = MatAYPX(B,-1.0,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+snes/impls/test/snestest.c:  ierr = MatAYPX(B,-1.0,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+snes/impls/tr/tr.c:  MatStructure        flg = DIFFERENT_NONZERO_PATTERN;
+snes/interface/noise/snesnoise.c:  MatStructure   sparsity = DIFFERENT_NONZERO_PATTERN;
+ts/examples/tests/ex3.c:  ierr = KSPSetOperators(ksp,obj->Amat,obj->Amat,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ts/examples/tests/ex4.c:  *flag = DIFFERENT_NONZERO_PATTERN;
+ts/examples/tutorials/ex21.c:        successive linear solves, then the flag DIFFERENT_NONZERO_PATTERN
+ts/examples/tutorials/ex21.c:        structure has changed or not, use the flag DIFFERENT_NONZERO_PATTERN.
+ts/examples/tutorials/ex2.c:        successive linear solves, then the flag DIFFERENT_NONZERO_PATTERN
+ts/examples/tutorials/ex2.c:        structure has changed or not, use the flag DIFFERENT_NONZERO_PATTERN.
+ts/examples/tutorials/ex3.c:        successive linear solves, then the flag DIFFERENT_NONZERO_PATTERN
+ts/examples/tutorials/ex3.c:        structure has changed or not, use the flag DIFFERENT_NONZERO_PATTERN.
+ts/examples/tutorials/ex4.c:        successive linear solves, then the flag DIFFERENT_NONZERO_PATTERN
+ts/examples/tutorials/ex4.c:        structure has changed or not, use the flag DIFFERENT_NONZERO_PATTERN.
+ts/examples/tutorials/ex5.c:        successive linear solves, then the flag DIFFERENT_NONZERO_PATTERN
+ts/examples/tutorials/ex5.c:        structure has changed or not, use the flag DIFFERENT_NONZERO_PATTERN.
+ts/examples/tutorials/ex6.c:        successive linear solves, then the flag DIFFERENT_NONZERO_PATTERN
+ts/examples/tutorials/ex6.c:        structure has changed or not, use the flag DIFFERENT_NONZERO_PATTERN.
+
+
+ksp/ksp/examples/tests/ex14.c:        successive linear solves, then the flag DIFFERENT_NONZERO_PATTERN
+ksp/ksp/examples/tests/ex14.c:        structure has changed or not, use the flag DIFFERENT_NONZERO_PATTERN.
+ksp/ksp/examples/tests/ex15.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex17.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex18.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex19.c:  ierr = KSPSetOperators(user.ksp_coarse,user.coarse.J,user.coarse.J,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex19.c:  ierr = KSPSetOperators(ksp_fine,user.fine.J,user.fine.J,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex19.c:  ierr = KSPSetOperators(ksp,user.fine.J,user.fine.J,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex1.c:  ierr = KSPSetOperators(ksp,C,C,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex20.c:  ierr = KSPSetOperators(ksp,C,C,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex24.c:      ierr = KSPSetOperators(ksp,C,C,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex24.c:      ierr = KSPSetOperators(ksp,C,C,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex24.c:      ierr = KSPSetOperators(ksp,C,C,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex25.c:      ierr = KSPSetOperators(ksp,C,C,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex25.c:      ierr = KSPSetOperators(ksp,C,C,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex25.c:      ierr = KSPSetOperators(ksp,C,C,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex26.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex27.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex28.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex29.c:    if (i<2) { /* test DIFFERENT_NONZERO_PATTERN */
+ksp/ksp/examples/tests/ex29.c:      ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex2.c:  ierr = KSPSetOperators(ksp,C,C,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex30.c:      ierr = MatAXPY(A,sigma,B,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);   /* A <- sigma*B + A */
+ksp/ksp/examples/tests/ex32.c:  ierr = MatAXPY(A,1.0,Atrans,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex33.c:    ierr  = MatAXPY(A,sigma,B,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr); /* A <- A - sigma*B */
+ksp/ksp/examples/tests/ex33.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex36.c:  ierr = KSPSetOperators(ksp,As,As,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex38.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex39.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex3.c:  ierr = KSPSetOperators(ksp,C,C,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex40.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex42.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex43-aijcusparse.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex4.c:  ierr = KSPSetOperators(ksp,C,C,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex6.c:  ierr   = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tests/ex7.c:  ierr = KSPSetOperators(ksp,A,B,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex11.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex12.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex15.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex18.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex1.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex23.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex2.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex30.c:  ierr = KSPSetOperators(solver,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex30.c:  ierr = KSPSetOperators(solver,B,B,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex31.c:  ierr = KSPSetOperators(ksp, mat, mat, DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex31.c:  ierr = KSPSetOperators(ksp, mat, mat, DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex38.c:  ierr = KSPSetOperators(kspmg,cmat,cmat,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex39.c:  ierr = KSPSetOperators(kspmg, HtH, HtH, DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex3.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex40.c:  ierr = KSPSetOperators(kspmg, HtH, HtH, DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex46.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex4.c:    ierr = KSPSetOperators(ksp, A, A, DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex51.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex52.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex58.c:  ierr = MatAXPY(C,2.0,B,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex58.c:  ierr = KSPSetOperators(ksp,C,C,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex5.c:        the second linear solve, then the flag DIFFERENT_NONZERO_PATTERN
+ksp/ksp/examples/tutorials/ex5.c:        DIFFERENT_NONZERO_PATTERN.
+ksp/ksp/examples/tutorials/ex7.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex8.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex8g.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex9.c:          the second linear solve, then the flag DIFFERENT_NONZERO_PATTERN
+ksp/ksp/examples/tutorials/ex9.c:          DIFFERENT_NONZERO_PATTERN.
+ksp/pc/examples/tests/ex1.c:  ierr = PCSetOperators(pc,mat,mat,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/pc/examples/tests/ex2.c:  ierr = PCSetOperators(pc,mat,mat,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/pc/examples/tests/ex2.c:  ierr = PCSetOperators(pc,mat,mat,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/pc/examples/tests/ex3.c:  ierr = PCSetOperators(pc,mat,mat,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/pc/examples/tests/ex3.c:  ierr = PCSetOperators(pc,mat,mat,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/pc/examples/tests/ex4.c:  ierr = PCSetOperators(pc,mat,mat,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/pc/examples/tests/ex5.c:  ierr = KSPSetOperators(cksp,cmat,cmat,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/pc/examples/tests/ex5.c:    ierr = KSPSetOperators(ksp[i],mat[i],mat[i],DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/pc/examples/tests/ex5.c:  ierr = KSPSetOperators(kspmg,fmat,fmat,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/pc/examples/tests/ex7.c:  ierr = PCSetOperators(pc,C,C,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/pc/examples/tutorials/ex2.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+ksp/pc/examples/tutorials/ex3.c:  ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+
+
++++++++++++++++++++++++
+
+grep "SAME_PRECONDITIONER" */*/*/*.c
+grep "SAME_PRECONDITIONER" */*/*/*/*.c
+
+cg66:~/software/petsc-3.4.5-serial/src> grep "SAME_PRECONDITIONER" */*/*/*.c
+ksp/ksp/interface/itcreate.c:$    SAME_PRECONDITIONER -
+ksp/ksp/interface/itfunc.c:.  mstruct - flag indicating structure, same as in KSPSetOperators(), one of SAME_NONZERO_PATTERN,DIFFERENT_NONZERO_PATTERN,SAME_PRECONDITIONER
+ksp/ksp/utils/schurm.c:-   str - either SAME_NONZERO_PATTERN,DIFFERENT_NONZERO_PATTERN,SAME_PRECONDITIONER
+ksp/pc/interface/precon.c:+    SAME_PRECONDITIONER -
+ksp/pc/interface/precon.c:  if (pc->setupcalled == 2 && flag != SAME_PRECONDITIONER) {
+snes/examples/tests/ex7.c:    *flag = SAME_PRECONDITIONER;
+snes/examples/tutorials/ex54.c:  *flg = SAME_PRECONDITIONER;
+snes/examples/tutorials/ex70.c:    ierr = KSPSetOperators(subksp[1], s->myS, s->myS, SAME_PRECONDITIONER);CHKERRQ(ierr);
+ts/examples/tutorials/ex23.c:  *flg = SAME_PRECONDITIONER;
+
+ksp/ksp/examples/tutorials/ex16.c:  ierr = KSPSetOperators(ksp,A,A,SAME_PRECONDITIONER);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex53.c:  ierr = KSPSetOperators(ksp,A,A,SAME_PRECONDITIONER);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex59.c:  ierr        = KSPSetOperators(temp_ksp,F,F,SAME_PRECONDITIONER);CHKERRQ(ierr);
+ksp/ksp/examples/tutorials/ex59.c:  ierr = KSPSetOperators(temp_ksp,A,A,SAME_PRECONDITIONER);CHKERRQ(ierr);
+
+
+
+Build PETSc ex50.C
+
+
+cg66:~/overtureFramework/Overture/oges> ex50 -pc_type ilu -n 100
+Entering ex50...
+solve ...
+Norm of residual 3.29675e-05 iterations 7 bs 2
+
+
+**************************************
+******* Fri Dec 16, 2022
+
++++ new machine cg66
++++ move to PETSC 3.18.2
+
++++ From petscversion.h :
+
+1: #ifndef PETSCVERSION_H
+  2: #define PETSCVERSION_H
+  3: #include <petscconf.h>
+
+  5: #define PETSC_VERSION_RELEASE    1
+  6: #define PETSC_VERSION_MAJOR      3
+  7: #define PETSC_VERSION_MINOR      18
+  8: #define PETSC_VERSION_SUBMINOR   2
+  9: #define PETSC_RELEASE_DATE       "Sep 30, 2022"
+ 10: #define PETSC_VERSION_DATE       "unknown"
+
+g++ -fPIC -fmessage-length=200 -I. -I/home/henshw/Overture.gn/include -I/home/henshw/software/petsc-3.18.2-serial/include  -I/home/henshw/software/petsc-3.18.2-serial/linux-gnu-opt/include -DOVERTURE_USE_PETSC -I/home/henshw/software/petsc-3.18.2-serial/include/petsc/mpiuni -I/home/henshw/software/AppPpp-0.8.3/A++/install/include -I/home/henshw/software/Mesa-7.2/include -I/usr/include   -I/home/henshw/software/hdf5-1.8.15/include -DBL_USE_DOUBLE -DBL_Solaris   -DHAS_MODFL_PROTO -g -DUSE_OPT_OPERATORS  -c ../../oges/PETScEquationSolver.C
+In file included from /home/henshw/software/petsc-3.18.2-serial/include/petscsys.h:21,
+                 from /home/henshw/software/petsc-3.18.2-serial/include/petscvec.h:9,
+                 from /home/henshw/software/petsc-3.18.2-serial/include/petscmat.h:7,
+                 from /home/henshw/software/petsc-3.18.2-serial/include/petscpc.h:7,
+                 from /home/henshw/software/petsc-3.18.2-serial/include/petscksp.h:7,
+                 from ../../oges/PETScEquationSolver.h:27,
+                 from ../../oges/PETScEquationSolver.C:12:
+/home/henshw/software/petsc-3.18.2-serial/include/petscmacros.h:59:6: error: conflicting declaration of C function ‘void 
+   assert_never_put_petsc_headers_inside_an_extern_c(double)’
+   59 | void assert_never_put_petsc_headers_inside_an_extern_c(double);
+
+
+
 **************************************
 ******* Wed Feb 19, 2020
 

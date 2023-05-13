@@ -632,7 +632,7 @@ sub substituteInlineMacros
     $notDone=0;
     $first=1;
     $numFound=$numFound+1;
-    if( $numFound>200 ){ print "substituteMacros:ERROR: too many recursive inline macros found. Something is wrong\n";
+    if( $numFound>20000 ){ print "substituteMacros:ERROR: too many recursive inline macros found, numFound=$numFound. Something is wrong\n";
                          print " Maybe there is an inline macro as argument of a macro that is not defined\n";
                          print "line = $line";
                          exit (1);
@@ -791,9 +791,9 @@ sub substituteInlineMacros
  
  $line = $inputLine;
 
-  if( $numberReplaced > 2000 )
+  if( $numberReplaced > 200000 )
   {
-    printf("bpp:ERROR in replacing inline macros. Too many replacements! Maybe there is an infinite recursion(?)\n");
+    printf("bpp:ERROR in replacing inline macros. Too many replacements! numberReplaced=$numberReplaced. Maybe there is an infinite recursion(?)\n");
     printf(" current line = $line\n");
     exit (1);
   }

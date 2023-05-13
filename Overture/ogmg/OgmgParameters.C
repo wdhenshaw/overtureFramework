@@ -2116,6 +2116,11 @@ update( GenericGraphicsInterface & gi, CompositeGrid & cg )
     {
       // update Oges coarse grid solver
       ogesParameters.update(gi,cg);
+      if( true )
+      {
+        printF("OgmgParameters::display direct solver ogesParameters:\n");
+        ogesParameters.display();
+      }
     }
     else if( answer=="interpolate the defect" )
     {

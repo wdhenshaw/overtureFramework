@@ -105,29 +105,29 @@ for(i2=I2Base; i2<=I2Bound; i2++) \
 for(i1=I1Base; i1<=I1Bound; i1++)
 
 // loop over boundary and ghost: 
-#define FOR_4D_BG(m,i1,i2,i3,M,I1,I2,I3, i1m,i2m,i3m,I1m,I2m,I3m)	\
+#define FOR_4D_BG(m,i1,i2,i3,M,I1,I2,I3, i1m,i2m,i3m,I1m,I2m,I3m)       \
 int mBase=M.getBase(), mBound=M.getBound(); \
 int I1Base =I1.getBase(),   I2Base =I2.getBase(),  I3Base =I3.getBase();  \
 int I1Bound=I1.getBound(),  I2Bound=I2.getBound(), I3Bound=I3.getBound(); \
 int I1mBase =I1m.getBase(),   I2mBase =I2m.getBase(),  I3mBase =I3m.getBase();  \
-for(int i3=I3Base, i3m=I3mBase; i3<=I3Bound; i3++, i3m++)				\
-  for(int i2=I2Base, i2m=I2mBase; i2<=I2Bound; i2++, i2m++)			\
-    for(int i1=I1Base, i1m=I1mBase; i1<=I1Bound; i1++, i1m++)			\
+for(int i3=I3Base, i3m=I3mBase; i3<=I3Bound; i3++, i3m++)                               \
+  for(int i2=I2Base, i2m=I2mBase; i2<=I2Bound; i2++, i2m++)                     \
+    for(int i1=I1Base, i1m=I1mBase; i1<=I1Bound; i1++, i1m++)                   \
 for(m=mBase; m<=mBound; m++)
 
 
 static real extrapCoeff[10][10] = 
                    {
                        {1.,-1.,0.,0.,0.,0.,0.,0.,0.,0.},     // order 1
-                       {1.,-2.,1.,0.,0.,0.,0.,0.,0.,0.},     // order 2		       
-                       {1.,-3.,3.,-1.,0.,0.,0.,0.,0.,0.},    // order 3		       
-                       {1.,-4.,6.,-4.,1.,0.,0.,0.,0.,0.},		       
-                       {1.,-5.,10.,-10.,5.,-1.,0.,0.,0.,0.},		       
-                       {1.,-6.,15.,-20.,15.,-6.,1.,0.,0.,0.},		       
-                       {1.,-7.,21.,-35.,35.,-21.,7.,-1.,0.,0.},		       
-                       {1.,-8.,28.,-56.,70.,-56.,28.,-8.,1.,0.},		       
-		       {1.,-9.,36.,-84.,126.,-126.,84.,-36.,9.,-1.}
-		     };
+                       {1.,-2.,1.,0.,0.,0.,0.,0.,0.,0.},     // order 2                
+                       {1.,-3.,3.,-1.,0.,0.,0.,0.,0.,0.},    // order 3                
+                       {1.,-4.,6.,-4.,1.,0.,0.,0.,0.,0.},                      
+                       {1.,-5.,10.,-10.,5.,-1.,0.,0.,0.,0.},                   
+                       {1.,-6.,15.,-20.,15.,-6.,1.,0.,0.,0.},                  
+                       {1.,-7.,21.,-35.,35.,-21.,7.,-1.,0.,0.},                
+                       {1.,-8.,28.,-56.,70.,-56.,28.,-8.,1.,0.},                       
+                       {1.,-9.,36.,-84.,126.,-126.,84.,-36.,9.,-1.}
+                     };
 
 
 bool
@@ -157,13 +157,13 @@ getLocalIndex( intArray & u, intSerialArray & uLocal,
 //\begin{>>MappedGridOperatorsInclude.tex}{\subsubsection{applyBoundaryConditionCoefficients}}  
 void MappedGridOperators::
 applyBoundaryConditionCoefficients(realMappedGridFunction & uCoeff, 
-				   const Index & E,
-				   const Index & C,
-				   const BCTypes::BCNames & 
+                                   const Index & E,
+                                   const Index & C,
+                                   const BCTypes::BCNames & 
                                          bcType,                     /* = BCTypes::dirichlet */
-				   const int & bc,                   /* = allBoundaries */
-				   const BoundaryConditionParameters & 
-				        bcParams /* = Overture::defaultBoundaryConditionParameters() */,
+                                   const int & bc,                   /* = allBoundaries */
+                                   const BoundaryConditionParameters & 
+                                        bcParams /* = Overture::defaultBoundaryConditionParameters() */,
                                    const int & grid /* =0 */ )
 //=======================================================================================
 // /Description:
@@ -259,11 +259,11 @@ applyBoundaryConditionCoefficients(realMappedGridFunction & uCoeff,
   }
   if( !boundaryTangentsUsed && bcType!=BCTypes::dirichlet && bcType!=BCTypes::extrapolate &&
       ( bcType==BCTypes::normalDerivativeOfTangentialComponent0 || 
-	bcType==BCTypes::normalDerivativeOfTangentialComponent1 ||
-	bcType==BCTypes::tangentialComponent0 || 
-	bcType==BCTypes::tangentialComponent1  || 
-	bcType==BCTypes::tangentialComponent ||
-	bcType==BCTypes::extrapolateTangentialComponent0 || 
+        bcType==BCTypes::normalDerivativeOfTangentialComponent1 ||
+        bcType==BCTypes::tangentialComponent0 || 
+        bcType==BCTypes::tangentialComponent1  || 
+        bcType==BCTypes::tangentialComponent ||
+        bcType==BCTypes::extrapolateTangentialComponent0 || 
         bcType==BCTypes::extrapolateTangentialComponent1 ) )
   {
     boundaryTangentsUsed=TRUE;
@@ -292,9 +292,9 @@ applyBoundaryConditionCoefficients(realMappedGridFunction & uCoeff,
 
 #define CE(c,e) (stencilSize*((c)+numberOfComponentsForCoefficients*(e)))
 #define ForStencil(m1,m2,m3)   \
-	for( m3=-halfWidth3; m3<=halfWidth3; m3++) \
-	for( m2=-halfWidth2; m2<=halfWidth2; m2++) \
-	for( m1=-halfWidth1; m1<=halfWidth1; m1++) 
+        for( m3=-halfWidth3; m3<=halfWidth3; m3++) \
+        for( m2=-halfWidth2; m2<=halfWidth2; m2++) \
+        for( m1=-halfWidth1; m1<=halfWidth1; m1++) 
 
   Index M(0,stencilSize);
   int stencilDim=stencilSize*numberOfComponentsForCoefficients;
@@ -336,22 +336,22 @@ applyBoundaryConditionCoefficients(realMappedGridFunction & uCoeff,
   int i1,i2,i3,m;
 
   bool normalIsNeeded=( (bcType==BCTypes::neumann && !isRectangular) || 
-			(bcType==BCTypes::mixed && !isRectangular) || 
-			bcType==BCTypes::normalDotScalarGrad ||
-			bcType==BCTypes::normalComponent ||
-			bcType==BCTypes::vectorSymmetry || 
-			bcType==BCTypes::normalDerivativeOfNormalComponent || 
-			bcType==BCTypes::normalDerivativeOfTangentialComponent0 || 
-			bcType==BCTypes::normalDerivativeOfTangentialComponent1 || 
-			bcType==BCTypes::extrapolateNormalComponent ); 
+                        (bcType==BCTypes::mixed && !isRectangular) || 
+                        bcType==BCTypes::normalDotScalarGrad ||
+                        bcType==BCTypes::normalComponent ||
+                        bcType==BCTypes::vectorSymmetry || 
+                        bcType==BCTypes::normalDerivativeOfNormalComponent || 
+                        bcType==BCTypes::normalDerivativeOfTangentialComponent0 || 
+                        bcType==BCTypes::normalDerivativeOfTangentialComponent1 || 
+                        bcType==BCTypes::extrapolateNormalComponent ); 
 
   bool tangentIsNeeded=( bcType==BCTypes::tangentialComponent0 ||
-			 bcType==BCTypes::tangentialComponent1 || 
-			 bcType==BCTypes::vectorSymmetry || 
-			 bcType==BCTypes::normalDerivativeOfTangentialComponent0 || 
-			 bcType==BCTypes::normalDerivativeOfTangentialComponent1 ||
-			 bcType==BCTypes::extrapolateTangentialComponent0 ||
-			 bcType==BCTypes::extrapolateTangentialComponent1 ); 
+                         bcType==BCTypes::tangentialComponent1 || 
+                         bcType==BCTypes::vectorSymmetry || 
+                         bcType==BCTypes::normalDerivativeOfTangentialComponent0 || 
+                         bcType==BCTypes::normalDerivativeOfTangentialComponent1 ||
+                         bcType==BCTypes::extrapolateTangentialComponent0 ||
+                         bcType==BCTypes::extrapolateTangentialComponent1 ); 
 
 
 
@@ -408,19 +408,19 @@ applyBoundaryConditionCoefficients(realMappedGridFunction & uCoeff,
 
       // The vect array holds either the normal or the tangent
       realSerialArray & vect = (bcType==BCTypes::normalDerivativeOfNormalComponent ||
-		   	        bcType==BCTypes::extrapolateNormalComponent )  ? normal : tangent;
+                                bcType==BCTypes::extrapolateNormalComponent )  ? normal : tangent;
 
 
       // save boundary points to be reset if this is a mixed boundary condition (i.e. if some points
       // on the boundary are physical Bc and others interp) OR if the user has specified a BC mask ti use.
       const bool saveBoundaryPoints = (mg.boundaryFlag(side,axis)==MappedGrid::mixedPhysicalInterpolationBoundary &&
-	bcParams.lineToAssign==0 && useWhereMaskOnBoundary[axis][side] && bcParams.useMixedBoundaryMask) || 
+        bcParams.lineToAssign==0 && useWhereMaskOnBoundary[axis][side] && bcParams.useMixedBoundaryMask) || 
            bcParams.getUseMask();
       
 //       if( true )
 //       {
 //         int temp=saveBoundaryPoints;
-// 	printf("applyBCC: side,axis=%i,%i, boundaryFlag=%i bcParams.lineToAssign=%i \n"
+//      printf("applyBCC: side,axis=%i,%i, boundaryFlag=%i bcParams.lineToAssign=%i \n"
 //                "           useWhereMaskOnBoundary=%i useMixedBoundaryMask=%i --> saveBoundaryPoints= %i \n",
 //                 side,axis,mg.boundaryFlag(side,axis),bcParams.lineToAssign,(int)useWhereMaskOnBoundary[axis][side],
 //                 (int)bcParams.useMixedBoundaryMask,temp);
@@ -437,13 +437,13 @@ applyBoundaryConditionCoefficients(realMappedGridFunction & uCoeff,
 
       case dirichlet:
 
-	if( saveBoundaryPoints )
-	{
+        if( saveBoundaryPoints )
+        {
           // save coefficients so we can reset some points where the BC should NOT be applied
           resetBoundaryPoints=TRUE;  // we reset the points after the switch statement
           coeffSave.redim(ME,I1,I2,I3);
           coeffSave=coeff(ME,I1,I2,I3);  
-	}
+        }
 
         if( numberOfComponentsForCoefficients > 1 )
           coeff(ME,I1,I2,I3)=0.;  // zero out boundary equation
@@ -454,68 +454,68 @@ applyBoundaryConditionCoefficients(realMappedGridFunction & uCoeff,
 //         uCoeff(M0,I1,I2,I3)=identityCoefficients(I1,I2,I3,e0,c0)(M0,I1,I2,I3);   // *** this is inefficient ****
 // #endif     
         assignCoefficients(identityOperator,coeff,I1,I2,I3,e0,c0);
-	
-	for( c=C.getBase(); c<=C.getBound(); c++ )                        
-	  for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
+        
+        for( c=C.getBase(); c<=C.getBound(); c++ )                        
+          for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
             if( c!=c0 || ee!=e0 )
-	      coeff(M+CE(c,ee),I1,I2,I3)=coeff(M0,I1,I2,I3);
+              coeff(M+CE(c,ee),I1,I2,I3)=coeff(M0,I1,I2,I3);
         if( bcParams.lineToAssign>0 )
-	{
-	  sparse.setClassify(SparseRepForMGF::ghost1,J1,J2,J3,E);
-	}
-	break;
+        {
+          sparse.setClassify(SparseRepForMGF::ghost1,J1,J2,J3,E);
+        }
+        break;
       case neumann:
       case mixed:
       {
 
         // const int myid=max(0,Communication_Manager::My_Process_Number);
-	// printf("applyBCC: myid=%i orderOfAccuracy=%i stencilSize=%i\n",myid,orderOfAccuracy,stencilSize);
+        // printf("applyBCC: myid=%i orderOfAccuracy=%i stencilSize=%i\n",myid,orderOfAccuracy,stencilSize);
 
 
-	realSerialArray  opX,opY,opZ;
-	// *************** Neumann or Mixed *******************
-	opX.redim(Range(M.getBase(),M.getBound()),            // dimension (to get base correct)
-		  Range(I1.getBase(),I1.getBound()),
-		  Range(I2.getBase(),I2.getBound()),
-		  Range(I3.getBase(),I3.getBound()));
+        realSerialArray  opX,opY,opZ;
+        // *************** Neumann or Mixed *******************
+        opX.redim(Range(M.getBase(),M.getBound()),            // dimension (to get base correct)
+                  Range(I1.getBase(),I1.getBound()),
+                  Range(I2.getBase(),I2.getBound()),
+                  Range(I3.getBase(),I3.getBound()));
         opX=0.;
         if( !rectangular || axis==axis1 )
-	{
+        {
           // in the rectangular case we only need to evaluate one derivative from x, y or z
-	  assignCoefficients(xDerivative,opX,I1,I2,I3,0,0);
-	}
+          assignCoefficients(xDerivative,opX,I1,I2,I3,0,0);
+        }
 //         display(opX,"opX ***new***");
-// 	opX=xCoefficients(I1,I2,I3,0,0)(M,I1,I2,I3);
+//      opX=xCoefficients(I1,I2,I3,0,0)(M,I1,I2,I3);
 //         display(opX,"opX  ***old****");
 
-	if( numberOfDimensions>1 )
-	{
+        if( numberOfDimensions>1 )
+        {
           if( rectangular && axis==axis2 )
-	  {
+          {
             assignCoefficients(yDerivative,opX,I1,I2,I3,0,0); // just save y-derivative in opX
-	  }
-	  else if( !rectangular )
-	  {
-	    opY.redim(opX);
-	    opY=0.;
-	    assignCoefficients(yDerivative,opY,I1,I2,I3,0,0);
-	  }
-	}
-	if( numberOfDimensions>2 )
-	{
+          }
+          else if( !rectangular )
+          {
+            opY.redim(opX);
+            opY=0.;
+            assignCoefficients(yDerivative,opY,I1,I2,I3,0,0);
+          }
+        }
+        if( numberOfDimensions>2 )
+        {
           if( rectangular && axis==axis3 )
-	  {
+          {
             assignCoefficients(zDerivative,opX,I1,I2,I3,0,0); // just save z-derivative in opX
-	  }
-	  else if( !rectangular )
-	  {
-	    opZ.redim(opX);
-	    opZ=0.;
-	    assignCoefficients(zDerivative,opZ,I1,I2,I3,0,0);
-	  }
-	}
+          }
+          else if( !rectangular )
+          {
+            opZ.redim(opX);
+            opZ=0.;
+            assignCoefficients(zDerivative,opZ,I1,I2,I3,0,0);
+          }
+        }
         // display(normal(I1,I2,I3,axis1),"normal(I1,I2,I3,axis1)");
-	
+        
         real *normalp = normal.Array_Descriptor.Array_View_Pointer3;
         const int normalDim0=normal.getRawDataSize(0);
         const int normalDim1=normal.getRawDataSize(1);
@@ -553,185 +553,185 @@ applyBoundaryConditionCoefficients(realMappedGridFunction & uCoeff,
 
         n=0;
         if( !isRectangular )
-	{ // multiply by the normal
+        { // multiply by the normal
           if( useNewVersion )
-	  {
+          {
             if( numberOfDimensions==1 )
-	    {
-	      FOR_4D(m,i1,i2,i3,M,I1,I2,I3)
-	      {
-		OPXS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n1);
-	      }
-	    }
-	    else if( numberOfDimensions==2 )
-	    {
-	      FOR_4D(m,i1,i2,i3,M,I1,I2,I3)
-	      {
-		OPXS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n1);
-		OPYS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n2);
-	      }
-	    }
-	    else
-	    {
-	      FOR_4D(m,i1,i2,i3,M,I1,I2,I3)
-	      {
-		OPXS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n1);
-		OPYS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n2);
-		OPZS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n3);
-	      }
-	    }
-	  }
-	  else
-	  {
-	    ForStencil(m1,m2,m3)
-	    {
-	      OPX(m1,m2,m3,n,I1,I2,I3)*=normal(I1,I2,I3,n1);
-	      if( numberOfDimensions>1 )
-		OPY(m1,m2,m3,n,I1,I2,I3)*=normal(I1,I2,I3,n2);
-	      if( numberOfDimensions>2 )
-		OPZ(m1,m2,m3,n,I1,I2,I3)*=normal(I1,I2,I3,n3);
-	    }
-	  }
+            {
+              FOR_4D(m,i1,i2,i3,M,I1,I2,I3)
+              {
+                OPXS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n1);
+              }
+            }
+            else if( numberOfDimensions==2 )
+            {
+              FOR_4D(m,i1,i2,i3,M,I1,I2,I3)
+              {
+                OPXS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n1);
+                OPYS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n2);
+              }
+            }
+            else
+            {
+              FOR_4D(m,i1,i2,i3,M,I1,I2,I3)
+              {
+                OPXS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n1);
+                OPYS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n2);
+                OPZS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n3);
+              }
+            }
+          }
+          else
+          {
+            ForStencil(m1,m2,m3)
+            {
+              OPX(m1,m2,m3,n,I1,I2,I3)*=normal(I1,I2,I3,n1);
+              if( numberOfDimensions>1 )
+                OPY(m1,m2,m3,n,I1,I2,I3)*=normal(I1,I2,I3,n2);
+              if( numberOfDimensions>2 )
+                OPZ(m1,m2,m3,n,I1,I2,I3)*=normal(I1,I2,I3,n3);
+            }
+          }
 
-	}
-	else
-	{ // rectangular case:
-	  if( side==0 ) 
-	    opX*=-1.;   // multiply by the normal
-	}
-	
+        }
+        else
+        { // rectangular case:
+          if( side==0 ) 
+            opX*=-1.;   // multiply by the normal
+        }
+        
         if( numberOfComponentsForCoefficients > 1 )
           coeff(ME,I1m,I2m,I3m)=0.;  // zero out boundary equation
 
-	if( bcType==BCTypes::neumann )
-	{ 
-	  if( numberOfDimensions==1 || rectangular )
-  	    coeff(M0,I1m,I2m,I3m)=opX;
-	  else if( numberOfDimensions==2 )
-  	    coeff(M0,I1m,I2m,I3m)=opX+opY;
-	  else if( numberOfDimensions==3 )
-  	    coeff(M0,I1m,I2m,I3m)=opX+opY+opZ;
+        if( bcType==BCTypes::neumann )
+        { 
+          if( numberOfDimensions==1 || rectangular )
+            coeff(M0,I1m,I2m,I3m)=opX;
+          else if( numberOfDimensions==2 )
+            coeff(M0,I1m,I2m,I3m)=opX+opY;
+          else if( numberOfDimensions==3 )
+            coeff(M0,I1m,I2m,I3m)=opX+opY+opZ;
 
-	  for( c=C.getBase(); c<=C.getBound(); c++ )                        
-	    for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
+          for( c=C.getBase(); c<=C.getBound(); c++ )                        
+            for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
               if( c!=c0 || ee!=e0 )
-		coeff(M+CE(c,ee),I1m,I2m,I3m)=coeff(M0,I1m,I2m,I3m);
-	}
-	else
-	{
-	  // mixed BC: alpha*u + beta*u.n
+                coeff(M+CE(c,ee),I1m,I2m,I3m)=coeff(M0,I1m,I2m,I3m);
+        }
+        else
+        {
+          // mixed BC: alpha*u + beta*u.n
           real alpha=0., beta=1.;
-	  //kkc 060816 sometimes alpha and beta are specified for each side
-	  if( spatiallyVaryingCoefficients )
-	  {
-	  }
-	  else if ( bcParams.a.getLength(1)>1 && bcParams.a.getLength(0)>=2 )
+          //kkc 060816 sometimes alpha and beta are specified for each side
+          if( spatiallyVaryingCoefficients )
           {
-	    alpha = bcParams.a(0,side,axis);
-	    beta  = bcParams.a(1,side,axis);
-	  }
+          }
+          else if ( bcParams.a.getLength(1)>1 && bcParams.a.getLength(0)>=2 )
+          {
+            alpha = bcParams.a(0,side,axis);
+            beta  = bcParams.a(1,side,axis);
+          }
           else if( bcParams.a.getLength(0)>=2 )
-	  {
-	    alpha = bcParams.a(0);
-	    beta  = bcParams.a(1);
-	  }
-	  else
-	  {
-	    printF("MappedGridOperators::applyBoundaryConditionCoefficients ERROR applying mixed BC\n");
-	    printF(" The coefficients for `a' must be set in the BoundaryConditionParameters\n");
-	    OV_ABORT("error");
-	  }
+          {
+            alpha = bcParams.a(0);
+            beta  = bcParams.a(1);
+          }
+          else
+          {
+            printF("MappedGridOperators::applyBoundaryConditionCoefficients ERROR applying mixed BC\n");
+            printF(" The coefficients for `a' must be set in the BoundaryConditionParameters\n");
+            OV_ABORT("error");
+          }
 
           assignCoefficients(identityOperator,coeff,I1m,I2m,I3m,e0,c0);
-	  if( spatiallyVaryingCoefficients )
-	  {
+          if( spatiallyVaryingCoefficients )
+          {
             // variable coefficients:
-	    if( numberOfDimensions==1 || rectangular )
-	    {
+            if( numberOfDimensions==1 || rectangular )
+            {
               FOR_4D_BG(m,i1,i2,i3,M,I1,I2,I3, i1m,i2m,i3m,I1m,I2m,I3m)
-	      {
-		COEFF(m,i1m,i2m,i3m)=VC(i1,i2,i3,1)*OPXS(m,i1,i2,i3) 
+              {
+                COEFF(m,i1m,i2m,i3m)=VC(i1,i2,i3,1)*OPXS(m,i1,i2,i3) 
                                    + VC(i1,i2,i3,0)*COEFF(m,i1m,i2m,i3m);
-	      }
+              }
 
-	    }
-	    else if( numberOfDimensions==2 )
-	    {
+            }
+            else if( numberOfDimensions==2 )
+            {
               FOR_4D_BG(m,i1,i2,i3,M,I1,I2,I3, i1m,i2m,i3m,I1m,I2m,I3m)
-	      {
-		COEFF(m,i1m,i2m,i3m)=VC(i1,i2,i3,1)*(OPXS(m,i1,i2,i3)+OPYS(m,i1,i2,i3))
+              {
+                COEFF(m,i1m,i2m,i3m)=VC(i1,i2,i3,1)*(OPXS(m,i1,i2,i3)+OPYS(m,i1,i2,i3))
                                    + VC(i1,i2,i3,0)*COEFF(m,i1m,i2m,i3m);
-	      }
-	    }
-	    else
-	    {
+              }
+            }
+            else
+            {
               FOR_4D_BG(m,i1,i2,i3,M,I1,I2,I3, i1m,i2m,i3m,I1m,I2m,I3m)
-	      {
-		COEFF(m,i1m,i2m,i3m)=VC(i1,i2,i3,1)*(OPXS(m,i1,i2,i3)+OPYS(m,i1,i2,i3)+OPZS(m,i1,i2,i3))
+              {
+                COEFF(m,i1m,i2m,i3m)=VC(i1,i2,i3,1)*(OPXS(m,i1,i2,i3)+OPYS(m,i1,i2,i3)+OPZS(m,i1,i2,i3))
                                    + VC(i1,i2,i3,0)*COEFF(m,i1m,i2m,i3m);
-	      }
-	    }
-	    
-	  }
-	  else
-	  {
-	    // constant coefficients 
-	    if( numberOfDimensions==1 || rectangular )
-	      coeff(M0,I1m,I2m,I3m)=beta*opX+alpha*coeff(M0,I1m,I2m,I3m);
-	    else if( numberOfDimensions==2 )
-	      coeff(M0,I1m,I2m,I3m)=beta*(opX+opY)+alpha*coeff(M0,I1m,I2m,I3m);
-	    else
-	      coeff(M0,I1m,I2m,I3m)=beta*(opX+opY+opZ)+alpha*coeff(M0,I1m,I2m,I3m);
-	  }
-	  
-	  for( c=C.getBase(); c<=C.getBound(); c++ )                        
-	    for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
+              }
+            }
+            
+          }
+          else
+          {
+            // constant coefficients 
+            if( numberOfDimensions==1 || rectangular )
+              coeff(M0,I1m,I2m,I3m)=beta*opX+alpha*coeff(M0,I1m,I2m,I3m);
+            else if( numberOfDimensions==2 )
+              coeff(M0,I1m,I2m,I3m)=beta*(opX+opY)+alpha*coeff(M0,I1m,I2m,I3m);
+            else
+              coeff(M0,I1m,I2m,I3m)=beta*(opX+opY+opZ)+alpha*coeff(M0,I1m,I2m,I3m);
+          }
+          
+          for( c=C.getBase(); c<=C.getBound(); c++ )                        
+            for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
               if( c!=c0 || ee!=e0 )
-		coeff(M+CE(c,ee),I1m,I2m,I3m)=coeff(M0,I1m,I2m,I3m);
-	}
+                coeff(M+CE(c,ee),I1m,I2m,I3m)=coeff(M0,I1m,I2m,I3m);
+        }
 
         // fix up equation numbers -- stencil is centred around the boundary point
-	for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
-	{
-	  for( c=C.getBase(); c<=C.getBound(); c++ )                        
-	  {
-	    ForStencil(m1,m2,m3)  
-	      sparse.setCoefficientIndex(M123CE(m1,m2,m3,c,ee), ee,J1m,J2m,J3m, c,(J1+m1),(J2+m2),(J3+m3) );  
-	  }
-	  sparse.setClassify(SparseRepForMGF::ghost1,J1m,J2m,J3m,ee);
-	}
+        for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
+        {
+          for( c=C.getBase(); c<=C.getBound(); c++ )                        
+          {
+            ForStencil(m1,m2,m3)  
+              sparse.setCoefficientIndex(M123CE(m1,m2,m3,c,ee), ee,J1m,J2m,J3m, c,(J1+m1),(J2+m2),(J3+m3) );  
+          }
+          sparse.setClassify(SparseRepForMGF::ghost1,J1m,J2m,J3m,ee);
+        }
         // sparse.classify.display("Here is classify after applyBoundaryConditionCoefficients");
-	break;
-	
+        break;
+        
       }
       
       case normalDotScalarGrad:
       {
 
-	realSerialArray  opX,opY,opZ;
-	// *************** normalDotScalarGrad *******************
-	opX.redim(Mv,   // holds a gradient (i.e. a vector)
-		  Range(I1.getBase(),I1.getBound()),
-		  Range(I2.getBase(),I2.getBound()),
-		  Range(I3.getBase(),I3.getBound()));
+        realSerialArray  opX,opY,opZ;
+        // *************** normalDotScalarGrad *******************
+        opX.redim(Mv,   // holds a gradient (i.e. a vector)
+                  Range(I1.getBase(),I1.getBound()),
+                  Range(I2.getBase(),I2.getBound()),
+                  Range(I3.getBase(),I3.getBound()));
 
         if( bcParams.getVariableCoefficients(grid)==0 )
-	{
-	  printf("MappedGridOperators::applyBoundaryConditionCoefficients:ERROR: The BoundaryConditionParameters \n"
+        {
+          printf("MappedGridOperators::applyBoundaryConditionCoefficients:ERROR: The BoundaryConditionParameters \n"
                  " do not have a variableCoefficient grid function defined in them. \n"
                  "The normalDotScalarGrad boundary condition requires a grid function to use for the scalar.\n");
-	  Overture::abort("error");
-	}
+          Overture::abort("error");
+        }
         #ifndef USE_PPP
           RealMappedGridFunction & scalar = *bcParams.getVariableCoefficients(grid);
           opX=scalarGradCoefficients(scalar,I1,I2,I3,0,0)(Mv,I1,I2,I3);
         #else
-	  Overture::abort("ERROR: finish this Bill!");
-	#endif
+          Overture::abort("ERROR: finish this Bill!");
+        #endif
 
         // for( axis=0; axis<numberOfDimensions; axis++ )
         if( useNewVersion )
-	{
+        {
           real *normalp = normal.Array_Descriptor.Array_View_Pointer3;
           const int normalDim0=normal.getRawDataSize(0);
           const int normalDim1=normal.getRawDataSize(1);
@@ -747,378 +747,378 @@ applyBoundaryConditionCoefficients(realMappedGridFunction & uCoeff,
           #define OPXS(i0,i1,i2,i3) opXp[i0+opXDim0*(i1+opXDim1*(i2+opXDim2*(i3)))]
 
           const int mv1=stencilSize, mv2=stencilSize*2;
-	  if( numberOfDimensions==1 )
-	  {
-	    FOR_4D(m,i1,i2,i3,M,I1,I2,I3)
-	    {
-	      OPXS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n1);
-	    }
-	  }
-	  else if( numberOfDimensions==2 )
-	  {
-	    FOR_4D(m,i1,i2,i3,M,I1,I2,I3)
-	    {
-	      OPXS(m    ,i1,i2,i3)*=NORMAL(i1,i2,i3,n1);
-	      OPXS(m+mv1,i1,i2,i3)*=NORMAL(i1,i2,i3,n2);
-	    }
-	  }
-	  else
-	  {
-	    FOR_4D(m,i1,i2,i3,M,I1,I2,I3)
-	    {
-	      OPXS(m    ,i1,i2,i3)*=NORMAL(i1,i2,i3,n1);
-	      OPXS(m+mv1,i1,i2,i3)*=NORMAL(i1,i2,i3,n2);
-	      OPXS(m+mv2,i1,i2,i3)*=NORMAL(i1,i2,i3,n3);
-	    }
-	  }
+          if( numberOfDimensions==1 )
+          {
+            FOR_4D(m,i1,i2,i3,M,I1,I2,I3)
+            {
+              OPXS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n1);
+            }
+          }
+          else if( numberOfDimensions==2 )
+          {
+            FOR_4D(m,i1,i2,i3,M,I1,I2,I3)
+            {
+              OPXS(m    ,i1,i2,i3)*=NORMAL(i1,i2,i3,n1);
+              OPXS(m+mv1,i1,i2,i3)*=NORMAL(i1,i2,i3,n2);
+            }
+          }
+          else
+          {
+            FOR_4D(m,i1,i2,i3,M,I1,I2,I3)
+            {
+              OPXS(m    ,i1,i2,i3)*=NORMAL(i1,i2,i3,n1);
+              OPXS(m+mv1,i1,i2,i3)*=NORMAL(i1,i2,i3,n2);
+              OPXS(m+mv2,i1,i2,i3)*=NORMAL(i1,i2,i3,n3);
+            }
+          }
 
-	}
-	else
-	{
-	  ForStencil(m1,m2,m3)
-	  {
-	    OPX(m1,m2,m3,n,I1,I2,I3)*=normal(I1,I2,I3,axis1);
-	    if( numberOfDimensions>1 )
-	      OPX(m1,m2,m3,n+1,I1,I2,I3)*=normal(I1,I2,I3,axis2);
-	    if( numberOfDimensions>2 )
-	      OPX(m1,m2,m3,n+2,I1,I2,I3)*=normal(I1,I2,I3,axis3);
-	  }
-	}
-	
+        }
+        else
+        {
+          ForStencil(m1,m2,m3)
+          {
+            OPX(m1,m2,m3,n,I1,I2,I3)*=normal(I1,I2,I3,axis1);
+            if( numberOfDimensions>1 )
+              OPX(m1,m2,m3,n+1,I1,I2,I3)*=normal(I1,I2,I3,axis2);
+            if( numberOfDimensions>2 )
+              OPX(m1,m2,m3,n+2,I1,I2,I3)*=normal(I1,I2,I3,axis3);
+          }
+        }
+        
         if( numberOfComponentsForCoefficients > 1 )
           coeff(ME,I1m,I2m,I3m)=0.;  // zero out boundary equation
 
-	if( numberOfDimensions==1 )
-	  coeff(M0,I1m,I2m,I3m)=opX(M0,I1,I2,I3);
-	else if( numberOfDimensions==2 )
-	  coeff(M0,I1m,I2m,I3m)=opX(M0,I1,I2,I3)+opX(M0+stencilSize,I1,I2,I3);
-	else if( numberOfDimensions==3 )
-	  coeff(M0,I1m,I2m,I3m)=opX(M0,I1,I2,I3)+opX(M0+stencilSize,I1,I2,I3)+opX(M0+2*stencilSize,I1,I2,I3);
+        if( numberOfDimensions==1 )
+          coeff(M0,I1m,I2m,I3m)=opX(M0,I1,I2,I3);
+        else if( numberOfDimensions==2 )
+          coeff(M0,I1m,I2m,I3m)=opX(M0,I1,I2,I3)+opX(M0+stencilSize,I1,I2,I3);
+        else if( numberOfDimensions==3 )
+          coeff(M0,I1m,I2m,I3m)=opX(M0,I1,I2,I3)+opX(M0+stencilSize,I1,I2,I3)+opX(M0+2*stencilSize,I1,I2,I3);
 
         for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
-	{
-	  for( c=C.getBase(); c<=C.getBound(); c++ )                        
-	  {
-	    ForStencil(m1,m2,m3)  
-	      sparse.setCoefficientIndex(M123CE(m1,m2,m3,c,ee), ee,J1m,J2m,J3m, c,(J1+m1),(J2+m2),(J3+m3) );  
-	  }
-	  sparse.setClassify(SparseRepForMGF::ghost1,J1m,J2m,J3m,ee);
-	}
+        {
+          for( c=C.getBase(); c<=C.getBound(); c++ )                        
+          {
+            ForStencil(m1,m2,m3)  
+              sparse.setCoefficientIndex(M123CE(m1,m2,m3,c,ee), ee,J1m,J2m,J3m, c,(J1+m1),(J2+m2),(J3+m3) );  
+          }
+          sparse.setClassify(SparseRepForMGF::ghost1,J1m,J2m,J3m,ee);
+        }
         // sparse.classify.display("Here is classify after applyBoundaryConditionCoefficients");
 
-	
-	}
-	break;
+        
+        }
+        break;
 
       case normalComponent:
 
         if( numberOfComponentsForCoefficients < numberOfDimensions || C.length()!=numberOfDimensions )
-	{
-	  cout << "applyBoundaryConditionCoefficients:ERROR: Cannot apply a normalComponent boundary condition\n";
+        {
+          cout << "applyBoundaryConditionCoefficients:ERROR: Cannot apply a normalComponent boundary condition\n";
           if(  C.length()!=numberOfDimensions )
             printf("The number of components (length of argument `C') must equal the number of space dimensions\n");
-	  else
+          else
             printf("numberOfComponentsForCoefficients < numberOfDimensions\n");
-	  Overture::abort("error");
-	}
-	if( saveBoundaryPoints )
-	{
+          Overture::abort("error");
+        }
+        if( saveBoundaryPoints )
+        {
           // save coefficients so we can reset some points where the BC should NOT be applied
           resetBoundaryPoints=TRUE;  // we reset the points after the switch statement
           coeffSave.redim(ME,I1,I2,I3);
           coeffSave=coeff(ME,I1,I2,I3);  
-	}
-	
+        }
+        
         coeff(ME,I1,I2,I3)=0.; // set all coefficients to zero.
         normal.reshape(1,normal.dimension(0),normal.dimension(1),normal.dimension(2),normal.dimension(3));
-	m1=m2=m3=0;
-	for( c=C.getBase(); c<=C.getBound(); c++ )                        
-	{
-	  for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
-	  {
+        m1=m2=m3=0;
+        for( c=C.getBase(); c<=C.getBound(); c++ )                        
+        {
+          for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
+          {
             coeff(M123CE(m1,m2,m3,c,ee),I1,I2,I3)=normal(0,I1,I2,I3,c-C.getBase());
-	  }
-	}
+          }
+        }
         normal.reshape(normal.dimension(1),normal.dimension(2),normal.dimension(3),normal.dimension(4));
-	break;
+        break;
       case tangentialComponent0:
       case tangentialComponent1:
-	if( saveBoundaryPoints )
-	{
+        if( saveBoundaryPoints )
+        {
           // save coefficients so we can reset some points where the BC should NOT be applied
           resetBoundaryPoints=TRUE;  // we reset the points after the switch statement
           coeffSave.redim(ME,I1,I2,I3);
           coeffSave=coeff(ME,I1,I2,I3);  
-	}
+        }
 
-	nt= bcType==BCTypes::tangentialComponent0 ? 0 : 1;
-	ndt=nt*numberOfDimensions;  // for indexing into the tangent array (last two components are merged)
-	if( numberOfDimensions==1 )
-	{
-	  cout << "applyBoundaryConditionCoefficients::ERROR: cannot apply tangentialComponent" << nt << " BC in 1D\n";
-	  Overture::abort("error");
-	}
+        nt= bcType==BCTypes::tangentialComponent0 ? 0 : 1;
+        ndt=nt*numberOfDimensions;  // for indexing into the tangent array (last two components are merged)
+        if( numberOfDimensions==1 )
+        {
+          cout << "applyBoundaryConditionCoefficients::ERROR: cannot apply tangentialComponent" << nt << " BC in 1D\n";
+          Overture::abort("error");
+        }
         if( numberOfComponentsForCoefficients < numberOfDimensions || C.length()!=numberOfDimensions )
-	{
-	  cout << "applyBoundaryConditionCoefficients:ERROR: Cannoy apply a normalComponent boundary condition\n";
-	  Overture::abort("error");
-	}
-	
+        {
+          cout << "applyBoundaryConditionCoefficients:ERROR: Cannoy apply a normalComponent boundary condition\n";
+          Overture::abort("error");
+        }
+        
         coeff(ME,I1,I2,I3)=0.; // set all coefficients to zero.
         tangent.reshape(1,tangent.dimension(0),tangent.dimension(1),tangent.dimension(2),tangent.dimension(3));
-	for( c=C.getBase(); c<=C.getBound(); c++ )                        
-	{
-	  for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
-	  {
-	    m1=m2=m3=0;
+        for( c=C.getBase(); c<=C.getBound(); c++ )                        
+        {
+          for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
+          {
+            m1=m2=m3=0;
             coeff(M123CE(m1,m2,m3,c,ee),I1,I2,I3)=tangent(0,I1,I2,I3,c-C.getBase()+ndt);
-	  }
-	}
+          }
+        }
         tangent.reshape(tangent.dimension(1),tangent.dimension(2),tangent.dimension(3),tangent.dimension(4));
-	break;
+        break;
 
       case generalMixedDerivative:
       {
-	if( bcParams.a.getLength(0)<numberOfDimensions+1 )
-	{
-	  printf("MappedGridOperators::applyBoundaryConditionCoefficients:ERROR applying the "
-		 "generalMixedDerivative BC\n");
-	  printf(" The coefficients for `a' must be set in the BoundaryConditionParameters\n");
-	  exit(1);
-	}
+        if( bcParams.a.getLength(0)<numberOfDimensions+1 )
+        {
+          printf("MappedGridOperators::applyBoundaryConditionCoefficients:ERROR applying the "
+                 "generalMixedDerivative BC\n");
+          printf(" The coefficients for `a' must be set in the BoundaryConditionParameters\n");
+          exit(1);
+        }
         b0=bcParams.a(0);
-	b1=bcParams.a(1);
-	b2= numberOfDimensions>1 ? bcParams.a(2) : 0.;
-	b3= numberOfDimensions>2 ? bcParams.a(3) : 0.;        if( numberOfComponentsForCoefficients > 1 )
+        b1=bcParams.a(1);
+        b2= numberOfDimensions>1 ? bcParams.a(2) : 0.;
+        b3= numberOfDimensions>2 ? bcParams.a(3) : 0.;        if( numberOfComponentsForCoefficients > 1 )
 
         if( numberOfComponentsForCoefficients > 1 )
           coeff(ME,I1m,I2m,I3m)=0.;  // zero out boundary equation
 
-	realSerialArray  opX; 
-	opX.redim(Range(M.getBase(),M.getBound()),   
-		  Range(I1.getBase(),I1.getBound()),
-		  Range(I2.getBase(),I2.getBound()),
-		  Range(I3.getBase(),I3.getBound()));
+        realSerialArray  opX; 
+        opX.redim(Range(M.getBase(),M.getBound()),   
+                  Range(I1.getBase(),I1.getBound()),
+                  Range(I2.getBase(),I2.getBound()),
+                  Range(I3.getBase(),I3.getBound()));
 
         opX=0.;  // *wdh* 060403
-	assignCoefficients(identityOperator,opX,I1,I2,I3,0,0);
+        assignCoefficients(identityOperator,opX,I1,I2,I3,0,0);
         coeff(M0,I1m,I2m,I3m)=b0*opX(M,I1,I2,I3);
 
-	assignCoefficients(xDerivative,opX,I1,I2,I3,0,0);
+        assignCoefficients(xDerivative,opX,I1,I2,I3,0,0);
         coeff(M0,I1m,I2m,I3m)+=b1*opX;
 
-	assignCoefficients(yDerivative,opX,I1,I2,I3,0,0);
+        assignCoefficients(yDerivative,opX,I1,I2,I3,0,0);
         coeff(M0,I1m,I2m,I3m)+=b2*opX;
-	if( numberOfDimensions==3 )
-	{
-	  assignCoefficients(zDerivative,opX,I1,I2,I3,0,0);
-	  coeff(M0,I1m,I2m,I3m)+=b3*opX;
-	}
-	
+        if( numberOfDimensions==3 )
+        {
+          assignCoefficients(zDerivative,opX,I1,I2,I3,0,0);
+          coeff(M0,I1m,I2m,I3m)+=b3*opX;
+        }
+        
 
-// 	if( numberOfDimensions==2 )
-// 	{
-// 	  coeff(M0,I1m,I2m,I3m)=b0*identityCoefficients(I1,I2,I3,0,0)(M,I1,I2,I3) 
+//      if( numberOfDimensions==2 )
+//      {
+//        coeff(M0,I1m,I2m,I3m)=b0*identityCoefficients(I1,I2,I3,0,0)(M,I1,I2,I3) 
 //                             + b1*xCoefficients(I1,I2,I3,0,0)(M,I1,I2,I3)
-// 	                    + b2*yCoefficients(I1,I2,I3,0,0)(M,I1,I2,I3);
-// 	}
-// 	else
-// 	{
-// 	  coeff(M0,I1m,I2m,I3m)=b0*identityCoefficients(I1,I2,I3,0,0)(M,I1,I2,I3) 
+//                          + b2*yCoefficients(I1,I2,I3,0,0)(M,I1,I2,I3);
+//      }
+//      else
+//      {
+//        coeff(M0,I1m,I2m,I3m)=b0*identityCoefficients(I1,I2,I3,0,0)(M,I1,I2,I3) 
 //                 + b1*xCoefficients(I1,I2,I3,0,0)(M,I1,I2,I3)
-// 	        + b2*yCoefficients(I1,I2,I3,0,0)(M,I1,I2,I3)
+//              + b2*yCoefficients(I1,I2,I3,0,0)(M,I1,I2,I3)
 //                 + b3*zCoefficients(I1,I2,I3,0,0)(M,I1,I2,I3);
-// 	}
-	for( c=C.getBase(); c<=C.getBound(); c++ )                        
-	  for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
-	    if( c!=c0 || ee!=e0 )
-	      coeff(M+CE(c,ee),I1m,I2m,I3m)=coeff(M0,I1m,I2m,I3m);
+//      }
+        for( c=C.getBase(); c<=C.getBound(); c++ )                        
+          for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
+            if( c!=c0 || ee!=e0 )
+              coeff(M+CE(c,ee),I1m,I2m,I3m)=coeff(M0,I1m,I2m,I3m);
         for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
-	{
-	  for( c=C.getBase(); c<=C.getBound(); c++ )                        
-	  {
-	    ForStencil(m1,m2,m3)  
-	      sparse.setCoefficientIndex(M123CE(m1,m2,m3,c,ee), ee,J1m,J2m,J3m, c,(J1+m1),(J2+m2),(J3+m3) );  
-	  }
-	  sparse.setClassify(SparseRepForMGF::ghost1,J1m,J2m,J3m,ee);
-	}
-	break;
+        {
+          for( c=C.getBase(); c<=C.getBound(); c++ )                        
+          {
+            ForStencil(m1,m2,m3)  
+              sparse.setCoefficientIndex(M123CE(m1,m2,m3,c,ee), ee,J1m,J2m,J3m, c,(J1+m1),(J2+m2),(J3+m3) );  
+          }
+          sparse.setClassify(SparseRepForMGF::ghost1,J1m,J2m,J3m,ee);
+        }
+        break;
       }
       case aDotU:
-	if( saveBoundaryPoints )
-	{
+        if( saveBoundaryPoints )
+        {
           // save coefficients so we can reset some points where the BC should NOT be applied
           resetBoundaryPoints=TRUE;  // we reset the points after the switch statement
           coeffSave.redim(ME,I1,I2,I3);
           coeffSave=coeff(ME,I1,I2,I3);  
-	}
-	if( bcParams.a.getLength(0)<numberOfDimensions )
-	{
-	  printf("MappedGridOperators::applyBoundaryConditionCoefficients:ERROR applying the aDotU BC\n");
-	  printf(" The coefficients for `a' must be set in the BoundaryConditionParameters\n");
-	  exit(1);
-	}
-	a1=bcParams.a(0);
-	a2= numberOfDimensions>1 ? bcParams.a(1) : 0.;
-	a3= numberOfDimensions>2 ? bcParams.a(2) : 0.;
-	aNorm=a1*a1+a2*a2+a3*a3;
-	if( aNorm==0. )
-	{
-	  printf("MappedGridOperators::applyBoundaryConditionCoefficients:ERROR applying a aDotU BC\n");
-	  printf(" The coefficients for `a' are all zero! side=%i, axis=%i\n",side,axis);
-	  exit(1);
-	}
-	aNorm=1./SQRT(aNorm); 
-	a1*=aNorm;  a2*=aNorm;  a3*=aNorm;  // Normalize "a"
+        }
+        if( bcParams.a.getLength(0)<numberOfDimensions )
+        {
+          printf("MappedGridOperators::applyBoundaryConditionCoefficients:ERROR applying the aDotU BC\n");
+          printf(" The coefficients for `a' must be set in the BoundaryConditionParameters\n");
+          exit(1);
+        }
+        a1=bcParams.a(0);
+        a2= numberOfDimensions>1 ? bcParams.a(1) : 0.;
+        a3= numberOfDimensions>2 ? bcParams.a(2) : 0.;
+        aNorm=a1*a1+a2*a2+a3*a3;
+        if( aNorm==0. )
+        {
+          printf("MappedGridOperators::applyBoundaryConditionCoefficients:ERROR applying a aDotU BC\n");
+          printf(" The coefficients for `a' are all zero! side=%i, axis=%i\n",side,axis);
+          exit(1);
+        }
+        aNorm=1./SQRT(aNorm); 
+        a1*=aNorm;  a2*=aNorm;  a3*=aNorm;  // Normalize "a"
         coeff(ME,I1,I2,I3)=0.; // set all coefficients to zero.
-	m1=m2=m3=0;
-	for( c=C.getBase(); c<=C.getBound(); c++ )                        
-	{
-	  for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
-	  {
+        m1=m2=m3=0;
+        for( c=C.getBase(); c<=C.getBound(); c++ )                        
+        {
+          for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
+          {
             coeff(M123CE(m1,m2,m3,c,ee),I1,I2,I3)=a[c-C.getBase()];
-	  }
-	}
-	break;
+          }
+        }
+        break;
       case aDotGradU:
         cout << "applyBoundaryConditionCoefficients: aDotGradU boundary condition is not implemented yet\n";
         break;
       case evenSymmetry:
       case oddSymmetry:
-	// u(ghost)=u(-ghost)
-	if( ghostLineToAssign > 3 || ghostLineToAssign < 0 )
-	  cout << "applyBoundaryConditionCoefficients::ERROR? extrapolating ghost line " << ghostLineToAssign << endl; 
+        // u(ghost)=u(-ghost)
+        if( ghostLineToAssign > 3 || ghostLineToAssign < 0 )
+          cout << "applyBoundaryConditionCoefficients::ERROR? extrapolating ghost line " << ghostLineToAssign << endl; 
 
         getGhostIndex( mg.indexRange(),side,axis,I1m,I2m,I3m, ghostLineToAssign,bcParams.extraInTangentialDirections);
         getGhostIndex( mg.indexRange(),side,axis,I1p,I2p,I3p,-ghostLineToAssign,bcParams.extraInTangentialDirections);
 
         // --> fixed 100413 *wdh* : 
-	// Remember the full size Index's: 
-	J1m=I1m, J2m=I2m, J3m=I3m;
-	J1p=I1p, J2p=I2p, J3p=I3p;
-	ok=getLocalIndex(mg.mask(),maskLocal,I1m,I2m,I3m,I1m,I2m,I3m); 
-	if( !ok ) continue;  // there are no points on this processor
-	ok=getLocalIndex(mg.mask(),maskLocal,I1p,I2p,I3p,I1p,I2p,I3p); 
+        // Remember the full size Index's: 
+        J1m=I1m, J2m=I2m, J3m=I3m;
+        J1p=I1p, J2p=I2p, J3p=I3p;
+        ok=getLocalIndex(mg.mask(),maskLocal,I1m,I2m,I3m,I1m,I2m,I3m); 
+        if( !ok ) continue;  // there are no points on this processor
+        ok=getLocalIndex(mg.mask(),maskLocal,I1p,I2p,I3p,I1p,I2p,I3p); 
         // <--- 
 
-	coeff(ME,I1m,I2m,I3m)=0.;
-	coeff(0,I1m,I2m,I3m)= 1.;
+        coeff(ME,I1m,I2m,I3m)=0.;
+        coeff(0,I1m,I2m,I3m)= 1.;
         if( bcType==BCTypes::BCNames(evenSymmetry) )
-   	  coeff(1,I1m,I2m,I3m)=-1.;
+          coeff(1,I1m,I2m,I3m)=-1.;
         else
-   	  coeff(1,I1m,I2m,I3m)=+1.;
-	  
-	for( c=C.getBase(); c<=C.getBound(); c++ )                        
-	  for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
-	    if( c!=c0 || ee!=e0 )
-	      coeff(M+CE(c,ee),I1m,I2m,I3m)=coeff(M0,I1m,I2m,I3m);
+          coeff(1,I1m,I2m,I3m)=+1.;
+          
+        for( c=C.getBase(); c<=C.getBound(); c++ )                        
+          for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
+            if( c!=c0 || ee!=e0 )
+              coeff(M+CE(c,ee),I1m,I2m,I3m)=coeff(M0,I1m,I2m,I3m);
         for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
-	{
-	  for( c=C.getBase(); c<=C.getBound(); c++ )                        
-	  {
-	    sparse.setCoefficientIndex(CE(c,ee)+0, ee,J1m,J2m,J3m, c,J1m,J2m,J3m );  
-	    sparse.setCoefficientIndex(CE(c,ee)+1, ee,J1m,J2m,J3m, c,J1p,J2p,J3p );  
-	  }
-  	  sparse.setClassify(SparseRepForMGF::extrapolation,J1m,J2m,J3m,ee);
-	}
+        {
+          for( c=C.getBase(); c<=C.getBound(); c++ )                        
+          {
+            sparse.setCoefficientIndex(CE(c,ee)+0, ee,J1m,J2m,J3m, c,J1m,J2m,J3m );  
+            sparse.setCoefficientIndex(CE(c,ee)+1, ee,J1m,J2m,J3m, c,J1p,J2p,J3p );  
+          }
+          sparse.setClassify(SparseRepForMGF::extrapolation,J1m,J2m,J3m,ee);
+        }
         break;
       case vectorSymmetry:
       {
         //
-	// Apply a symmetry condition to a vector u=(u1,u2,u3)
-	//    n.u is odd  
-	//    t.u is even 
+        // Apply a symmetry condition to a vector u=(u1,u2,u3)
+        //    n.u is odd  
+        //    t.u is even 
         assert( ghostLineToAssign==1 );
-	
+        
         if( C.length()!=numberOfDimensions || E.length()!=numberOfDimensions )
-	{
+        {
           printf("MappedGridOperators::applyBoundaryConditionCoefficients:ERROR applying a vectorSymmetry BC\n");
-	  printf(" C.length()!=numberOfDimensions || E.length()!=numberOfDimensions\n");
-	  Overture::abort("error");
-	}
-	coeff(ME,I1m,I2m,I3m)=0.;
+          printf(" C.length()!=numberOfDimensions || E.length()!=numberOfDimensions\n");
+          Overture::abort("error");
+        }
+        coeff(ME,I1m,I2m,I3m)=0.;
         normal.reshape(1,normal.dimension(0),normal.dimension(1),normal.dimension(2),normal.dimension(3));
 
         // The last two dimensions of the tangent are merged
         assert( tangent.getLength(3) == numberOfDimensions*(numberOfDimensions-1) );
         tangent.reshape(1,tangent.dimension(0),tangent.dimension(1),tangent.dimension(2),tangent.dimension(3));
         
-	if( false )
-	{
+        if( false )
+        {
           // old way: this could result in a zero diagonal element
-  	  //    n.u is odd  (equation 0)
-	  //    t.u is even  (equation 1,[2])
-	  m1=m2=m3=0;
-	  for( c=C.getBase(); c<=C.getBound(); c++ )  
-	  {
-	    mm[axis]=2*side-1;  // note: mm[0:2] == {m1,m2,m3}
-	    coeff(M123CE(m1,m2,m3,c,e0),I1m,I2m,I3m)= normal(0,I1,I2,I3,c-C.getBase());
-	    coeff(M123CE(m1,m2,m3,c,e1),I1m,I2m,I3m)=tangent(0,I1,I2,I3,c-C.getBase());
-	    if( numberOfDimensions==3 )
-	      coeff(M123CE(m1,m2,m3,c,e2),I1m,I2m,I3m)=tangent(0,I1,I2,I3,c+3-C.getBase());
-	    mm[axis]=-mm[axis];
-	    coeff(M123CE(m1,m2,m3,c,e0),I1m,I2m,I3m)=  normal(0,I1,I2,I3,c-C.getBase());
-	    coeff(M123CE(m1,m2,m3,c,e1),I1m,I2m,I3m)=-tangent(0,I1,I2,I3,c-C.getBase());
-	    if( numberOfDimensions==3 )
-	      coeff(M123CE(m1,m2,m3,c,e2),I1m,I2m,I3m)=-tangent(0,I1,I2,I3,c+3-C.getBase());
-	  }
-	}
-	else
-	{
+          //    n.u is odd  (equation 0)
+          //    t.u is even  (equation 1,[2])
+          m1=m2=m3=0;
+          for( c=C.getBase(); c<=C.getBound(); c++ )  
+          {
+            mm[axis]=2*side-1;  // note: mm[0:2] == {m1,m2,m3}
+            coeff(M123CE(m1,m2,m3,c,e0),I1m,I2m,I3m)= normal(0,I1,I2,I3,c-C.getBase());
+            coeff(M123CE(m1,m2,m3,c,e1),I1m,I2m,I3m)=tangent(0,I1,I2,I3,c-C.getBase());
+            if( numberOfDimensions==3 )
+              coeff(M123CE(m1,m2,m3,c,e2),I1m,I2m,I3m)=tangent(0,I1,I2,I3,c+3-C.getBase());
+            mm[axis]=-mm[axis];
+            coeff(M123CE(m1,m2,m3,c,e0),I1m,I2m,I3m)=  normal(0,I1,I2,I3,c-C.getBase());
+            coeff(M123CE(m1,m2,m3,c,e1),I1m,I2m,I3m)=-tangent(0,I1,I2,I3,c-C.getBase());
+            if( numberOfDimensions==3 )
+              coeff(M123CE(m1,m2,m3,c,e2),I1m,I2m,I3m)=-tangent(0,I1,I2,I3,c+3-C.getBase());
+          }
+        }
+        else
+        {
           // new way: this will always have a diagonal element (of 1)
           // equation d:  u_d(-1) + (n.u)(1) n_d - (t^1.u)(1) t^1_d - (t^2.u)(1) t^2_d = 0 
           // printf(" ***** applyBCC: fill in coeff for vectorSymmetry *****\n");
-	  
+          
           m1=m2=m3=0;
           mm[axis]=2*side-1;  // note: mm[0:2] == {m1,m2,m3}
           const int c1=c0+1, c2=c0+2;
           if( numberOfDimensions==2 )
-	  {
+          {
             for( int d=0; d<numberOfDimensions; d++ )
-	    { // assign equation e0+d: 
+            { // assign equation e0+d: 
               // coeff of the ghost point (m1,m2,m3) is for u_d:  
-	      coeff(M123CE( m1, m2, m3,c0+d,e0+d),I1m,I2m,I3m)= 1.;
+              coeff(M123CE( m1, m2, m3,c0+d,e0+d),I1m,I2m,I3m)= 1.;
               // coeff's of the first line in -(m1,m2,m3) for u_m, m=c0,c1
-	      coeff(M123CE(-m1,-m2,-m3,c0,e0+d),I1m,I2m,I3m)=(  normal(0,I1,I2,I3,0)* normal(0,I1,I2,I3,d)
-							      -tangent(0,I1,I2,I3,0)*tangent(0,I1,I2,I3,d));
-	      coeff(M123CE(-m1,-m2,-m3,c1,e0+d),I1m,I2m,I3m)=(  normal(0,I1,I2,I3,1)* normal(0,I1,I2,I3,d)
-							      -tangent(0,I1,I2,I3,1)*tangent(0,I1,I2,I3,d));
-	    }
-	  }
-	  else if( numberOfDimensions==3 )
-	  {
+              coeff(M123CE(-m1,-m2,-m3,c0,e0+d),I1m,I2m,I3m)=(  normal(0,I1,I2,I3,0)* normal(0,I1,I2,I3,d)
+                                                              -tangent(0,I1,I2,I3,0)*tangent(0,I1,I2,I3,d));
+              coeff(M123CE(-m1,-m2,-m3,c1,e0+d),I1m,I2m,I3m)=(  normal(0,I1,I2,I3,1)* normal(0,I1,I2,I3,d)
+                                                              -tangent(0,I1,I2,I3,1)*tangent(0,I1,I2,I3,d));
+            }
+          }
+          else if( numberOfDimensions==3 )
+          {
             for( int d=0; d<numberOfDimensions; d++ )
-	    { // assign equation e0+d: 
+            { // assign equation e0+d: 
               // coeff of the ghost point (m1,m2,m3) is for u_d: 
-	      coeff(M123CE( m1, m2, m3,c0+d,e0+d),I1m,I2m,I3m)= 1.;
+              coeff(M123CE( m1, m2, m3,c0+d,e0+d),I1m,I2m,I3m)= 1.;
               // coeff's of the first line in -(m1,m2,m3) for u_m, m=c0,c1,c2
-	      coeff(M123CE(-m1,-m2,-m3,c0,e0+d),I1m,I2m,I3m)=(  normal(0,I1,I2,I3,0)* normal(0,I1,I2,I3,d)
-							      -tangent(0,I1,I2,I3,0)*tangent(0,I1,I2,I3,d)
-							      -tangent(0,I1,I2,I3,3)*tangent(0,I1,I2,I3,3+d));
-	      coeff(M123CE(-m1,-m2,-m3,c1,e0+d),I1m,I2m,I3m)=(  normal(0,I1,I2,I3,1)* normal(0,I1,I2,I3,d)
-							      -tangent(0,I1,I2,I3,1)*tangent(0,I1,I2,I3,d)
-							      -tangent(0,I1,I2,I3,4)*tangent(0,I1,I2,I3,3+d));
-	      coeff(M123CE(-m1,-m2,-m3,c2,e0+d),I1m,I2m,I3m)=(  normal(0,I1,I2,I3,2)* normal(0,I1,I2,I3,d)
-							      -tangent(0,I1,I2,I3,2)*tangent(0,I1,I2,I3,d)
-							      -tangent(0,I1,I2,I3,5)*tangent(0,I1,I2,I3,3+d));
-	    }
-	  }
-	  else
-	  { // in 1D: u(-1) = -u(1) 
+              coeff(M123CE(-m1,-m2,-m3,c0,e0+d),I1m,I2m,I3m)=(  normal(0,I1,I2,I3,0)* normal(0,I1,I2,I3,d)
+                                                              -tangent(0,I1,I2,I3,0)*tangent(0,I1,I2,I3,d)
+                                                              -tangent(0,I1,I2,I3,3)*tangent(0,I1,I2,I3,3+d));
+              coeff(M123CE(-m1,-m2,-m3,c1,e0+d),I1m,I2m,I3m)=(  normal(0,I1,I2,I3,1)* normal(0,I1,I2,I3,d)
+                                                              -tangent(0,I1,I2,I3,1)*tangent(0,I1,I2,I3,d)
+                                                              -tangent(0,I1,I2,I3,4)*tangent(0,I1,I2,I3,3+d));
+              coeff(M123CE(-m1,-m2,-m3,c2,e0+d),I1m,I2m,I3m)=(  normal(0,I1,I2,I3,2)* normal(0,I1,I2,I3,d)
+                                                              -tangent(0,I1,I2,I3,2)*tangent(0,I1,I2,I3,d)
+                                                              -tangent(0,I1,I2,I3,5)*tangent(0,I1,I2,I3,3+d));
+            }
+          }
+          else
+          { // in 1D: u(-1) = -u(1) 
             coeff(M123CE( m1, m2, m3,c0,e0),I1m,I2m,I3m)= 1.;
             coeff(M123CE(-m1,-m2,-m3,c0,e0),I1m,I2m,I3m)= 1.;
-	  }
-	}
-	
+          }
+        }
+        
         for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
-	{
-	  for( c=C.getBase(); c<=C.getBound(); c++ )                        
-	  {
-	    ForStencil(m1,m2,m3)  
-	      sparse.setCoefficientIndex(M123CE(m1,m2,m3,c,ee), ee,J1m,J2m,J3m, c,(J1+m1),(J2+m2),(J3+m3) );  
-	  }
-	  sparse.setClassify(SparseRepForMGF::ghost1,J1m,J2m,J3m,ee);
-	}
+        {
+          for( c=C.getBase(); c<=C.getBound(); c++ )                        
+          {
+            ForStencil(m1,m2,m3)  
+              sparse.setCoefficientIndex(M123CE(m1,m2,m3,c,ee), ee,J1m,J2m,J3m, c,(J1+m1),(J2+m2),(J3+m3) );  
+          }
+          sparse.setClassify(SparseRepForMGF::ghost1,J1m,J2m,J3m,ee);
+        }
         normal.reshape(normal.dimension(1),normal.dimension(2),normal.dimension(3),normal.dimension(4));
         tangent.reshape(tangent.dimension(1),tangent.dimension(2),tangent.dimension(3),tangent.dimension(4));
         break;
@@ -1127,134 +1127,134 @@ applyBoundaryConditionCoefficients(realMappedGridFunction & uCoeff,
       case generalizedDivergence:
       {
         //   \av\cdot\uv = a(0) u(0)_x + a(1) u(1)_y + a(2) u(2)_z = g
-	if( bcParams.a.getLength(0) >= numberOfDimensions )
-	{
-	  b1=bcParams.a(0);
-	  b2= numberOfDimensions>1 ? bcParams.a(1) : 0.;
-	  b3= numberOfDimensions>2 ? bcParams.a(2) : 0.;
-	}
-	else
-	{
-	  b1=b2=b3=1.;  // default values
-	}
-	if( fabs(b1)==0. && (numberOfDimensions<2 || fabs(b2)==0.) && (numberOfDimensions<3 || fabs(b3)==0.) )
-	{
-	  printf("MappedGridOperators::applyBoundaryConditionCoefficients:ERROR applying generalizedDivergence BC\n");
-	  printf(" The elements of a in generalizedDivergence are all zero!\n");
-	  Overture::abort("MappedGridOperators::applyBoundaryConditions:ERROR applying generalizedDivergence BC");
-	}
+        if( bcParams.a.getLength(0) >= numberOfDimensions )
+        {
+          b1=bcParams.a(0);
+          b2= numberOfDimensions>1 ? bcParams.a(1) : 0.;
+          b3= numberOfDimensions>2 ? bcParams.a(2) : 0.;
+        }
+        else
+        {
+          b1=b2=b3=1.;  // default values
+        }
+        if( fabs(b1)==0. && (numberOfDimensions<2 || fabs(b2)==0.) && (numberOfDimensions<3 || fabs(b3)==0.) )
+        {
+          printf("MappedGridOperators::applyBoundaryConditionCoefficients:ERROR applying generalizedDivergence BC\n");
+          printf(" The elements of a in generalizedDivergence are all zero!\n");
+          Overture::abort("MappedGridOperators::applyBoundaryConditions:ERROR applying generalizedDivergence BC");
+        }
         if( C.length()!=numberOfDimensions )
-	{
+        {
           printf("MappedGridOperators::applyBoundaryConditionCoefficients:ERROR applying generalizedDivergence BC\n");
           printf("C.length()!=numberOfDimensions\n");
           Overture::abort("error");
-	}
-	realSerialArray  opX,opY,opZ;
-	opX.redim(Range(M.getBase(),M.getBound()),   
-		  Range(I1.getBase(),I1.getBound()),
-		  Range(I2.getBase(),I2.getBound()),
-		  Range(I3.getBase(),I3.getBound()));
+        }
+        realSerialArray  opX,opY,opZ;
+        opX.redim(Range(M.getBase(),M.getBound()),   
+                  Range(I1.getBase(),I1.getBound()),
+                  Range(I2.getBase(),I2.getBound()),
+                  Range(I3.getBase(),I3.getBound()));
 
         opX=0.;  // *wdh* 060403
-	assignCoefficients(xDerivative,opX,I1,I2,I3,0,0);
+        assignCoefficients(xDerivative,opX,I1,I2,I3,0,0);
 
-	if( numberOfDimensions>=2 )
-	{
-	  opY.redim(opX); 
+        if( numberOfDimensions>=2 )
+        {
+          opY.redim(opX); 
           opY=0.;  // *wdh* 060403
-	  assignCoefficients(yDerivative,opY,I1,I2,I3,0,0);
-	}
-	
-	if( numberOfDimensions==3 )
-	{
-	  opZ.redim(opX); 
+          assignCoefficients(yDerivative,opY,I1,I2,I3,0,0);
+        }
+        
+        if( numberOfDimensions==3 )
+        {
+          opZ.redim(opX); 
           opZ=0.;  // *wdh* 060403
-	  assignCoefficients(zDerivative,opZ,I1,I2,I3,0,0);
-	}
+          assignCoefficients(zDerivative,opZ,I1,I2,I3,0,0);
+        }
 
         coeff(ME,I1m,I2m,I3m)=0.; // set all coefficients to zero.
-	m1=m2=m3=0;
+        m1=m2=m3=0;
         for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
-	{
+        {
           c=C.getBase();
           if( b1==1. )
             coeff(M+CE(c,ee),I1m,I2m,I3m)=opX(M,I1,I2,I3);
           else if( b1!=0. )
             coeff(M+CE(c,ee),I1m,I2m,I3m)=b1*opX(M,I1,I2,I3);
           if( numberOfDimensions>1 )
-	  {
+          {
             c++;
             if( b2==1. )
               coeff(M+CE(c,ee),I1m,I2m,I3m)=opY(M,I1,I2,I3);
             else if( b2!=0. )
               coeff(M+CE(c,ee),I1m,I2m,I3m)=b2*opY(M,I1,I2,I3);
-	  }
+          }
           if( numberOfDimensions>2 )
-	  {
+          {
             c++;
             if( b3==1. )
               coeff(M+CE(c,ee),I1m,I2m,I3m)=opZ(M,I1,I2,I3);
             else
               coeff(M+CE(c,ee),I1m,I2m,I3m)=b3*opZ(M,I1,I2,I3);
-	  }
-	}
+          }
+        }
         // fix up equation numbers:
         for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
-	{
-	  for( c=C.getBase(); c<=C.getBound(); c++ )                        
-	  {
-	    ForStencil(m1,m2,m3)  
-	      sparse.setCoefficientIndex(M123CE(m1,m2,m3,c,ee), ee,J1m,J2m,J3m, c,(J1+m1),(J2+m2),(J3+m3) );  
-	  }
-	  sparse.setClassify(SparseRepForMGF::ghost1,J1m,J2m,J3m,ee);
-	}
+        {
+          for( c=C.getBase(); c<=C.getBound(); c++ )                        
+          {
+            ForStencil(m1,m2,m3)  
+              sparse.setCoefficientIndex(M123CE(m1,m2,m3,c,ee), ee,J1m,J2m,J3m, c,(J1+m1),(J2+m2),(J3+m3) );  
+          }
+          sparse.setClassify(SparseRepForMGF::ghost1,J1m,J2m,J3m,ee);
+        }
         break;
       }
       
       case normalDerivativeOfADotU:
         cout << "applyBoundaryConditionCoefficients: normalDerivativeOfADotU: BC is not implemented yet\n";
-	break;
+        break;
       case normalDerivativeOfNormalComponent:
       case normalDerivativeOfTangentialComponent0:
       case normalDerivativeOfTangentialComponent1:
       {
-	realSerialArray  opX,opY,opZ;
+        realSerialArray  opX,opY,opZ;
 
-	if( bcType==BCTypes::normalDerivativeOfNormalComponent )
-	{
-	  v0=0; v1=1; v2=2;
-	}
-	else
-	{
-	  nt= bcType==BCTypes::normalDerivativeOfTangentialComponent0 ? 0 : 1;
-	  v0=nt*numberOfDimensions; v1=v0+1; v2=v1+1;
-	  if( numberOfDimensions<2+nt )
-	  {
-	    cout << "applyBoundaryCondition::ERROR: cannot apply extrapolateTangentialComponent" << nt 
-		 << " BC in " << numberOfDimensions << "D\n";
-	    Overture::abort("error");
-	  }
-	}
+        if( bcType==BCTypes::normalDerivativeOfNormalComponent )
+        {
+          v0=0; v1=1; v2=2;
+        }
+        else
+        {
+          nt= bcType==BCTypes::normalDerivativeOfTangentialComponent0 ? 0 : 1;
+          v0=nt*numberOfDimensions; v1=v0+1; v2=v1+1;
+          if( numberOfDimensions<2+nt )
+          {
+            cout << "applyBoundaryCondition::ERROR: cannot apply extrapolateTangentialComponent" << nt 
+                 << " BC in " << numberOfDimensions << "D\n";
+            Overture::abort("error");
+          }
+        }
 
-	opX.redim(Range(M.getBase(),M.getBound()),            // dimension (to get base correct)
-		  Range(I1.getBase(),I1.getBound()),
-		  Range(I2.getBase(),I2.getBound()),
-		  Range(I3.getBase(),I3.getBound()));
-	// opX=xCoefficients(I1,I2,I3,0,0)(M,I1,I2,I3);
+        opX.redim(Range(M.getBase(),M.getBound()),            // dimension (to get base correct)
+                  Range(I1.getBase(),I1.getBound()),
+                  Range(I2.getBase(),I2.getBound()),
+                  Range(I3.getBase(),I3.getBound()));
+        // opX=xCoefficients(I1,I2,I3,0,0)(M,I1,I2,I3);
         opX=0.;  // *wdh* 060403
         assignCoefficients(xDerivative,opX,I1,I2,I3,0,0);
-	if( numberOfDimensions>1 )
-	{
-	  opY.redim(opX);
+        if( numberOfDimensions>1 )
+        {
+          opY.redim(opX);
           opY=0.;  // *wdh* 060403
           assignCoefficients(yDerivative,opY,I1,I2,I3,0,0);
-	}
-	if( numberOfDimensions>2 )
-	{
-	  opZ.redim(opX);
+        }
+        if( numberOfDimensions>2 )
+        {
+          opZ.redim(opX);
           opZ=0.;  // *wdh* 060403
-	  assignCoefficients(zDerivative,opZ,I1,I2,I3,0,0);
-	}
+          assignCoefficients(zDerivative,opZ,I1,I2,I3,0,0);
+        }
 
         n=0;
 
@@ -1287,53 +1287,53 @@ applyBoundaryConditionCoefficients(realMappedGridFunction & uCoeff,
         #define OPZS(i0,i1,i2,i3) opZp[i0+opZDim0*(i1+opZDim1*(i2+opZDim2*(i3)))]
 
         n=0;
-	if( useNewVersion )
-	{
-	  if( numberOfDimensions==1 )
-	  {
-	    FOR_4D(m,i1,i2,i3,M,I1,I2,I3)
-	    {
-	      OPXS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n1);
-	    }
-	  }
-	  else if( numberOfDimensions==2 )
-	  {
-	    FOR_4D(m,i1,i2,i3,M,I1,I2,I3)
-	    {
-	      OPXS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n1);
-	      OPYS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n2);
-	    }
-	  }
-	  else
-	  {
-	    FOR_4D(m,i1,i2,i3,M,I1,I2,I3)
-	    {
-	      OPXS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n1);
-	      OPYS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n2);
-	      OPZS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n3);
-	    }
-	  }
-	}
-	else
-	{
-	  ForStencil(m1,m2,m3)
-	  {
-	    OPX(m1,m2,m3,n,I1,I2,I3)*=normal(I1,I2,I3,n1);
-	    if( numberOfDimensions>1 )
-	      OPY(m1,m2,m3,n,I1,I2,I3)*=normal(I1,I2,I3,n2);
-	    if( numberOfDimensions>2 )
-	      OPZ(m1,m2,m3,n,I1,I2,I3)*=normal(I1,I2,I3,n3);
-	  }
-	}
+        if( useNewVersion )
+        {
+          if( numberOfDimensions==1 )
+          {
+            FOR_4D(m,i1,i2,i3,M,I1,I2,I3)
+            {
+              OPXS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n1);
+            }
+          }
+          else if( numberOfDimensions==2 )
+          {
+            FOR_4D(m,i1,i2,i3,M,I1,I2,I3)
+            {
+              OPXS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n1);
+              OPYS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n2);
+            }
+          }
+          else
+          {
+            FOR_4D(m,i1,i2,i3,M,I1,I2,I3)
+            {
+              OPXS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n1);
+              OPYS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n2);
+              OPZS(m,i1,i2,i3)*=NORMAL(i1,i2,i3,n3);
+            }
+          }
+        }
+        else
+        {
+          ForStencil(m1,m2,m3)
+          {
+            OPX(m1,m2,m3,n,I1,I2,I3)*=normal(I1,I2,I3,n1);
+            if( numberOfDimensions>1 )
+              OPY(m1,m2,m3,n,I1,I2,I3)*=normal(I1,I2,I3,n2);
+            if( numberOfDimensions>2 )
+              OPZ(m1,m2,m3,n,I1,I2,I3)*=normal(I1,I2,I3,n3);
+          }
+        }
 
-// 	ForStencil(m1,m2,m3)
-// 	{
-// 	  OPX(m1,m2,m3,n,I1,I2,I3)*=normal(I1,I2,I3,axis1);
-// 	  if( numberOfDimensions>1 )
-//   	    OPY(m1,m2,m3,n,I1,I2,I3)*=normal(I1,I2,I3,axis2);
-// 	  if( numberOfDimensions>2 )
-// 	    OPZ(m1,m2,m3,n,I1,I2,I3)*=normal(I1,I2,I3,axis3);
-// 	}
+//      ForStencil(m1,m2,m3)
+//      {
+//        OPX(m1,m2,m3,n,I1,I2,I3)*=normal(I1,I2,I3,axis1);
+//        if( numberOfDimensions>1 )
+//          OPY(m1,m2,m3,n,I1,I2,I3)*=normal(I1,I2,I3,axis2);
+//        if( numberOfDimensions>2 )
+//          OPZ(m1,m2,m3,n,I1,I2,I3)*=normal(I1,I2,I3,axis3);
+//      }
 
 
         if( numberOfComponentsForCoefficients > 1 )
@@ -1343,79 +1343,79 @@ applyBoundaryConditionCoefficients(realMappedGridFunction & uCoeff,
         if( (bcType==BCTypes::normalDerivativeOfTangentialComponent0 ||
              bcType==BCTypes::normalDerivativeOfTangentialComponent1 ) &&
              vect.getLength(3) != numberOfDimensions*(numberOfDimensions-1) )
-	{
-	  printf("applyBCC:ERROR: vect.getLength(3)=%i != numberOfDimensions*(numberOfDimensions-1)=%i\n"
+        {
+          printf("applyBCC:ERROR: vect.getLength(3)=%i != numberOfDimensions*(numberOfDimensions-1)=%i\n"
                  "   vect.getLength(4)=%i\n",
-		 vect.getLength(3),numberOfDimensions*(numberOfDimensions-1),vect.getLength(4));
-	  Overture::abort("error");
-	}
-	
-	vect.reshape(1,vect.dimension(0),vect.dimension(1),vect.dimension(2),vect.dimension(3));
+                 vect.getLength(3),numberOfDimensions*(numberOfDimensions-1),vect.getLength(4));
+          Overture::abort("error");
+        }
+        
+        vect.reshape(1,vect.dimension(0),vect.dimension(1),vect.dimension(2),vect.dimension(3));
 
-	if( numberOfDimensions==2 )
+        if( numberOfDimensions==2 )
           opX(M,I1,I2,I3)=opX(M,I1,I2,I3)+opY(M,I1,I2,I3);
         else
           opX(M,I1,I2,I3)=opX(M,I1,I2,I3)+opY(M,I1,I2,I3)+opZ(M,I1,I2,I3);
 
-	ForStencil(m1,m2,m3)
-	{
-	  coeff(M123CE(m1,m2,m3,c0,e0),I1m,I2m,I3m)=vect(0,I1,I2,I3,v0)*opX(M123(m1,m2,m3),I1,I2,I3);
-	  if( numberOfDimensions>1 )
-	    coeff(M123CE(m1,m2,m3,c0+1,e0),I1m,I2m,I3m)=vect(0,I1,I2,I3,v1)*opX(M123(m1,m2,m3),I1,I2,I3);
-	  if( numberOfDimensions>2 )
-	    coeff(M123CE(m1,m2,m3,c0+2,e0),I1m,I2m,I3m)=vect(0,I1,I2,I3,v2)*opX(M123(m1,m2,m3),I1,I2,I3);
-	}
-	
-	vect.reshape(vect.dimension(1),vect.dimension(2),vect.dimension(3),vect.dimension(4));
+        ForStencil(m1,m2,m3)
+        {
+          coeff(M123CE(m1,m2,m3,c0,e0),I1m,I2m,I3m)=vect(0,I1,I2,I3,v0)*opX(M123(m1,m2,m3),I1,I2,I3);
+          if( numberOfDimensions>1 )
+            coeff(M123CE(m1,m2,m3,c0+1,e0),I1m,I2m,I3m)=vect(0,I1,I2,I3,v1)*opX(M123(m1,m2,m3),I1,I2,I3);
+          if( numberOfDimensions>2 )
+            coeff(M123CE(m1,m2,m3,c0+2,e0),I1m,I2m,I3m)=vect(0,I1,I2,I3,v2)*opX(M123(m1,m2,m3),I1,I2,I3);
+        }
+        
+        vect.reshape(vect.dimension(1),vect.dimension(2),vect.dimension(3),vect.dimension(4));
 
         for( ee=E.getBase()+1; ee<=E.getBound(); ee++ )                        
-	{
+        {
           for( c=C.getBase(); c<=C.getBound(); c++ )                        
-	  {
+          {
             coeff(M0+CE(c,ee),I1m,I2m,I3m)=coeff(M0+CE(c,e0),I1m,I2m,I3m);
-	  }
+          }
         }
         // fix up equation numbers:
         for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
-	{
-	  for( c=C.getBase(); c<=C.getBound(); c++ )                        
-	  {
-	    ForStencil(m1,m2,m3)  
-	      sparse.setCoefficientIndex(M123CE(m1,m2,m3,c,ee), ee,J1m,J2m,J3m, c,(J1+m1),(J2+m2),(J3+m3) );  
-	  }
-	  sparse.setClassify(SparseRepForMGF::ghost1,J1m,J2m,J3m,ee);
-	}
-	break;
+        {
+          for( c=C.getBase(); c<=C.getBound(); c++ )                        
+          {
+            ForStencil(m1,m2,m3)  
+              sparse.setCoefficientIndex(M123CE(m1,m2,m3,c,ee), ee,J1m,J2m,J3m, c,(J1+m1),(J2+m2),(J3+m3) );  
+          }
+          sparse.setClassify(SparseRepForMGF::ghost1,J1m,J2m,J3m,ee);
+        }
+        break;
       }
       
       case tangentialComponent:
         cout << "applyBoundaryConditionCoefficients: tangentialComponent boundary condition is not implemented yet\n";
-	if( saveBoundaryPoints )
-	{
+        if( saveBoundaryPoints )
+        {
           // save coefficients so we can reset some points where the BC should NOT be applied
           resetBoundaryPoints=TRUE;  // we reset the points after the switch statement
           coeffSave.redim(ME,I1,I2,I3);
           coeffSave=coeff(ME,I1,I2,I3);  
-	}
+        }
         break;
 
       case extrapolate:
       {
-	if( ghostLineToAssign > 3 || ghostLineToAssign < 0 )
-	  cout << "applyBoundaryConditionCoefficients::ERROR? extrapolating ghost line " << ghostLineToAssign << endl; 
-	getGhostIndex( mg.indexRange(),side,axis,I1e,I2e,I3e,ghostLineToAssign,bcParams.extraInTangentialDirections); 
+        if( ghostLineToAssign > 3 || ghostLineToAssign < 0 )
+          cout << "applyBoundaryConditionCoefficients::ERROR? extrapolating ghost line " << ghostLineToAssign << endl; 
+        getGhostIndex( mg.indexRange(),side,axis,I1e,I2e,I3e,ghostLineToAssign,bcParams.extraInTangentialDirections); 
 
         int orderOfExtrap=bcParams.orderOfExtrapolation<0 ? orderOfAccuracy+1 : bcParams.orderOfExtrapolation;
-	const int nx=mg.gridIndexRange(End,axis)-mg.gridIndexRange(Start,axis)+1;
-	if( orderOfExtrap >= nx+ghostLineToAssign )
-	{
-	  // reduce order of extrap if we only have a few grid points
-	  // The extrap formula uses "orderOfExtrap+1" grid points -- we should not be coupled to the ghost
-	  //   points on the opposite boundary
-	  orderOfExtrap = nx+ghostLineToAssign-1;
-	  printf("MappedGridOperators::extrapolate: WARNING: reducing order of extrapolation to %i "
-		 "since number of grid points =%i\n",orderOfExtrap,nx);
-	}
+        const int nx=mg.gridIndexRange(End,axis)-mg.gridIndexRange(Start,axis)+1;
+        if( orderOfExtrap >= nx+ghostLineToAssign )
+        {
+          // reduce order of extrap if we only have a few grid points
+          // The extrap formula uses "orderOfExtrap+1" grid points -- we should not be coupled to the ghost
+          //   points on the opposite boundary
+          orderOfExtrap = nx+ghostLineToAssign-1;
+          printf("MappedGridOperators::extrapolate: WARNING: reducing order of extrapolation to %i "
+                 "since number of grid points =%i\n",orderOfExtrap,nx);
+        }
 
         for( ee=E.getBase(); ee<=E.getBound(); ee++ ) // ****** fix this for c and e *****
           setExtrapolationCoefficients(uCoeff,ee,I1e,I2e,I3e,orderOfExtrap);
@@ -1426,62 +1426,62 @@ applyBoundaryConditionCoefficients(realMappedGridFunction & uCoeff,
       case extrapolateTangentialComponent1:
       {
         int orderOfExtrap=bcParams.orderOfExtrapolation<0 ? orderOfAccuracy+1 : bcParams.orderOfExtrapolation;
-	if( orderOfExtrap*numberOfDimensions >= stencilSize*numberOfComponentsForCoefficients )
-	{
-	  cout << "applyBoundaryConditionCoefficients::ERROR: in extrapolate[Normal/Tangential]Component\n";
+        if( orderOfExtrap*numberOfDimensions >= stencilSize*numberOfComponentsForCoefficients )
+        {
+          cout << "applyBoundaryConditionCoefficients::ERROR: in extrapolate[Normal/Tangential]Component\n";
           cout << " There is not enough room in the stencil to hold this order of extrapolation\n";
           cout << " orderOfExtrapolation*numberOfDimensions >= stencilSize*numberOfComponentsForCoefficients \n";
-	  Overture::abort("error");
-	}
-	if( ghostLineToAssign > 3 || ghostLineToAssign < 0 )
-	  cout << "applyBoundaryConditionCoefficients::ERROR? extrapolating ghost line " << ghostLineToAssign << endl; 
+          Overture::abort("error");
+        }
+        if( ghostLineToAssign > 3 || ghostLineToAssign < 0 )
+          cout << "applyBoundaryConditionCoefficients::ERROR? extrapolating ghost line " << ghostLineToAssign << endl; 
         // line to extrapolate:
-	getGhostIndex(mg.indexRange(),side,axis,I1e,I2e,I3e,ghostLineToAssign,bcParams.extraInTangentialDirections);
+        getGhostIndex(mg.indexRange(),side,axis,I1e,I2e,I3e,ghostLineToAssign,bcParams.extraInTangentialDirections);
 
-	const int nx=mg.gridIndexRange(End,axis)-mg.gridIndexRange(Start,axis)+1;
-	if( orderOfExtrap >= nx+ghostLineToAssign )
-	{
-	  // reduce order of extrap if we only have a few grid points
-	  // The extrap formula uses "orderOfExtrap+1" grid points -- we should not be coupled to the ghost
-	  //   points on the opposite boundary
-	  orderOfExtrap = nx+ghostLineToAssign-1;
-	  printf("MappedGridOperators::extrapolate: WARNING: reducing order of extrapolation to %i "
-		 "since number of grid points =%i\n",orderOfExtrap,nx);
-	}
+        const int nx=mg.gridIndexRange(End,axis)-mg.gridIndexRange(Start,axis)+1;
+        if( orderOfExtrap >= nx+ghostLineToAssign )
+        {
+          // reduce order of extrap if we only have a few grid points
+          // The extrap formula uses "orderOfExtrap+1" grid points -- we should not be coupled to the ghost
+          //   points on the opposite boundary
+          orderOfExtrap = nx+ghostLineToAssign-1;
+          printf("MappedGridOperators::extrapolate: WARNING: reducing order of extrapolation to %i "
+                 "since number of grid points =%i\n",orderOfExtrap,nx);
+        }
 
         bool ok=getLocalIndex(mg.mask(),maskLocal,I1e,I2e,I3e, I1e,I2e,I3e); 
         if( !ok ) continue;  // there are no points on this processor
 
-	coeff(ME,I1e,I2e,I3e)=0.;
-	vect.reshape(1,vect.dimension(0),vect.dimension(1),vect.dimension(2),vect.dimension(3));
-	// NOTE: store at the start of the equation (for Oges) ---
+        coeff(ME,I1e,I2e,I3e)=0.;
+        vect.reshape(1,vect.dimension(0),vect.dimension(1),vect.dimension(2),vect.dimension(3));
+        // NOTE: store at the start of the equation (for Oges) ---
         dir[0]=dir[1]=dir[2]=0;
-	dir[axis]=1-2*side;  // extrapolate in this direction
-	for( ee=E.getBase(); ee<=E.getBound(); ee++ )  // *** there is probably an error if E.length()>1 !
-	{
-	  for( c=C.getBase(); c<=C.getBound(); c++ ) 
-	  {
-	    for( int i=0; i<=orderOfExtrap; i++ )
-	    {
-	      coeff(i+CE(c,ee),I1e,I2e,I3e)=extrapCoeff[orderOfExtrap-1][i] * vect(0,I1,I2,I3,c-C.getBase()); //kkc 070831 add -C.getBase() so the code works when C is a range other than 0,1,2    
-  	      sparse.setCoefficientIndex(i+CE(c,ee), ee,I1e,I2e,I3e, c,
-						 (I1e+dir[0]*i),(I2e+dir[1]*i),(I3e+dir[2]*i) );  
-	    }
-	  }
-	  sparse.setClassify(SparseRepForMGF::extrapolation,I1e,I2e,I3e,ee);
-	}
-	vect.reshape(vect.dimension(1),vect.dimension(2),vect.dimension(3),vect.dimension(4));
+        dir[axis]=1-2*side;  // extrapolate in this direction
+        for( ee=E.getBase(); ee<=E.getBound(); ee++ )  // *** there is probably an error if E.length()>1 !
+        {
+          for( c=C.getBase(); c<=C.getBound(); c++ ) 
+          {
+            for( int i=0; i<=orderOfExtrap; i++ )
+            {
+              coeff(i+CE(c,ee),I1e,I2e,I3e)=extrapCoeff[orderOfExtrap-1][i] * vect(0,I1,I2,I3,c-C.getBase()); //kkc 070831 add -C.getBase() so the code works when C is a range other than 0,1,2    
+              sparse.setCoefficientIndex(i+CE(c,ee), ee,I1e,I2e,I3e, c,
+                                                 (I1e+dir[0]*i),(I2e+dir[1]*i),(I3e+dir[2]*i) );  
+            }
+          }
+          sparse.setClassify(SparseRepForMGF::extrapolation,I1e,I2e,I3e,ee);
+        }
+        vect.reshape(vect.dimension(1),vect.dimension(2),vect.dimension(3),vect.dimension(4));
 
         break;
       }
       default:
-	cout << "applyBoundaryConditionCoefficients: unknown or un-implemented boundary conditon = " << 
-	  bcType << endl;
+        cout << "applyBoundaryConditionCoefficients: unknown or un-implemented boundary conditon = " << 
+          bcType << endl;
       } // end switch
 
       if( resetBoundaryPoints )
       {
-	// reset some points where the BC should NOT be applied
+        // reset some points where the BC should NOT be applied
         // we only need to worry about this for BC's that alter the point on the boundary
 
         #ifdef USE_PPP
@@ -1494,42 +1494,42 @@ applyBoundaryConditionCoefficients(realMappedGridFunction & uCoeff,
         #endif
 
         intSerialArray mask(I1,I2,I3);
-	if( !bcParams.getUseMask() )
-	{
+        if( !bcParams.getUseMask() )
+        {
           // we should NOT apply a BC at interpolation points or interiorBoundaryPoint
-	  // mask=cmask(I1,I2,I3)>0 ||
-  	  //     cmask(I1,I2,I3)< (MappedGrid::ISinterpolationPoint | MappedGrid::ISinteriorBoundaryPoint);
+          // mask=cmask(I1,I2,I3)>0 ||
+          //     cmask(I1,I2,I3)< (MappedGrid::ISinterpolationPoint | MappedGrid::ISinteriorBoundaryPoint);
           // *wdh* 990915 : use bit ops
-	  mask=cmask(I1,I2,I3)>0 &&
+          mask=cmask(I1,I2,I3)>0 &&
             !( cmask(I1,I2,I3) & (MappedGrid::ISinterpolationPoint | MappedGrid::ISinteriorBoundaryPoint));
-	}
-	else if( !(useWhereMaskOnBoundary[axis][side] && bcParams.useMixedBoundaryMask) )
-	  mask=bcMask(I1,I2,I3);
-	else
-	{
+        }
+        else if( !(useWhereMaskOnBoundary[axis][side] && bcParams.useMixedBoundaryMask) )
+          mask=bcMask(I1,I2,I3);
+        else
+        {
           // we should NOT apply a BC at interpolation points or interiorBoundaryPoint
-	  // mask=(cmask(I1,I2,I3)>0 ||
-	  // cmask(I1,I2,I3)< (MappedGrid::ISinterpolationPoint | MappedGrid::ISinteriorBoundaryPoint) ) &&
-	  //   ((BoundaryConditionParameters&)bcParams).mask()(I1,I2,I3);
+          // mask=(cmask(I1,I2,I3)>0 ||
+          // cmask(I1,I2,I3)< (MappedGrid::ISinterpolationPoint | MappedGrid::ISinteriorBoundaryPoint) ) &&
+          //   ((BoundaryConditionParameters&)bcParams).mask()(I1,I2,I3);
           // *wdh* 990915 : use bit ops
           mask=cmask(I1,I2,I3)>0 &&
             !( cmask(I1,I2,I3) & (MappedGrid::ISinterpolationPoint | MappedGrid::ISinteriorBoundaryPoint)) &&
-	    bcMask(I1,I2,I3);
-	}
+            bcMask(I1,I2,I3);
+        }
 
 //         if( true )
-// 	{
+//      {
 //           aString buff;
-// 	  displayMask(mask,sPrintF(buff,"*** applyBCC grid=%i mask: mixed boundary is mask!=0 ***",grid));
-// 	}
-	
-	mask.reshape(1,mask.dimension(0),mask.dimension(1),mask.dimension(2));
+//        displayMask(mask,sPrintF(buff,"*** applyBCC grid=%i mask: mixed boundary is mask!=0 ***",grid));
+//      }
+        
+        mask.reshape(1,mask.dimension(0),mask.dimension(1),mask.dimension(2));
         where( !mask(0,I1,I2,I3) )
-	{
-	  for( int m=ME.getBase(); m<=ME.getBound(); m++ )
+        {
+          for( int m=ME.getBase(); m<=ME.getBound(); m++ )
             coeff(m,I1,I2,I3)=coeffSave(m,I1,I2,I3);  
-	}
-	mask.reshape(mask.dimension(1),mask.dimension(2),mask.dimension(3));
+        }
+        mask.reshape(mask.dimension(1),mask.dimension(2),mask.dimension(3));
       }
 
     } // if( mg.boundaryCondition(side,axis)==bc  

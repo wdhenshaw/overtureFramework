@@ -27,7 +27,10 @@ formMatrix(int & numberOfEquations_, int & numberOfNonzeros_,
            bool allocateSpace /* =TRUE */,
            bool factorMatrixInPlace /* =FALSE */ )
 //=====================================================================================
-// /Purpose: 
+/// \brief Form the sparse matrix from the coefficient grid function. 
+///           
+///   This function calls generateMatrix.
+//           
 //  Form the matrix for the given coefficients. Then extract the
 //           matrix, and try other linear solvers. Does not do a solve.
 //

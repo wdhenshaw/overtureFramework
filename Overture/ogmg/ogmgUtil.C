@@ -176,7 +176,7 @@ setMean(realCompositeGridFunction & u, const real meanValue, int level)
   }
   
   // Sum mean and count over all processors
-  real val[2]={mean, count}, valSum[2]; // 
+  real val[2]={mean, (Real)count}, valSum[2]; // 
   ParallelUtility::getSums(val,valSum,2);
   mean=valSum[0]; 
   count=int( valSum[1] +.5 );

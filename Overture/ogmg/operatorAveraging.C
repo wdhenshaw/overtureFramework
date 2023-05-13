@@ -137,9 +137,9 @@ operatorAveraging(RealCompositeGridFunction & coeff, const int & level)
 #define CE(c,e) (stencilSize*((c)+numberOfComponentsForCoefficients*(e)))
 #define M123CE(m1,m2,m3,c,e) (M123(m1,m2,m3)+CE(c,e))
 #define ForStencil(m1,m2,m3)   \
-	for( m3=-halfWidth3; m3<=halfWidth3; m3++) \
-	for( m2=-halfWidth2; m2<=halfWidth2; m2++) \
-	for( m1=-halfWidth1; m1<=halfWidth1; m1++) 
+        for( m3=-halfWidth3; m3<=halfWidth3; m3++) \
+        for( m2=-halfWidth2; m2<=halfWidth2; m2++) \
+        for( m1=-halfWidth1; m1<=halfWidth1; m1++) 
 
 
 #define averageOpt EXTERN_C_NAME(averageopt)
@@ -149,12 +149,12 @@ extern "C"
   void averageOpt( const int& nd, const int & nd1a,const int & nd1b,const int & nd2a,const int & nd2b,
                    const int & nd3a,const int & nd3b,
                    const int& md1a,const int& md1b,const int& md2a,const int& md2b,const int& md3a,const int& md3b, 
-		   const int& j1a,const int& j1b,const int& j2a,const int& j2b,const int& j3a,const int& j3b, 
+                   const int& j1a,const int& j1b,const int& j2a,const int& j2b,const int& j3a,const int& j3b, 
                    const int& i1a,const int& i1b,const int& i1c,const int& i2a,const int& i2b,const int& i2c,
                    const int& i3a,const int& i3b,const int& i3c, 
-		   const int& i1pa,const int& i1pb,const int& i2pa,const int& i2pb,const int& i3pa,const int& i3pb,
+                   const int& i1pa,const int& i1pb,const int& i2pa,const int& i2pb,const int& i3pa,const int& i3pb,
                    const int& ndc, const real & cFine, real & cCoarse,
-		   const int& ndc0, real & c0, real & c1, const int& option, const int& orderOfAccuracy,
+                   const int& ndc0, real & c0, real & c1, const int& option, const int& orderOfAccuracy,
                    const int &ipar );
 }
 
@@ -174,6 +174,12 @@ operatorAveraging(RealMappedGridFunction & coeffFine,
   CompositeGrid & mgcg  = multigridCompositeGrid();
   MappedGrid & mgFine   = *coeffFine.getMappedGrid();
   MappedGrid & mgCoarse = *coeffCoarse.getMappedGrid();
+
+  if( false )
+  {
+    printF("\n *** Operator averaging for grid=%i, level=%i, parameters.averagingOption=%d\n",
+           grid,level,(int)parameters.averagingOption );
+  }
 
   Index Iv[3], &I1=Iv[0], &I2=Iv[1], &I3=Iv[2];
   int ipar[5]={0,0,0,0,0};
@@ -209,7 +215,7 @@ operatorAveraging(RealMappedGridFunction & coeffFine,
        parameters.averagingOption==OgmgParameters::doNotAverageCoarseGridEquations ||
        parameters.averagingOption==OgmgParameters::doNotAverageCoarseCurvilinearGridEquations ||
        ( !averageEquationsOnCoarsestGrid && isCoarsestLevel ) 
-	) )
+        ) )
   {
     if( Ogmg::debug & 2 )
       printF("\n**** operatorAveraging: do NOT average coeff's for grid=%i, level=%i *****\n",grid,level+1); 
@@ -312,41 +318,41 @@ operatorAveraging(RealMappedGridFunction & coeffFine,
       // --- side=0 ---
       if( maskFineLocal.getLength(axis)==0 )
       {
-	// no points on this processor
-	thisProcessorHasPoints=false;
-	for( int side=0; side<=1; side++ )
-	{
-	  dimLocalCoarse(side,axis) = -side;
-	}
-	continue;
+        // no points on this processor
+        thisProcessorHasPoints=false;
+        for( int side=0; side<=1; side++ )
+        {
+          dimLocalCoarse(side,axis) = -side;
+        }
+        continue;
       }      
       if( maskFine.getLocalBase(axis) == maskFine.getBase(axis) ) 
       {
-	dimLocalCoarse(0,axis) = gidc(0,axis)-numGhost;
+        dimLocalCoarse(0,axis) = gidc(0,axis)-numGhost;
       }
       else
       { // this side is an internal parallel boundary
-	// choose end-pt to match the coarse grid pt 
-	int ia0 =  maskFine.getLocalBase(axis)+maskFine.getGhostBoundaryWidth(axis); // index-bound, no ghost
-	int ja = (ia0-gidf(0,axis))/cf[axis]+gidc(0,axis);   // coarse grid pt <= ia0 
-	int ia = (ja -gidc(0,axis))*cf[axis]+gidf(0,axis);                    // fine grid point to match ja
-	assert( ia>=maskFine.getLocalBase(axis) );
-	  
-	dimLocalCoarse(0,axis) = ja; // -hw[axis];   // what should this be ? 
+        // choose end-pt to match the coarse grid pt 
+        int ia0 =  maskFine.getLocalBase(axis)+maskFine.getGhostBoundaryWidth(axis); // index-bound, no ghost
+        int ja = (ia0-gidf(0,axis))/cf[axis]+gidc(0,axis);   // coarse grid pt <= ia0 
+        int ia = (ja -gidc(0,axis))*cf[axis]+gidf(0,axis);                    // fine grid point to match ja
+        assert( ia>=maskFine.getLocalBase(axis) );
+          
+        dimLocalCoarse(0,axis) = ja; // -hw[axis];   // what should this be ? 
       }
       // --- side=1 ---
       if( maskFine.getLocalBound(axis) == maskFine.getBound(axis) ) 
       {
-	dimLocalCoarse(1,axis) = gidc(1,axis)+numGhost; 
+        dimLocalCoarse(1,axis) = gidc(1,axis)+numGhost; 
       }
       else
       { // this side is an internal parallel boundary
-	int ia0 = maskFine.getLocalBound(axis)-maskFine.getGhostBoundaryWidth(axis);  // last pt (no parallel ghost)
-	int ja = (ia0+(cf[axis]-1)-gidf(0,axis))/cf[axis]+gidc(0,axis);   // coarse grid pt >= ia0 
-	int ia = (ja-gidc(0,axis))*cf[axis]+gidf(0,axis);                 // fine grid point to match ja 
-	assert( ia<=maskFine.getLocalBound(axis) );
+        int ia0 = maskFine.getLocalBound(axis)-maskFine.getGhostBoundaryWidth(axis);  // last pt (no parallel ghost)
+        int ja = (ia0+(cf[axis]-1)-gidf(0,axis))/cf[axis]+gidc(0,axis);   // coarse grid pt >= ia0 
+        int ia = (ja-gidc(0,axis))*cf[axis]+gidf(0,axis);                 // fine grid point to match ja 
+        assert( ia<=maskFine.getLocalBound(axis) );
 
-	dimLocalCoarse(1,axis) = ja; // +hw[axis];  // what should this be ? 
+        dimLocalCoarse(1,axis) = ja; // +hw[axis];  // what should this be ? 
       } 
     }
     getIndex(dimLocalCoarse,J1,J2,J3);
@@ -372,13 +378,13 @@ operatorAveraging(RealMappedGridFunction & coeffFine,
         getGhostIndex(mgFine.gridIndexRange(),side,axis,I1,I2,I3,1,extra);
         int includeGhost=1;
         bool ok =ParallelUtility::getLocalArrayBounds(maskFine,maskFineLocal,I1,I2,I3,includeGhost);
-	if( !ok ) continue;
+        if( !ok ) continue;
 
         is1=is2=is3=0;
-	isv[axis]=1-2*side;
+        isv[axis]=1-2*side;
         if( debug & 4 )
           printF("*** Extrap fine grid equation on interp boundary (%i,%i) of grid %i level=%i\n",side,axis,grid,level);
-	
+        
         cFineLocal(all,I1,I2,I3)=2.*cFineLocal(all,I1+is1,I2+is2,I3+is3)-cFineLocal(all,I1+2*is1,I2+2*is2,I3+2*is3);
       }
     }
@@ -413,6 +419,7 @@ operatorAveraging(RealMappedGridFunction & coeffFine,
     // ::display(cFineLocal,"cFineLocal",pDebugFile,"%7.1e ");
     ::display(cCoarseLocal,"cCoarseLocal",pDebugFile,"%7.1e ");
     fflush(pDebugFile);
+    
   }
 
   //  **********************************************************************
@@ -439,259 +446,259 @@ operatorAveraging(RealMappedGridFunction & coeffFine,
     {
       // *** Check for internal ghost boundary ****
       bool internalGhost = ( (side==0 && maskFine.getLocalBase(axis)  != maskFine.getBase(axis)) ||
-			     (side==1 && maskFine.getLocalBound(axis) != maskFine.getBound(axis)) );
+                             (side==1 && maskFine.getLocalBound(axis) != maskFine.getBound(axis)) );
 
       if( mgCoarse.boundaryCondition(side,axis)>0 && !internalGhost )
       {
 
-	if( boundaryCondition(side,axis,grid)==OgmgParameters::extrapolate ) 
-	{
+        if( boundaryCondition(side,axis,grid)==OgmgParameters::extrapolate ) 
+        {
           // --- DIRICHLET -- no averaging
-	}
-	else 
-	{
+        }
+        else 
+        {
           // -- NEUMANN : average equations on the boundary
 
-	  getBoundaryIndex(mgFine.gridIndexRange(),side,axis,I1,I2,I3);
-	  getBoundaryIndex(mgFine.gridIndexRange(),side,axis,I1p,I2p,I3p,1);  // one extra point on each end
-	  getBoundaryIndex(mgCoarse.gridIndexRange(),side,axis,J1,J2,J3);
+          getBoundaryIndex(mgFine.gridIndexRange(),side,axis,I1,I2,I3);
+          getBoundaryIndex(mgFine.gridIndexRange(),side,axis,I1p,I2p,I3p,1);  // one extra point on each end
+          getBoundaryIndex(mgCoarse.gridIndexRange(),side,axis,J1,J2,J3);
 
 
-	  // do not change the equation on the ends if the adjacent boundary is Dirichlet (probably)
-	  for( int dir=0; dir<numberOfDimensions-1; dir++ )
-  	  {
-  	    const int axisp=(axis+dir+1)%numberOfDimensions;  // tangential direction
+          // do not change the equation on the ends if the adjacent boundary is Dirichlet (probably)
+          for( int dir=0; dir<numberOfDimensions-1; dir++ )
+          {
+            const int axisp=(axis+dir+1)%numberOfDimensions;  // tangential direction
 
-  	    int shift0=0, shift1=0;
-	    if( boundaryCondition(Start,axisp,grid)==OgmgParameters::extrapolate )
-	      shift0=1;
-	    if( boundaryCondition(End,axisp,grid)==OgmgParameters::extrapolate )
-	      shift1=-1;
-	    if( shift0!=0 || shift1!=0 )
-  	    {
-  	      Jv[axisp] =Range(Jv[axisp].getBase() +shift0          ,Jv[axisp].getBound() +shift1);
-  	      Iv[axisp] =Range(Iv[axisp].getBase() +shift0*cf[axisp],Iv[axisp].getBound() +shift1*cf[axisp]);
-  	      Ipv[axisp]=Range(Ipv[axisp].getBase()+shift0*cf[axisp],Ipv[axisp].getBound()+shift1*cf[axisp]);
-  	    }
-	    
-  	  }
-	  
-	  I1=IndexBB(I1,cf[0]);  I2=IndexBB(I2,cf[1]);  I3=IndexBB(I3,cf[2]);  // set stride
-
-          // ------------------------------------------------------------
-	  // ------- First do equations ON the boundary -----------------
-          // ------------------------------------------------------------
-
-	  if( parameters.boundaryAveragingOption[1]==OgmgParameters::partialWeighting )
-	  {
-	    option[axis]=restrictedFullWeighting;
+            int shift0=0, shift1=0;
+            if( boundaryCondition(Start,axisp,grid)==OgmgParameters::extrapolate )
+              shift0=1;
+            if( boundaryCondition(End,axisp,grid)==OgmgParameters::extrapolate )
+              shift1=-1;
+            if( shift0!=0 || shift1!=0 )
+            {
+              Jv[axisp] =Range(Jv[axisp].getBase() +shift0          ,Jv[axisp].getBound() +shift1);
+              Iv[axisp] =Range(Iv[axisp].getBase() +shift0*cf[axisp],Iv[axisp].getBound() +shift1*cf[axisp]);
+              Ipv[axisp]=Range(Ipv[axisp].getBase()+shift0*cf[axisp],Ipv[axisp].getBound()+shift1*cf[axisp]);
+            }
             
-	    
+          }
+          
+          I1=IndexBB(I1,cf[0]);  I2=IndexBB(I2,cf[1]);  I3=IndexBB(I3,cf[2]);  // set stride
+
+          // ------------------------------------------------------------
+          // ------- First do equations ON the boundary -----------------
+          // ------------------------------------------------------------
+
+          if( parameters.boundaryAveragingOption[1]==OgmgParameters::partialWeighting )
+          {
+            option[axis]=restrictedFullWeighting;
+            
+            
             // ipar[0]=1;  // 1= apply even symmetry condition to coefficients
             ipar[1]=side;
             ipar[2]=axis;
 
             //#ifdef USE_PPP
-  	    //  OV_ABORT("operator averaging: BC: ERROR: finish me for parallel");
+            //  OV_ABORT("operator averaging: BC: ERROR: finish me for parallel");
             //#endif
-	    averageCoefficients(I1,I2,I3,I1p,I2p,I3p,J1,J2,J3,option,cFineLocal,cCoarseLocal,ipar);
+            averageCoefficients(I1,I2,I3,I1p,I2p,I3p,J1,J2,J3,option,cFineLocal,cCoarseLocal,ipar);
 
             ipar[0]=0; // reset
 
-	    if( false ) // for testing
-	    {
-	      op.coefficients(MappedGridOperators::laplacianOperator,coeffCoarse,J1,J2,J3);
-	      getGhostIndex(mgCoarse.gridIndexRange(),side,axis,J1,J2,J3,-1); // first line in
-	      op.coefficients(MappedGridOperators::laplacianOperator,coeffCoarse,J1,J2,J3);
-	    }
-	    
+            if( false ) // for testing
+            {
+              op.coefficients(MappedGridOperators::laplacianOperator,coeffCoarse,J1,J2,J3);
+              getGhostIndex(mgCoarse.gridIndexRange(),side,axis,J1,J2,J3,-1); // first line in
+              op.coefficients(MappedGridOperators::laplacianOperator,coeffCoarse,J1,J2,J3);
+            }
+            
 
             // use restricted full weighting on ends in 2d or edges in 3D
-	    for( int dir=0; dir<numberOfDimensions-1; dir++ )
-	    {
-	      const int axisp=(axis+dir+1)%numberOfDimensions;  // tangential direction
+            for( int dir=0; dir<numberOfDimensions-1; dir++ )
+            {
+              const int axisp=(axis+dir+1)%numberOfDimensions;  // tangential direction
               if( (bool)mgCoarse.isPeriodic(axisp) ) 
                 continue;   // periodic boundaries are ok on the ends 
-	      
-	      for( int side2=0; side2<=1; side2++ )
-	      {
-		if( (side2==0 && Iv[axisp].getBase() ==mgFine.gridIndexRange(0,axisp)) ||  // only do if this is really the end pt
-		    (side2==1 && Iv[axisp].getBound()==mgFine.gridIndexRange(1,axisp)) )
-		{
+              
+              for( int side2=0; side2<=1; side2++ )
+              {
+                if( (side2==0 && Iv[axisp].getBase() ==mgFine.gridIndexRange(0,axisp)) ||  // only do if this is really the end pt
+                    (side2==1 && Iv[axisp].getBound()==mgFine.gridIndexRange(1,axisp)) )
+                {
                   // (I1c,I2c,I3c) : corner or edge
-		  I1c=I1; I2c=I2; I3c=I3;
-		  Ivc[axisp] = side2==0 ? Iv[axisp].getBase() : Iv[axisp].getBound();
+                  I1c=I1; I2c=I2; I3c=I3;
+                  Ivc[axisp] = side2==0 ? Iv[axisp].getBase() : Iv[axisp].getBound();
 
                   // (I1a,I2a,I3a) : (I1c,I2c,I3c) + 1 extra in each direction (for averaging)
                   // *030831* Next lines are wrong, need to have a buffer of cf[axis]
-		  // *030831* I1a=I1p; I2a=I2p; I3a=I3p;
-		  // *030831* Iav[axisp] = side2==0 ? Ipv[axisp].getBase() : Ipv[axisp].getBound();
+                  // *030831* I1a=I1p; I2a=I2p; I3a=I3p;
+                  // *030831* Iav[axisp] = side2==0 ? Ipv[axisp].getBase() : Ipv[axisp].getBound();
                   // I1a=Range(I1c.getBase()-1,I1c.getBound()+1);
                   // I2a=Range(I2c.getBase()-1,I2c.getBound()+1);
                   // I3a=numberOfDimensions==2 ? Range(I3c) : Range(I3c.getBase()-1,I3c.getBound()+1);
 
-		  I1a=I1p; I2a=I2p; I3a=I3p;
-		  Iav[axisp] = side2==0 ? Ivc[axisp].getBase() : Ivc[axisp].getBound(); // this direction: injection
-		  
-		  J1c=J1; J2c=J2; J3c=J3;
-		  Jvc[axisp] = side2==0 ? Jv[axisp].getBase() : Jv[axisp].getBound();
+                  I1a=I1p; I2a=I2p; I3a=I3p;
+                  Iav[axisp] = side2==0 ? Ivc[axisp].getBase() : Ivc[axisp].getBound(); // this direction: injection
+                  
+                  J1c=J1; J2c=J2; J3c=J3;
+                  Jvc[axisp] = side2==0 ? Jv[axisp].getBase() : Jv[axisp].getBound();
 
                   option[axisp]=restrictedFullWeighting;
-		  averageCoefficients(I1c,I2c,I3c,I1a,I2a,I3a,J1c,J2c,J3c,option,cFineLocal,cCoarseLocal,ipar);
+                  averageCoefficients(I1c,I2c,I3c,I1a,I2a,I3a,J1c,J2c,J3c,option,cFineLocal,cCoarseLocal,ipar);
 
                   if( debug & 64 )
-		  {
-		    aString buff;
+                  {
+                    aString buff;
                     Range all;
-		    ::display(cCoarse(all,J1c,J2c,J3c),
+                    ::display(cCoarse(all,J1c,J2c,J3c),
                        sPrintF(buff,"Neumann side=%i axis=%i side2=%i cCoarse(all,J1c,J2c,J3c)",side,axis,side2),debugFile);
-		    ::display(cFine(all,I1a,I2a,I3a),
+                    ::display(cFine(all,I1a,I2a,I3a),
                        sPrintF(buff,"Neumann side=%i axis=%i side2=%i cFine(all,I1a,I2a,I3a)",side,axis,side2),debugFile);
-		    
-		  }
-		  
+                    
+                  }
+                  
                   if( numberOfDimensions==3 )
-		  {
-		    // end points of edges in 3D
+                  {
+                    // end points of edges in 3D
                     const int axisp2= dir==0 ?  (axisp+1)%numberOfDimensions : (axis+1)%numberOfDimensions;
-		    assert( axisp2!=axis && axisp2!=axisp );
-		    for( int side3=0; side3<=1; side3++ )
-		    {
-		      Ivc[axisp2] = side3==0 ? Iv[axisp2].getBase()  : Iv[axisp2].getBound();
-		      // *030831 * Iav[axisp2] = side3==0 ? Ipv[axisp2].getBase() : Ipv[axisp2].getBound();
+                    assert( axisp2!=axis && axisp2!=axisp );
+                    for( int side3=0; side3<=1; side3++ )
+                    {
+                      Ivc[axisp2] = side3==0 ? Iv[axisp2].getBase()  : Iv[axisp2].getBound();
+                      // *030831 * Iav[axisp2] = side3==0 ? Ipv[axisp2].getBase() : Ipv[axisp2].getBound();
                       // Iav[axisp2] = numberOfDimensions==2 ? Range(Ivc[axisp2]) : 
                       //               Range(Ivc[axisp2].getBase()-1,Ivc[axisp2].getBound()+1);
                       Iav[axisp2] = side3==0 ? Ivc[axisp2].getBase() : Ivc[axisp2].getBound(); // injection
-		      Jvc[axisp2] = side3==0 ? Jv[axisp2].getBase()  : Jv[axisp2].getBound();
+                      Jvc[axisp2] = side3==0 ? Jv[axisp2].getBase()  : Jv[axisp2].getBound();
 
-		      option[axisp2]=restrictedFullWeighting;
-		      averageCoefficients(I1c,I2c,I3c,I1a,I2a,I3a,J1c,J2c,J3c,option,cFineLocal,cCoarseLocal,ipar);
-		    }
-		    option[axisp2]=fullWeighting; // reset
+                      option[axisp2]=restrictedFullWeighting;
+                      averageCoefficients(I1c,I2c,I3c,I1a,I2a,I3a,J1c,J2c,J3c,option,cFineLocal,cCoarseLocal,ipar);
+                    }
+                    option[axisp2]=fullWeighting; // reset
                   }
                   option[axisp]=fullWeighting; // reset
-		}
-	      }
-	    }
-	    
-	    option[axis]=fullWeighting; // reset
+                }
+              }
+            }
+            
+            option[axis]=fullWeighting; // reset
 
-	  }
-	  else
-	  {
-	    printF("ERROR: unknown boundaryAveragingOption[1]=%i\n",parameters.boundaryAveragingOption[1]);
-	    OV_ABORT("error");
-	  }
+          }
+          else
+          {
+            printF("ERROR: unknown boundaryAveragingOption[1]=%i\n",parameters.boundaryAveragingOption[1]);
+            OV_ABORT("error");
+          }
 
           // ------------------------------------------------------------
-	  // ------- Assign Coefficients on the GHOST line --------------
+          // ------- Assign Coefficients on the GHOST line --------------
           // ------------------------------------------------------------
 
           Index Imv[3], &I1m=Imv[0], &I2m=Imv[1], &I3m=Imv[2];
           Index Jmv[3], &J1m=Jmv[0], &J2m=Jmv[1], &J3m=Jmv[2];
 
-	  getBoundaryIndex(mgCoarse.gridIndexRange(),side,axis,J1,J2,J3); // recompute to be full length
+          getBoundaryIndex(mgCoarse.gridIndexRange(),side,axis,J1,J2,J3); // recompute to be full length
 
-	  getGhostIndex(mgFine.gridIndexRange(),side,axis,I1m,I2m,I3m);
-	  getGhostIndex(mgFine.gridIndexRange(),side,axis,I1p,I2p,I3p,1,1); // one line wider
-	  getGhostIndex(mgCoarse.gridIndexRange(),side,axis,J1m,J2m,J3m);
+          getGhostIndex(mgFine.gridIndexRange(),side,axis,I1m,I2m,I3m);
+          getGhostIndex(mgFine.gridIndexRange(),side,axis,I1p,I2p,I3p,1,1); // one line wider
+          getGhostIndex(mgCoarse.gridIndexRange(),side,axis,J1m,J2m,J3m);
 
-	  I1m=IndexBB(I1m,cf[0]);  I2m=IndexBB(I2m,cf[1]);  I3m=IndexBB(I3m,cf[2]);  // set stride
+          I1m=IndexBB(I1m,cf[0]);  I2m=IndexBB(I2m,cf[1]);  I3m=IndexBB(I3m,cf[2]);  // set stride
 
-	  if( bc(side,axis,grid)==OgesParameters::extrapolate )
-	  {
+          if( bc(side,axis,grid)==OgesParameters::extrapolate )
+          {
               // this is done below ...
-	  }
-	  else if( parameters.ghostLineAveragingOption[1]==OgmgParameters::imposeNeumann ||
+          }
+          else if( parameters.ghostLineAveragingOption[1]==OgmgParameters::imposeNeumann ||
                    orderOfAccuracyCoarse==4 )
-	  {
+          {
             // this is done below ...
-	  }
-	  else if( parameters.ghostLineAveragingOption[1]==OgmgParameters::partialWeighting )
-	  {
+          }
+          else if( parameters.ghostLineAveragingOption[1]==OgmgParameters::partialWeighting )
+          {
             // **** could use partialWeighting except at the end points *****
 
             option[axis]=restrictedFullWeighting;
-	    averageCoefficients(I1m,I2m,I3m,I1p,I2p,I3p,J1m,J2m,J3m,option,cFineLocal,cCoarseLocal,ipar);
+            averageCoefficients(I1m,I2m,I3m,I1p,I2p,I3p,J1m,J2m,J3m,option,cFineLocal,cCoarseLocal,ipar);
 
-	    // use restricted full weighting on ends in 2d or edges in 3D
-	    for( int dir=0; dir<numberOfDimensions-1; dir++ )
-	    {
-	      const int axisp=(axis+dir+1)%numberOfDimensions;  // tangential direction
-	      for( int side2=0; side2<=1; side2++ )
-	      {
-		if( (bool)mgCoarse.isPeriodic(axisp) ) 
-		  continue;   // periodic boundaries are ok on the ends 
+            // use restricted full weighting on ends in 2d or edges in 3D
+            for( int dir=0; dir<numberOfDimensions-1; dir++ )
+            {
+              const int axisp=(axis+dir+1)%numberOfDimensions;  // tangential direction
+              for( int side2=0; side2<=1; side2++ )
+              {
+                if( (bool)mgCoarse.isPeriodic(axisp) ) 
+                  continue;   // periodic boundaries are ok on the ends 
 
-		// *wdh* 030901 if( (side2==0 && Iv[axisp].getBase() ==mgFine.gridIndexRange(0,axisp)) ||  // only do if this is the end pt
-		// *wdh* 030901     (side2==1 && Iv[axisp].getBound()==mgFine.gridIndexRange(1,axisp)) )
-		if( (side2==0 && Imv[axisp].getBase() ==mgFine.gridIndexRange(0,axisp)) ||  // only do if this is the end pt
-		    (side2==1 && Imv[axisp].getBound()==mgFine.gridIndexRange(1,axisp)) )
-		{
-		  I1c=I1m; I2c=I2m; I3c=I3m;
-		  Ivc[axisp] = side2==0 ? Imv[axisp].getBase() : Imv[axisp].getBound();
+                // *wdh* 030901 if( (side2==0 && Iv[axisp].getBase() ==mgFine.gridIndexRange(0,axisp)) ||  // only do if this is the end pt
+                // *wdh* 030901     (side2==1 && Iv[axisp].getBound()==mgFine.gridIndexRange(1,axisp)) )
+                if( (side2==0 && Imv[axisp].getBase() ==mgFine.gridIndexRange(0,axisp)) ||  // only do if this is the end pt
+                    (side2==1 && Imv[axisp].getBound()==mgFine.gridIndexRange(1,axisp)) )
+                {
+                  I1c=I1m; I2c=I2m; I3c=I3m;
+                  Ivc[axisp] = side2==0 ? Imv[axisp].getBase() : Imv[axisp].getBound();
                   // *030831* Next lines are wrong, need to have a buffer of cf[axis]
-		  // *030831* I1a=I1p; I2a=I2p; I3a=I3p;
-		  // *030831* Iav[axisp] = side2==0 ? Ipv[axisp].getBase() : Ipv[axisp].getBound();
+                  // *030831* I1a=I1p; I2a=I2p; I3a=I3p;
+                  // *030831* Iav[axisp] = side2==0 ? Ipv[axisp].getBase() : Ipv[axisp].getBound();
                   // I1a=Range(I1c.getBase()-1,I1c.getBound()+1);
                   // I2a=Range(I2c.getBase()-1,I2c.getBound()+1);
                   // I3a=numberOfDimensions==2 ? Range(I3c) : Range(I3c.getBase()-1,I3c.getBound()+1);
-		  // I1a=I1c; I2a=I2c; I3a=I3c;  
-		  I1a=I1p; I2a=I2p; I3a=I3p;
-		  Iav[axisp] = side2==0 ? Ivc[axisp].getBase() : Ivc[axisp].getBound(); // injection
+                  // I1a=I1c; I2a=I2c; I3a=I3c;  
+                  I1a=I1p; I2a=I2p; I3a=I3p;
+                  Iav[axisp] = side2==0 ? Ivc[axisp].getBase() : Ivc[axisp].getBound(); // injection
 
-		  // *wdh* 030901 J1c=J1; J2c=J2; J3c=J3;
-		  J1c=J1m; J2c=J2m; J3c=J3m;  // assign ghost line at ends
-		  Jvc[axisp] = side2==0 ? Jmv[axisp].getBase() : Jmv[axisp].getBound();
+                  // *wdh* 030901 J1c=J1; J2c=J2; J3c=J3;
+                  J1c=J1m; J2c=J2m; J3c=J3m;  // assign ghost line at ends
+                  Jvc[axisp] = side2==0 ? Jmv[axisp].getBase() : Jmv[axisp].getBound();
 
                   option[axisp]=restrictedFullWeighting;
-		  averageCoefficients(I1c,I2c,I3c,I1a,I2a,I3a,J1c,J2c,J3c,option,cFineLocal,cCoarseLocal,ipar);
+                  averageCoefficients(I1c,I2c,I3c,I1a,I2a,I3a,J1c,J2c,J3c,option,cFineLocal,cCoarseLocal,ipar);
                   if( numberOfDimensions==3 )
-		  {
-		    // do ends of edges in 3D
+                  {
+                    // do ends of edges in 3D
                     const int axisp2= dir==0 ?  (axisp+1)%numberOfDimensions : (axis+1)%numberOfDimensions;
-		    assert( axisp2!=axis && axisp2!=axisp );
-		    for( int side3=0; side3<=1; side3++ )
-		    {
-		      Ivc[axisp2] = side3==0 ? Imv[axisp2].getBase() : Imv[axisp2].getBound();
-		      // *030831 * Iav[axisp2] = side3==0 ? Ipv[axisp2].getBase() : Ipv[axisp2].getBound();
+                    assert( axisp2!=axis && axisp2!=axisp );
+                    for( int side3=0; side3<=1; side3++ )
+                    {
+                      Ivc[axisp2] = side3==0 ? Imv[axisp2].getBase() : Imv[axisp2].getBound();
+                      // *030831 * Iav[axisp2] = side3==0 ? Ipv[axisp2].getBase() : Ipv[axisp2].getBound();
                       // Iav[axisp2] = numberOfDimensions==2 ? Range(Ivc[axisp2]) : 
                       //               Range(Ivc[axisp2].getBase()-1,Ivc[axisp2].getBound()+1);
                       Iav[axisp2] = side3==0 ? Ivc[axisp2].getBase() : Ivc[axisp2].getBound(); // injection
 
-		      Jvc[axisp2] = side3==0 ? Jmv[axisp2].getBase() : Jmv[axisp2].getBound();
+                      Jvc[axisp2] = side3==0 ? Jmv[axisp2].getBase() : Jmv[axisp2].getBound();
 
-		      option[axisp2]=restrictedFullWeighting;
-		      averageCoefficients(I1c,I2c,I3c,I1a,I2a,I3a,J1c,J2c,J3c,option,cFineLocal,cCoarseLocal,ipar);
-		    }
-		    
-		    option[axisp2]=fullWeighting; // reset
-		  }
+                      option[axisp2]=restrictedFullWeighting;
+                      averageCoefficients(I1c,I2c,I3c,I1a,I2a,I3a,J1c,J2c,J3c,option,cFineLocal,cCoarseLocal,ipar);
+                    }
+                    
+                    option[axisp2]=fullWeighting; // reset
+                  }
                   option[axisp]=fullWeighting; // reset
 
-		  if( debug & 64 )
-		  {
-		    aString buff;
+                  if( debug & 64 )
+                  {
+                    aString buff;
                     Range all;
-		    ::display(cCoarse(all,J1c,J2c,J3c),
-			      sPrintF(buff,"Neumann:Ghost side=%i axis=%i side2=%i cCoarse(all,J1c,J2c,J3c)",side,axis,side2),debugFile);
-		    ::display(cFine(all,I1a,I2a,I3a),
-			      sPrintF(buff,"Neumann:Ghost side=%i axis=%i side2=%i cFine(all,I1a,I2a,I3a)",side,axis,side2),debugFile);
-		    
-		  }
-		}
-	      }
-	    }
+                    ::display(cCoarse(all,J1c,J2c,J3c),
+                              sPrintF(buff,"Neumann:Ghost side=%i axis=%i side2=%i cCoarse(all,J1c,J2c,J3c)",side,axis,side2),debugFile);
+                    ::display(cFine(all,I1a,I2a,I3a),
+                              sPrintF(buff,"Neumann:Ghost side=%i axis=%i side2=%i cFine(all,I1a,I2a,I3a)",side,axis,side2),debugFile);
+                    
+                  }
+                }
+              }
+            }
             option[axis]=fullWeighting; // reset
-	  }
-	  else
-	  {
+          }
+          else
+          {
             printF("ERROR: unknown ghostLineAveragingOption[1]=%i\n",parameters.ghostLineAveragingOption[1]);
-	    OV_ABORT("error");
-	  }
-	  
+            OV_ABORT("error");
+          }
+          
 
-	} // end Neumann
+        } // end Neumann
 
       } // end if mgCoarse.bc > 0 
 
@@ -798,7 +805,7 @@ operatorAveraging(RealMappedGridFunction & coeffFine,
 //     extrapParams.ghostLineToAssign=2;
 //     coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::allBoundaries,extrapParams); 
 //     extrapParams.ghostLineToAssign=1;
-	
+        
 //   }
 
   for( int axis=0; axis<numberOfDimensions; axis++ )
@@ -808,40 +815,40 @@ operatorAveraging(RealMappedGridFunction & coeffFine,
       if( mgCoarse.boundaryCondition(side,axis)>0 )
       {
 
-	getBoundaryIndex(mgFine.gridIndexRange(),side,axis,I1,I2,I3);
-	getBoundaryIndex(mgFine.gridIndexRange(),side,axis,I1p,I2p,I3p,1);
-	getBoundaryIndex(mgCoarse.gridIndexRange(),side,axis,J1,J2,J3);
+        getBoundaryIndex(mgFine.gridIndexRange(),side,axis,I1,I2,I3);
+        getBoundaryIndex(mgFine.gridIndexRange(),side,axis,I1p,I2p,I3p,1);
+        getBoundaryIndex(mgCoarse.gridIndexRange(),side,axis,J1,J2,J3);
 
         I1=IndexBB(I1,cf[0]);  I2=IndexBB(I2,cf[1]);  I3=IndexBB(I3,cf[2]);  // set stride
 
-	if( boundaryCondition(side,axis,grid)==OgmgParameters::extrapolate ) 
-	{
+        if( boundaryCondition(side,axis,grid)==OgmgParameters::extrapolate ) 
+        {
           // ****************************************************************************
           // *************************DIRICHLET******************************************
           // ****************************************************************************
 
 
           if( Ogmg::debug & 4 )
-  	    printF("operatorAveraging: level=%i,grid=%i, (side,axis)=(%i,%i) `extrapolate BC' \n",
-		 level+1,grid,side,axis);
+            printF("operatorAveraging: level=%i,grid=%i, (side,axis)=(%i,%i) `extrapolate BC' \n",
+                 level+1,grid,side,axis);
 
-	  
+          
           if(  parameters.ghostLineAveragingOption[0]==OgmgParameters::imposeExtrapolation &&
                parameters.boundaryAveragingOption[0]==OgmgParameters::imposeDirichlet )
-	  {
+          {
             // New way
-	    assignBoundaryConditionCoefficients( coeffCoarse, grid, level+1, orderOfThisLevel, side,axis );
+            assignBoundaryConditionCoefficients( coeffCoarse, grid, level+1, orderOfThisLevel, side,axis );
             continue;
-	  }
-	  
+          }
+          
 
 
-	  bool useEquationOnGhost = useEquationOnGhostLineForDirichletBC(mgCoarse,level+1);
+          bool useEquationOnGhost = useEquationOnGhostLineForDirichletBC(mgCoarse,level+1);
 
-	  // Line solvers may need the equation on the ghost line, otherwise we only need to fill in
+          // Line solvers may need the equation on the ghost line, otherwise we only need to fill in
           // the matrix on the coarsest level since the BC's other levels will be treated by the BC routine.
           bool lineSolverIsUsed = true;  // **** can we fix this ? do we know atthis point?
-	  useEquationOnGhost = (useEquationOnGhost && 
+          useEquationOnGhost = (useEquationOnGhost && 
                                  ( (level+1) == mgcg.numberOfMultigridLevels()-1 ||
                                    lineSolverIsUsed ) );
 
@@ -850,511 +857,511 @@ operatorAveraging(RealMappedGridFunction & coeffFine,
 
           // ------ ghost line ---------
           if( parameters.ghostLineAveragingOption[0]==OgmgParameters::imposeExtrapolation )
-	  {
-	    // extrapParams.orderOfExtrapolation=2; // "odd symmetry u(-1)=2*u(0)-u(1)"
-	    // extrapParams.orderOfExtrapolation=4; // nearly consistent with odd symmetry , 4th deriv = 0
+          {
+            // extrapParams.orderOfExtrapolation=2; // "odd symmetry u(-1)=2*u(0)-u(1)"
+            // extrapParams.orderOfExtrapolation=4; // nearly consistent with odd symmetry , 4th deriv = 0
 
-	    extrapParams.orderOfExtrapolation=parameters.orderOfExtrapolationForDirichletOnLowerLevels;
+            extrapParams.orderOfExtrapolation=parameters.orderOfExtrapolationForDirichletOnLowerLevels;
             if( !useEquationOnGhost )
               coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::boundary(side,axis),
                               extrapParams);
             extrapParams.orderOfExtrapolation=orderOfExtrapolation; 
           }
-	  else
-	  {
+          else
+          {
             printF("ERROR: unknown ghostLineAveragingOption[0]=%i\n",parameters.ghostLineAveragingOption[0]);
-	    OV_ABORT("error");
-	  }
+            OV_ABORT("error");
+          }
 
            
           // ------- boundary -------
           if( parameters.boundaryAveragingOption[0]==OgmgParameters::imposeDirichlet )
-	  {
+          {
             // apply dirichlet for now ***fix this*** may not be  ********************************************
-	    printF("operatorAveraging: level=%i,grid=%i, (side,axis)=(%i,%i) `extrapolate BC' \n"
-		   " ******************* setting a Dirichlet BC FIX THIS ****************************\n",
-		   level+1,grid,side,axis);
+            printF("operatorAveraging: level=%i,grid=%i, (side,axis)=(%i,%i) `extrapolate BC' \n"
+                   " ******************* setting a Dirichlet BC FIX THIS ****************************\n",
+                   level+1,grid,side,axis);
 
             if( Ogmg::debug & 4 )
-   	      printF("operatorAveraging: level=%i,grid=%i, (side,axis)=(%i,%i) apply dirichlet BC \n",
-		       level+1,grid,side,axis);
+              printF("operatorAveraging: level=%i,grid=%i, (side,axis)=(%i,%i) apply dirichlet BC \n",
+                       level+1,grid,side,axis);
 
 
             if( useEquationOnGhost )
-	    {
-	      if( equationToSolve==OgesParameters::laplaceEquation )
-	      {
+            {
+              if( equationToSolve==OgesParameters::laplaceEquation )
+              {
                 Index Iv[3], &I1=Iv[0], &I2=Iv[1], &I3=Iv[2];
                 Index Igv[3], &Ig1=Igv[0], &Ig2=Igv[1], &Ig3=Igv[2];
-		
-		
+                
+                
                 // *** this is wrong -- see code in predefined ---
-//  		getBoundaryIndex(mgCoarse.gridIndexRange(),side,axis,I1,I2,I3);
-//  		op.setOrderOfAccuracy(2);
-//  		op.coefficients(MappedGridOperators::laplacianOperator,coeffCoarse,I1,I2,I3); // efficient version
-//  		op.setOrderOfAccuracy(4);
-//  		getGhostIndex(mgCoarse.gridIndexRange(),side,axis,Ig1,Ig2,Ig3);
+//              getBoundaryIndex(mgCoarse.gridIndexRange(),side,axis,I1,I2,I3);
+//              op.setOrderOfAccuracy(2);
+//              op.coefficients(MappedGridOperators::laplacianOperator,coeffCoarse,I1,I2,I3); // efficient version
+//              op.setOrderOfAccuracy(4);
+//              getGhostIndex(mgCoarse.gridIndexRange(),side,axis,Ig1,Ig2,Ig3);
 //                  Range all;
-//  		coeffCoarse(all,Ig1,Ig2,Ig3)=coeffCoarse(all,I1,I2,I3);
+//              coeffCoarse(all,Ig1,Ig2,Ig3)=coeffCoarse(all,I1,I2,I3);
 
                 getBoundaryIndex(mgCoarse.indexRange(),side,axis,I1,I2,I3);
                 getGhostIndex(mgCoarse.indexRange(),side,axis,Ig1,Ig2,Ig3);
                 // do not apply on ends if the adjacent boundary is Dirichlet -- otherwise the 
                 // same equation would appear twice
-		for( int dir=1; dir<numberOfDimensions; dir++ )
-		{
-		  int axisp=(axis+dir)%numberOfDimensions;  // tangential direction
+                for( int dir=1; dir<numberOfDimensions; dir++ )
+                {
+                  int axisp=(axis+dir)%numberOfDimensions;  // tangential direction
 
-		  int bca=boundaryCondition(Start,axisp,grid);
-		  int ia=Iv[axisp].getBase();
-		  ia= bca==OgmgParameters::extrapolate ? ia+1 : ia;
+                  int bca=boundaryCondition(Start,axisp,grid);
+                  int ia=Iv[axisp].getBase();
+                  ia= bca==OgmgParameters::extrapolate ? ia+1 : ia;
 
-		  int bcb=boundaryCondition(End,axisp,grid);
-		  int ib=Iv[axisp].getBound();
-		  ib= bcb==OgmgParameters::extrapolate ? ib-1 : ib;
-		  Iv[axisp]=Range(ia,ib);
+                  int bcb=boundaryCondition(End,axisp,grid);
+                  int ib=Iv[axisp].getBound();
+                  ib= bcb==OgmgParameters::extrapolate ? ib-1 : ib;
+                  Iv[axisp]=Range(ia,ib);
                   Igv[axisp]=Iv[axisp];
-		}
+                }
 
                 op.setOrderOfAccuracy(2);
                 realArray tempCoeff(coeffCoarse.dimension(0),I1,I2,I3);
                 op.assignCoefficients(MappedGridOperators::laplacianOperator,tempCoeff,I1,I2,I3); // efficient version
                 op.setOrderOfAccuracy(4);
 
-		const int ee=0; 
-		int I1Base,I2Base,I3Base;
-		int I1Bound,I2Bound,I3Bound;
-		int i1,i2,i3;
-		is1=is2=is3=0;
-		isv[axis]=1-2*side;
+                const int ee=0; 
+                int I1Base,I2Base,I3Base;
+                int I1Bound,I2Bound,I3Bound;
+                int i1,i2,i3;
+                is1=is2=is3=0;
+                isv[axis]=1-2*side;
 
-		const int m3b= numberOfDimensions==2 ? -1 : 1;
-		for( int m3=-1; m3<=m3b; m3++ )
-		  for( int m2=-1; m2<=1; m2++ )
-		    for( int m1=-1; m1<=1; m1++ )
-		    {
-		      // copy the second order equation into the correct positions of the 4th order stencil
-		      const int index2=(m1+1)+3*(m2+1+3*(m3+1));  // stencil width=3
+                const int m3b= numberOfDimensions==2 ? -1 : 1;
+                for( int m3=-1; m3<=m3b; m3++ )
+                  for( int m2=-1; m2<=1; m2++ )
+                    for( int m1=-1; m1<=1; m1++ )
+                    {
+                      // copy the second order equation into the correct positions of the 4th order stencil
+                      const int index2=(m1+1)+3*(m2+1+3*(m3+1));  // stencil width=3
 
-		      int index4=numberOfDimensions==2 ? (m1+2)+5*(m2+2)          :        // stencil width==5
-			(m1+2)+5*(m2+2+5*(m3+2));
-		      // remember we are shifted to the ghost line :
-		      index4 += axis==0 ? 1-2*side : axis==1 ? 5*(1-2*side) : 25*(1-2*side);
-		
-		      FOR_3(i1,i2,i3,I1,I2,I3)
-		      {
-			int ig1=i1-is1, ig2=i2-is2, ig3=i3-is3;
-			coeffCoarse(index4,ig1,ig2,ig3)=tempCoeff(index2,i1,i2,i3);
-			coeffCoarse.sparse->setClassify(SparseRepForMGF::ghost1,ig1,ig2,ig3,ee);
-		      }
-		      //coeffCoarse(index4,Ig1,Ig2,Ig3)=tempCoeff(index2,I1,I2,I3);
-		    }
+                      int index4=numberOfDimensions==2 ? (m1+2)+5*(m2+2)          :        // stencil width==5
+                        (m1+2)+5*(m2+2+5*(m3+2));
+                      // remember we are shifted to the ghost line :
+                      index4 += axis==0 ? 1-2*side : axis==1 ? 5*(1-2*side) : 25*(1-2*side);
+                
+                      FOR_3(i1,i2,i3,I1,I2,I3)
+                      {
+                        int ig1=i1-is1, ig2=i2-is2, ig3=i3-is3;
+                        coeffCoarse(index4,ig1,ig2,ig3)=tempCoeff(index2,i1,i2,i3);
+                        coeffCoarse.sparse->setClassify(SparseRepForMGF::ghost1,ig1,ig2,ig3,ee);
+                      }
+                      //coeffCoarse(index4,Ig1,Ig2,Ig3)=tempCoeff(index2,I1,I2,I3);
+                    }
 
-		// coeffCoarse.sparse->setClassify(SparseRepForMGF::ghost1,Ig1,Ig2,Ig3,ee);
+                // coeffCoarse.sparse->setClassify(SparseRepForMGF::ghost1,Ig1,Ig2,Ig3,ee);
 
-		// **** end points on dirichlet sides: use extrapolation (otherwise the same eqn appears twice!)
+                // **** end points on dirichlet sides: use extrapolation (otherwise the same eqn appears twice!)
 
-		getGhostIndex(mgCoarse.indexRange(),side,axis,Ig1,Ig2,Ig3);
-		for( int dir=0; dir<numberOfDimensions-1; dir++ )
-		{
-		  const int axisp = (axis+dir+1) % numberOfDimensions; // adjacent side
-		  for( int side2=0; side2<=1; side2++ )
-		  {
-		    if( boundaryCondition(side2,axisp,grid)==OgmgParameters::extrapolate )
-		    {
-		      I1=Ig1, I2=Ig2, I3=Ig3;
-		      Iv[axisp]= side2==0 ? Iv[axisp].getBase() : Iv[axisp].getBound();
-		      // extrapolate points  coeff(.,I1,I2,I3) in the direction axis
+                getGhostIndex(mgCoarse.indexRange(),side,axis,Ig1,Ig2,Ig3);
+                for( int dir=0; dir<numberOfDimensions-1; dir++ )
+                {
+                  const int axisp = (axis+dir+1) % numberOfDimensions; // adjacent side
+                  for( int side2=0; side2<=1; side2++ )
+                  {
+                    if( boundaryCondition(side2,axisp,grid)==OgmgParameters::extrapolate )
+                    {
+                      I1=Ig1, I2=Ig2, I3=Ig3;
+                      Iv[axisp]= side2==0 ? Iv[axisp].getBase() : Iv[axisp].getBound();
+                      // extrapolate points  coeff(.,I1,I2,I3) in the direction axis
                       // printF(" Extrap ends: [%i,%i][%i,%i]\n",I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound());
-		      
-		      op.setExtrapolationCoefficients(coeffCoarse,ee,I1,I2,I3,orderOfExtrapolation); // in GenericMGOP
-		    }
-		  }
-		}
+                      
+                      op.setExtrapolationCoefficients(coeffCoarse,ee,I1,I2,I3,orderOfExtrapolation); // in GenericMGOP
+                    }
+                  }
+                }
 
 
-		printF("\n+++++++++++++Op Ave: fill in 2nd-order equation on the ghost points : level=%i\n",level+1);
-		if( false )
-		{
-		  Range all;
-		  coeffCoarse(all,Ig1,Ig2,Ig3).display("2nd-order equation on the ghost points");
-		}
-		
-	      }
-	      else
-	      {
-		Overture::abort("operator averaging: apply boundary conditions");
-	      }
-	    }
+                printF("\n+++++++++++++Op Ave: fill in 2nd-order equation on the ghost points : level=%i\n",level+1);
+                if( false )
+                {
+                  Range all;
+                  coeffCoarse(all,Ig1,Ig2,Ig3).display("2nd-order equation on the ghost points");
+                }
+                
+              }
+              else
+              {
+                Overture::abort("operator averaging: apply boundary conditions");
+              }
+            }
           
-	    coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::dirichlet,BCTypes::boundary(side,axis));
-	    
-	  }
+            coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::dirichlet,BCTypes::boundary(side,axis));
+            
+          }
           else if( parameters.boundaryAveragingOption[0]==OgmgParameters::partialWeighting )
-	  {
-	    printF("operatorAveraging: level=%i,grid=%i, (side,axis)=(%i,%i) `extrapolate BC' \n"
-		   " ******************* partial weighting on boundary ****************************\n",
-		   level+1,grid,side,axis);
-	    option[axis]=restrictedFullWeighting;
+          {
+            printF("operatorAveraging: level=%i,grid=%i, (side,axis)=(%i,%i) `extrapolate BC' \n"
+                   " ******************* partial weighting on boundary ****************************\n",
+                   level+1,grid,side,axis);
+            option[axis]=restrictedFullWeighting;
             averageCoefficients(I1,I2,I3,I1p,I2p,I3p,J1,J2,J3,option,cFineLocal,cCoarseLocal,ipar);
-	    option[axis]=fullWeighting;
-	  }
+            option[axis]=fullWeighting;
+          }
           else if( parameters.boundaryAveragingOption[0]==OgmgParameters::lumpedPartialWeighting )
-	  {
+          {
             Overture::abort("error");
-//  	    printF("operatorAveraging: level=%i,grid=%i, (side,axis)=(%i,%i) `extrapolate BC' \n"
-//  		   " ******************* lumped partial weighting on boundary ****************************\n",
-//  		   level+1,grid,side,axis);
-//  	    option[axis]=restrictedFullWeighting;
+//          printF("operatorAveraging: level=%i,grid=%i, (side,axis)=(%i,%i) `extrapolate BC' \n"
+//                 " ******************* lumped partial weighting on boundary ****************************\n",
+//                 level+1,grid,side,axis);
+//          option[axis]=restrictedFullWeighting;
 //              averageCoefficients(I1,I2,I3,I1p,I2p,I3p,J1,J2,J3,lumpedPartialWeighting,cFine,cCoarse,ipar);
-//  	    option[axis]=fullWeighting;
+//          option[axis]=fullWeighting;
 
 //              if( true ||  Ogmg::debug & 8 )
-//  	    {
+//          {
 //                printF("level=%i : lumped boundary condition coefficients, side=%i, axis=%i\n",
 //                      level,side,axis);
 //                Range all;
-//  	      cCoarse(all,J1,J2,J3).display("cCoarse");
-//  	    }
-	  }
+//            cCoarse(all,J1,J2,J3).display("cCoarse");
+//          }
+          }
 //           else if( parameters.boundaryAveragingOption[0]==lumpedPartialWeighting )
-// 	  {
-// 	    const int diagonal=numberOfDimensions==1 ? 1 : numberOfDimensions==2 ? 4 : 13;
-// 	    if(  max(fabs(cFine(diagonal,I1,I2,I3)-1.))<REAL_EPSILON*10. )
-// 	    {
-// 	    }
-// 	  }
-	  else
-	  {
-	    printF("ERROR: unknown boundaryAveragingOption[0]=%i\n",parameters.boundaryAveragingOption[0]);
-	    OV_ABORT("error");
-	  }
-	  
-	  if( orderOfAccuracy==4 )
-	  {
+//        {
+//          const int diagonal=numberOfDimensions==1 ? 1 : numberOfDimensions==2 ? 4 : 13;
+//          if(  max(fabs(cFine(diagonal,I1,I2,I3)-1.))<REAL_EPSILON*10. )
+//          {
+//          }
+//        }
+          else
+          {
+            printF("ERROR: unknown boundaryAveragingOption[0]=%i\n",parameters.boundaryAveragingOption[0]);
+            OV_ABORT("error");
+          }
+          
+          if( orderOfAccuracy==4 )
+          {
             // ---- 2nd ghost line ----
-	    extrapParams.ghostLineToAssign=2;
-	    coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::boundary(side,axis),extrapParams); 
-	    extrapParams.ghostLineToAssign=1;
-	  }
-	  
-	}
-	else  // "equation" BC  (Neumann, mixed or extrap)
-	{
+            extrapParams.ghostLineToAssign=2;
+            coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::boundary(side,axis),extrapParams); 
+            extrapParams.ghostLineToAssign=1;
+          }
+          
+        }
+        else  // "equation" BC  (Neumann, mixed or extrap)
+        {
           // ***************************************************************************************
           // *********************** NEUMANN, MIXED, or EXTRAP *************************************
           // ***************************************************************************************
 
-	  if( bc(side,axis,grid)==OgesParameters::extrapolate )
-	  { // *wdh* 100412 
-	    // extrapParams.orderOfExtrapolation=getOrderOfExtrapolation(level); // parameters.orderOfExtrapolationForDirichletOnLowerLevels;
+          if( bc(side,axis,grid)==OgesParameters::extrapolate )
+          { // *wdh* 100412 
+            // extrapParams.orderOfExtrapolation=getOrderOfExtrapolation(level); // parameters.orderOfExtrapolationForDirichletOnLowerLevels;
             extrapParams.orderOfExtrapolation= int( boundaryConditionData(0,side,axis,grid)+.5);
-	    
-	    coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::boundary(side,axis),extrapParams);
+            
+            coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::boundary(side,axis),extrapParams);
 
-	    if( orderOfAccuracy==4 )
-	    {
-	      extrapParams.ghostLineToAssign=2; // extrap 2nd ghost line
-	      coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::boundary(side,axis),extrapParams);
-	      extrapParams.ghostLineToAssign=1; // reset 
-	    }
-            extrapParams.orderOfExtrapolation=orderOfExtrapolation; 	    
+            if( orderOfAccuracy==4 )
+            {
+              extrapParams.ghostLineToAssign=2; // extrap 2nd ghost line
+              coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::boundary(side,axis),extrapParams);
+              extrapParams.ghostLineToAssign=1; // reset 
+            }
+            extrapParams.orderOfExtrapolation=orderOfExtrapolation;         
 
             continue;
-	  }
+          }
 
           if(  parameters.ghostLineAveragingOption[1]==OgmgParameters::imposeNeumann ||
                orderOfAccuracy==4 )
-	  {
+          {
             // ==============================================================
             // =================== New way ==================================
             // ==============================================================
-	    assignBoundaryConditionCoefficients( coeffCoarse, grid, level+1, orderOfThisLevel, side,axis );
+            assignBoundaryConditionCoefficients( coeffCoarse, grid, level+1, orderOfThisLevel, side,axis );
 
             continue;
-	  }
-	  
-	  if( debug & 64 )
-	  {
-	    aString buff;
-	    Range all;
-	    ::display(cCoarse,sPrintF(buff,"Neumann side=%i axis=%i cCoarse after assign boundary",
+          }
+          
+          if( debug & 64 )
+          {
+            aString buff;
+            Range all;
+            ::display(cCoarse,sPrintF(buff,"Neumann side=%i axis=%i cCoarse after assign boundary",
                    side,axis),debugFile);
-	  }
+          }
 
 
           // ------------------------------------------------------------
-	  // ------- Assign Coefficients on the GHOST line --------------
+          // ------- Assign Coefficients on the GHOST line --------------
           // ------------------------------------------------------------
 
           Index Imv[3], &I1m=Imv[0], &I2m=Imv[1], &I3m=Imv[2];
           Index Jmv[3], &J1m=Jmv[0], &J2m=Jmv[1], &J3m=Jmv[2];
 
-	  getBoundaryIndex(mgCoarse.gridIndexRange(),side,axis,J1,J2,J3); // recompute to be full length
+          getBoundaryIndex(mgCoarse.gridIndexRange(),side,axis,J1,J2,J3); // recompute to be full length
 
-	  getGhostIndex(mgFine.gridIndexRange(),side,axis,I1m,I2m,I3m);
-	  getGhostIndex(mgFine.gridIndexRange(),side,axis,I1p,I2p,I3p,1,1); // one line wider
-	  getGhostIndex(mgCoarse.gridIndexRange(),side,axis,J1m,J2m,J3m);
+          getGhostIndex(mgFine.gridIndexRange(),side,axis,I1m,I2m,I3m);
+          getGhostIndex(mgFine.gridIndexRange(),side,axis,I1p,I2p,I3p,1,1); // one line wider
+          getGhostIndex(mgCoarse.gridIndexRange(),side,axis,J1m,J2m,J3m);
 
-	  I1m=IndexBB(I1m,cf[0]);  I2m=IndexBB(I2m,cf[1]);  I3m=IndexBB(I3m,cf[2]);  // set stride
+          I1m=IndexBB(I1m,cf[0]);  I2m=IndexBB(I2m,cf[1]);  I3m=IndexBB(I3m,cf[2]);  // set stride
 
 
           bool fixupClassification=true;
 
-	  if( parameters.ghostLineAveragingOption[1]==OgmgParameters::imposeNeumann ||
+          if( parameters.ghostLineAveragingOption[1]==OgmgParameters::imposeNeumann ||
               orderOfAccuracy==4 )
-	  {
+          {
             // ** For fourth-order equations we do this since the second-order averaging of the Neumann BC results
             // in much slower convergence; For 2nd-order the averaged Neumann equation remains the same on a rect. grid
 
-	    fixupClassification=false;  // no need for fixups below if we call the applyBC function
-	    
-	    printF("operatorAveraging: level=%i,grid=%i, (side,axis)=(%i,%i) `equation BC' \n"
-		   " ******************* setting a Neumann or Mixed BC  ****************************\n",
-		   level+1,grid,side,axis);
+            fixupClassification=false;  // no need for fixups below if we call the applyBC function
+            
+            printF("operatorAveraging: level=%i,grid=%i, (side,axis)=(%i,%i) `equation BC' \n"
+                   " ******************* setting a Neumann or Mixed BC  ****************************\n",
+                   level+1,grid,side,axis);
        
             // For fourth order accuracy we must support different options ****
 
-	    if( equationToSolve!=OgesParameters::userDefined )
-	    {
-	      if( bc(side,axis,grid)==OgmgParameters::neumann )
-	      {
-		coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::neumann,BCTypes::boundary1+side+2*axis);
-	      }
-	      else if( bc(side,axis,grid)==OgmgParameters::mixed )
-	      {
+            if( equationToSolve!=OgesParameters::userDefined )
+            {
+              if( bc(side,axis,grid)==OgmgParameters::neumann )
+              {
+                coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::neumann,BCTypes::boundary1+side+2*axis);
+              }
+              else if( bc(side,axis,grid)==OgmgParameters::mixed )
+              {
                 if( false &&
                     orderOfAccuracy==4 && (parameters.lowerLevelNeumannFirstGhostLineBC==OgmgParameters::useSymmetry ||
                          parameters.lowerLevelNeumannFirstGhostLineBC==
-					   OgmgParameters::useEquationToSecondOrder) )
-		{
+                                           OgmgParameters::useEquationToSecondOrder) )
+                {
                   // **** FIX FOR useEquationToSecondOrder ****
-		  printF("operatorAveraging: level=%i,grid=%i, (side,axis)=(%i,%i) apply MIXED BC -> Symmetry\n",
-			 level+1,grid,side,axis);  
-		  extrapParams.ghostLineToAssign=1;
-		  coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::evenSymmetry,
-								 BCTypes::boundary(side,axis),extrapParams); 
-		}
-		else
-		{
-		  RealArray & a = bcParams.a;
-		  a.redim(2);
+                  printF("operatorAveraging: level=%i,grid=%i, (side,axis)=(%i,%i) apply MIXED BC -> Symmetry\n",
+                         level+1,grid,side,axis);  
+                  extrapParams.ghostLineToAssign=1;
+                  coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::evenSymmetry,
+                                                                 BCTypes::boundary(side,axis),extrapParams); 
+                }
+                else
+                {
+                  RealArray & a = bcParams.a;
+                  a.redim(2);
 
-		  a(0)=boundaryConditionData(0,side,axis,grid);  // coeff of u
-		  a(1)=boundaryConditionData(1,side,axis,grid);  // coeff of du/dn
-		  printF("operatorAveraging: level=%i,grid=%i, (side,axis)=(%i,%i) apply MIXED BC a0,a1=%f,%f\n",
-			 level+1,grid,side,axis,a(0),a(1));  
-		  coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::mixed,
+                  a(0)=boundaryConditionData(0,side,axis,grid);  // coeff of u
+                  a(1)=boundaryConditionData(1,side,axis,grid);  // coeff of du/dn
+                  printF("operatorAveraging: level=%i,grid=%i, (side,axis)=(%i,%i) apply MIXED BC a0,a1=%f,%f\n",
+                         level+1,grid,side,axis,a(0),a(1));  
+                  coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::mixed,
                                           BCTypes::boundary1+side+2*axis,bcParams);
-		}
-		
-	      }
-	      else if( bc(side,axis,grid)>0 )
-	      {
-		printF("Ogmg::operatorAveraging:ERROR: unknown bc=%i for grid=%i side=%i axis=%i\n",
-		       bc(side,axis,grid),grid,side,axis);
-		OV_ABORT("error");
-	      }
-	    }
-	    else
-	    {
-	      coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::neumann,BCTypes::boundary(side,axis));
-	      
-	    }
-	  }
-	  else if( parameters.ghostLineAveragingOption[1]==OgmgParameters::partialWeighting )
-	  {
+                }
+                
+              }
+              else if( bc(side,axis,grid)>0 )
+              {
+                printF("Ogmg::operatorAveraging:ERROR: unknown bc=%i for grid=%i side=%i axis=%i\n",
+                       bc(side,axis,grid),grid,side,axis);
+                OV_ABORT("error");
+              }
+            }
+            else
+            {
+              coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::neumann,BCTypes::boundary(side,axis));
+              
+            }
+          }
+          else if( parameters.ghostLineAveragingOption[1]==OgmgParameters::partialWeighting )
+          {
 // -- this next section was moved to above -- 
 //             // **** could use partialWeighting except at the end points *****
 
 //             option[axis]=restrictedFullWeighting;
-// 	    averageCoefficients(I1m,I2m,I3m,I1p,I2p,I3p,J1m,J2m,J3m,option,cFineLocal,cCoarseLocal,ipar);
+//          averageCoefficients(I1m,I2m,I3m,I1p,I2p,I3p,J1m,J2m,J3m,option,cFineLocal,cCoarseLocal,ipar);
 
-// 	    // use restricted full weighting on ends in 2d or edges in 3D
-// 	    for( int dir=0; dir<numberOfDimensions-1; dir++ )
-// 	    {
-// 	      const int axisp=(axis+dir+1)%numberOfDimensions;  // tangential direction
-// 	      for( int side2=0; side2<=1; side2++ )
-// 	      {
-// 		if( (bool)mgCoarse.isPeriodic(axisp) ) 
-// 		  continue;   // periodic boundaries are ok on the ends 
+//          // use restricted full weighting on ends in 2d or edges in 3D
+//          for( int dir=0; dir<numberOfDimensions-1; dir++ )
+//          {
+//            const int axisp=(axis+dir+1)%numberOfDimensions;  // tangential direction
+//            for( int side2=0; side2<=1; side2++ )
+//            {
+//              if( (bool)mgCoarse.isPeriodic(axisp) ) 
+//                continue;   // periodic boundaries are ok on the ends 
 
-// 		// *wdh* 030901 if( (side2==0 && Iv[axisp].getBase() ==mgFine.gridIndexRange(0,axisp)) ||  // only do if this is the end pt
-// 		// *wdh* 030901     (side2==1 && Iv[axisp].getBound()==mgFine.gridIndexRange(1,axisp)) )
-// 		if( (side2==0 && Imv[axisp].getBase() ==mgFine.gridIndexRange(0,axisp)) ||  // only do if this is the end pt
-// 		    (side2==1 && Imv[axisp].getBound()==mgFine.gridIndexRange(1,axisp)) )
-// 		{
-// 		  I1c=I1m; I2c=I2m; I3c=I3m;
-// 		  Ivc[axisp] = side2==0 ? Imv[axisp].getBase() : Imv[axisp].getBound();
+//              // *wdh* 030901 if( (side2==0 && Iv[axisp].getBase() ==mgFine.gridIndexRange(0,axisp)) ||  // only do if this is the end pt
+//              // *wdh* 030901     (side2==1 && Iv[axisp].getBound()==mgFine.gridIndexRange(1,axisp)) )
+//              if( (side2==0 && Imv[axisp].getBase() ==mgFine.gridIndexRange(0,axisp)) ||  // only do if this is the end pt
+//                  (side2==1 && Imv[axisp].getBound()==mgFine.gridIndexRange(1,axisp)) )
+//              {
+//                I1c=I1m; I2c=I2m; I3c=I3m;
+//                Ivc[axisp] = side2==0 ? Imv[axisp].getBase() : Imv[axisp].getBound();
 //                   // *030831* Next lines are wrong, need to have a buffer of cf[axis]
-// 		  // *030831* I1a=I1p; I2a=I2p; I3a=I3p;
-// 		  // *030831* Iav[axisp] = side2==0 ? Ipv[axisp].getBase() : Ipv[axisp].getBound();
+//                // *030831* I1a=I1p; I2a=I2p; I3a=I3p;
+//                // *030831* Iav[axisp] = side2==0 ? Ipv[axisp].getBase() : Ipv[axisp].getBound();
 //                   // I1a=Range(I1c.getBase()-1,I1c.getBound()+1);
 //                   // I2a=Range(I2c.getBase()-1,I2c.getBound()+1);
 //                   // I3a=numberOfDimensions==2 ? Range(I3c) : Range(I3c.getBase()-1,I3c.getBound()+1);
-// 		  // I1a=I1c; I2a=I2c; I3a=I3c;  
-// 		  I1a=I1p; I2a=I2p; I3a=I3p;
-// 		  Iav[axisp] = side2==0 ? Ivc[axisp].getBase() : Ivc[axisp].getBound(); // injection
+//                // I1a=I1c; I2a=I2c; I3a=I3c;  
+//                I1a=I1p; I2a=I2p; I3a=I3p;
+//                Iav[axisp] = side2==0 ? Ivc[axisp].getBase() : Ivc[axisp].getBound(); // injection
 
-// 		  // *wdh* 030901 J1c=J1; J2c=J2; J3c=J3;
-// 		  J1c=J1m; J2c=J2m; J3c=J3m;  // assign ghost line at ends
-// 		  Jvc[axisp] = side2==0 ? Jmv[axisp].getBase() : Jmv[axisp].getBound();
+//                // *wdh* 030901 J1c=J1; J2c=J2; J3c=J3;
+//                J1c=J1m; J2c=J2m; J3c=J3m;  // assign ghost line at ends
+//                Jvc[axisp] = side2==0 ? Jmv[axisp].getBase() : Jmv[axisp].getBound();
 
 //                   option[axisp]=restrictedFullWeighting;
-// 		  averageCoefficients(I1c,I2c,I3c,I1a,I2a,I3a,J1c,J2c,J3c,option,cFineLocal,cCoarseLocal,ipar);
+//                averageCoefficients(I1c,I2c,I3c,I1a,I2a,I3a,J1c,J2c,J3c,option,cFineLocal,cCoarseLocal,ipar);
 //                   if( numberOfDimensions==3 )
-// 		  {
-// 		    // do ends of edges in 3D
+//                {
+//                  // do ends of edges in 3D
 //                     const int axisp2= dir==0 ?  (axisp+1)%numberOfDimensions : (axis+1)%numberOfDimensions;
-// 		    assert( axisp2!=axis && axisp2!=axisp );
-// 		    for( int side3=0; side3<=1; side3++ )
-// 		    {
-// 		      Ivc[axisp2] = side3==0 ? Imv[axisp2].getBase() : Imv[axisp2].getBound();
-// 		      // *030831 * Iav[axisp2] = side3==0 ? Ipv[axisp2].getBase() : Ipv[axisp2].getBound();
+//                  assert( axisp2!=axis && axisp2!=axisp );
+//                  for( int side3=0; side3<=1; side3++ )
+//                  {
+//                    Ivc[axisp2] = side3==0 ? Imv[axisp2].getBase() : Imv[axisp2].getBound();
+//                    // *030831 * Iav[axisp2] = side3==0 ? Ipv[axisp2].getBase() : Ipv[axisp2].getBound();
 //                       // Iav[axisp2] = numberOfDimensions==2 ? Range(Ivc[axisp2]) : 
 //                       //               Range(Ivc[axisp2].getBase()-1,Ivc[axisp2].getBound()+1);
 //                       Iav[axisp2] = side3==0 ? Ivc[axisp2].getBase() : Ivc[axisp2].getBound(); // injection
 
-// 		      Jvc[axisp2] = side3==0 ? Jmv[axisp2].getBase() : Jmv[axisp2].getBound();
+//                    Jvc[axisp2] = side3==0 ? Jmv[axisp2].getBase() : Jmv[axisp2].getBound();
 
-// 		      option[axisp2]=restrictedFullWeighting;
-// 		      averageCoefficients(I1c,I2c,I3c,I1a,I2a,I3a,J1c,J2c,J3c,option,cFineLocal,cCoarseLocal,ipar);
-// 		    }
-		    
-// 		    option[axisp2]=fullWeighting; // reset
-// 		  }
+//                    option[axisp2]=restrictedFullWeighting;
+//                    averageCoefficients(I1c,I2c,I3c,I1a,I2a,I3a,J1c,J2c,J3c,option,cFineLocal,cCoarseLocal,ipar);
+//                  }
+                    
+//                  option[axisp2]=fullWeighting; // reset
+//                }
 //                   option[axisp]=fullWeighting; // reset
 
-// 		  if( debug & 64 )
-// 		  {
-// 		    aString buff;
+//                if( debug & 64 )
+//                {
+//                  aString buff;
 //                     Range all;
-// 		    ::display(cCoarse(all,J1c,J2c,J3c),
-// 			      sPrintF(buff,"Neumann:Ghost side=%i axis=%i side2=%i cCoarse(all,J1c,J2c,J3c)",side,axis,side2),debugFile);
-// 		    ::display(cFine(all,I1a,I2a,I3a),
-// 			      sPrintF(buff,"Neumann:Ghost side=%i axis=%i side2=%i cFine(all,I1a,I2a,I3a)",side,axis,side2),debugFile);
-		    
-// 		  }
-// 		}
-// 	      }
-// 	    }
+//                  ::display(cCoarse(all,J1c,J2c,J3c),
+//                            sPrintF(buff,"Neumann:Ghost side=%i axis=%i side2=%i cCoarse(all,J1c,J2c,J3c)",side,axis,side2),debugFile);
+//                  ::display(cFine(all,I1a,I2a,I3a),
+//                            sPrintF(buff,"Neumann:Ghost side=%i axis=%i side2=%i cFine(all,I1a,I2a,I3a)",side,axis,side2),debugFile);
+                    
+//                }
+//              }
+//            }
+//          }
 //             option[axis]=fullWeighting; // reset
 
-	    
-	  }
-	  else
-	  {
+            
+          }
+          else
+          {
             printF("ERROR: unknown ghostLineAveragingOption[1]=%i\n",parameters.ghostLineAveragingOption[1]);
-	    OV_ABORT("error");
-	  }
-	  
+            OV_ABORT("error");
+          }
+          
 
           // *****fix up equation numbers and classify****          
           if( fixupClassification )
-	  {
-	    const int numberOfComponentsForCoefficients=1;  // **** fix these ******************
-	    const int width=3;
-	    const int stencilSize = int( pow(width,numberOfDimensions) );
-	    // const int halfWidth1= 1;
-	    // const int halfWidth2= numberOfDimensions>1 ? 1 : 0;
-	    // const int halfWidth3= numberOfDimensions>2 ? 1 : 0;
-	
-	
-	    assert( coeffCoarse.sparse!=NULL );
-	    int m1,m2,m3,ee,c;
-	    Range E(0,0), C(0,0);
-	
-	    for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
-	    {
-	      for( c=C.getBase(); c<=C.getBound(); c++ )                        
-	      {
-		ForStencil(m1,m2,m3)  
-		  coeffCoarse.sparse->setCoefficientIndex(M123CE(m1,m2,m3,c,ee), ee,J1m,J2m,J3m, c, (J1+m1),(J2+m2),(J3+m3) );  
-	      }
-	      coeffCoarse.sparse->setClassify(SparseRepForMGF::ghost1,J1m,J2m,J3m,ee);
-	    }
-	  }
-	  
-	  if( true && orderOfAccuracy==4 )
-	  {
+          {
+            const int numberOfComponentsForCoefficients=1;  // **** fix these ******************
+            const int width=3;
+            const int stencilSize = int( pow(width,numberOfDimensions) );
+            // const int halfWidth1= 1;
+            // const int halfWidth2= numberOfDimensions>1 ? 1 : 0;
+            // const int halfWidth3= numberOfDimensions>2 ? 1 : 0;
+        
+        
+            assert( coeffCoarse.sparse!=NULL );
+            int m1,m2,m3,ee,c;
+            Range E(0,0), C(0,0);
+        
+            for( ee=E.getBase(); ee<=E.getBound(); ee++ )                        
+            {
+              for( c=C.getBase(); c<=C.getBound(); c++ )                        
+              {
+                ForStencil(m1,m2,m3)  
+                  coeffCoarse.sparse->setCoefficientIndex(M123CE(m1,m2,m3,c,ee), ee,J1m,J2m,J3m, c, (J1+m1),(J2+m2),(J3+m3) );  
+              }
+              coeffCoarse.sparse->setClassify(SparseRepForMGF::ghost1,J1m,J2m,J3m,ee);
+            }
+          }
+          
+          if( true && orderOfAccuracy==4 )
+          {
             bool useEquationOnGhost = orderOfAccuracy==4 ? useEquationOnGhostLineForNeumannBC(mgCoarse,level+1) : false;
 
             if( orderOfAccuracy==4 && parameters.useSymmetryForNeumannOnLowerLevels )
-	    {
-	      
+            {
+              
               if( bc(side,axis,grid)==OgmgParameters::neumann && parameters.fourthOrderBoundaryConditionOption==1 )
-	      {
+              {
                 // This results in poor convergence for a square with mixed BC's
-		printF("+++++++++++++++++Op ave: assign even symmetry to BOTH ghost lines for Neumann BC "
+                printF("+++++++++++++++++Op ave: assign even symmetry to BOTH ghost lines for Neumann BC "
                        "(%i,%i) level=%i\n",side,axis,level+1);
 
-		extrapParams.ghostLineToAssign=1;
-		coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::evenSymmetry,
+                extrapParams.ghostLineToAssign=1;
+                coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::evenSymmetry,
                                                                BCTypes::boundary(side,axis),extrapParams); 
-	      }
-	      
-	      if( useEquationOnGhost )
-	      {
-		printF("\n *********WARNING: opAve: NOT using EQN BC for Neumann Boundary on level %i, "
-		       " using symmetry for 2nd ghost ****************\n",level+1);
-	      }
-	      extrapParams.ghostLineToAssign=2;
+              }
+              
+              if( useEquationOnGhost )
+              {
+                printF("\n *********WARNING: opAve: NOT using EQN BC for Neumann Boundary on level %i, "
+                       " using symmetry for 2nd ghost ****************\n",level+1);
+              }
+              extrapParams.ghostLineToAssign=2;
               coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::evenSymmetry,
                                                                  BCTypes::boundary(side,axis),extrapParams); 
               extrapParams.ghostLineToAssign=1;
-	    }
-	    else
-	    {
-	      if( useEquationOnGhost )
-	      {
-		printF("\n *********WARNING: opAve: NOT using EQN BC for Neumann Boundary on level %i-- "
+            }
+            else
+            {
+              if( useEquationOnGhost )
+              {
+                printF("\n *********WARNING: opAve: NOT using EQN BC for Neumann Boundary on level %i-- "
                        " Extrapolating 2nd ghost ****************\n",level+1);
-	      }
+              }
 
-	      // ---- 2nd ghost line ----
-	      extrapParams.ghostLineToAssign=2;
-	      //    coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::boundary(side,axis),extrapParams); 
-	      // *** fix this coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::evenSymmetry,BCTypes::boundary(side,axis),extrapParams); 
-	      printF("+++++++++++++++++Op ave: extrap 2nd ghost line on Neumann BC (%i,%i) level=%i\n",side,axis,level+1);
+              // ---- 2nd ghost line ----
+              extrapParams.ghostLineToAssign=2;
+              //    coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::boundary(side,axis),extrapParams); 
+              // *** fix this coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::evenSymmetry,BCTypes::boundary(side,axis),extrapParams); 
+              printF("+++++++++++++++++Op ave: extrap 2nd ghost line on Neumann BC (%i,%i) level=%i\n",side,axis,level+1);
 
-	      extrapParams.orderOfExtrapolation=3;
-	      coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::boundary(side,axis),extrapParams); 
-	      extrapParams.ghostLineToAssign=1;
-	    }
-	    
+              extrapParams.orderOfExtrapolation=3;
+              coeffCoarse.applyBoundaryConditionCoefficients(0,0,BCTypes::extrapolate,BCTypes::boundary(side,axis),extrapParams); 
+              extrapParams.ghostLineToAssign=1;
+            }
+            
         
-	  }
+          }
 
 
-	  if( boundaryCondition(side,axis,grid)!=OgmgParameters::equation ) 
-	  {
+          if( boundaryCondition(side,axis,grid)!=OgmgParameters::equation ) 
+          {
             // This boundary has a mixture of equation and extrapolation points
-	    // over-write extrapolation points.
+            // over-write extrapolation points.
 /* ----
-	    const IntegerArray & classifyConst = c.sparse->classify(I1m,I2m,I3m);
-	    IntegerArray & classify = (IntegerArray &)classifyConst;
-	    classify.reshape(1,I1m,I2m,I3m);
-	    where( classify==SparseRepForMGF::extrapolation  )
-	    {
-	      u(0,I1m,I2m,I3m)=-(c(1,I1m,I2m,I3m)*u(0,I1m+  is1,I2m+  is2,I3m+  is3)+
-				 c(2,I1m,I2m,I3m)*u(0,I1m+2*is1,I2m+2*is2,I3m+2*is3)+
-				 c(3,I1m,I2m,I3m)*u(0,I1m+3*is1,I2m+3*is2,I3m+3*is3)+
-				 c(4,I1m,I2m,I3m)*u(0,I1m+4*is1,I2m+4*is2,I3m+4*is3)
-		)/c(0,I1m,I2m,I3m);
+            const IntegerArray & classifyConst = c.sparse->classify(I1m,I2m,I3m);
+            IntegerArray & classify = (IntegerArray &)classifyConst;
+            classify.reshape(1,I1m,I2m,I3m);
+            where( classify==SparseRepForMGF::extrapolation  )
+            {
+              u(0,I1m,I2m,I3m)=-(c(1,I1m,I2m,I3m)*u(0,I1m+  is1,I2m+  is2,I3m+  is3)+
+                                 c(2,I1m,I2m,I3m)*u(0,I1m+2*is1,I2m+2*is2,I3m+2*is3)+
+                                 c(3,I1m,I2m,I3m)*u(0,I1m+3*is1,I2m+3*is2,I3m+3*is3)+
+                                 c(4,I1m,I2m,I3m)*u(0,I1m+4*is1,I2m+4*is2,I3m+4*is3)
+                )/c(0,I1m,I2m,I3m);
 
-	    }
+            }
 ---- */
-	  }
+          }
         
-	  if( debug & 64 )
-	  {
-	    aString buff;
-	    Range all;
-	    ::display(cCoarse,sPrintF(buff,"Neumann side=%i axis=%i cCoarse at end",
+          if( debug & 64 )
+          {
+            aString buff;
+            Range all;
+            ::display(cCoarse,sPrintF(buff,"Neumann side=%i axis=%i cCoarse at end",
                    side,axis),debugFile);
-	  }
+          }
 
-	} // end Neumann
+        } // end Neumann
       }
     }
   }
@@ -1428,11 +1435,11 @@ operatorAveraging(RealMappedGridFunction & coeffFine,
 
 int Ogmg::
 averageCoefficients(Index & I1, Index & I2, Index & I3,
-		    Index & I1p, Index & I2p, Index & I3p,
-		    Index & J1, Index & J2, Index & J3,
-		    TransferTypesEnum option[3],
-		    const realSerialArray & cFine, 
-		    realSerialArray & cCoarse, int ipar[] )
+                    Index & I1p, Index & I2p, Index & I3p,
+                    Index & J1, Index & J2, Index & J3,
+                    TransferTypesEnum option[3],
+                    const realSerialArray & cFine, 
+                    realSerialArray & cCoarse, int ipar[] )
 // =========================================================================================
 // /Description:
 //    Form a coarse grid operator by averaging from a fine grid operator.
@@ -1507,72 +1514,72 @@ averageCoefficients(Index & I1, Index & I2, Index & I3,
         int na=I.getBase(), nb=I.getBound();
 
         if( option[dir]==restrictedFullWeighting )
-	{
+        {
           // In this case we do not average in this direction -- this must be a boundary or ghost line
           assert( na==nb && Jv[dir].getBase()==Jv[dir].getBound() );
-	  
+          
           // *wdh* 2012/04/07 NOTE: na==nb here
           if( na<cFineLocal.getBase(dir+1) +numGhost[dir]-1 || 
               nb>cFineLocal.getBound(dir+1)-numGhost[dir]+1 )
-	  {
-	    ok=false;  // there are no pts to assign on this processor
-	    break;
-	  }
+          {
+            ok=false;  // there are no pts to assign on this processor
+            break;
+          }
           continue;
-	  
+          
           // -- *wdh* 2012/04/07 OLD: this is not correct -- NOTE: na=nb 
-// 	  na = max(na,cFineLocal.getBase(dir+1));
+//        na = max(na,cFineLocal.getBase(dir+1));
 //           nb = min(nb,cFineLocal.getBound(dir+1));
-// 	  if( na>nb ) 
-// 	  {
-// 	    ok=false;  // there are no pts to assign on this processor
-// 	    break;
-// 	  }
+//        if( na>nb ) 
+//        {
+//          ok=false;  // there are no pts to assign on this processor
+//          break;
+//        }
 //        continue;
 
-	}
-	
+        }
+        
 
         assert( ( na % 2 == 0) && ( nb % 2 == 0 ) );  // we assume this below
 
         int ma=na, mb=nb;  // original values
 
         // This seems to work but I am not exactly sure why: *wdh* 110422
-	na=max(na,cFineLocal.getBase(dir+1) +numGhost[dir]-1);  // *note* dir+1 in cFineLocal since this is a coeff matrix
-	nb=min(nb,cFineLocal.getBound(dir+1)-numGhost[dir]+1);  // *note* dir-1
+        na=max(na,cFineLocal.getBase(dir+1) +numGhost[dir]-1);  // *note* dir+1 in cFineLocal since this is a coeff matrix
+        nb=min(nb,cFineLocal.getBound(dir+1)-numGhost[dir]+1);  // *note* dir-1
 
         // *wdh* This is NOT correct but I am not exactly sure why: 
-	//na=max(na,cFineLocal.getBase(dir+1) +(halfWidth+numExtraParallelGhost));  // *note* dir+1 in cFineLocal since this is a coeff matrix
-	//nb=min(nb,cFineLocal.getBound(dir+1)-(halfWidth+numExtraParallelGhost));  // *note* dir-1
+        //na=max(na,cFineLocal.getBase(dir+1) +(halfWidth+numExtraParallelGhost));  // *note* dir+1 in cFineLocal since this is a coeff matrix
+        //nb=min(nb,cFineLocal.getBound(dir+1)-(halfWidth+numExtraParallelGhost));  // *note* dir-1
 
         // Old: 
-	//na=max(na,cFineLocal.getBase(dir+1) +1);  // *note* dir+1 in cFineLocal since this is a coeff matrix
-	//nb=min(nb,cFineLocal.getBound(dir+1)-1);  // *note* dir-1
+        //na=max(na,cFineLocal.getBase(dir+1) +1);  // *note* dir+1 in cFineLocal since this is a coeff matrix
+        //nb=min(nb,cFineLocal.getBound(dir+1)-1);  // *note* dir-1
 
-	na+=(na-ma) % 2;  // na should remain even
-	nb-=(mb-nb) % 2;  // nb should remain even
+        na+=(na-ma) % 2;  // na should remain even
+        nb-=(mb-nb) % 2;  // nb should remain even
 
         if( na>nb ) 
-	{
-	  ok=false;  // there are no pts to assign on this processor
-	  break;
-	}
-	
+        {
+          ok=false;  // there are no pts to assign on this processor
+          break;
+        }
+        
         I=Range(na,nb,I.getStride());
         Ivp[dir]=Range(na-1,nb+1);
 
         Index & J = Jv[dir];  // coarse grid points
-	na/=2;  // for coarse grid
-	nb/=2;
+        na/=2;  // for coarse grid
+        nb/=2;
         // we assume the fine and coarse are distributed in the same way:
-	assert( na>=J.getBase() && nb<=J.getBound() );  
-	
+        assert( na>=J.getBase() && nb<=J.getBound() );  
+        
         if( na<cCoarseLocal.getBase(dir+1) || nb>cCoarseLocal.getBound(dir+1) )
-	{
-	  printf("Ogmg::averageCoefficients:ERROR in computing coarse grid bounds:\n"
+        {
+          printf("Ogmg::averageCoefficients:ERROR in computing coarse grid bounds:\n"
                  "  dir=%i, na=%i, nb=%i but cCoarseLocal=[%i,%i] \n",dir,na,nb,cCoarseLocal.getBase(dir+1),cCoarseLocal.getBound(dir+1));
-	  OV_ABORT("error");
-	}
+          OV_ABORT("error");
+        }
 
         J=Range(na,nb);  // coarse grid points
       }
@@ -1610,20 +1617,20 @@ averageCoefficients(Index & I1, Index & I2, Index & I3,
                 cCoarseLocal.getBase(1),cCoarseLocal.getBound(1),
                 cCoarseLocal.getBase(2),cCoarseLocal.getBound(2),
                 cCoarseLocal.getBase(3),cCoarseLocal.getBound(3),
-		Jv[0].getBase(),Jv[0].getBound(),
+                Jv[0].getBase(),Jv[0].getBound(),
                 Jv[1].getBase(),Jv[1].getBound(),
                 Jv[2].getBase(),Jv[2].getBound(),
-		Iv[0].getBase(),Iv[0].getBound(),Iv[0].getStride(),
-		Iv[1].getBase(),Iv[1].getBound(),Iv[1].getStride(),
-		Iv[2].getBase(),Iv[2].getBound(),Iv[2].getStride(),
-		Ivp[0].getBase(),Ivp[0].getBound(),
+                Iv[0].getBase(),Iv[0].getBound(),Iv[0].getStride(),
+                Iv[1].getBase(),Iv[1].getBound(),Iv[1].getStride(),
+                Iv[2].getBase(),Iv[2].getBound(),Iv[2].getStride(),
+                Ivp[0].getBase(),Ivp[0].getBound(),
                 Ivp[1].getBase(),Ivp[1].getBound(),
                 Ivp[2].getBase(),Ivp[2].getBound(),
-		ndc, 
+                ndc, 
                 *getDataPointer(cFineLocal), 
                 *getDataPointer(cCoarseLocal), 
-		ndc, *getDataPointer(c0), *getDataPointer(c1),
-		averageOption[0], orderOfThisLevel, ipar[0] );
+                ndc, *getDataPointer(c0), *getDataPointer(c1),
+                averageOption[0], orderOfThisLevel, ipar[0] );
     
 //     time=getCPU()-time;
 //     printF(">>>Time for averageOpt=%8.2e\n",time);
@@ -1642,15 +1649,15 @@ averageCoefficients(Index & I1, Index & I2, Index & I3,
     {
       if( option[0]==fullWeighting )
       {
-	cCoarse(0,J1,J2,J3)=FW0_1D_0(cFine,0,1,2,I1,I2,I3);
-	cCoarse(1,J1,J2,J3)=FW0_1D_1(cFine,0,1,2,I1,I2,I3);
-	cCoarse(2,J1,J2,J3)=FW0_1D_2(cFine,0,1,2,I1,I2,I3);
+        cCoarse(0,J1,J2,J3)=FW0_1D_0(cFine,0,1,2,I1,I2,I3);
+        cCoarse(1,J1,J2,J3)=FW0_1D_1(cFine,0,1,2,I1,I2,I3);
+        cCoarse(2,J1,J2,J3)=FW0_1D_2(cFine,0,1,2,I1,I2,I3);
       }
       else
       {
-	cCoarse(0,J1,J2,J3)=INJECTION_1D_0(cFine,0,1,2,I1,I2,I3);
-	cCoarse(1,J1,J2,J3)=INJECTION_1D_1(cFine,0,1,2,I1,I2,I3);
-	cCoarse(2,J1,J2,J3)=INJECTION_1D_2(cFine,0,1,2,I1,I2,I3);
+        cCoarse(0,J1,J2,J3)=INJECTION_1D_0(cFine,0,1,2,I1,I2,I3);
+        cCoarse(1,J1,J2,J3)=INJECTION_1D_1(cFine,0,1,2,I1,I2,I3);
+        cCoarse(2,J1,J2,J3)=INJECTION_1D_2(cFine,0,1,2,I1,I2,I3);
       }
     }
     else if( numberOfDimensions==2 )
@@ -1668,96 +1675,96 @@ averageCoefficients(Index & I1, Index & I2, Index & I3,
       int m;
       for( m=0; m<3; m++ )
       {
-	int m0=3*m, m1=m0+1, m2=m0+2;
-	if( option[0]==fullWeighting )
-	{
-	  c0(m0,J1,I2p,I3p)=FW0_1D_0(cFine,m0,m1,m2,I1,I2p,I3p);  // average coefficients m0,m1,m2 along axis1
-	  c0(m1,J1,I2p,I3p)=FW0_1D_1(cFine,m0,m1,m2,I1,I2p,I3p);
-	  c0(m2,J1,I2p,I3p)=FW0_1D_2(cFine,m0,m1,m2,I1,I2p,I3p);
-	}
-	else if( option[0]==restrictedFullWeighting )
-	{
-	  c0(m0,J1,I2p,I3p)=INJECTION_1D_0(cFine,m0,m1,m2,I1,I2p,I3p);  
-	  c0(m1,J1,I2p,I3p)=INJECTION_1D_1(cFine,m0,m1,m2,I1,I2p,I3p);
-	  c0(m2,J1,I2p,I3p)=INJECTION_1D_2(cFine,m0,m1,m2,I1,I2p,I3p);
-	}
-	else if( option[0]==injection )
-	{
-	  c0(m0,J1,I2p,I3p)=cFine(m0,I1,I2p,I3p);  
-	  c0(m1,J1,I2p,I3p)=cFine(m1,I1,I2p,I3p);
-	  c0(m2,J1,I2p,I3p)=cFine(m2,I1,I2p,I3p);
-	}
+        int m0=3*m, m1=m0+1, m2=m0+2;
+        if( option[0]==fullWeighting )
+        {
+          c0(m0,J1,I2p,I3p)=FW0_1D_0(cFine,m0,m1,m2,I1,I2p,I3p);  // average coefficients m0,m1,m2 along axis1
+          c0(m1,J1,I2p,I3p)=FW0_1D_1(cFine,m0,m1,m2,I1,I2p,I3p);
+          c0(m2,J1,I2p,I3p)=FW0_1D_2(cFine,m0,m1,m2,I1,I2p,I3p);
+        }
+        else if( option[0]==restrictedFullWeighting )
+        {
+          c0(m0,J1,I2p,I3p)=INJECTION_1D_0(cFine,m0,m1,m2,I1,I2p,I3p);  
+          c0(m1,J1,I2p,I3p)=INJECTION_1D_1(cFine,m0,m1,m2,I1,I2p,I3p);
+          c0(m2,J1,I2p,I3p)=INJECTION_1D_2(cFine,m0,m1,m2,I1,I2p,I3p);
+        }
+        else if( option[0]==injection )
+        {
+          c0(m0,J1,I2p,I3p)=cFine(m0,I1,I2p,I3p);  
+          c0(m1,J1,I2p,I3p)=cFine(m1,I1,I2p,I3p);
+          c0(m2,J1,I2p,I3p)=cFine(m2,I1,I2p,I3p);
+        }
 //          else if( option[0]==lumpedPartialWeighting  )
-//  	{
+//      {
 //            if( axis!=0 )
-//  	  {
-//  	    c0(m0,J1,I2p,I3p)=0.;
-//  	    c0(m1,J1,I2p,I3p)=(FW0_1D_0(cFine,m0,m1,m2,I1,I2p,I3p)+
-//  			       FW0_1D_1(cFine,m0,m1,m2,I1,I2p,I3p)+
-//  			       FW0_1D_2(cFine,m0,m1,m2,I1,I2p,I3p));
-//  	    c0(m2,J1,I2p,I3p)=0.;
-//  	  }
-//  	  else
-//  	  {
-//  	    c0(m0,J1,I2p,I3p)=0.;
-//  	    c0(m1,J1,I2p,I3p)=(INJECTION_1D_0(cFine,m0,m1,m2,I1,I2p,I3p)+
-//  			       INJECTION_1D_1(cFine,m0,m1,m2,I1,I2p,I3p)+
-//  			       INJECTION_1D_2(cFine,m0,m1,m2,I1,I2p,I3p));
-//  	    c0(m2,J1,I2p,I3p)=0.;
-//  	  }
-//  	}
-	else
-	{
-	  Overture::abort("error");
-	}
+//        {
+//          c0(m0,J1,I2p,I3p)=0.;
+//          c0(m1,J1,I2p,I3p)=(FW0_1D_0(cFine,m0,m1,m2,I1,I2p,I3p)+
+//                             FW0_1D_1(cFine,m0,m1,m2,I1,I2p,I3p)+
+//                             FW0_1D_2(cFine,m0,m1,m2,I1,I2p,I3p));
+//          c0(m2,J1,I2p,I3p)=0.;
+//        }
+//        else
+//        {
+//          c0(m0,J1,I2p,I3p)=0.;
+//          c0(m1,J1,I2p,I3p)=(INJECTION_1D_0(cFine,m0,m1,m2,I1,I2p,I3p)+
+//                             INJECTION_1D_1(cFine,m0,m1,m2,I1,I2p,I3p)+
+//                             INJECTION_1D_2(cFine,m0,m1,m2,I1,I2p,I3p));
+//          c0(m2,J1,I2p,I3p)=0.;
+//        }
+//      }
+        else
+        {
+          Overture::abort("error");
+        }
       }
       // display(c0,"c0","%9.1e");
 
     // now average in direction 1
       for( m=0; m<3; m++ )
       {
-	int m0=m, m1=m0+3, m2=m0+6;
-	if( option[1]==fullWeighting )
-	{
-	  cCoarse(m0,J1,J2,I3p)=FW1_1D_0(c0,m0,m1,m2,J1,I2,I3p); 
-	  cCoarse(m1,J1,J2,I3p)=FW1_1D_1(c0,m0,m1,m2,J1,I2,I3p); 
-	  cCoarse(m2,J1,J2,I3p)=FW1_1D_2(c0,m0,m1,m2,J1,I2,I3p); 
-	}
-	else if( option[1]==restrictedFullWeighting )
-	{
-	    cCoarse(m0,J1,J2,I3p)=INJECTION_1D_0(c0,m0,m1,m2,J1,I2,I3p); 
-	    cCoarse(m1,J1,J2,I3p)=INJECTION_1D_1(c0,m0,m1,m2,J1,I2,I3p); 
-	    cCoarse(m2,J1,J2,I3p)=INJECTION_1D_2(c0,m0,m1,m2,J1,I2,I3p); 
-	}
-	else if( option[1]==injection )
-	{
-	  cCoarse(m0,J1,J2,I3p)=c0(m0,J1,I2,I3p);
-	  cCoarse(m1,J1,J2,I3p)=c0(m1,J1,I2,I3p);
-	  cCoarse(m2,J1,J2,I3p)=c0(m2,J1,I2,I3p);
-	}
+        int m0=m, m1=m0+3, m2=m0+6;
+        if( option[1]==fullWeighting )
+        {
+          cCoarse(m0,J1,J2,I3p)=FW1_1D_0(c0,m0,m1,m2,J1,I2,I3p); 
+          cCoarse(m1,J1,J2,I3p)=FW1_1D_1(c0,m0,m1,m2,J1,I2,I3p); 
+          cCoarse(m2,J1,J2,I3p)=FW1_1D_2(c0,m0,m1,m2,J1,I2,I3p); 
+        }
+        else if( option[1]==restrictedFullWeighting )
+        {
+            cCoarse(m0,J1,J2,I3p)=INJECTION_1D_0(c0,m0,m1,m2,J1,I2,I3p); 
+            cCoarse(m1,J1,J2,I3p)=INJECTION_1D_1(c0,m0,m1,m2,J1,I2,I3p); 
+            cCoarse(m2,J1,J2,I3p)=INJECTION_1D_2(c0,m0,m1,m2,J1,I2,I3p); 
+        }
+        else if( option[1]==injection )
+        {
+          cCoarse(m0,J1,J2,I3p)=c0(m0,J1,I2,I3p);
+          cCoarse(m1,J1,J2,I3p)=c0(m1,J1,I2,I3p);
+          cCoarse(m2,J1,J2,I3p)=c0(m2,J1,I2,I3p);
+        }
 //          else if( option[1]==lumpedPartialWeighting )
-//  	{
+//      {
 //            if( axis!=1 )
-//  	  {
-//  	    cCoarse(m0,J1,J2,I3p)=0.;
-//  	    cCoarse(m1,J1,J2,I3p)=(FW1_1D_0(c0,m0,m1,m2,J1,I2,I3p)+
-//  				   FW1_1D_1(c0,m0,m1,m2,J1,I2,I3p)+
-//  				   FW1_1D_2(c0,m0,m1,m2,J1,I2,I3p)); 
-//  	    cCoarse(m2,J1,J2,I3p)=0.;
-//  	  }
-//  	  else
-//  	  {
-//  	    cCoarse(m0,J1,J2,I3p)=0.;
-//  	    cCoarse(m1,J1,J2,I3p)=(INJECTION_1D_0(c0,m0,m1,m2,J1,I2,I3p)+
-//  				   INJECTION_1D_1(c0,m0,m1,m2,J1,I2,I3p)+
-//  				   INJECTION_1D_2(c0,m0,m1,m2,J1,I2,I3p)); 
-//  	    cCoarse(m2,J1,J2,I3p)=0.;
-//  	  }
-//  	}
-	else
-	{
-	  Overture::abort("error");
-	}
+//        {
+//          cCoarse(m0,J1,J2,I3p)=0.;
+//          cCoarse(m1,J1,J2,I3p)=(FW1_1D_0(c0,m0,m1,m2,J1,I2,I3p)+
+//                                 FW1_1D_1(c0,m0,m1,m2,J1,I2,I3p)+
+//                                 FW1_1D_2(c0,m0,m1,m2,J1,I2,I3p)); 
+//          cCoarse(m2,J1,J2,I3p)=0.;
+//        }
+//        else
+//        {
+//          cCoarse(m0,J1,J2,I3p)=0.;
+//          cCoarse(m1,J1,J2,I3p)=(INJECTION_1D_0(c0,m0,m1,m2,J1,I2,I3p)+
+//                                 INJECTION_1D_1(c0,m0,m1,m2,J1,I2,I3p)+
+//                                 INJECTION_1D_2(c0,m0,m1,m2,J1,I2,I3p)); 
+//          cCoarse(m2,J1,J2,I3p)=0.;
+//        }
+//      }
+        else
+        {
+          Overture::abort("error");
+        }
       }
     }
     else if( numberOfDimensions==3 )
@@ -1774,23 +1781,23 @@ averageCoefficients(Index & I1, Index & I2, Index & I3,
       int m;
       for( m=0; m<9; m++ )
       {
-	int m0=3*m, m1=m0+1, m2=m0+2;
-	if( option[0]==fullWeighting )
-	{
-	  c0(m0,J1,I2p,I3p)=FW0_1D_0(cFine,m0,m1,m2,I1,I2p,I3p);  // average coefficients m0,m1,m2 along axis1
-	  c0(m1,J1,I2p,I3p)=FW0_1D_1(cFine,m0,m1,m2,I1,I2p,I3p);
-	  c0(m2,J1,I2p,I3p)=FW0_1D_2(cFine,m0,m1,m2,I1,I2p,I3p);
-	}
-	else if( option[0]==restrictedFullWeighting )
-	{
-	  c0(m0,J1,I2p,I3p)=INJECTION_1D_0(cFine,m0,m1,m2,I1,I2p,I3p);  
-	  c0(m1,J1,I2p,I3p)=INJECTION_1D_1(cFine,m0,m1,m2,I1,I2p,I3p);
-	  c0(m2,J1,I2p,I3p)=INJECTION_1D_2(cFine,m0,m1,m2,I1,I2p,I3p);
-	}
-	else
-	{
-	  Overture::abort("error");
-	}
+        int m0=3*m, m1=m0+1, m2=m0+2;
+        if( option[0]==fullWeighting )
+        {
+          c0(m0,J1,I2p,I3p)=FW0_1D_0(cFine,m0,m1,m2,I1,I2p,I3p);  // average coefficients m0,m1,m2 along axis1
+          c0(m1,J1,I2p,I3p)=FW0_1D_1(cFine,m0,m1,m2,I1,I2p,I3p);
+          c0(m2,J1,I2p,I3p)=FW0_1D_2(cFine,m0,m1,m2,I1,I2p,I3p);
+        }
+        else if( option[0]==restrictedFullWeighting )
+        {
+          c0(m0,J1,I2p,I3p)=INJECTION_1D_0(cFine,m0,m1,m2,I1,I2p,I3p);  
+          c0(m1,J1,I2p,I3p)=INJECTION_1D_1(cFine,m0,m1,m2,I1,I2p,I3p);
+          c0(m2,J1,I2p,I3p)=INJECTION_1D_2(cFine,m0,m1,m2,I1,I2p,I3p);
+        }
+        else
+        {
+          Overture::abort("error");
+        }
         
       }
       // display(c0,"c0","%9.1e");
@@ -1808,23 +1815,23 @@ averageCoefficients(Index & I1, Index & I2, Index & I3,
       realSerialArray c1(27,J1,J2,I3p);
       for( m=0; m<9; m++ )
       {
-	int m0=m+(m/3)*6, m1=m0+3, m2=m0+6;
-	if( option[1]==fullWeighting )
-	{
-	  c1(m0,J1,J2,I3p)=FW1_1D_0(c0,m0,m1,m2,J1,I2,I3p); 
-	  c1(m1,J1,J2,I3p)=FW1_1D_1(c0,m0,m1,m2,J1,I2,I3p); 
-	  c1(m2,J1,J2,I3p)=FW1_1D_2(c0,m0,m1,m2,J1,I2,I3p); 
-	}
-	else if( option[1]==restrictedFullWeighting )
-	{
-	  c1(m0,J1,J2,I3p)=INJECTION_1D_0(c0,m0,m1,m2,J1,I2,I3p); 
-	  c1(m1,J1,J2,I3p)=INJECTION_1D_1(c0,m0,m1,m2,J1,I2,I3p); 
-	  c1(m2,J1,J2,I3p)=INJECTION_1D_2(c0,m0,m1,m2,J1,I2,I3p); 
-	}
-	else
-	{
-	  Overture::abort("error");
-	}
+        int m0=m+(m/3)*6, m1=m0+3, m2=m0+6;
+        if( option[1]==fullWeighting )
+        {
+          c1(m0,J1,J2,I3p)=FW1_1D_0(c0,m0,m1,m2,J1,I2,I3p); 
+          c1(m1,J1,J2,I3p)=FW1_1D_1(c0,m0,m1,m2,J1,I2,I3p); 
+          c1(m2,J1,J2,I3p)=FW1_1D_2(c0,m0,m1,m2,J1,I2,I3p); 
+        }
+        else if( option[1]==restrictedFullWeighting )
+        {
+          c1(m0,J1,J2,I3p)=INJECTION_1D_0(c0,m0,m1,m2,J1,I2,I3p); 
+          c1(m1,J1,J2,I3p)=INJECTION_1D_1(c0,m0,m1,m2,J1,I2,I3p); 
+          c1(m2,J1,J2,I3p)=INJECTION_1D_2(c0,m0,m1,m2,J1,I2,I3p); 
+        }
+        else
+        {
+          Overture::abort("error");
+        }
       }
     
       // now average in direction 2
@@ -1834,23 +1841,23 @@ averageCoefficients(Index & I1, Index & I2, Index & I3,
       // 3 12 21
       for( m=0; m<9; m++ )
       {
-	int m0=m,   m1=m0+9, m2=m0+18;
-	if( option[2]==fullWeighting )
-	{
-	  cCoarse(m0,J1,J2,J3)=FW2_1D_0(c1,m0,m1,m2,J1,J2,I3); 
-	  cCoarse(m1,J1,J2,J3)=FW2_1D_1(c1,m0,m1,m2,J1,J2,I3); 
-	  cCoarse(m2,J1,J2,J3)=FW2_1D_2(c1,m0,m1,m2,J1,J2,I3); 
-	}
-	else if( option[2]==restrictedFullWeighting )
-	{
-	  cCoarse(m0,J1,J2,J3)=INJECTION_1D_0(c1,m0,m1,m2,J1,J2,I3); 
-	  cCoarse(m1,J1,J2,J3)=INJECTION_1D_1(c1,m0,m1,m2,J1,J2,I3); 
-	  cCoarse(m2,J1,J2,J3)=INJECTION_1D_2(c1,m0,m1,m2,J1,J2,I3); 
-	}
-	else
-	{
-	  Overture::abort("error");
-	}
+        int m0=m,   m1=m0+9, m2=m0+18;
+        if( option[2]==fullWeighting )
+        {
+          cCoarse(m0,J1,J2,J3)=FW2_1D_0(c1,m0,m1,m2,J1,J2,I3); 
+          cCoarse(m1,J1,J2,J3)=FW2_1D_1(c1,m0,m1,m2,J1,J2,I3); 
+          cCoarse(m2,J1,J2,J3)=FW2_1D_2(c1,m0,m1,m2,J1,J2,I3); 
+        }
+        else if( option[2]==restrictedFullWeighting )
+        {
+          cCoarse(m0,J1,J2,J3)=INJECTION_1D_0(c1,m0,m1,m2,J1,J2,I3); 
+          cCoarse(m1,J1,J2,J3)=INJECTION_1D_1(c1,m0,m1,m2,J1,J2,I3); 
+          cCoarse(m2,J1,J2,J3)=INJECTION_1D_2(c1,m0,m1,m2,J1,J2,I3); 
+        }
+        else
+        {
+          Overture::abort("error");
+        }
       }
 
     }

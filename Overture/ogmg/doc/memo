@@ -1,0 +1,24 @@
+********************************
+******* Fri Dec 23, 2022
+
+RERUN performance tests ob cg66 using latest PETSc and Hypre.
+
+
+
+
+********************************
+******* Thurs Dec 22, 2022
+
+RERUN performance tests ob cg66 using latest PETSc and Hypre.
+
+
+
+
+
+********************************
+******* Mon July 11, 2022
+
+Make bar charts for performance data.
+
+plotPerformance.m
+

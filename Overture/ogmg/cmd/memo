@@ -4,6 +4,214 @@ set ogmgt = /home/liuc10/overtureFramework/Overture/ogmg/ogmgt
 
 set ogmgp = $ogmg/ogmgt
 
+
+****************************
+****** Thurs May 4, 2023
+
+darkCornerRoomGride2.order2.ml2.hdf
+
+$ogmgt tz -noplot -g=darkCornerRoomGride2.order2.ml2.hdf -autoChoose=1 -maxIt=9 -orderCoarse=2 -debug=1 -ssr=1 
+
+
+
+****************************
+****** Thurs May 4, 2023
+
+
+BUG : operator averaging for constnt coeff -- Missing constant term in Heat operator sometimes
+
+$ogmgt tz -noplot -g=boxNx16.order2 -autoChoose=1 -maxIt=9 -orderCoarse=2 -debug=1 -ssr=1 -eqn=heat
+
+
+>>>>>>>>> NEW:   **BETTER**
+
+Ogmg::cycle:level=0, it=0, Initial defect =7.76e+01
+  Ogmg:smooth, level = 0, BEFORE iteration=0, defect=7.761389e+01 
+  Ogmg:smooth, level = 0, iteration=0, defect: (0=4.605e+01),max= 4.61e+01, [rate = 0.5933],
+     Ogmg:smooth, level = 1, BEFORE iteration=0, defect=1.466421e+01 
+     Ogmg:smooth, level = 1, iteration=0, defect: (0=3.839e+00),max= 3.84e+00, [rate = 0.2618],
+         Ogmg:smooth, level = 2, BEFORE iteration=0, defect=1.253236e+00 
+         Ogmg:smooth, level = 2, iteration=0, defect: (0=1.544e-01),max= 1.54e-01, [rate = 0.1232],
+PETScSolver::buildSolver: INFO: adding option=[-pc_hypre_boomeramg_cycle_type] value=[V]
+PETScSolver::buildSolver: INFO: adding option=[-pc_hypre_boomeramg_strong_threshold] value=[.5]
+PETScSolver::buildSolver: INFO: adding option=[-pc_hypre_boomeramg_coarsen_type] value=[Falgout]
+PETScSolver::buildSolver: INFO: adding option=[-pc_hypre_boomeramg_max_levels] value=[20]
+ PETScEquationSolver::solve:WARNING numberOfIterations=0! Could be trouble for MG, maybe decrease atol
+             Ogmg::cycle:level=3, it=1, WU= 3.00, defect=1.66e-18, defect/defectOld= 0.000,  ECR3=   0.000  
+         Ogmg:smooth, level = 2, BEFORE iteration=0, defect=1.544208e-01 
+         Ogmg:smooth, level = 2, iteration=0, defect: (0=1.893e-02),max= 1.89e-02, [rate = 0.1226],
+         Ogmg::cycle:level=2, it=1, WU= 1.91, defect=1.89e-02, defect/defectOld= 0.000,  ECR2=   0.013  
+     Ogmg:smooth, level = 1, BEFORE iteration=0, defect=2.384477e+00 
+     Ogmg:smooth, level = 1, iteration=0, defect: (0=4.076e-01),max= 4.08e-01, [rate = 0.1709],
+     Ogmg::cycle:level=1, it=1, WU= 2.09, defect=4.08e-01, defect/defectOld= 0.005,  ECR1=   0.081  
+  Ogmg:smooth, level = 0, BEFORE iteration=0, defect=4.270901e+01 
+  Ogmg:smooth, level = 0, iteration=0, defect: (0=4.335e+00),max= 4.34e+00, [rate = 0.1015],
+  Ogmg:smooth, level = 0, BEFORE iteration=1, defect=4.335360e+00 
+  Ogmg:smooth, level = 0, iteration=1, defect: (0=1.455e+00),max= 1.45e+00, [rate = 0.3356],
+  Ogmg::cycle:level=0, it=1, WU= 4.67, defect=1.45e+00, defect/defectOld= 0.019,  ECR0=   0.427 ***
+     Ogmg:smooth, level = 1, BEFORE iteration=0, defect=3.313992e-01 
+     Ogmg:smooth, level = 1, iteration=0, defect: (0=5.618e-02),max= 5.62e-02, [rate = 0.1695],
+         Ogmg:smooth, level = 2, BEFORE iteration=0, defect=2.983588e-02 
+         Ogmg:smooth, level = 2, iteration=0, defect: (0=3.714e-03),max= 3.71e-03, [rate = 0.1245],
+ PETScEquationSolver::solve:WARNING numberOfIterations=0! Could be trouble for MG, maybe decrease atol
+             Ogmg::cycle:level=3, it=1, WU= 3.00, defect=5.34e-18, defect/defectOld= 0.000,  ECR3=   0.000  
+         Ogmg:smooth, level = 2, BEFORE iteration=0, defect=3.713725e-03 
+         Ogmg:smooth, level = 2, iteration=0, defect: (0=4.313e-04),max= 4.31e-04, [rate = 0.1161],
+         Ogmg::cycle:level=2, it=1, WU= 1.91, defect=4.31e-04, defect/defectOld= 0.000,  ECR2=   0.014  
+     Ogmg:smooth, level = 1, BEFORE iteration=0, defect=5.004966e-02 
+     Ogmg:smooth, level = 1, iteration=0, defect: (0=1.091e-02),max= 1.09e-02, [rate = 0.2181],
+     Ogmg::cycle:level=1, it=1, WU= 2.09, defect=1.09e-02, defect/defectOld= 0.008,  ECR1=   0.096  
+  Ogmg:smooth, level = 0, BEFORE iteration=0, defect=1.306293e+00 
+  Ogmg:smooth, level = 0, iteration=0, defect: (0=1.046e-01),max= 1.05e-01, [rate = 0.0801],
+  Ogmg:smooth, level = 0, BEFORE iteration=1, defect=1.046285e-01 
+  Ogmg:smooth, level = 0, iteration=1, defect: (0=4.318e-02),max= 4.32e-02, [rate = 0.4127],
+  Ogmg::cycle:level=0, it=2, WU= 3.67, defect=4.32e-02, defect/defectOld= 0.030,  ECR0=   0.384 ***
+****Ogmg::solve:WARNING: No convergence in 2 iterations defect=4.32e-02 ****
+
+
+
+>>>>>>> OLD: <<<<<<<<<<<<<<<<<<<<<<<<<<
+ ======= Ogmg::initializeConstantCoefficients: heat: level=0, grid=0 cI=1.00e+00 cLap=-1.00e-01, doNotAverageEquations=1
+ ======= Ogmg::initializeConstantCoefficients: heat: level=1, grid=0 cI=1.00e+00 cLap=-1.00e-01, doNotAverageEquations=0
+ ======= Ogmg::const-coeff op average on level=1 cI=1.00e+00 cLap=-1.00e-01
+ ======= Ogmg::initializeConstantCoefficients: heat: level=2, grid=0 cI=1.00e+00 cLap=-1.00e-01, doNotAverageEquations=0
+ ======= Ogmg::initializeConstantCoefficients: heat: level=3, grid=0 cI=1.00e+00 cLap=-1.00e-01, doNotAverageEquations=0
+
+ *** Operator averaging for grid=0, level=0, parameters.averagingOption=0
+
+ *** Operator averaging for grid=0, level=1, parameters.averagingOption=0
+
+ *** Operator averaging for grid=0, level=2, parameters.averagingOption=0
+maximumNumberOfExtraLevels=10 
+
+  Ogmg::cycle:level=0, it=0, Initial defect =7.76e+01
+  Ogmg:smooth, level = 0, BEFORE iteration=0, defect=7.761389e+01 
+  Ogmg:smooth, level = 0, iteration=0, defect: (0=4.605e+01),max= 4.61e+01, [rate = 0.5933],
+     Ogmg:smooth, level = 1, BEFORE iteration=0, defect=1.466421e+01 
+     Ogmg:smooth, level = 1, iteration=0, defect: (0=4.075e+00),max= 4.07e+00, [rate = 0.2779],
+         Ogmg:smooth, level = 2, BEFORE iteration=0, defect=1.351264e+00 
+         Ogmg:smooth, level = 2, iteration=0, defect: (0=1.665e-01),max= 1.66e-01, [rate = 0.1232],
+PETScSolver::buildSolver: INFO: adding option=[-pc_hypre_boomeramg_cycle_type] value=[V]
+PETScSolver::buildSolver: INFO: adding option=[-pc_hypre_boomeramg_strong_threshold] value=[.5]
+PETScSolver::buildSolver: INFO: adding option=[-pc_hypre_boomeramg_coarsen_type] value=[Falgout]
+PETScSolver::buildSolver: INFO: adding option=[-pc_hypre_boomeramg_max_levels] value=[20]
+ PETScEquationSolver::solve:WARNING numberOfIterations=0! Could be trouble for MG, maybe decrease atol
+             Ogmg::cycle:level=3, it=1, WU= 3.00, defect=2.62e-18, defect/defectOld= 0.000,  ECR3=   0.000  
+         Ogmg:smooth, level = 2, BEFORE iteration=0, defect=1.664683e-01 
+         Ogmg:smooth, level = 2, iteration=0, defect: (0=2.041e-02),max= 2.04e-02, [rate = 0.1226],
+         Ogmg::cycle:level=2, it=1, WU= 1.91, defect=2.04e-02, defect/defectOld= 0.000,  ECR2=   0.013  
+     Ogmg:smooth, level = 1, BEFORE iteration=0, defect=2.622453e+00 
+     Ogmg:smooth, level = 1, iteration=0, defect: (0=4.052e-01),max= 4.05e-01, [rate = 0.1545],
+     Ogmg::cycle:level=1, it=1, WU= 2.09, defect=4.05e-01, defect/defectOld= 0.005,  ECR1=   0.081  
+  Ogmg:smooth, level = 0, BEFORE iteration=0, defect=4.251296e+01 
+  Ogmg:smooth, level = 0, iteration=0, defect: (0=5.731e+00),max= 5.73e+00, [rate = 0.1348],
+  Ogmg:smooth, level = 0, BEFORE iteration=1, defect=5.731084e+00 
+  Ogmg:smooth, level = 0, iteration=1, defect: (0=2.548e+00),max= 2.55e+00, [rate = 0.4446],
+  Ogmg::cycle:level=0, it=1, WU= 4.67, defect=2.55e+00, defect/defectOld= 0.033,  ECR0=   0.481 ***
+     Ogmg:smooth, level = 1, BEFORE iteration=0, defect=6.592700e-01 
+     Ogmg:smooth, level = 1, iteration=0, defect: (0=2.658e-01),max= 2.66e-01, [rate = 0.4031],
+         Ogmg:smooth, level = 2, BEFORE iteration=0, defect=1.075051e-01 
+         Ogmg:smooth, level = 2, iteration=0, defect: (0=1.341e-02),max= 1.34e-02, [rate = 0.1247],
+ PETScEquationSolver::solve:WARNING numberOfIterations=0! Could be trouble for MG, maybe decrease atol
+             Ogmg::cycle:level=3, it=1, WU= 3.00, defect=1.85e-18, defect/defectOld= 0.000,  ECR3=   0.000  
+         Ogmg:smooth, level = 2, BEFORE iteration=0, defect=1.340538e-02 
+         Ogmg:smooth, level = 2, iteration=0, defect: (0=1.630e-03),max= 1.63e-03, [rate = 0.1216],
+         Ogmg::cycle:level=2, it=1, WU= 1.91, defect=1.63e-03, defect/defectOld= 0.001,  ECR2=   0.021  
+     Ogmg:smooth, level = 1, BEFORE iteration=0, defect=1.798055e-01 
+     Ogmg:smooth, level = 1, iteration=0, defect: (0=3.449e-02),max= 3.45e-02, [rate = 0.1918],
+     Ogmg::cycle:level=1, it=1, WU= 2.09, defect=3.45e-02, defect/defectOld= 0.014,  ECR1=   0.127  
+  Ogmg:smooth, level = 0, BEFORE iteration=0, defect=2.157997e+00 
+  Ogmg:smooth, level = 0, iteration=0, defect: (0=2.871e-01),max= 2.87e-01, [rate = 0.1330],
+  Ogmg:smooth, level = 0, BEFORE iteration=1, defect=2.871005e-01 
+  Ogmg:smooth, level = 0, iteration=1, defect: (0=1.126e-01),max= 1.13e-01, [rate = 0.3923],
+  Ogmg::cycle:level=0, it=2, WU= 3.67, defect=1.13e-01, defect/defectOld= 0.044,  ECR0=   0.428 ***
+****Ogmg::solve:WARNING: No convergence in 2 iterations defect=1.13e-01 ****
+
+
+****************************
+****** Tues May 2, 2023
+
+TESTS FOR CGWAVE implicit time-stepping
+
+$ogmgt tz -noplot -g=box4.order2 -autoChoose=1 -maxIt=9 -orderCoarse=2 -debug=1 -ssr=1 -eqn=heat
+
+$ogmgt tz -noplot -g=box1.order2 -autoChoose=1 -maxIt=9 -orderCoarse=2 -debug=1 -ssr=1 -eqn=heat
+
+
+BOX2: 3-levels, Heat, ok
+$ogmgt tz -noplot -g=box2.order2 -autoChoose=1 -maxIt=9 -orderCoarse=2 -debug=1 -ssr=1 -eqn=heat
+Iteration=1..9 : Total WU=4.44e+01, total res reduction=2.01e-11, ave CR=0.0648 ave ECR=0.574 np=1
+
+BOX2: OK
+$ogmgt tz -noplot -g=box2.order2 -autoChoose=1 -maxIt=9 -orderCoarse=2 -debug=1 -ssr=1 
+Iteration=1..8 : Total WU=4.17e+01, total res reduction=2.29e-15, ave CR=0.0148 ave ECR=0.446 np=1
+
+
+
+$ogmgt tz -noplot -g=square64.order2 -autoChoose=1 -maxIt=9 -orderCoarse=2 -debug=1 -srr=1
+Iteration=1..9 : Total WU=4.26e+01, total res reduction=2.53e-14, ave CR=0.0308 ave ECR=0.479 np=1
+
+
+****************************
+****** Fri Jan 13, 2023
+
+$ogmgt tz -noplot -g=square8.order2 -autoChoose=0 -maxIt=9 -orderCoarse=2 -debug=0 -cgSolver=yale -ogesDebug=63
+
+buildPredefinedCoefficientMatrix: build Coefficients for Cartesian grid=0 level=2
+==63782== Invalid read of size 8
+==63782==    at 0x2CBB89: Ogmg::buildPredefinedCoefficientMatrix(doubleMappedGridFunction&, int, int, int, bool, bool) (predefined.C:633)
+==63782==    by 0x2CB40E: Ogmg::buildPredefinedCoefficientMatrix(int, bool, bool) (predefined.C:330)
+==63782==    by 0x1C7428: Ogmg::operatorAveraging(doubleCompositeGridFunction&, int const&) (operatorAveraging.C:128)
+==63782==    by 0x154159: Ogmg::buildCoefficientArrays() (Ogmg.C:3457)
+==63782==    by 0x2CB06A: Ogmg::buildPredefinedEquations(CompositeGridOperators&) (predefined.C:267)
+==63782==    by 0x2CA74A: Ogmg::setEquationAndBoundaryConditions(OgesParameters::EquationEnum, CompositeGridOperators&, intArray const&, doubleArray const&, doubleArray const&, doubleCompositeGridFunction*) (predefined.C:109)
+
+
+****************************
+****** Wed Jan 11, 2023
+
+TEST yale direct solver on coarse level: *TROUBLE* BAD VALUES IN FINAL ENTRY IN COEFF FOR OP-AVERAGING 
+
+$ogmgt tz -noplot -g=sise2.order2 -autoChoose=0 -maxIt=9 -orderCoarse=2 -debug=0 -cgSolver=yale -ogesDebug=63
+
+FUNNY EQUATIONS: 
+ (0,0) coeff= 0.00e+00  0.00e+00  0.00e+00  0.00e+00  1.00e+00  0.00e+00  0.00e+00  0.00e+00  0.00e+00  7.81e+00 
+ (1,0) coeff= 0.00e+00  0.00e+00  0.00e+00  0.00e+00  1.00e+00  0.00e+00  0.00e+00  0.00e+00  0.00e+00  7.81e+00 
+ (2,0) coeff= 0.00e+00  0.00e+00  0.00e+00  0.00e+00  1.00e+00  0.00e+00  0.00e+00  0.00e+00  0.00e+00  7.81e+00 
+ (3,0) coeff= 0.00e+00  0.00e+00  0.00e+00  0.00e+00  1.00e+00  0.00e+00  0.00e+00  0.00e+00  0.00e+00  7.81e+00 
+ (4,0) coeff= 0.00e+00  0.00e+00  0.00e+00  0.00e+00  1.00e+00  0.00e+00  0.00e+00  0.00e+00  0.00e+00  7.81e+00 
+
+
+WHAT ARE THESE EQUATIONS: DOUBLE ENTRY!!!
+Row i=   33(   33,    1.00) (   33,    7.81) 
+Row i=   34(   34,    1.00) (   34,    7.81) 
+Row i=   35(   35,    1.00) (   35,    7.81) 
+Row i=   36(   36,    1.00) (   36,    7.81) 
+Row i=   37(   37,    1.00) (   37,    7.81) 
+Row i=   38(   38,    1.00) (   38,    7.81) 
+Row i=   39(   39,    1.00) (   39,    7.81) 
+Row i=   40(   40,    1.00) (   40,    7.81) 
+Row i=   41(   41,    1.00) (   41,    7.81) 
+Row i=   42(   42,    1.00) (   42,    7.81) 
+Row i=   43(   43,    1.00) (   43,    7.81) 
+
+
+callSparseSolver: calling CGESL1 job=7 (2=refactor, 4=reorder) debug=63
+ CGESL1: neq,nqs =         325        4550
+ CGESL1: ndia,ndja,nda,nsp=         326        4550        4550       33220
+ CGESL1: reordering matrix
+ CGESL1: time to reorder =   1.5500000000000236E-004
+ CGESL1: flag =           0
+  ***** CGESL1: INFO written to fort.1 **** 
+ CGESL1: YALE  path:1   null row in a                 --  row =        33                     
+ CGESL1: flag=         358
+ CGESL1: neq =         325
+ CGESL1: nsp=        33220
+ CGESL1: path=            1
+ CGESL1: Work spaces used fillinRatio = 20.00
+ CGESL1: irem=mod(flag,neq)=          33
+ CGESL1: itype=(flag-irem)/neq=           1
+
 ****************************
 ****** Fri July 22, 2022
 

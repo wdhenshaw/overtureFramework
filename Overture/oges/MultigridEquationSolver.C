@@ -41,8 +41,8 @@ printStatistics(FILE *file /* = stdout */ ) const
 /// \brief Use this function in combination with setGrid(..)
 int MultigridEquationSolver::
 setCoefficientsAndBoundaryConditions( realCompositeGridFunction & coeff,
-				      const IntegerArray & boundaryConditions,
-				      const RealArray & bcData )
+                                      const IntegerArray & boundaryConditions,
+                                      const RealArray & bcData )
 {
       
   ogmg.setCoefficientArray(coeff,boundaryConditions,bcData); 
@@ -92,8 +92,8 @@ set( MultigridCompositeGrid & mgcg )
 // New: *wdh* 100404
 int MultigridEquationSolver::
 setCoefficientArray( realCompositeGridFunction & coeff,
-		     const IntegerArray & boundaryConditions /* =Overture::nullIntArray() */,
-		     const RealArray & bcData /* =Overture::nullRealArray() */ )
+                     const IntegerArray & boundaryConditions /* =Overture::nullIntArray() */,
+                     const RealArray & bcData /* =Overture::nullRealArray() */ )
 {
 
   return ogmg.setCoefficientArray( coeff,boundaryConditions,bcData );
@@ -104,8 +104,8 @@ int MultigridEquationSolver::
 setEquationAndBoundaryConditions( OgesParameters::EquationEnum equation, 
                                   CompositeGridOperators & op,
                                   const IntegerArray & boundaryConditions,
-				  const RealArray & bcData, 
-				  RealArray & constantCoeff,
+                                  const RealArray & bcData, 
+                                  RealArray & constantCoeff,
                                   realCompositeGridFunction *variableCoeff )
 {
   if( !oges.initialized || oges.shouldBeInitialized )

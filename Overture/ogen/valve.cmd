@@ -8,6 +8,7 @@
 #                .063 tux291
 #                .047 (ansel)
 #                .033 (cg6)
+#                .022 (cg66, 2022)
 #
 create mappings
  #

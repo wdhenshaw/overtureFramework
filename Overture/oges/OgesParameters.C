@@ -1811,7 +1811,8 @@ update( GenericGraphicsInterface & gi, CompositeGrid & cGrid )
     {
       set(THEpreconditioner,ssorPreconditioner);
     }
-    else if( answer=="number of GMRES vectors" )
+    else if( answer=="number of GMRES vectors" ||
+             answer=="gmres restart length" )
     {
       gi.inputString(line,sPrintF(buff,"Enter the GMRES restart length (default=%i)",gmresRestartLength));
       if( line!="" )

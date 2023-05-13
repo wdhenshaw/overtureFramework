@@ -44,16 +44,22 @@
 #   ogen -noplot boxArg -order=4 -prefix=nonBox -factor=1  
 #   ogen -noplot boxArg -order=4 -prefix=nonBox -factor=2 
 #
+#   ogen -noplot boxArg -order=2 -nx0=8
+#   ogen -noplot boxArg -order=2 -nx0=16
+#   ogen -noplot boxArg -prefix=nonBox -order=2 -nx0=8
+#   ogen -noplot boxArg -prefix=nonBox -order=2 -nx0=16
+#
 $prefix="box";
 $xa=0.; $xb=1.; $ya=0.; $yb=1.; $za=0.; $zb=1.; $name=""; 
 $order=2; $factor=1; $ml=0; # default values
 $orderOfAccuracy = "second order"; $ng=2; $periodic="";
 $numGhost=-1;  # if this value is set, then use this number of ghost points
+$nx0=-1;       # set this value to make this the number of CELLS in each direction
 # 
 # get command line arguments
 GetOptions( "order=i"=>\$order,"factor=i"=> \$factor,"name=s"=>\$name,"ml=i"=>\$ml,"numGhost=i"=>\$numGhost,\
             "xa=f"=>\$xa,"xb=f"=>\$xb,"ya=f"=>\$ya,"yb=f"=>\$yb,"za=f"=>\$za,"zb=f"=>\$zb,"periodic=s"=>\$periodic,\
-            "prefix=s"=>\$prefix );
+            "prefix=s"=>\$prefix,"nx0=i"=>\$nx0 );
 # 
 if( $order eq 4 ){ $orderOfAccuracy="fourth order"; $ng=2; }\
 elsif( $order eq 6 ){ $orderOfAccuracy="sixth order"; $ng=4; }\
@@ -68,7 +74,8 @@ $suffix .= ".order$order";
 if( $ml ne 0 ){ $suffix .= ".ml$ml"; }
 if( $numGhost ne -1 ){ $suffix .= ".ng$numGhost"; } 
 if( $numGhost ne -1 ){ $ng = $numGhost; } # overide number of ghost
-if( $name eq "" ){ $name = $prefix . "$interp$factor" . $suffix . ".hdf";}
+if( $name eq "" ){ $name = $prefix . "$interp$factor" . $suffix . ".hdf";}else{ $name = $name . ".hdf"; }
+if( $nx0 > 0 ){ $name = $prefix . "$interp" . "Nx$nx0" . $suffix . ".hdf";  }
 # 
 $ds=.1/$factor;
 # 
@@ -89,6 +96,7 @@ Box
     $nx = intmg( ($xb-$xa)/$ds +1.5);
     $ny = intmg( ($yb-$ya)/$ds +1.5);
     $nz = intmg( ($zb-$za)/$ds +1.5);
+    if( $nx0 > 0 ){ $nx=$nx0+1; $ny=$nx; $nz=$nx; }
     $nx $ny $nz
   boundary conditions
     $bc ="1 2 3 4 5 6";
@@ -99,12 +107,17 @@ Box
     if( $periodic eq "nnp" ){ $bc ="1 2 3 4 -1 -1"; }
     $bc
   mappingName
-    if( $prefix eq "nonBox" ){ $gridName = $prefix; } else{ $gridName="box"; }
+    # change the name here if we create a nonBox or rotated box
+    if( ($prefix eq "nonBox")  || ($prefix eq "rotatedBox") ){ $gridName = $prefix; } else{ $gridName="box"; }
+    # printf(">>> prefix=[$prefix], gridName=$gridName\n");
     $gridName
   exit
 #
-#  -- optionnally create a "nonBox"
-  if( $prefix eq "nonBox" ){ $cmd ="rotate/scale/shift\n mappingName\n box\n exit\n"; }else{ $cmd="#"; }
+  #  -- optionnally create a "nonBox"
+  $cmd="#"; 
+  if( $prefix eq "nonBox" ){ $cmd ="rotate/scale/shift\n mappingName\n box\n exit\n"; }
+  # rotated box 
+  if( $prefix eq "rotatedBox" ){ $cmd ="rotate/scale/shift\n rotate\n 45 0\n .5 .5 .5\n rotate\n 45 1\n .5 .5 .5\n rotate\n 45 2\n .5 .5 .5\n mappingName\n box\n exit\n"; }
   $cmd
 # 
 #**********************************

@@ -11,6 +11,10 @@
 #     ogen -noplot sicArg -order=2 -interp=e -factor=4    ( creates sice4.order2.hdf)
 #     ogen -noplot sicArg -order=2 -interp=e -factor=5    ( creates sice5.order2.hdf)
 #
+# MG : Jan 2023:
+#     ogen -noplot sicArg -order=2 -interp=e -factor=2 -ml=2 
+#     ogen -noplot sicArg -order=2 -interp=e -factor=4 -ml=3 
+# 
 #     ogen -noplot sicArg -order=4 -factor=1 
 #     ogen -noplot sicArg -order=4 -factor=2 
 #     ogen -noplot sicArg -order=4 -interp=e -factor=2
@@ -32,13 +36,13 @@
 # Order 8 
 #     ogen -noplot sicArg -order=8 -numGhost=5 -interp=e -factor=4
 #
-$order=2; $factor=1; $interp="i"; $fixedRadius=-1; # default values
+$order=2; $factor=1; $interp="i"; $fixedRadius=-1; $ml=0; # default values 
 $orderOfAccuracy = "second order"; $ng=2; $interpType = "implicit for all grids";
 $numGhost=-1;  # if this value is set, then use this number of ghost points
 # 
 # get command line arguments
 GetOptions( "order=i"=>\$order,"factor=i"=>\$factor,"interp=s"=>\$interp,\
-            "fixedRadius=f"=>\$fixedRadius,"numGhost=i"=> \$numGhost);
+            "fixedRadius=f"=>\$fixedRadius,"numGhost=i"=> \$numGhost,"ml=i"=>\$ml );
 # 
 if( $order eq 4 ){ $orderOfAccuracy="fourth order"; $ng=2; }\
 elsif( $order eq 6 ){ $orderOfAccuracy="sixth order"; $ng=4; }\
@@ -48,6 +52,7 @@ if( $interp eq "e" ){ $interpType = "explicit for all grids"; }
 $suffix = ".order$order"; 
 if( $numGhost ne -1 ){ $ng = $numGhost; } # overide number of ghost
 if( $numGhost ne -1 ){ $suffix .= ".ng$numGhost"; } 
+if( $ml ne 0 ){ $suffix .= ".ml$ml"; }
 $prefix = "sic"; 
 if( $fixedRadius ne -1 ){ $prefix .= "Fixed"; }
 $name = $prefix . "$interp$factor" . $suffix . ".hdf";
@@ -56,20 +61,25 @@ $ds=.1/$factor;
 # 
 # Here is the radius of the circular boundary:
 $outerRad=1.;
+# -- convert a number so that it is a power of 2 plus 1 --
+#    ml = number of multigrid levels 
+$ml2 = 2**$ml; 
+sub intmg{ local($n)=@_; $n = int(int($n+$ml2-2)/$ml2)*$ml2+1; return $n; }
+sub max{ local($n,$m)=@_; if( $n>$m ){ return $n; }else{ return $m; } }
 # 
 create mappings
 #
 Annulus
  # keep the number of radial points on the annulus fixed:
   # $nr = 9+$ng;
-  $nr = 5+$ng;
+  $nr = intmg( 5+$ng );
   if( $order eq 8 ){ $nr = $nr+4; } # add more for order 8 to avoid backup
   $innerRad= $outerRad - ($nr-1)*$ds;
   if( $fixedRadius ne -1 ){ $innerRad=$outerRad-$fixedRadius; $nr=int( $fixedRadius/$ds+1.5 ); }
   inner and outer radii
     $innerRad $outerRad
   lines
-    $nTheta = int( 2.*3.1415*($innerRad+$outerRad)*.5/$ds + 1.5 );
+    $nTheta = intmg( 2.*3.1415*($innerRad+$outerRad)*.5/$ds + 1.5 );
     $nTheta $nr
   boundary conditions
     -1 -1 0 1 
@@ -83,7 +93,7 @@ rectangle
     $xa = -$xb;
     $xa $xb $xa $xb
   lines
-    $nx = int( ($xb-$xa)/$ds +1.5 ); $ny=$nx; 
+    $nx = intmg( ($xb-$xa)/$ds +1.5 ); $ny=$nx; 
     $nx $ny
   boundary conditions
     0 0 0 0

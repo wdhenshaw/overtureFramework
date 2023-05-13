@@ -13,7 +13,7 @@ extern "C"
 
     void smoothJacobiOpt( const int &nd,  const int & nd1a, const int &nd1b, const int &nd2a, const int &nd2b,
                                               const int &nd3a, const int &nd3b,
-                   		       const int &n1a, const int &n1b, const int &n1c,
+                                              const int &n1a, const int &n1b, const int &n1c,
                                               const int &n2a, const int &n2b, const int &n2c,
                                               const int &n3a, const int &n3b, const int &n3c,
                                               const int &ndc, const real & f, const real & c,
@@ -24,7 +24,7 @@ extern "C"
 
     void smoothRedBlackOpt( const int &nd,  const int & nd1a, const int &nd1b, const int &nd2a, const int &nd2b,
                                               const int &nd3a, const int &nd3b,
-                   		       const int &n1a, const int &n1b, const int &n1c,
+                                              const int &n1a, const int &n1b, const int &n1c,
                                               const int &n2a, const int &n2b, const int &n2c,
                                               const int &n3a, const int &n3b, const int &n3c, 
                                               const int &ndc, const real & f, const real & c,
@@ -36,16 +36,16 @@ extern "C"
 
   // new opt version for parallel:
     void smRedBlack( const int &nd,  const int & nd1a, const int &nd1b, const int &nd2a, const int &nd2b,
-               		   const int &nd3a, const int &nd3b,
-               		   const int &n1a, const int &n1b, const int &n1c,
-               		   const int &n2a, const int &n2b, const int &n2c,
-               		   const int &n3a, const int &n3b, const int &n3c, 
-               		   const int &ndc, const real & f, const real & c,
-               		   const real & u, const real & v, const int & mask, const int & option, 
-               		   const int & order, const int & sparseStencil,
-               		   const real & cc, const real & varCoeff, const real & dx, const real & omega,
-               		   const int & useLocallyOptimalOmega, const real & variableOmegaScaleFactor, 
-               		   const int & ipar, const real & rpar );
+                                      const int &nd3a, const int &nd3b,
+                                      const int &n1a, const int &n1b, const int &n1c,
+                                      const int &n2a, const int &n2b, const int &n2c,
+                                      const int &n3a, const int &n3b, const int &n3c, 
+                                      const int &ndc, const real & f, const real & c,
+                                      const real & u, const real & v, const int & mask, const int & option, 
+                                      const int & order, const int & sparseStencil,
+                                      const real & cc, const real & varCoeff, const real & dx, const real & omega,
+                                      const int & useLocallyOptimalOmega, const real & variableOmegaScaleFactor, 
+                                      const int & ipar, const real & rpar );
 
 }
 
@@ -103,47 +103,47 @@ smooth(const int & level, int numberOfSmoothingSteps, int cycleNumber )
             if( computeDefectRatios || parameters.showSmoothingRates )
             {
                 if( false && level==0 && parameters.useNewAutoSubSmooth && defectRatio(0,level)>=0. )
-      	{
-      	}
-      	else
-      	{
-        	  real time0=getCPU();
+                {
+                }
+                else
+                {
+                    real time0=getCPU();
 
-        	  if( debug & 4 ) printF("Ogmg:smooth:INFO:compute defect for auto-smooth: cycleNumber=%i level=%i\n",cycleNumber,level);
-        	  
-          // **** should compute defect and l2norms on a sub-set of points for speed.
-                    if( false )
-        	  {
-          	    defect(level);  // we could probably avoid this sometimes *****************************************
+                    if( debug & 4 ) printF("Ogmg:smooth:INFO:compute defect for auto-smooth: cycleNumber=%i level=%i\n",cycleNumber,level);
+                    
+    // **** should compute defect and l2norms on a sub-set of points for speed.
+        if( false )
+                    {
+                        defect(level);  // we could probably avoid this sometimes *****************************************
 
-          	    real time=getCPU()-time0;
-          	    tm[timeForDefectInSmooth]+=time;
-          	    tm[timeForDefect]-=time;         // don't count this time here
+                        real time=getCPU()-time0;
+                        tm[timeForDefectInSmooth]+=time;
+                        tm[timeForDefect]-=time;         // don't count this time here
 
-	    // printF(" smooth: compute defect for autosmooth: iteration=%i level=%i \n",iteration,level);
-        	  
-	  // **workUnits(level)+=1.;  // *wdh* added 030711 
-          	    for( int grid=0; grid<mgcg.multigridLevel[level].numberOfComponentGrids(); grid++ )
-          	    {
-            	      defectRatio(grid,level)=l2Norm(defectMG.multigridLevel[level][grid]);
+            // printF(" smooth: compute defect for autosmooth: iteration=%i level=%i \n",iteration,level);
+                    
+          // **workUnits(level)+=1.;  // *wdh* added 030711 
+                        for( int grid=0; grid<mgcg.multigridLevel[level].numberOfComponentGrids(); grid++ )
+                        {
+                            defectRatio(grid,level)=l2Norm(defectMG.multigridLevel[level][grid]);
 
-            	      real norm=defectNorm(level,grid);
-            	      printF("level=%i grid=%i: old=%8.2e new=%8.2e Error in norm=%8.2e\n",
+                            real norm=defectNorm(level,grid);
+                            printF("level=%i grid=%i: old=%8.2e new=%8.2e Error in norm=%8.2e\n",
                                           level,grid,defectRatio(grid,level),norm,fabs(norm-defectRatio(grid,level)));
-           	     
-          	    }
-        	  }
-        	  else
-        	  {
-          	    for( int grid=0; grid<mgcg.multigridLevel[level].numberOfComponentGrids(); grid++ )
-          	    {
-            	      defectRatio(grid,level)=defectNorm(level,grid);
-            	      
-          	    }
-        	  }
-        	  
+                          
+                        }
+                    }
+                    else
+                    {
+                        for( int grid=0; grid<mgcg.multigridLevel[level].numberOfComponentGrids(); grid++ )
+                        {
+                            defectRatio(grid,level)=defectNorm(level,grid);
+                            
+                        }
+                    }
+                    
 
-      	}
+                }
             }
             
 
@@ -162,17 +162,17 @@ smooth(const int & level, int numberOfSmoothingSteps, int cycleNumber )
 //       {
 //         MappedGrid & mg = mgcg.multigridLevel[level][grid];
 //         const IntegerArray & gid = mg.gridIndexRange();
-// 	int numGridPoints=(gid(1,0)-gid(0,0)+1)*(gid(1,1)-gid(0,1)+1)*(gid(1,2)-gid(0,2)+1);
-// 	if( numGridPoints>maxGridPoints )
-// 	{
-// 	  maxGridPoints=numGridPoints;
-// 	  gridMax=grid;
-// 	}
-// 	if( mg.isRectangular() && numGridPoints>maxGridPointsCartesian )
-// 	{
-// 	  maxGridPointsCartesian=numGridPoints;
-// 	  gridMaxCartesian=grid;
-// 	}
+//      int numGridPoints=(gid(1,0)-gid(0,0)+1)*(gid(1,1)-gid(0,1)+1)*(gid(1,2)-gid(0,2)+1);
+//      if( numGridPoints>maxGridPoints )
+//      {
+//        maxGridPoints=numGridPoints;
+//        gridMax=grid;
+//      }
+//      if( mg.isRectangular() && numGridPoints>maxGridPointsCartesian )
+//      {
+//        maxGridPointsCartesian=numGridPoints;
+//        gridMaxCartesian=grid;
+//      }
 //       }
 //       int defectReferenceGrid=gridMax;
 //       if( gridMaxCartesian>=0 && maxGridPointsCartesian > .25*maxGridPoints )
@@ -182,36 +182,36 @@ smooth(const int & level, int numberOfSmoothingSteps, int cycleNumber )
               
             if( debug & 4 )
             {
-      	fPrintF(debugFile,"auto subSmooth: iteration=%i (grid,L2 defect,max defect) on level=%i : ",iteration,level);
-      	for( int grid=0; grid<mgcg.multigridLevel[level].numberOfComponentGrids(); grid++ )
-        	  fPrintF(debugFile,"(%i : %6.2e, %6.2e) ",grid,defectRatio(grid,level),
+                fPrintF(debugFile,"auto subSmooth: iteration=%i (grid,L2 defect,max defect) on level=%i : ",iteration,level);
+                for( int grid=0; grid<mgcg.multigridLevel[level].numberOfComponentGrids(); grid++ )
+                    fPrintF(debugFile,"(%i : %6.2e, %6.2e) ",grid,defectRatio(grid,level),
                                     maxNorm(defectMG.multigridLevel[level][grid]));
-      	fPrintF(debugFile,"\n");
+                fPrintF(debugFile,"\n");
             }
 
             real minDefect;
             if( false && level==0 )
             {
                 where( active )
-        	  minDefect=min( defectRatio(all,level) );   // only count active grids.
+                    minDefect=min( defectRatio(all,level) );   // only count active grids.
             }
             else
             {
         // if there is one grid with many more points than the others then we force this large grid to 
         // have 1 sub-smooth
-      	if( false ) // **wdh* 2012/03/06 -- TEST -- turn this back on
-      	{
+                if( false ) // **wdh* 2012/03/06 -- TEST -- turn this back on
+                {
           // *wdh* 030425: With this choice there could be a small grid with a small defect that 
           //               would cause a very large grid to get many sub-smooths -- this is bad
-        	  minDefect=min( defectRatio(all,level) );  
-      	}
-      	else
-      	{
+                    minDefect=min( defectRatio(all,level) );  
+                }
+                else
+                {
           // make the grid with the most grid points have one sub-smooth
           //  -- we could relax this if there are a number of grids nearly the same size.
                     minDefect=defectRatio(subSmoothReferenceGrid,level);  
-      	}
-      	
+                }
+                
             }
 
             defectRatio(all,level)/=max(REAL_MIN*100., minDefect );
@@ -222,14 +222,14 @@ smooth(const int & level, int numberOfSmoothingSteps, int cycleNumber )
             
             for( int grid=0; grid<mgcg.multigridLevel[level].numberOfComponentGrids(); grid++ )
             {
-      	const OgmgParameters::SmootherTypeEnum & type = 
+                const OgmgParameters::SmootherTypeEnum & type = 
                           OgmgParameters::SmootherTypeEnum(parameters.smootherType(grid,level));
-      	if( true ||
+                if( true ||
                         type==OgmgParameters::GaussSeidel || 
                         type==OgmgParameters::Jacobi || 
                         type==OgmgParameters::redBlack ||
                         type==OgmgParameters::redBlackJacobi )
-      	{
+                {
           // we use a different rule for line smoothers since they are more expensive
                     bool lineSmooth=!(type==OgmgParameters::GaussSeidel || 
                                                         type==OgmgParameters::Jacobi || 
@@ -243,44 +243,44 @@ smooth(const int & level, int numberOfSmoothingSteps, int cycleNumber )
  // *wdh*          const real defectRatioUpperBound=lineSmooth ? 3.0 : 2.0;
                     real defectRatioLowerBound, defectRatioUpperBound; 
                     if( lineSmooth )
-        	  { // use the value specified in the parameters, if >0
+                    { // use the value specified in the parameters, if >0
                         defectRatioLowerBound=parameters.defectRatioLowerBoundLineSmooth>0. ? 
                                                                     parameters.defectRatioLowerBoundLineSmooth : .5;
                         defectRatioUpperBound=parameters.defectRatioUpperBoundLineSmooth>0. ? 
                                                                     parameters.defectRatioUpperBoundLineSmooth : 2.;
-        	  }
-        	  else
-        	  {
+                    }
+                    else
+                    {
                         defectRatioLowerBound=parameters.defectRatioLowerBound>0. ? parameters.defectRatioLowerBound : .5;
                         defectRatioUpperBound=parameters.defectRatioUpperBound>0. ? parameters.defectRatioUpperBound : 2.;
-        	  }
-        	  
+                    }
+                    
                     const real nu =1./max(1,numberOfSubSmooths(grid,level));
                     defectRatioLowerBound=pow(defectRatioLowerBound,nu);
                     defectRatioUpperBound=pow(defectRatioUpperBound,nu);
-        	  
+                    
                     maxDefectRatio=max(maxDefectRatio,defectRatio(grid,level));
-        	  
+                    
 
-        	  const int minSubSmooths=1;
-        	  if( numberOfSubSmooths(grid,level)>minSubSmooths && defectRatio(grid,level)<defectRatioLowerBound )
-          	    numberOfSubSmooths(grid,level)--;
-        	  else if( numberOfSubSmooths(grid,level)<maxNumberOfSubSmooths && defectRatio(grid,level)>defectRatioUpperBound )
-        	  {
-          	    numberOfSubSmooths(grid,level)++;
-        	  }
-        	  
+                    const int minSubSmooths=1;
+                    if( numberOfSubSmooths(grid,level)>minSubSmooths && defectRatio(grid,level)<defectRatioLowerBound )
+                        numberOfSubSmooths(grid,level)--;
+                    else if( numberOfSubSmooths(grid,level)<maxNumberOfSubSmooths && defectRatio(grid,level)>defectRatioUpperBound )
+                    {
+                        numberOfSubSmooths(grid,level)++;
+                    }
+                    
 
-        	  if( debug & 2 )
-        	  {
-          	    fPrintF(debugFile," level=%i grid=%i numberOfSubSmooths=%i defectRatio=%g defRatUpperBound=%g" 
+                    if( debug & 2 )
+                    {
+                        fPrintF(debugFile," level=%i grid=%i numberOfSubSmooths=%i defectRatio=%g defRatUpperBound=%g" 
                                                     " maxSubSmooths=%i\n",
-                		    level,grid,numberOfSubSmooths(grid,level),defectRatio(grid,level),defectRatioUpperBound,
+                                        level,grid,numberOfSubSmooths(grid,level),defectRatio(grid,level),defectRatioUpperBound,
                                         maxNumberOfSubSmooths);
-        	  }
+                    }
 
 
-      	}
+                }
             } // end for grid
             
       // *wdh* 2012/03/16 -- if grid with most points has the largest defect then we need to increase
@@ -288,7 +288,7 @@ smooth(const int & level, int numberOfSmoothingSteps, int cycleNumber )
             if( false && maxDefectRatio<1.01 && 
                     numberOfSubSmooths(subSmoothReferenceGrid,level)<parameters.maximumNumberOfSubSmooths ) 
             {
-      	numberOfSubSmooths(subSmoothReferenceGrid,level)++;
+                numberOfSubSmooths(subSmoothReferenceGrid,level)++;
             }
 
 
@@ -296,15 +296,15 @@ smooth(const int & level, int numberOfSmoothingSteps, int cycleNumber )
 //        Range G=mgcg.multigridLevel[level].numberOfComponentGrids();
 //        if( min(numberOfSubSmooths(G,level))>1 )
 //        {
-//  	numberOfSubSmooths(G,level)--;
+//      numberOfSubSmooths(G,level)--;
 //        }
         
             if( (parameters.showSmoothingRates || (debug & 2 && level==0)) && debugFile!=NULL )
             {
-      	fPrintF(debugFile,"(grid,defectRatio,subSmooth) on level=%i : ",level);
-      	for( int grid=0; grid<mgcg.multigridLevel[level].numberOfComponentGrids(); grid++ )
-        	  fPrintF(debugFile,"(%i : %6.2e :%i) ",grid,defectRatio(grid,level),numberOfSubSmooths(grid,level));
-      	fPrintF(debugFile,"\n");
+                fPrintF(debugFile,"(grid,defectRatio,subSmooth) on level=%i : ",level);
+                for( int grid=0; grid<mgcg.multigridLevel[level].numberOfComponentGrids(); grid++ )
+                    fPrintF(debugFile,"(%i : %6.2e :%i) ",grid,defectRatio(grid,level),numberOfSubSmooths(grid,level));
+                fPrintF(debugFile,"\n");
             }
         }
         
@@ -321,7 +321,7 @@ smooth(const int & level, int numberOfSmoothingSteps, int cycleNumber )
 
             maximumDefectOld=maxNorm(defectMG.multigridLevel[level]);
 
-            if( Ogmg::debug & 8 )
+            if( true || Ogmg::debug & 8 ) // *wdh* April 3, 2023
                 printF("%*.1s Ogmg:smooth, level = %i, BEFORE iteration=%i, defect=%e \n",
                           level*4,"  ",level,iteration,maximumDefectOld);
 
@@ -357,7 +357,7 @@ smooth(const int & level, int numberOfSmoothingSteps, int cycleNumber )
             
             if( false && !active(grid) && cycleNumber>0 && level==0 )
             {
-      	interpolate(uMG.multigridLevel[level],grid,level);
+                interpolate(uMG.multigridLevel[level],grid,level);
                 continue;   // skip this grid if it is not active and it is not the first cycle.
             }
             
@@ -371,54 +371,54 @@ smooth(const int & level, int numberOfSmoothingSteps, int cycleNumber )
             switch (smootherType)
             {
             case OgmgParameters::GaussSeidel:
-      	smoothGaussSeidel(level,grid);
-      	break;
+                smoothGaussSeidel(level,grid);
+                break;
             case OgmgParameters::Jacobi:
-      	smoothJacobi(level,grid);
-      	break;
+                smoothJacobi(level,grid);
+                break;
             case OgmgParameters::redBlack:
             case OgmgParameters::redBlackJacobi:
-      	smoothRedBlack(level,grid);
-      	break;
+                smoothRedBlack(level,grid);
+                break;
             case OgmgParameters::lineJacobiInDirection1:
-      	smoothLine(level,grid,axis1,false);
-      	break;
+                smoothLine(level,grid,axis1,false);
+                break;
             case OgmgParameters::lineJacobiInDirection2:
-      	smoothLine(level,grid,axis2,false);
-      	break;
+                smoothLine(level,grid,axis2,false);
+                break;
             case OgmgParameters::lineJacobiInDirection3:
-      	smoothLine(level,grid,axis3,false);
-      	break;
+                smoothLine(level,grid,axis3,false);
+                break;
             case OgmgParameters::lineZebraInDirection1:
-      	smoothLine(level,grid,axis1);
-      	break;
+                smoothLine(level,grid,axis1);
+                break;
             case OgmgParameters::lineZebraInDirection2:
-      	smoothLine(level,grid,axis2);
-      	break;
+                smoothLine(level,grid,axis2);
+                break;
             case OgmgParameters::lineZebraInDirection3:
-      	smoothLine(level,grid,axis3);
-      	break;
+                smoothLine(level,grid,axis3);
+                break;
             case OgmgParameters::alternatingLineJacobi:
-      	alternatingLineSmooth(level,grid,false);
-      	break;
+                alternatingLineSmooth(level,grid,false);
+                break;
             case OgmgParameters::alternatingLineZebra:
-      	alternatingLineSmooth(level,grid);
-      	break;
+                alternatingLineSmooth(level,grid);
+                break;
             case OgmgParameters::ogesSmoother:
 
                 applyOgesSmoother(level,grid);
                 break;
             default :
-      	printF("Unknown smoother type! \n");
+                printF("Unknown smoother type! \n");
             }
 
             if( parameters.combineSmoothsWithIBS==1 && 
-        	  parameters.numberOfInterpolationLayersToSmooth>=1 && parameters.numberOfInterpolationSmoothIterations>=1 &&
-        	  parameters.numberOfIBSIterations>0 && level<parameters.numberOfLevelsForInterpolationSmoothing )
+                    parameters.numberOfInterpolationLayersToSmooth>=1 && parameters.numberOfInterpolationSmoothIterations>=1 &&
+                    parameters.numberOfIBSIterations>0 && level<parameters.numberOfLevelsForInterpolationSmoothing )
             {
-	// *************IBS: Interpolation Boundary Smoothing**********************
+        // *************IBS: Interpolation Boundary Smoothing**********************
         // --- Here we merge the IBS smoothing with the regular smooth ---
-      	smoothInterpolationNeighbours(level, grid );
+                smoothInterpolationNeighbours(level, grid );
             }
       // interpolate(uMG.multigridLevel[level]);
         } // end for grid 
@@ -443,12 +443,12 @@ smooth(const int & level, int numberOfSmoothingSteps, int cycleNumber )
         // --- Here we apply the IBS smoothing after the regular smooth ---
             for( int it=0; it<parameters.numberOfIBSIterations; it++ )
             {
-	// optionally smooth neighbours of interpolation points where the defect can get large after 
+        // optionally smooth neighbours of interpolation points where the defect can get large after 
         // the final interpolation above.
-      	for( int grid=0; grid<mgcg.multigridLevel[level].numberOfComponentGrids(); grid++ )
-        	  smoothInterpolationNeighbours(level, grid );
+                for( int grid=0; grid<mgcg.multigridLevel[level].numberOfComponentGrids(); grid++ )
+                    smoothInterpolationNeighbours(level, grid );
 
-      	interpolate(uMG.multigridLevel[level],-1,level); 
+                interpolate(uMG.multigridLevel[level],-1,level); 
             }
             
         }
@@ -480,16 +480,16 @@ smooth(const int & level, int numberOfSmoothingSteps, int cycleNumber )
                 fPrintF(debugFile,"max= %8.2e, [rate = %6.4f],\n",maximumDefectNew,rate);
             if( Ogmg::debug & 4 )
             {
-      	for( int grid=0; grid<mgcg.multigridLevel[level].numberOfComponentGrids(); grid++ )
-      	{
-        	  MappedGrid & mg = mgcg.multigridLevel[level][grid];
+                for( int grid=0; grid<mgcg.multigridLevel[level].numberOfComponentGrids(); grid++ )
+                {
+                    MappedGrid & mg = mgcg.multigridLevel[level][grid];
           // note: do not display a view uu(J1,J2,J3) since this can cause trouble in parallel -- instead pass Jv
                     Index Jv[4], &J1=Jv[0], &J2=Jv[1], &J3=Jv[2]; Jv[3]=Range(0,0); // Jv[3]= components
                     int extra=1; getIndex(mg.gridIndexRange(),J1,J2,J3,extra);
-        	  ::display(defectMG.multigridLevel[level][grid],
-                		    sPrintF(buff,"defect after smooth, level=%i grid=%i iteration=%i",
-                      			    level,grid,iteration),debugFile,"%8.2e ",Jv);         
-      	}
+                    ::display(defectMG.multigridLevel[level][grid],
+                                        sPrintF(buff,"defect after smooth, level=%i grid=%i iteration=%i",
+                                                        level,grid,iteration),debugFile,"%8.2e ",Jv);         
+                }
             }
         }
 
@@ -500,7 +500,7 @@ smooth(const int & level, int numberOfSmoothingSteps, int cycleNumber )
             printF("smooth:ERROR: parameters.totalNumberOfSubSmooths.getLength(0)=%i \n"
                           "              parameters.numberOfSubSmooths.getLength(0)=%i\n"
                           "              parameters.totalNumberOfSmoothsPerLevel.getLength(0)=%i\n",
-           	     parameters.totalNumberOfSubSmooths.getLength(0),
+                          parameters.totalNumberOfSubSmooths.getLength(0),
                           parameters.numberOfSubSmooths.getLength(0),
                           parameters.totalNumberOfSmoothsPerLevel.getLength(0));
 
@@ -687,11 +687,11 @@ smoothJacobi(const int & level, const int & grid, int smootherChoice /* = 0 */ )
 //               boundaryCondition(1,axis,grid),I1a.getBase(),I1a.getBound());
             if( boundaryCondition(0,axis,grid)==OgmgParameters::extrapolate && 
                     boundaryCondition(1,axis,grid)==OgmgParameters::extrapolate )
-      	Iv[axis]=Range(Iv[axis].getBase()+1,Iv[axis].getBound()-1);
+                Iv[axis]=Range(Iv[axis].getBase()+1,Iv[axis].getBound()-1);
             else if( boundaryCondition(0,axis,grid)==OgmgParameters::extrapolate  )
-      	Iv[axis]=Range(Iv[axis].getBase()+1,Iv[axis].getBound());
+                Iv[axis]=Range(Iv[axis].getBase()+1,Iv[axis].getBound());
             else if( boundaryCondition(1,axis,grid)==OgmgParameters::extrapolate  )
-      	Iv[axis]=Range(Iv[axis].getBase(),Iv[axis].getBound()-1);
+                Iv[axis]=Range(Iv[axis].getBase(),Iv[axis].getBound()-1);
       // printF("  I1a=[%i,%i]\n",I1a.getBase(),I1a.getBound());
         }
     }
@@ -723,13 +723,13 @@ smoothJacobi(const int & level, const int & grid, int smootherChoice /* = 0 */ )
                 if( equationToSolve==OgesParameters::divScalarGradOperator ||
                         equationToSolve==OgesParameters::variableHeatEquationOperator ||
                         equationToSolve==OgesParameters::divScalarGradHeatEquationOperator )
-      	{
-        	  sparseStencil=level==0 ? sparseVariableCoefficients : variableCoefficients;
-      	}
-      	else
-      	{
-        	  sparseStencil=level==0 ? sparseConstantCoefficients : constantCoeff;
-      	}
+                {
+                    sparseStencil=level==0 ? sparseVariableCoefficients : variableCoefficients;
+                }
+                else
+                {
+                    sparseStencil=level==0 ? sparseConstantCoefficients : constantCoeff;
+                }
             }
             else if( rectangular && assumeSparseStencilForRectangularGrids )
                 sparseStencil=sparse;
@@ -813,17 +813,17 @@ smoothJacobi(const int & level, const int & grid, int smootherChoice /* = 0 */ )
             if( smootherChoice!=0 && parameters.alternateSmoothingDirections )
             {
         // Alternate the ordering of the points in the Gauss-Seidel sweep (has no effect on Jacobi)
-	// Two possibilities for now:
-      	int numMod = parameters.totalNumberOfSubSmooths(grid,level)+iteration % 2;
-      	if( numMod == 1 )
-      	{
-	  // reverse the order of the smoother
-        	  int temp;
-        	  temp=n1b; n1b=n1a; n1a=temp; n1c=-n1c;
-        	  temp=n2b; n2b=n2a; n2a=temp; n2c=-n2c;
-        	  temp=n3b; n3b=n3a; n3a=temp; n3c=-n3c;
+        // Two possibilities for now:
+                int numMod = parameters.totalNumberOfSubSmooths(grid,level)+iteration % 2;
+                if( numMod == 1 )
+                {
+          // reverse the order of the smoother
+                    int temp;
+                    temp=n1b; n1b=n1a; n1a=temp; n1c=-n1c;
+                    temp=n2b; n2b=n2a; n2a=temp; n2c=-n2c;
+                    temp=n3b; n3b=n3a; n3a=temp; n3c=-n3c;
 
-      	}
+                }
             }
       // :::display(u,"smoothJacobi: u before new smooth",debugFile,"%7.1e ");
       // ::display(f,"smoothJacobi: f before new smooth",debugFile,"%7.1e ");
@@ -832,19 +832,19 @@ smoothJacobi(const int & level, const int & grid, int smootherChoice /* = 0 */ )
 
             smoothJacobiOpt( mg.numberOfDimensions(), 
                                               maskLocal.getBase(0),maskLocal.getBound(0),
-                   		       maskLocal.getBase(1),maskLocal.getBound(1),
-                   		       maskLocal.getBase(2),maskLocal.getBound(2),
-                   		       n1a,n1b,n1c,n2a,n2b,n2c,n3a,n3b,n3c, ndc, 
-                   		       *getDataPointer(fLocal),
-                   		       *getDataPointer(cLocal),
-                   		       *up, *vp,
-                   		       *getDataPointer(maskLocal), 
-                   		       option, orderOfThisLevel, sparseStencil, *pcc, *vcp, dx[0], omega,
+                                              maskLocal.getBase(1),maskLocal.getBound(1),
+                                              maskLocal.getBase(2),maskLocal.getBound(2),
+                                              n1a,n1b,n1c,n2a,n2b,n2c,n3a,n3b,n3c, ndc, 
+                                              *getDataPointer(fLocal),
+                                              *getDataPointer(cLocal),
+                                              *up, *vp,
+                                              *getDataPointer(maskLocal), 
+                                              option, orderOfThisLevel, sparseStencil, *pcc, *vcp, dx[0], omega,
                                               bc(0,0),np,ndip,ip, ipar[0] );
 
             tm[timeForRelaxInSmooth]+=getCPU()-time0;
             
-	// ::display(u,"smoothJacobi: u after smooth",debugFile,"%5.1f ");
+        // ::display(u,"smoothJacobi: u after smooth",debugFile,"%5.1f ");
             applyBoundaryConditions( level,grid,u,f );  // *** wdh 991121 for periodic and Neumann BC's
       // ::display(u,"smoothJacobi: u after applyBoundaryConditions",debugFile,"%5.1f ");
 
@@ -879,14 +879,14 @@ smoothJacobi(const int & level, const int & grid, int smootherChoice /* = 0 */ )
 
             if( Ogmg::debug & 32 )
             {
-      	maximumDefect=maxNorm(defectMG.multigridLevel[level][grid]);
-      	cout << "smoothJacobi: iteration = " << iteration << ", maximumDefect = " << maximumDefect << endl;
+                maximumDefect=maxNorm(defectMG.multigridLevel[level][grid]);
+                cout << "smoothJacobi: iteration = " << iteration << ", maximumDefect = " << maximumDefect << endl;
             }
             if( Ogmg::debug & 4 )
             {
-      	display(u,"smoothJacobi: Here is u",debugFile);
+                display(u,"smoothJacobi: Here is u",debugFile);
                 real maxDefect=maxNorm(defectMG.multigridLevel[level][grid]);
-      	display(defect,sPrintF(buff,"smoothJacobi: Here is the defect, grid=%i, max=%e",grid,maxDefect),debugFile);
+                display(defect,sPrintF(buff,"smoothJacobi: Here is the defect, grid=%i, max=%e",grid,maxDefect),debugFile);
             }
 
 /* ---
@@ -898,15 +898,15 @@ smoothJacobi(const int & level, const int & grid, int smootherChoice /* = 0 */ )
 //    defect.reshape(1,defect.dimension(0),defect.dimension(1),defect.dimension(2));
             if( false && numberOfSubSmooths(grid,level)==1 )
             {
-      	uu(I1,I2,I3)+=defect(I1,I2,I3)*omegaOverC0;
+                uu(I1,I2,I3)+=defect(I1,I2,I3)*omegaOverC0;
             }
             else
             { // do not change the interpolation point values:
-      	where( mask(I1,I2,I3)>0 )
-        	  uu(I1,I2,I3)+=defect(I1,I2,I3)*omegaOverC0;
+                where( mask(I1,I2,I3)>0 )
+                    uu(I1,I2,I3)+=defect(I1,I2,I3)*omegaOverC0;
             }
             if( debug & 16 )
-      	fPrintF(debugFile," **** smooth jacobi level=%i grid=%i defect =%e \n",level,grid,
+                fPrintF(debugFile," **** smooth jacobi level=%i grid=%i defect =%e \n",level,grid,
                                           maxNorm(defectMG.multigridLevel[level][grid]));
 
 //    u.reshape(u.dimension(1),u.dimension(2),u.dimension(3));
@@ -989,13 +989,13 @@ smoothRedBlack(const int & level, const int & grid)
     if( Ogmg::debug & 4 ) 
     {
         fPrintF(debugFile," --- Entering smoothRedBlack: level=%i grid=%i cycle=%i orderOfThisLevel=%i ---\n"
-          	    "     useJacobiRedBlack=%i useNewSmoother=%i, alternateSmoothingDirections=%i\n",
-          	    level,grid,numberOfCycles,orderOfThisLevel,(int)useJacobiRedBlack,
+                        "     useJacobiRedBlack=%i useNewSmoother=%i, alternateSmoothingDirections=%i\n",
+                        level,grid,numberOfCycles,orderOfThisLevel,(int)useJacobiRedBlack,
                         (int)parameters.useNewRedBlackSmoother,(int)parameters.alternateSmoothingDirections );
         if( debugFile!=pDebugFile )
             fprintf(pDebugFile," --- Entering smoothRedBlack: level=%i grid=%i cycle=%i ---\n"
-          	    "     useJacobiRedBlack=%i useNewSmoother=%i, alternateSmoothingDirections=%i\n",
-          	    level,grid,numberOfCycles,(int)useJacobiRedBlack,
+                        "     useJacobiRedBlack=%i useNewSmoother=%i, alternateSmoothingDirections=%i\n",
+                        level,grid,numberOfCycles,(int)useJacobiRedBlack,
                         (int)parameters.useNewRedBlackSmoother,(int)parameters.alternateSmoothingDirections );
 
     }
@@ -1022,11 +1022,11 @@ smoothRedBlack(const int & level, const int & grid)
 //               boundaryCondition(1,axis,grid),I1a.getBase(),I1a.getBound());
             if( boundaryCondition(0,axis,grid)==OgmgParameters::extrapolate && mg.boundaryCondition(0,axis)>0 && 
                     boundaryCondition(1,axis,grid)==OgmgParameters::extrapolate && mg.boundaryCondition(1,axis)>0 )
-      	Iav[axis]=Range(Iav[axis].getBase()+1,Iav[axis].getBound()-1);
+                Iav[axis]=Range(Iav[axis].getBase()+1,Iav[axis].getBound()-1);
             else if( boundaryCondition(0,axis,grid)==OgmgParameters::extrapolate && mg.boundaryCondition(0,axis)>0 )
-      	Iav[axis]=Range(Iav[axis].getBase()+1,Iav[axis].getBound());
+                Iav[axis]=Range(Iav[axis].getBase()+1,Iav[axis].getBound());
             else if( boundaryCondition(1,axis,grid)==OgmgParameters::extrapolate && mg.boundaryCondition(1,axis)>0 )
-      	Iav[axis]=Range(Iav[axis].getBase(),Iav[axis].getBound()-1);
+                Iav[axis]=Range(Iav[axis].getBase(),Iav[axis].getBound()-1);
       // printF("  I1a=[%i,%i]\n",I1a.getBase(),I1a.getBound());
         }
     }
@@ -1074,19 +1074,19 @@ smoothRedBlack(const int & level, const int & grid)
                 if( equationToSolve==OgesParameters::divScalarGradOperator ||
                         equationToSolve==OgesParameters::variableHeatEquationOperator ||
                         equationToSolve==OgesParameters::divScalarGradHeatEquationOperator )
-      	{
-        	  sparseStencil=level==0 ? sparseVariableCoefficients : variableCoefficients;
-      	}
-      	else
-      	{
-        	  sparseStencil=level==0 ? sparseConstantCoefficients : constantCoeff;
-      	}
+                {
+                    sparseStencil=level==0 ? sparseVariableCoefficients : variableCoefficients;
+                }
+                else
+                {
+                    sparseStencil=level==0 ? sparseConstantCoefficients : constantCoeff;
+                }
             }
             else if( rectangular && assumeSparseStencilForRectangularGrids )
                 sparseStencil=sparse;
 
 //        if( equationToSolve!=OgesParameters::userDefined ) // && level==0 ) 
-//  	sparseStencil=level==0 ? sparseConstantCoefficients : constantCoeff;
+//      sparseStencil=level==0 ? sparseConstantCoefficients : constantCoeff;
 //        else if( rectangular && assumeSparseStencilForRectangularGrids )
 //          sparseStencil=sparse;
 
@@ -1172,13 +1172,13 @@ smoothRedBlack(const int & level, const int & grid)
 
             if( preSmooth )
             {
-      // 	smoothAllBoundaries();
-            if( parameters.numberOfBoundaryLayersToSmooth>0 )
-            {
-                int bc[6]={1,1,1,1,1,1};
-                int numberOfLayers=parameters.numberOfBoundaryLayersToSmooth; //  + (numberOfLinesSolves%3)-1;
-                smoothBoundary(level,grid,bc,numberOfLayers,parameters.numberOfBoundarySmoothIterations );
-            }
+        // smoothAllBoundaries();
+                if( parameters.numberOfBoundaryLayersToSmooth>0 )
+                {
+                    int bc[6]={1,1,1,1,1,1};
+                    int numberOfLayers=parameters.numberOfBoundaryLayersToSmooth; //  + (numberOfLinesSolves%3)-1;
+                    smoothBoundary(level,grid,bc,numberOfLayers,parameters.numberOfBoundarySmoothIterations );
+                }
             }
             for( int rb=0; rb<=1; rb++ )  // rb==0 : red points, rb==1 : black points
             {
@@ -1186,75 +1186,75 @@ smoothRedBlack(const int & level, const int & grid)
 
                 real *u1p=up, *u2p=useJacobiRedBlack ? vp : up;
         // if( false && useJacobiRedBlack )
-	// {
+        // {
         //   // Jacobi-RB : First time update v from u, second time update u from v.
-	//   u1p= rb==0 ? up : vp;
-	//   u2p= rb==0 ? vp : up;
-	// }
-      	
+        //   u1p= rb==0 ? up : vp;
+        //   u2p= rb==0 ? vp : up;
+        // }
+                
                 int n1a,n1b,n1c=1,n2a,n2b,n2c=1,n3a,n3b,n3c=1,shift1=0,shift2=0,shift3=0;
-      	
+                
                 int redBlackOption = rb;
 
                 #ifdef USE_PPP
-      	if( Ogmg::debug & 8 ) 
+                if( Ogmg::debug & 8 ) 
                     ::display(uLocal,sPrintF(buff,"smoothRedBlack: uLocal at start of smooth grid=%i rb=%i it=%i cycle=%i jacobiRB=%i, bcEveryStep=%i",
-                           				   grid,rb,iteration,numberOfCycles,(int)useJacobiRedBlack,(int)applyBoundaryConditionsAtEverySubStep),pDebugFile,fmt);
+                                                                      grid,rb,iteration,numberOfCycles,(int)useJacobiRedBlack,(int)applyBoundaryConditionsAtEverySubStep),pDebugFile,fmt);
                 #endif
 
 
-      	if( !parameters.useNewRedBlackSmoother )
-      	{
-	  // old way
-        	  shift1=rb;
-        	  shift2=0;
-        	  shift3=0;
-      	
-        	  n1a = I1a.getBase()+shift1;
-        	  n1b = I1a.getBound()+shift1;
-        	  n1c = 2;
-        	  n2a = I2a.getBase()+shift2;
-        	  n2b = I2a.getBound();
-        	  n2c = 2;
-        	  n3a = mg.numberOfDimensions()==2 ? I3a.getBase() : I3a.getBase()+shift3;
-        	  n3b = mg.numberOfDimensions()==2 ? I3a.getBound() : I3a.getBound()+shift3;
-        	  n3c = 2;
-      	}
-      	else
-      	{ // new way -- no need to adjust bounds for red vs. black
-        	  n1a = I1a.getBase(); n1b=I1a.getBound(); n1c=1;
-        	  n2a = I2a.getBase(); n2b=I2a.getBound(); n2c=1;
-        	  n3a = I3a.getBase(); n3b=I3a.getBound(); n3c=1;
+                if( !parameters.useNewRedBlackSmoother )
+                {
+          // old way
+                    shift1=rb;
+                    shift2=0;
+                    shift3=0;
+                
+                    n1a = I1a.getBase()+shift1;
+                    n1b = I1a.getBound()+shift1;
+                    n1c = 2;
+                    n2a = I2a.getBase()+shift2;
+                    n2b = I2a.getBound();
+                    n2c = 2;
+                    n3a = mg.numberOfDimensions()==2 ? I3a.getBase() : I3a.getBase()+shift3;
+                    n3b = mg.numberOfDimensions()==2 ? I3a.getBound() : I3a.getBound()+shift3;
+                    n3c = 2;
+                }
+                else
+                { // new way -- no need to adjust bounds for red vs. black
+                    n1a = I1a.getBase(); n1b=I1a.getBound(); n1c=1;
+                    n2a = I2a.getBase(); n2b=I2a.getBound(); n2c=1;
+                    n3a = I3a.getBase(); n3b=I3a.getBound(); n3c=1;
 
                     redBlackOption = (n1a +rb+1 +128) % 2;  // match to old "red" points
-      	}
-      	const int nab[] = {n1a,n1b,n1c, n2a,n2b,n2c, n3a,n3b,n3c}; //  save for printing in parallel
-      	
+                }
+                const int nab[] = {n1a,n1b,n1c, n2a,n2b,n2c, n3a,n3b,n3c}; //  save for printing in parallel
+                
                 #ifdef USE_PPP
 
-      	if( debug & 16 )
-      	{
+                if( debug & 16 )
+                {
                     fprintf(pDebugFile,"\n********** smoothRedBlack: grid=%i level=%i rb=%i\n",grid,level,rb);
                     fprintf(pDebugFile," Before: [n1a,n1b]=[%i,%i] [n2a,n2b]=[%i,%i] \n",n1a,n1b,n2a,n2b);
                     fprintf(pDebugFile," Before: mask = [%i,%i]x[%i,%i] \n",mask.getBase(0),mask.getBound(0),
-              		  mask.getBase(1),mask.getBound(1));
+                                    mask.getBase(1),mask.getBound(1));
                     fprintf(pDebugFile," Before: maskLocal = [%i,%i]x[%i,%i] \n",maskLocal.getBase(0),maskLocal.getBound(0),
-              		  maskLocal.getBase(1),maskLocal.getBound(1));
+                                    maskLocal.getBase(1),maskLocal.getBound(1));
                     fprintf(pDebugFile," Before: uLocal = [%i,%i]x[%i,%i] \n",uLocal.getBase(0),uLocal.getBound(0),
-              		  uLocal.getBase(1),uLocal.getBound(1));
+                                    uLocal.getBase(1),uLocal.getBound(1));
                     fflush(pDebugFile);
-        	  Communication_Manager::Sync(); // *************
-      	}
+                    Communication_Manager::Sync(); // *************
+                }
 
-      	if( !parameters.useNewRedBlackSmoother )
-      	{
-  	  // int m1a = max(n1a,maskLocal.getBase(0)  +mask.getGhostBoundaryWidth(0));  
+                if( !parameters.useNewRedBlackSmoother )
+                {
+          // int m1a = max(n1a,maskLocal.getBase(0)  +mask.getGhostBoundaryWidth(0));  
           // int m1b = min(n1b,maskLocal.getBound(0) -mask.getGhostBoundaryWidth(0));
           // int m2a = max(n2a,maskLocal.getBase(1)  +mask.getGhostBoundaryWidth(1));
           // int m2b = min(n2b,maskLocal.getBound(1) -mask.getGhostBoundaryWidth(1));
           // int m3a = max(n3a,maskLocal.getBase(2)  +mask.getGhostBoundaryWidth(2));
           // int m3b = min(n3b,maskLocal.getBound(2) -mask.getGhostBoundaryWidth(2));
-            	  int m1a = max(n1a,maskLocal.getBase(0)  +hw[0]);
+                    int m1a = max(n1a,maskLocal.getBase(0)  +hw[0]);
                     int m1b = min(n1b,maskLocal.getBound(0) -hw[0]);
                     int m2a = max(n2a,maskLocal.getBase(1)  +hw[1]);
                     int m2b = min(n2b,maskLocal.getBound(1) -hw[1]);
@@ -1272,92 +1272,92 @@ smoothRedBlack(const int & level, const int & grid)
                     n3a=m3a + (m3a-n3a)%2;
 
                     if( n1a>m1a )
-        	  {
+                    {
             // ** not quite -- misses pts on far right
-	    // **wdh* 061118  redBlackOption=1-redBlackOption;  // flip so we get all the points
-        	  }
-      	}
+            // **wdh* 061118  redBlackOption=1-redBlackOption;  // flip so we get all the points
+                    }
+                }
                 else
-      	{
-  	  // n1a = max(n1a,maskLocal.getBase(0)  +mask.getGhostBoundaryWidth(0));  
+                {
+          // n1a = max(n1a,maskLocal.getBase(0)  +mask.getGhostBoundaryWidth(0));  
           // n1b = min(n1b,maskLocal.getBound(0) -mask.getGhostBoundaryWidth(0));
           // n2a = max(n2a,maskLocal.getBase(1)  +mask.getGhostBoundaryWidth(1));
           // n2b = min(n2b,maskLocal.getBound(1) -mask.getGhostBoundaryWidth(1));
           // n3a = max(n3a,maskLocal.getBase(2)  +mask.getGhostBoundaryWidth(2));
           // n3b = min(n3b,maskLocal.getBound(2) -mask.getGhostBoundaryWidth(2));
-            	  n1a = max(n1a,maskLocal.getBase(0)  +hw[0]);
+                    n1a = max(n1a,maskLocal.getBase(0)  +hw[0]);
                     n1b = min(n1b,maskLocal.getBound(0) -hw[0]);
                     n2a = max(n2a,maskLocal.getBase(1)  +hw[1]);
                     n2b = min(n2b,maskLocal.getBound(1) -hw[1]);
                     n3a = max(n3a,maskLocal.getBase(2)  +hw[2]);
                     n3b = min(n3b,maskLocal.getBound(2) -hw[2]);
-      	}
+                }
                 if( debug & 4 ) fprintf(pDebugFile," After: [n1a,n1b]=[%i,%i] [n2a,n2b]=[%i,%i] \n",n1a,n1b,n2a,n2b);
 
                 #endif
 
                 if( parameters.alternateSmoothingDirections )
-      	{
+                {
           // Two possibilities for now:
                     if( parameters.alternateSmoothingDirections==1 )
-        	  {
-          	    int numMod = parameters.totalNumberOfSubSmooths(grid,level)+iteration % 2;
-          	    if( numMod == 1 )
-          	    {
-	      // reverse the order of the smoother
-            	      int temp;
-            	      temp=n1b; n1b=n1a; n1a=temp; n1c=-n1c;
-            	      temp=n2b; n2b=n2a; n2a=temp; n2c=-n2c;
-            	      temp=n3b; n3b=n3a; n3a=temp; n3c=-n3c;
+                    {
+                        int numMod = parameters.totalNumberOfSubSmooths(grid,level)+iteration % 2;
+                        if( numMod == 1 )
+                        {
+              // reverse the order of the smoother
+                            int temp;
+                            temp=n1b; n1b=n1a; n1a=temp; n1c=-n1c;
+                            temp=n2b; n2b=n2a; n2a=temp; n2c=-n2c;
+                            temp=n3b; n3b=n3a; n3a=temp; n3c=-n3c;
 
-          	    }
-        	  }
-        	  else
-        	  {
+                        }
+                    }
+                    else
+                    {
                         const int numberOfAlternatives=mg.numberOfDimensions()==2 ? 4 : 8;
-          	    int numMod = (parameters.totalNumberOfSubSmooths(grid,level)+iteration) % numberOfAlternatives;
-          	    int temp;
+                        int numMod = (parameters.totalNumberOfSubSmooths(grid,level)+iteration) % numberOfAlternatives;
+                        int temp;
                         if( numMod % 2 == 1 )
-          	    { // switch i1 every other sweep
-            	      temp=n1b; n1b=n1a; n1a=temp; n1c=-n1c;
-          	    }
-          	    if( (numMod/2) % 2 == 1 )
-          	    { // switch i2 every (2-3)th sweep
-            	      temp=n2b; n2b=n2a; n2a=temp; n2c=-n2c;
-          	    }
-          	    if( (numMod/4) % 2 == 1 )
-          	    { // switch i3 every (4-7)th sweep
-            	      temp=n3b; n3b=n3a; n3a=temp; n3c=-n3c;
-          	    }
-        	  }
-      	}
+                        { // switch i1 every other sweep
+                            temp=n1b; n1b=n1a; n1a=temp; n1c=-n1c;
+                        }
+                        if( (numMod/2) % 2 == 1 )
+                        { // switch i2 every (2-3)th sweep
+                            temp=n2b; n2b=n2a; n2a=temp; n2c=-n2c;
+                        }
+                        if( (numMod/4) % 2 == 1 )
+                        { // switch i3 every (4-7)th sweep
+                            temp=n3b; n3b=n3a; n3a=temp; n3c=-n3c;
+                        }
+                    }
+                }
 
         // printF(" l=%i g=%i ts=%i it=%i rb=%i n1=[%i,%i,%i] n2=[%i,%i,%i] n3=[%i,%i,%i] \n",level,grid,
         //   parameters.totalNumberOfSubSmooths(grid,level)+iteration,iteration,rb,n1a,n1b,n1c,n2a,n2b,n2c,n3a,n3b,n3c);
         //printf("       d=[%i,%i][%i,%i][%i,%i] \n",d(0,0),d(1,0),d(0,1),d(1,1),d(0,2),d(1,2));
-      	
-      	
-	// :::display(u,"smoothRedBlack: u before new smooth",debugFile,"%7.1e ");
-	// ::display(f,"smoothRedBlack: f before new smooth",debugFile,"%7.1e ");
+                
+                
+        // :::display(u,"smoothRedBlack: u before new smooth",debugFile,"%7.1e ");
+        // ::display(f,"smoothRedBlack: f before new smooth",debugFile,"%7.1e ");
 
         // *** no need to smooth the boundary if dirichlet ***
 
 //      real *uptr = u.Array_Descriptor.Array_View_Pointer3;
 //      int shift=d(0,0)+(d(1,0)-d(0,0)+1)*( d(0,1)+(d(1,1)-d(0,1)+1)*( d(0,2) ) );
 //        printF(" smooth: uptr=%i dp=%i diff=%i \n",uptr,u.getDataPointer(),u.getDataPointer()-uptr);
-//	uptr += d(0,0)+(d(1,0)-d(0,0)+1)*( d(0,1)+(d(1,1)-d(0,1)+1)*( d(0,2) ) );
-//	printf(" shift=%i uptr=%i\n",d(0,0)+(d(1,0)-d(0,0)+1)*( d(0,1)+(d(1,1)-d(0,1)+1)*( d(0,2) ) ),uptr );
-//	int shiftc=c.getBase(0)+c.getRawDataSize(0)*(c.getBase(1)+c.getRawDataSize(1)*(c.getBase(2)+
-//			          +c.getRawDataSize(2)*(c.getBase(3))));
-      	
+//      uptr += d(0,0)+(d(1,0)-d(0,0)+1)*( d(0,1)+(d(1,1)-d(0,1)+1)*( d(0,2) ) );
+//      printf(" shift=%i uptr=%i\n",d(0,0)+(d(1,0)-d(0,0)+1)*( d(0,1)+(d(1,1)-d(0,1)+1)*( d(0,2) ) ),uptr );
+//      int shiftc=c.getBase(0)+c.getRawDataSize(0)*(c.getBase(1)+c.getRawDataSize(1)*(c.getBase(2)+
+//                                +c.getRawDataSize(2)*(c.getBase(3))));
+                
 //    printF(" c.numberOfDimensions()=%i u.numberOfDimensions()=%i\n",c.numberOfDimensions(),u.numberOfDimensions());
-      	
+                
         // u.updateGhostBoundaries();  // ************************************************************** try this 091230
 
 
-      	if( Ogmg::debug & 32 ) ::display(c,sPrintF(buff,"smoothRedBlack: c before smooth grid=%i rb=%i it=%i cycle=%i",
+                if( Ogmg::debug & 32 ) ::display(c,sPrintF(buff,"smoothRedBlack: c before smooth grid=%i rb=%i it=%i cycle=%i",
                                                   grid,rb,iteration,numberOfCycles),debugFile,"%5.1f ");
-      	if( Ogmg::debug & 8 ) 
+                if( Ogmg::debug & 8 ) 
                     ::display(u,sPrintF(buff,"smoothRedBlack: u before smooth level=%i grid=%i rb=%i it=%i cycle=%i "
                                       "[%i,%i,%i][%i,%i,%i][%i,%i,%i]",level,grid,rb,iteration,numberOfCycles,
                                         nab[0],nab[1],nab[2],nab[3],nab[4],nab[5],nab[6],nab[7],nab[8]),debugFile,fmt);
@@ -1366,95 +1366,95 @@ smoothRedBlack(const int & level, const int & grid)
         // printF("smoothRedBlack: level=%i : order=%i\n",level,orderOfThisLevel);
                 
 
-      	if( useJacobiRedBlack )
-      	{ 
-	  // defect=u;
+                if( useJacobiRedBlack )
+                { 
+          // defect=u;
           // assign(defect,u);
                     vTemp=uLocal;
-      	}
-      	if( !parameters.useNewRedBlackSmoother )
-      	{
-        	  smoothRedBlackOpt( mg.numberOfDimensions(), 
-                       			     maskLocal.getBase(0),maskLocal.getBound(0),
-                       			     maskLocal.getBase(1),maskLocal.getBound(1),
-                       			     maskLocal.getBase(2),maskLocal.getBound(2),
-                       			     n1a,n1b,n1c,n2a,n2b,n2c,n3a,n3b,n3c, ndc, 
-                       			     *getDataPointer(fLocal),
-                       			     *getDataPointer(cLocal),
-                       			     *u1p, *u2p,
-                       			     *getDataPointer(maskLocal), 
-                       			     redBlackOption, orderOfThisLevel, sparseStencil, 
-                       			     *pcc, *vcp, dx[0],
-                       			     parameters.omegaRedBlack, (int)parameters.useLocallyOptimalOmega,
-                       			     parameters.variableOmegaScaleFactor, ipar[0], rpar[0] );
-      	}
-      	else
-      	{
-        	  smRedBlack( mg.numberOfDimensions(), 
-                  		      maskLocal.getBase(0),maskLocal.getBound(0),
-                  		      maskLocal.getBase(1),maskLocal.getBound(1),
-                  		      maskLocal.getBase(2),maskLocal.getBound(2),
-                  		      n1a,n1b,n1c,n2a,n2b,n2c,n3a,n3b,n3c, ndc, 
-                  		      *getDataPointer(fLocal),
-                  		      *getDataPointer(cLocal),
-                  		      *u1p, *u2p,
-                  		      *getDataPointer(maskLocal), 
-                  		      redBlackOption, orderOfThisLevel, sparseStencil, 
-                  		      *pcc, *vcp, dx[0],
-                  		      parameters.omegaRedBlack, (int)parameters.useLocallyOptimalOmega,
-                  		      parameters.variableOmegaScaleFactor, ipar[0], rpar[0] );
-      	}
-      	
-      	tm[timeForRelaxInSmooth]+=getCPU()-time0;
+                }
+                if( !parameters.useNewRedBlackSmoother )
+                {
+                    smoothRedBlackOpt( mg.numberOfDimensions(), 
+                                                          maskLocal.getBase(0),maskLocal.getBound(0),
+                                                          maskLocal.getBase(1),maskLocal.getBound(1),
+                                                          maskLocal.getBase(2),maskLocal.getBound(2),
+                                                          n1a,n1b,n1c,n2a,n2b,n2c,n3a,n3b,n3c, ndc, 
+                                                          *getDataPointer(fLocal),
+                                                          *getDataPointer(cLocal),
+                                                          *u1p, *u2p,
+                                                          *getDataPointer(maskLocal), 
+                                                          redBlackOption, orderOfThisLevel, sparseStencil, 
+                                                          *pcc, *vcp, dx[0],
+                                                          parameters.omegaRedBlack, (int)parameters.useLocallyOptimalOmega,
+                                                          parameters.variableOmegaScaleFactor, ipar[0], rpar[0] );
+                }
+                else
+                {
+                    smRedBlack( mg.numberOfDimensions(), 
+                                            maskLocal.getBase(0),maskLocal.getBound(0),
+                                            maskLocal.getBase(1),maskLocal.getBound(1),
+                                            maskLocal.getBase(2),maskLocal.getBound(2),
+                                            n1a,n1b,n1c,n2a,n2b,n2c,n3a,n3b,n3c, ndc, 
+                                            *getDataPointer(fLocal),
+                                            *getDataPointer(cLocal),
+                                            *u1p, *u2p,
+                                            *getDataPointer(maskLocal), 
+                                            redBlackOption, orderOfThisLevel, sparseStencil, 
+                                            *pcc, *vcp, dx[0],
+                                            parameters.omegaRedBlack, (int)parameters.useLocallyOptimalOmega,
+                                            parameters.variableOmegaScaleFactor, ipar[0], rpar[0] );
+                }
+                
+                tm[timeForRelaxInSmooth]+=getCPU()-time0;
             
                 realMappedGridFunction & uu = u; // !useJacobiRedBlack ? u : rb==0 ? vv : u;
-      	if( useJacobiRedBlack )
-      	{
+                if( useJacobiRedBlack )
+                {
 //          realSerialArray & unc = (realSerialArray &)uLocal;  // remove const property
-//	  unc=defectLocal;
-	  // assign( uu,defect );
+//        unc=defectLocal;
+          // assign( uu,defect );
                     uLocal=vTemp;
-        	}
+                }
 
-      	if( Ogmg::debug & 8 )
-      	{
+                if( Ogmg::debug & 8 )
+                {
           // note: do not display a view uu(J1,J2,J3) since this can cause trouble in parallel -- instead pass Jv
-        	  int extra=1; getIndex(mg.gridIndexRange(),J1,J2,J3,extra);
+                    int extra=1; getIndex(mg.gridIndexRange(),J1,J2,J3,extra);
                       ::display(uu,sPrintF(buff,"smoothRedBlack: u after smooth level=%i grid=%i rb=%i it=%i cycle=%i",
-                        				level,grid,rb,iteration,numberOfCycles),debugFile,fmt,Jv);
+                                                                level,grid,rb,iteration,numberOfCycles),debugFile,fmt,Jv);
 
                     #ifdef USE_PPP
-        	  if( Ogmg::debug & 8 ) 
+                    if( Ogmg::debug & 8 ) 
                         ::display(uLocal,sPrintF(buff,"smoothRedBlack: uLocal after smooth (before BC) grid=%i rb=%i it=%i cycle=%i jacobiRB=%i, bcEveryStep=%i",
-                           				   grid,rb,iteration,numberOfCycles,(int)useJacobiRedBlack,(int)applyBoundaryConditionsAtEverySubStep),pDebugFile,fmt);
+                                                                      grid,rb,iteration,numberOfCycles,(int)useJacobiRedBlack,(int)applyBoundaryConditionsAtEverySubStep),pDebugFile,fmt);
                     #endif
-      	}
-      	
+                }
+                
                 if( applyBoundaryConditionsAtEverySubStep )
-      	{
-        	  if( numExtraParallelGhost<=0 )
-        	  {
-	    // if there are no extra parallel ghost then we need to do a ghost boundary update
+                {
+                    if( numExtraParallelGhost<=0 )
+                    {
+            // if there are no extra parallel ghost then we need to do a ghost boundary update
                         #ifdef USE_PPP
-           	     if( debug & 4 )
-             	       printF("smoothRedBlack:INFO: update parallel ghost boundaries (increase the ghost boundary with to avoid this)\n");
-           	     uu.updateGhostBoundaries();
+                          if( debug & 4 )
+                              printF("smoothRedBlack:INFO: update parallel ghost boundaries (increase the ghost boundary with to avoid this)\n");
+                          uu.updateGhostBoundaries();
                         #endif
-        	  }
+                    }
 
-            	  applyBoundaryConditions( level,grid,uu,f );  // *** wdh 991121 for periodic and Neumann BC's
-      	}
-      	
-      	if( Ogmg::debug & 8 ) 
-      	{
-        	  int extra=1; getIndex(mg.gridIndexRange(),J1,J2,J3,extra);
+                    applyBoundaryConditions( level,grid,uu,f );  // *** wdh 991121 for periodic and Neumann BC's
+                }
+                
+                if( Ogmg::debug & 8 ) 
+                {
+                    int extra=1; getIndex(mg.gridIndexRange(),J1,J2,J3,extra);
                     ::display(uu,sPrintF(buff,
                                         "smoothRedBlack: u after applyBoundaryConditions level=%i grid=%i rb=%i it=%i cycle=%i",
-                         			       level,grid,rb,iteration,numberOfCycles),debugFile,fmt,Jv);
-      	}
-      	
+                                                              level,grid,rb,iteration,numberOfCycles),debugFile,fmt,Jv);
+                }
+                
                 #ifdef USE_PPP
-      	if( Ogmg::debug & 8 ) 
+                if( Ogmg::debug & 8 ) 
                     ::display(uLocal,sPrintF(buff,"smoothRedBlack: uLocal after applyBoundaryConditions grid=%i rb=%i it=%i cycle=%i",
                                                   grid,rb,iteration,numberOfCycles),pDebugFile,fmt);
                 #endif
@@ -1462,24 +1462,24 @@ smoothRedBlack(const int & level, const int & grid)
             } // end for rb
             if( !applyBoundaryConditionsAtEverySubStep )
             {
-      	applyBoundaryConditions( level,grid,u,f );  
+                applyBoundaryConditions( level,grid,u,f );  
             }
 
             #ifdef USE_PPP
-      	if( Ogmg::debug & 8 ) 
+                if( Ogmg::debug & 8 ) 
                     ::display(uLocal,sPrintF(buff,"smoothRedBlack: uLocal after smooth and BC grid=%i it=%i cycle=%i jacobiRB=%i, bcEveryStep=%i",
-               		   grid,iteration,numberOfCycles,(int)useJacobiRedBlack,(int)applyBoundaryConditionsAtEverySubStep),pDebugFile,fmt);
+                                      grid,iteration,numberOfCycles,(int)useJacobiRedBlack,(int)applyBoundaryConditionsAtEverySubStep),pDebugFile,fmt);
             #endif
             
             if( postSmooth )
             {
-      // 	smoothAllBoundaries();
-            if( parameters.numberOfBoundaryLayersToSmooth>0 )
-            {
-                int bc[6]={1,1,1,1,1,1};
-                int numberOfLayers=parameters.numberOfBoundaryLayersToSmooth; //  + (numberOfLinesSolves%3)-1;
-                smoothBoundary(level,grid,bc,numberOfLayers,parameters.numberOfBoundarySmoothIterations );
-            }
+        // smoothAllBoundaries();
+                if( parameters.numberOfBoundaryLayersToSmooth>0 )
+                {
+                    int bc[6]={1,1,1,1,1,1};
+                    int numberOfLayers=parameters.numberOfBoundaryLayersToSmooth; //  + (numberOfLinesSolves%3)-1;
+                    smoothBoundary(level,grid,bc,numberOfLayers,parameters.numberOfBoundarySmoothIterations );
+                }
             }
             workUnits(level)+=mask.elementCount()/real(numberOfGridPoints);
             
@@ -1548,100 +1548,100 @@ smoothRedBlack(const int & level, const int & grid)
 
             for( int rb=0; rb<=1; rb++ )  // rb==0 : red points, rb==1 : black points
             {
-      	for( int sweep=0; sweep<numberOfSweeps; sweep++ ) // red or black points take this many sweeps to get them all
-      	{
-        	  const int m=sweep+rb*numberOfSweeps;
-        	  const int shift1= shiftd1[m];
-        	  const int shift2= shiftd2[m];
-        	  const int shift3= mg.numberOfDimensions()==3 ? shiftd3[m] : 0;
+                for( int sweep=0; sweep<numberOfSweeps; sweep++ ) // red or black points take this many sweeps to get them all
+                {
+                    const int m=sweep+rb*numberOfSweeps;
+                    const int shift1= shiftd1[m];
+                    const int shift2= shiftd2[m];
+                    const int shift3= mg.numberOfDimensions()==3 ? shiftd3[m] : 0;
 
-        	  I1=IndexBB(I1a.getBase()+shift1,I1a.getBound(),2);  // stride 2
-        	  I2=IndexBB(I2a.getBase()+shift2,I2a.getBound(),2);  // stride 2
-        	  I3= mg.numberOfDimensions()==3 ? IndexBB(I3a.getBase()+shift3,I3a.getBound(),2) : I3a;
+                    I1=IndexBB(I1a.getBase()+shift1,I1a.getBound(),2);  // stride 2
+                    I2=IndexBB(I2a.getBase()+shift2,I2a.getBound(),2);  // stride 2
+                    I3= mg.numberOfDimensions()==3 ? IndexBB(I3a.getBase()+shift3,I3a.getBound(),2) : I3a;
 
-        	  real time1=getCPU();
+                    real time1=getCPU();
 
-	  // ***** compute the defect at the red or black points *******
-        	  getDefect(level,grid,f,u,I1,I2,I3,defect);
+          // ***** compute the defect at the red or black points *******
+                    getDefect(level,grid,f,u,I1,I2,I3,defect);
 
-        	  time0=getCPU();
-        	  tm[timeForDefectInSmooth]+=time0-time1;
+                    time0=getCPU();
+                    tm[timeForDefectInSmooth]+=time0-time1;
 
-// 	  if( parameters.problemIsSingular )
-// 	  {
-// 	    real rDotU=sum(u(I1,I2,I3)*rightNullVector.multigridLevel[level][grid](I1,I2,I3)); // this is not correct.
-// 	    defect(I1,I2,I3)+=10.*rDotU*rightNullVector.multigridLevel[level][grid](I1,I2,I3);
-// 	  }
+//        if( parameters.problemIsSingular )
+//        {
+//          real rDotU=sum(u(I1,I2,I3)*rightNullVector.multigridLevel[level][grid](I1,I2,I3)); // this is not correct.
+//          defect(I1,I2,I3)+=10.*rDotU*rightNullVector.multigridLevel[level][grid](I1,I2,I3);
+//        }
 
-        	  if( true || debug & 16 )
-        	  {
+                    if( true || debug & 16 )
+                    {
                         const IntegerArray & gid=mg.gridIndexRange();
                         const IntegerArray & eir=mg.extendedIndexRange();
                         fPrintF(debugFile,"gridIndexRange    =[%i,%i][%i,%i]\n",gid(0,0),gid(1,0),gid(0,1),gid(1,1));
                         fPrintF(debugFile,"extendedIndexRange=[%i,%i][%i,%i]\n",eir(0,0),eir(1,0),eir(0,1),eir(1,1));
 
-          	    fPrintF(debugFile,"redBlack: shift1=%i, shift2=%i, shift3=%i I1=[%i,%i,%i] I2=[%i,%i,%i] I3=[%i,%i,%i]\n",
-                		    shift1,shift2,shift3,I1.getBase(),I1.getBound(),I1.getStride(),
-                		    I2.getBase(),I2.getBound(),I2.getStride(),I3.getBase(),I3.getBound(),I3.getStride());
-        	  }
-        	  if( debug & 64 )
-          	    displayMask(mask,sPrintF(buff,"mask in smooth redBlack, level=%i",level),debugFile);
+                        fPrintF(debugFile,"redBlack: shift1=%i, shift2=%i, shift3=%i I1=[%i,%i,%i] I2=[%i,%i,%i] I3=[%i,%i,%i]\n",
+                                        shift1,shift2,shift3,I1.getBase(),I1.getBound(),I1.getStride(),
+                                        I2.getBase(),I2.getBound(),I2.getStride(),I3.getBase(),I3.getBound(),I3.getStride());
+                    }
+                    if( debug & 64 )
+                        displayMask(mask,sPrintF(buff,"mask in smooth redBlack, level=%i",level),debugFile);
             
 
-	  // @PD realArray3[c0Inverse,uu,defect] Range[I1,I2,I3] 
-	  // if( parameters.numberOfSubSmooths(grid,level)==1 )
+          // @PD realArray3[c0Inverse,uu,defect] Range[I1,I2,I3] 
+          // if( parameters.numberOfSubSmooths(grid,level)==1 )
           // **** never change interpolation points for iterative interpolation*****
-        	  if( false && iteration == parameters.numberOfSubSmooths(grid,level)-1 )  // no mask needed on last iteration
-        	  {
-          	    uu(I1,I2,I3)+=defect(I1,I2,I3)*c0Inverse(I1,I2,I3);  // @PA
-        	  }
-        	  else
-        	  { // do not change the interpolation point values: ** for implicit interpolation too ***
-          	    where( mask(I1,I2,I3)>0 )
-            	      uu(I1,I2,I3)+=defect(I1,I2,I3)*c0Inverse(I1,I2,I3);  // @PAW
-        	  }
+                    if( false && iteration == parameters.numberOfSubSmooths(grid,level)-1 )  // no mask needed on last iteration
+                    {
+                        uu(I1,I2,I3)+=defect(I1,I2,I3)*c0Inverse(I1,I2,I3);  // @PA
+                    }
+                    else
+                    { // do not change the interpolation point values: ** for implicit interpolation too ***
+                        where( mask(I1,I2,I3)>0 )
+                            uu(I1,I2,I3)+=defect(I1,I2,I3)*c0Inverse(I1,I2,I3);  // @PAW
+                    }
 
-        	  tm[timeForRelaxInSmooth]+=getCPU()-time0;
+                    tm[timeForRelaxInSmooth]+=getCPU()-time0;
 //      uu.reshape(uu.dimension(1),uu.dimension(2),uu.dimension(3));
 //      defect.reshape(defect.dimension(1),defect.dimension(2),defect.dimension(3));
-        	  if( Ogmg::debug & 32 )
-        	  {
-          	    display(defect,sPrintF(buff,"smoothRedBlack: defect (shift1,shift2,shift3)=(%i,%i,%i)",
-                           				   shift1,shift2,shift3),debugFile);
-          	    display(u,sPrintF(buff,"smoothRedBlack: Here is u: (shift1,shift2,shift3)=(%i,%i,%i)",
-                        			      shift1,shift2,shift3),debugFile);
-        	  }
-        	  if( debug & 16 )
-          	    fPrintF(debugFile," **** smooth RB level=%i grid=%i defect =%e \n",level,grid,
+                    if( Ogmg::debug & 32 )
+                    {
+                        display(defect,sPrintF(buff,"smoothRedBlack: defect (shift1,shift2,shift3)=(%i,%i,%i)",
+                                                                      shift1,shift2,shift3),debugFile);
+                        display(u,sPrintF(buff,"smoothRedBlack: Here is u: (shift1,shift2,shift3)=(%i,%i,%i)",
+                                                            shift1,shift2,shift3),debugFile);
+                    }
+                    if( debug & 16 )
+                        fPrintF(debugFile," **** smooth RB level=%i grid=%i defect =%e \n",level,grid,
                                     maxNorm(defectMG.multigridLevel[level][grid]));
-      	
-      	} // end sweep (end of red points or black points)
+                
+                } // end sweep (end of red points or black points)
 
-	// u.periodicUpdate();  // *** wdh 991121
-      	applyBoundaryConditions( level,grid,u,f );  // *** wdh 991121 for periodic and Neumann BC's
+        // u.periodicUpdate();  // *** wdh 991121
+                applyBoundaryConditions( level,grid,u,f );  // *** wdh 991121 for periodic and Neumann BC's
 
         // ::display(u,"u after old smooth","%7.1e ");      
 
-	// interpolate(uMG.multigridLevel[level]);
+        // interpolate(uMG.multigridLevel[level]);
             
             } // for(rb)
 
             if( FALSE )
             {
-      	realMappedGridFunction v;
-      	v=u;
-      	applyBoundaryConditions( level,grid,u,f ); // this make a difference for mixed ??
-      	v=u-v;
-      	real diff=maxNorm(v);
-      	fPrintF(stdout,"max difference =%e, level=%i\n",maxNorm(v),level);
-      	fPrintF(debugFile,"max difference =%e, level=%i \n",diff,level);
-      	if( diff > 1.e-5 )
-      	{
-        	  display(v,"Difference in u after second applyBC",debugFile,"%9.2e");
-        	  display(f,"f",debugFile,"%9.2e");
-        	  display(c,"c",debugFile,"%9.2e");
-        	  throw "error";
-      	}
+                realMappedGridFunction v;
+                v=u;
+                applyBoundaryConditions( level,grid,u,f ); // this make a difference for mixed ??
+                v=u-v;
+                real diff=maxNorm(v);
+                fPrintF(stdout,"max difference =%e, level=%i\n",maxNorm(v),level);
+                fPrintF(debugFile,"max difference =%e, level=%i \n",diff,level);
+                if( diff > 1.e-5 )
+                {
+                    display(v,"Difference in u after second applyBC",debugFile,"%9.2e");
+                    display(f,"f",debugFile,"%9.2e");
+                    display(c,"c",debugFile,"%9.2e");
+                    throw "error";
+                }
             }
         
       // applyBoundaryConditions( level,grid,u,f );

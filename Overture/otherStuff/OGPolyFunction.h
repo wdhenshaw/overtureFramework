@@ -24,8 +24,9 @@ class OGPolyFunction : public OGFunction
  private:
   enum
   {
-    maximumDegreeX=6,
-    maximumDegreeT=6
+    maximumDegreeX=10,
+    maximumDegreeT=10,
+    maxOptimizedDegree=6 // max degree for optimized evaluations
   };
   int numberOfComponents,degreeX,degreeY,degreeZ,degreeT,numberOfDimensions;
 
@@ -52,77 +53,13 @@ class OGPolyFunction : public OGFunction
   //
   //  Supply coefficients to use
   //   note that arrays should be dimensioned
-  //        c(0:4,0:4,0:4,0:nc-1) and a(0:4,0:nc-1)   where nc=numberOfComponents
+  //        c(0:d,0:d,0:d,0:nc-1) and a(0:d,0:nc-1)   where nc=numberOfComponents
   // 
   void setCoefficients( const RealArray & c, const RealArray & a );
 
   // get the current values of the coefficients
   void getCoefficients( RealArray & c, RealArray & a ) const;
 
-//   // Here are the member functions that you must define
-//   //     u(x,y,z,n) : function value at x,y,z for component n
-//   //    ux(x,y,z,n) : partial derivative of u with respect to x
-//   //      ...etc...
-
-// #define TIME(n,t)  ( a(0,n)+t*(a(1,n)+t*(a(2,n)+t*(a(3,n)+t*(a(4,n))))) )
-
-
-//   inline real u(const real x, const real y, const real z, const int n, const real t=0.)
-//   {
-//     return (cc(0,0,0,n)
-//             +x*(cc(1,0,0,n)+y*cc(1,1,0,n)+x*(cc(2,0,0,n)+x*(cc(3,0,0,n)+x*cc(4,0,0,n))))
-//             +y*(cc(0,1,0,n)+z*cc(0,1,1,n)+y*(cc(0,2,0,n)+y*(cc(0,3,0,n)+y*cc(0,4,0,n))))
-//   	    +z*(cc(0,0,1,n)+x*cc(1,0,1,n)+z*(cc(0,0,2,n)+z*(cc(0,0,3,n)+z*cc(0,0,4,n))))
-//            )
-//            *TIME(n,t);
-//   }
-//   inline real ut(const real x, const real y, const real z, const int n=0, const real t=0. )
-//   {
-//     return (cc(0,0,0,n)
-//             +x*(cc(1,0,0,n)+y*cc(1,1,0,n)+x*(cc(2,0,0,n)+x*(cc(3,0,0,n)+x*cc(4,0,0,n))))
-//             +y*(cc(0,1,0,n)+z*cc(0,1,1,n)+y*(cc(0,2,0,n)+y*(cc(0,3,0,n)+y*cc(0,4,0,n))))
-//   	    +z*(cc(0,0,1,n)+x*cc(1,0,1,n)+z*(cc(0,0,2,n)+z*(cc(0,0,3,n)+z*cc(0,0,4,n)))))
-//            *( a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n)+t*(4.*a(4,n)))) ); 
-//   }
-//   inline real ux(const real x, const real y, const real z, const int n=0, const real t=0.)
-//   {
-//     return (cc(1,0,0,n)+y*cc(1,1,0,n)+z*cc(1,0,1,n)+x*(2.*cc(2,0,0,n)+x*(3.*cc(3,0,0,n)+x*4.*cc(4,0,0,n)))
-//            )*TIME(n,t);
-//   }
-//   inline real uy(const real x, const real y, const real z, const int n=0, const real t=0.)
-//   {
-//     return (cc(0,1,0,n)+x*cc(1,1,0,n)+z*cc(0,1,1,n)+y*(2.*cc(0,2,0,n)+y*(3.*cc(0,3,0,n)+y*4.*cc(0,4,0,n)))
-//            )*TIME(n,t);
-//   }
-//   inline real uxx(const real x, const real , const real , const int n=0, const real t=0.)
-//   {
-//     return (2.*cc(2,0,0,n)+x*(6.*cc(3,0,0,n)+x*12.*cc(4,0,0,n)))*TIME(n,t);
-//   }
-//   inline real uxy(const real , const real , const real , const int n=0, const real t=0.)
-//   {
-//     return cc(1,1,0,n)*TIME(n,t);
-//   }
-//   inline real uyy(const real , const real y, const real , const int n=0, const real t=0.)
-//   {
-//     return (2.*cc(0,2,0,n)+y*(6.*cc(0,3,0,n)+y*12.*cc(0,4,0,n)))*TIME(n,t);
-//   }
-//   inline real uz(const real x, const real y, const real z, const int n=0, const real t=0.)
-//   {
-//     return (cc(0,0,1,n)+x*cc(1,0,1,n)+y*cc(0,1,1,n)+z*(2.*cc(0,0,2,n)+z*(3.*cc(0,0,3,n)+z*4.*cc(0,0,4,n)))
-//            )*TIME(n,t);
-//   }
-//   inline real uxz(const real , const real , const real , const int n=0, const real t=0.)
-//   {
-//     return cc(1,0,1,n)*TIME(n,t);
-//   }
-//   inline real uyz(const real , const real , const real , const int n=0, const real t=0.)
-//   {
-//     return cc(0,1,1,n)*TIME(n,t);
-//   }
-//   inline real uzz(const real , const real , const real z, const int n=0, const real t=0.)
-//   {
-//     return (2.*cc(0,0,2,n)+z*(6.*cc(0,0,3,n)+z*12.*cc(0,0,4,n)))*TIME(n,t);
-//   }
 
   // ========= Here are versions with a new naming convention ===========
 

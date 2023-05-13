@@ -1,5 +1,7 @@
 // This file automatically generated from OGPolyFunction.bC with bpp.
 #include "OGPolyFunction.h"
+#include "ParallelUtility.h"
+
 
 #define polyFunction EXTERN_C_NAME(polyfunction)
 #define polyEvaluate EXTERN_C_NAME(polyevaluate)
@@ -7,47 +9,46 @@ extern "C"
 {
     void polyFunction(const int &nd,
                                         const int &ndra,const int &ndrb,const int &ndsa,const int &ndsb,const int &ndta,const int &ndtb,
-                		    const int &ndrra,const int &ndrrb,const int &ndrsa,const int &ndrsb,
+                                        const int &ndrra,const int &ndrrb,const int &ndrsa,const int &ndrsb,
                                         const int &ndrta,const int &ndrtb,const int &ndrca,const int &ndrcb,
                                         const int &ndc1,const int &ndc2,const int &ndc3,
-                		    const int &nra,const int &nrb,const int &nsa,const int &nsb,const int &nta,const int &ntb, 
+                                        const int &nra,const int &nrb,const int &nsa,const int &nsb,const int &nta,const int &ntb, 
                                         const int &nca, const int &ncb, const int &nda, 
                                         const int &degree, const int &degreeTime, const real &t,
-                		    const real &a, const real &c, real &r,
+                                        const real &a, const real &c, real &r,
                                         const real &xa,const real &ya,const real &za, 
                                         const int &dx,const int &dy,const int &dz,const int &dt);
 
     void polyEvaluate(const int &nd, real &r, const real &x,const real &y,const real &z,const int &n,const real &t, 
-                		    const int &ndc1,const int &ndc2,const int &ndc3,const int &nda,
-                		    const int &degree, const int &degreeTime, const real &a, const real &c, 
-                		    const int &dx,const int &dy,const int &dz,const int &dt);
+                                        const int &ndc1,const int &ndc2,const int &ndc3,const int &nda,
+                                        const int &degree, const int &degreeTime, const real &a, const real &c, 
+                                        const int &dx,const int &dy,const int &dz,const int &dt);
   
 }
 
 
-//\begin{>OGPolyFunctionInclude.tex}{\subsubsection{Constructor}} 
 OGPolyFunction::
 OGPolyFunction(const int & degreeOfSpacePolynomial /* =2 */ , 
                               const int & numberOfDimensions0     /* =3 */ ,
                               const int & numberOfComponents0     /* =10 */ ,
                               const int & degreeOfTimePolynomial  /* =1 */  )
 //---------------------------------------------------------------------------------------
-// /Description: 
-// Create a polynomial with the given degree, number Of Space Dimensions and for
-// a maximum number of components. The polynomial created is of the form 
-//  \begin{alignat*}{3}
-//     U &= (1 + x + x^2 + ... + x^{n}) (1+t+...+t^{m})  &\qquad& \mbox{in 1D} \//     U &= (1 + x + x^2 + ... + x^{n} + y + y^2 + ... + y^{n} )(1+t+...+t^{m})  &\qquad& \mbox{in 2D} \//     U &= (1 + x + x^2 + ... + x^{n} + y + y^2 + ... + y^{n} +z + z^2 + ... +z^n)(1+t+...+t^{m})  &\qquad& \mbox{in 3D}
-//  \end{alignat*}
-//
-// /degreeOfSpacePolynomial (input): degree of the polynomial in x,y,z (n in the above formula).
-// /numberOfDimensions (input): number of space dimensions, 1,2, or 3.
-// /numberOfComponents0 (input): maximum number of components required.
-// /degreeOfTimePolynomial (input): degree of the polynomial in t (m in the above formula).
-// 
-// /Notes:
-//  Only polynomials with degreeOfSpacePolynomial $<5$ and degreeOfTimePolynomial $<5$ are supported
-// /Author: WDH
-//\end{OGPolyFunctionInclude.tex} 
+/// \brief Create a polynomial manufactured solution.
+///
+/// Create a polynomial with the given degree, number Of Space Dimensions and for
+/// a maximum number of components. The polynomial created is of the form 
+///  \begin{alignat*}{3}
+///     U &= (1 + x + x^2 + ... + x^{n}) (1+t+...+t^{m})  &\qquad& \mbox{in 1D} \///     U &= (1 + x + x^2 + ... + x^{n} + y + y^2 + ... + y^{n} )(1+t+...+t^{m})  &\qquad& \mbox{in 2D} \///     U &= (1 + x + x^2 + ... + x^{n} + y + y^2 + ... + y^{n} +z + z^2 + ... +z^n)(1+t+...+t^{m})  &\qquad& \mbox{in 3D}
+///  \end{alignat*}
+///
+/// \param degreeOfSpacePolynomial (input): degree of the polynomial in x,y,z (n in the above formula).
+/// \param numberOfDimensions (input): number of space dimensions, 1,2, or 3.
+/// \param numberOfComponents0 (input): maximum number of components required.
+/// \param degreeOfTimePolynomial (input): degree of the polynomial in t (m in the above formula).
+/// 
+/// \Notes:
+///  Only polynomials with degreeOfSpacePolynomial $<5$ and degreeOfTimePolynomial $<5$ are supported
+/// \Author: WDH
 //---------------------------------------------------------------------------------------
 {
     numberOfComponents=numberOfComponents0;
@@ -106,7 +107,7 @@ OGPolyFunction(const OGPolyFunction & ogp )   // copy constructor is a deep copy
 }
 
 //--------------------------------------------------------------------------------------
-//  operator = is  a deep copy
+/// \brief operator = is  a deep copy
 //--------------------------------------------------------------------------------------
 OGPolyFunction & OGPolyFunction::
 operator=(const OGPolyFunction & ogp )
@@ -125,28 +126,28 @@ operator=(const OGPolyFunction & ogp )
 
 
 
-//\begin{>>OGPolyFunctionInclude.tex}{\subsubsection{setCoefficients}} 
 void OGPolyFunction::
 setCoefficients( const RealArray & c, const RealArray & a0 )
 // =========================================================================================
-// /Description: Use this member function to set the coefficient matrices $c$ and $a$  
-// of a {\it general} polynomial up to order 6.
-// \[
-//    U(x,y,z,n,t) = ( \sum_{i,j,k} c(i,j,k,n) x^i y^j z^k ) \sum_m a(m,n) t^m
-// \]
-//  Note that the values of {\tt numberOfDimensions} and
-// {\tt numberOfComponents} given in the call to the constructor help to determine the polynomial
-// created here.
-//
-// /c (input) : array of dimension $c(0:nx,0:nx,0:nx,0:{\tt numberOfComponents}-1)$ that gives the
-//   coefficients of the spatial polynomial of degree nx
-//   ({\tt numberOfComponents} is the value given in call to the constructor).
-//   Some values in c may be ignored depending on the value for {\tt numberOfDimensions}.
-// /a (input) : array of dimension $a(0:nt,0:{\tt numberOfComponents-1})$ that gives the coefficients
-//   of the time polynomial ({\tt numberOfComponents} is the value given in call to the constructor).
-//
-// /Author: WDH
-//\end{OGPolyFunctionInclude.tex} 
+/// \brief Assign the coefficients in the polynomial
+///
+/// \Description: Use this member function to set the coefficient matrices $c$ and $a$  
+/// of a {\it general} polynomial up to order 6.
+/// \[
+///    U(x,y,z,n,t) = ( \sum_{i,j,k} c(i,j,k,n) x^i y^j z^k ) \sum_m a(m,n) t^m
+/// \]
+///  Note that the values of {\tt numberOfDimensions} and
+/// {\tt numberOfComponents} given in the call to the constructor help to determine the polynomial
+/// created here.
+///
+/// \param c (input) : array of dimension $c(0:nx,0:nx,0:nx,0:{\tt numberOfComponents}-1)$ that gives the
+///   coefficients of the spatial polynomial of degree nx
+///   ({\tt numberOfComponents} is the value given in call to the constructor).
+///   Some values in c may be ignored depending on the value for {\tt numberOfDimensions}.
+/// \param a (input) : array of dimension $a(0:nt,0:{\tt numberOfComponents-1})$ that gives the coefficients
+///   of the time polynomial ({\tt numberOfComponents} is the value given in call to the constructor).
+///
+/// \Author: WDH
 // ==========================================================================================
 {
     numberOfComponents=c.getLength(3);
@@ -161,10 +162,10 @@ setCoefficients( const RealArray & c, const RealArray & a0 )
         cout << "OGPolyFunction::setCoefficients::ERROR: The arrays c and a are not valid sizes\n";
         cout << " They should be dimensioned at least c(0:nx,0:nx,0:nx,0:n-1) and a(0:nt,0:n-1)\n";
         cout << " Where n is the number of components = " << numberOfComponents << endl;
-        printf("  and nx<=%i and nt<=%i\n",maximumDegreeX,maximumDegreeT);
+        printF("  and nx<=%i and nt<=%i\n",maximumDegreeX,maximumDegreeT);
         c.display("Here is c");
         a.display("Here is a");
-        Overture::abort("OGPolyFunction::setCoefficients::ERROR: The arrays c and a are not big enough");
+        OV_ABORT("OGPolyFunction::setCoefficients::ERROR: The arrays c and a are not big enough");
     }
     cc.redim(0);
     cc=c;
@@ -213,22 +214,19 @@ setCoefficients( const RealArray & c, const RealArray & a0 )
 
 }
 
-// \begin{>>OGPolyFunctionInclude.tex}{\subsubsection{setCoefficients}}
 void OGPolyFunction::
 getCoefficients( RealArray & cx, RealArray & ct ) const
 // =========================================================================================
-// /Description: 
-//    Return the current values of the coefficients. (See setCoeffcients)
-//
-// /cx (output) : array of dimension $cx(0:nx,0:nx,0:nx,0:{\tt numberOfComponents}-1)$ that gives the
-//   coefficients of the spatial polynomial of maximum degree nx
-//   ({\tt numberOfComponents} is the value given in call to the constructor).
-//   Some values in c may be ignored depending on the value for {\tt numberOfDimensions}.
-// /ct (input) : array of dimension $ct(0:nt,0:{\tt numberOfComponents-1})$ that gives the coefficients
-//   of the time polynomial ({\tt numberOfComponents} is the value given in call to the constructor).
-//
-// /Author: WDH
-//\end{OGPolyFunctionInclude.tex} 
+/// \brief   Return the current values of the coefficients. (See setCoeffcients)
+///
+/// \param cx (output) : array of dimension $cx(0:nx,0:nx,0:nx,0:{\tt numberOfComponents}-1)$ that gives the
+///   coefficients of the spatial polynomial of maximum degree nx
+///   ({\tt numberOfComponents} is the value given in call to the constructor).
+///   Some values in c may be ignored depending on the value for {\tt numberOfDimensions}.
+/// \param ct (input) : array of dimension $ct(0:nt,0:{\tt numberOfComponents-1})$ that gives the coefficients
+///   of the time polynomial ({\tt numberOfComponents} is the value given in call to the constructor).
+///
+/// \Author: WDH
 // ==========================================================================================
 {
     cx.redim(0);
@@ -238,17 +236,17 @@ getCoefficients( RealArray & cx, RealArray & ct ) const
     
 }
 
-// This routine is used locally to check some arguments
 void OGPolyFunction::
 checkArguments(const Index & N)
+/// \brief This routine is used locally to check some arguments
 {
     if( N.getBound() >= numberOfComponents )
     {
         cout << "OGPolyFunction:ERROR: trying to evaluate a function with " << N.getBound()+1 
                   << " components, \n  but the polynomial only supports numberOfComponents = " 
-         	   << numberOfComponents << endl;
+                      << numberOfComponents << endl;
         cout << "Why not create the OGPolyFunction object with more components :-) \n";
-        Overture::abort( "OGPolyFunction:ERROR");
+        OV_ABORT( "OGPolyFunction:ERROR");
     }
 }
 
@@ -268,46 +266,89 @@ checkArguments(const Index & N)
 // is passed as an argument
 
 
-#define EVAL(ndx,ndy,ndz,ndt,n,t)real r;polyEvaluate(numberOfDimensions, r, x,y,z,n,t, cc.getLength(0),cc.getLength(1),cc.getLength(2), a.getLength(0),degreeX, degreeT,*a.getDataPointer(), *cc.getDataPointer(), ndx,ndy,ndz,ndt);return r;
+#define EVAL_OLD(ndx,ndy,ndz,ndt,n,t)real r;polyEvaluate(numberOfDimensions, r, x,y,z,n,t, cc.getLength(0),cc.getLength(1),cc.getLength(2), a.getLength(0),degreeX, degreeT,*a.getDataPointer(), *cc.getDataPointer(), ndx,ndy,ndz,ndt);return r;
 
-//\begin{>OGFunctionInclude.tex}{\subsection{Evaluate the function or a derivative at a point}} 
+// ==============================================================================
+// Macro: macro to call the appropriate polynomial evaluation routine 
+// ==============================================================================
+
+
 real OGPolyFunction::
 operator()(const real x, 
-         	   const real y, 
-         	   const real z, 
-         	   const int n /* =0 */ , 
-         	   const real t /* =0. */ )
+                      const real y, 
+                      const real z, 
+                      const int n /* =0 */ , 
+                      const real t /* =0. */ )
 //===================================================================================
-//\end{OGFunctionInclude.tex} 
+/// \brief Evaluate the polynomial at (x,y,z), component n, time t
 // ==========================================================================================
 {
-    EVAL(0,0,0,0,n,t);
+  // EVAL(0,0,0,0,n,t);
+        Real rEval;
+        if( max(degreeX,degreeT) <= maxOptimizedDegree )
+        {
+            polyEvaluate(numberOfDimensions, rEval, x,y,z,n,t, cc.getLength(0),cc.getLength(1),cc.getLength(2), a.getLength(0),degreeX, degreeT,
+                  *a.getDataPointer(), *cc.getDataPointer(), 0,0,0,0);
+      // printF("eval: after polyEvaluate: r=%9.3e\n",r); 
+        }
+        else
+        {
+      // call non optimized general derivative routine
+            rEval = gd( 0, 0, 0, 0, x, y, z, n, t );
+      //  printF("eval: after gd: r=%9.3e\n",r); 
+        }
+        return rEval;
 //  return u(x,y,z,n,t);
 }
 
-//\begin{>>OGFunctionInclude.tex}{}
 real OGPolyFunction::
 operator()(const real x, const real y, const real z, const int n)
 // ==========================================================================================
-//\end{OGFunctionInclude.tex} 
+/// \brief Eval the poly at a point (x,y,z), component n and t=0
 // ==========================================================================================
 {
-      EVAL(0,0,0,0,n,0.);
+   // EVAL(0,0,0,0,n,0.);
+          Real rEval;
+          if( max(degreeX,degreeT) <= maxOptimizedDegree )
+          {
+              polyEvaluate(numberOfDimensions, rEval, x,y,z,n,0., cc.getLength(0),cc.getLength(1),cc.getLength(2), a.getLength(0),degreeX, degreeT,
+                    *a.getDataPointer(), *cc.getDataPointer(), 0,0,0,0);
+       // printF("eval: after polyEvaluate: r=%9.3e\n",r); 
+          }
+          else
+          {
+       // call non optimized general derivative routine
+              rEval = gd( 0, 0, 0, 0, x, y, z, n, 0. );
+       //  printF("eval: after gd: r=%9.3e\n",r); 
+          }
+          return rEval;
 //   return u(x,y,z,n,0.);
 }
 
-//\begin{>>OGFunctionInclude.tex}{}
 real OGPolyFunction::
 operator()(const real x, const real y, const real z)
 //===================================================================================
-//\end{OGFunctionInclude.tex} 
+///  \brief Eval the poly at a point (x,y,z), component n=0 and t=0
 // ==========================================================================================
 {
-    EVAL(0,0,0,0,0,0.);
+  // EVAL(0,0,0,0,0,0.);
+        Real rEval;
+        if( max(degreeX,degreeT) <= maxOptimizedDegree )
+        {
+            polyEvaluate(numberOfDimensions, rEval, x,y,z,0,0., cc.getLength(0),cc.getLength(1),cc.getLength(2), a.getLength(0),degreeX, degreeT,
+                  *a.getDataPointer(), *cc.getDataPointer(), 0,0,0,0);
+      // printF("eval: after polyEvaluate: r=%9.3e\0",r); 
+        }
+        else
+        {
+      // call non optimized general derivative routine
+            rEval = gd( 0, 0, 0, 0, x, y, z, 0, 0. );
+      //  printF("eval: after gd: r=%9.3e\0",r); 
+        }
+        return rEval;
 //  return u(x,y,z,0,0.);
 }
 
-//\begin{>>OGFunctionInclude.tex}{}
 real OGPolyFunction::
 x(const real x, 
     const real y, 
@@ -315,104 +356,271 @@ x(const real x,
     const int n /* =0 */, 
     const real t /* =0. */ )
 //===================================================================================
-// /Description: Evaluate the function or a derivative of the function at a point
-//    The function name {\bf x} can be replaced by any one of {\bf t}, {\bf x}, {\bf y}, {\bf z}, {\bf xx},
-//     {\bf yy}, {\bf zz}, {\bf xy}, {\bf xz}, {\bf yz}, {\bf xxx} or {\bf xxxx}.
-// /x,y,z (input) : coordinates
-// /n (input) : component number (starting from 0)
-// /t (input) : time
-//\end{OGFunctionInclude.tex} 
+/// \brief Evaluate the x derivative
+/// \param x,y,z (input) : coordinates
+/// \param n (input) : component number (starting from 0)
+/// \param t (input) : time
 // ==========================================================================================
 {
-    EVAL(1,0,0,0,n,t);
+  // EVAL(1,0,0,0,n,t);
+        Real rEval;
+        if( max(degreeX,degreeT) <= maxOptimizedDegree )
+        {
+            polyEvaluate(numberOfDimensions, rEval, x,y,z,n,t, cc.getLength(0),cc.getLength(1),cc.getLength(2), a.getLength(0),degreeX, degreeT,
+                  *a.getDataPointer(), *cc.getDataPointer(), 1,0,0,0);
+      // printF("eval: after polyEvaluate: r=%9.3e\n",r); 
+        }
+        else
+        {
+      // call non optimized general derivative routine
+            rEval = gd( 0, 1, 0, 0, x, y, z, n, t );
+      //  printF("eval: after gd: r=%9.3e\n",r); 
+        }
+        return rEval;
 //  return ux(x,y,z,n,t);
 }
 
 real OGPolyFunction::
 t(const real x, const real y, const real z, const int n, const real t )
-//===================================================================================
+// ==========================================================================================
+/// \brief Evaluate the first time derivative
 // ==========================================================================================
 {
-    EVAL(0,0,0,1,n,t);
+  // EVAL(0,0,0,1,n,t);
+        Real rEval;
+        if( max(degreeX,degreeT) <= maxOptimizedDegree )
+        {
+            polyEvaluate(numberOfDimensions, rEval, x,y,z,n,t, cc.getLength(0),cc.getLength(1),cc.getLength(2), a.getLength(0),degreeX, degreeT,
+                  *a.getDataPointer(), *cc.getDataPointer(), 0,0,0,1);
+      // printF("eval: after polyEvaluate: r=%9.3e\n",r); 
+        }
+        else
+        {
+      // call non optimized general derivative routine
+            rEval = gd( 1, 0, 0, 0, x, y, z, n, t );
+      //  printF("eval: after gd: r=%9.3e\n",r); 
+        }
+        return rEval;
 //  return ut(x,y,z,n,t);
 }
 real OGPolyFunction::
 y(const real x, const real y, const real z, const int n, const real t )
-//===================================================================================
+// ==========================================================================================
+/// \brief Evaluate the y derivative
 // ==========================================================================================
 {
-    EVAL(0,1,0,0,n,t);
+  // EVAL(0,1,0,0,n,t);
+        Real rEval;
+        if( max(degreeX,degreeT) <= maxOptimizedDegree )
+        {
+            polyEvaluate(numberOfDimensions, rEval, x,y,z,n,t, cc.getLength(0),cc.getLength(1),cc.getLength(2), a.getLength(0),degreeX, degreeT,
+                  *a.getDataPointer(), *cc.getDataPointer(), 0,1,0,0);
+      // printF("eval: after polyEvaluate: r=%9.3e\n",r); 
+        }
+        else
+        {
+      // call non optimized general derivative routine
+            rEval = gd( 0, 0, 1, 0, x, y, z, n, t );
+      //  printF("eval: after gd: r=%9.3e\n",r); 
+        }
+        return rEval;
 //  return uy(x,y,z,n,t);
 }
 
 real OGPolyFunction::
 xx(const real x, const real y, const real z, const int n, const real t )
-//===================================================================================
+// ==========================================================================================
 // ==========================================================================================
 {
-    EVAL(2,0,0,0,n,t);
+  // EVAL(2,0,0,0,n,t);
+        Real rEval;
+        if( max(degreeX,degreeT) <= maxOptimizedDegree )
+        {
+            polyEvaluate(numberOfDimensions, rEval, x,y,z,n,t, cc.getLength(0),cc.getLength(1),cc.getLength(2), a.getLength(0),degreeX, degreeT,
+                  *a.getDataPointer(), *cc.getDataPointer(), 2,0,0,0);
+      // printF("eval: after polyEvaluate: r=%9.3e\n",r); 
+        }
+        else
+        {
+      // call non optimized general derivative routine
+            rEval = gd( 0, 2, 0, 0, x, y, z, n, t );
+      //  printF("eval: after gd: r=%9.3e\n",r); 
+        }
+        return rEval;
 //  return uxx(x,y,z,n,t);
 }
 
 real OGPolyFunction::
 xy(const real x, const real y, const real z, const int n, const real t )
-//===================================================================================
+// ==========================================================================================
 // ==========================================================================================
 {
-    EVAL(1,1,0,0,n,t);
+  // EVAL(1,1,0,0,n,t);
+        Real rEval;
+        if( max(degreeX,degreeT) <= maxOptimizedDegree )
+        {
+            polyEvaluate(numberOfDimensions, rEval, x,y,z,n,t, cc.getLength(0),cc.getLength(1),cc.getLength(2), a.getLength(0),degreeX, degreeT,
+                  *a.getDataPointer(), *cc.getDataPointer(), 1,1,0,0);
+      // printF("eval: after polyEvaluate: r=%9.3e\n",r); 
+        }
+        else
+        {
+      // call non optimized general derivative routine
+            rEval = gd( 0, 1, 1, 0, x, y, z, n, t );
+      //  printF("eval: after gd: r=%9.3e\n",r); 
+        }
+        return rEval;
 //  return uxy(x,y,z,n,t);
 }
 real OGPolyFunction::
 yy(const real x, const real y, const real z, const int n, const real t )
-//===================================================================================
+// ==========================================================================================
 // ==========================================================================================
 {
-    EVAL(0,2,0,0,n,t);
-//return uyy(x,y,z,n,t);
+  // EVAL(0,2,0,0,n,t);
+        Real rEval;
+        if( max(degreeX,degreeT) <= maxOptimizedDegree )
+        {
+            polyEvaluate(numberOfDimensions, rEval, x,y,z,n,t, cc.getLength(0),cc.getLength(1),cc.getLength(2), a.getLength(0),degreeX, degreeT,
+                  *a.getDataPointer(), *cc.getDataPointer(), 0,2,0,0);
+      // printF("eval: after polyEvaluate: r=%9.3e\n",r); 
+        }
+        else
+        {
+      // call non optimized general derivative routine
+            rEval = gd( 0, 0, 2, 0, x, y, z, n, t );
+      //  printF("eval: after gd: r=%9.3e\n",r); 
+        }
+        return rEval;
+  //return uyy(x,y,z,n,t);
 }
 real OGPolyFunction::
 z(const real x, const real y, const real z, const int n, const real t )
-//===================================================================================
+// ==========================================================================================
 // ==========================================================================================
 {
-    EVAL(0,0,1,0,n,t);
-//return uz(x,y,z,n,t);
+  // EVAL(0,0,1,0,n,t);
+        Real rEval;
+        if( max(degreeX,degreeT) <= maxOptimizedDegree )
+        {
+            polyEvaluate(numberOfDimensions, rEval, x,y,z,n,t, cc.getLength(0),cc.getLength(1),cc.getLength(2), a.getLength(0),degreeX, degreeT,
+                  *a.getDataPointer(), *cc.getDataPointer(), 0,0,1,0);
+      // printF("eval: after polyEvaluate: r=%9.3e\n",r); 
+        }
+        else
+        {
+      // call non optimized general derivative routine
+            rEval = gd( 0, 0, 0, 1, x, y, z, n, t );
+      //  printF("eval: after gd: r=%9.3e\n",r); 
+        }
+        return rEval;
+  //return uz(x,y,z,n,t);
 }
 real OGPolyFunction::
 xz(const real x, const real y, const real z, const int n, const real t )
 // ==========================================================================================
 {
-    EVAL(1,0,1,0,n,t);
-//return uxz(x,y,z,n,t);
+  // EVAL(1,0,1,0,n,t);
+        Real rEval;
+        if( max(degreeX,degreeT) <= maxOptimizedDegree )
+        {
+            polyEvaluate(numberOfDimensions, rEval, x,y,z,n,t, cc.getLength(0),cc.getLength(1),cc.getLength(2), a.getLength(0),degreeX, degreeT,
+                  *a.getDataPointer(), *cc.getDataPointer(), 1,0,1,0);
+      // printF("eval: after polyEvaluate: r=%9.3e\n",r); 
+        }
+        else
+        {
+      // call non optimized general derivative routine
+            rEval = gd( 0, 1, 0, 1, x, y, z, n, t );
+      //  printF("eval: after gd: r=%9.3e\n",r); 
+        }
+        return rEval;
+  //return uxz(x,y,z,n,t);
 }
 real OGPolyFunction::
 yz(const real x, const real y, const real z, const int n, const real t )
 {
-    EVAL(0,1,1,0,n,t);
-//return uyz(x,y,z,n,t);
+  // EVAL(0,1,1,0,n,t);
+        Real rEval;
+        if( max(degreeX,degreeT) <= maxOptimizedDegree )
+        {
+            polyEvaluate(numberOfDimensions, rEval, x,y,z,n,t, cc.getLength(0),cc.getLength(1),cc.getLength(2), a.getLength(0),degreeX, degreeT,
+                  *a.getDataPointer(), *cc.getDataPointer(), 0,1,1,0);
+      // printF("eval: after polyEvaluate: r=%9.3e\n",r); 
+        }
+        else
+        {
+      // call non optimized general derivative routine
+            rEval = gd( 0, 0, 1, 1, x, y, z, n, t );
+      //  printF("eval: after gd: r=%9.3e\n",r); 
+        }
+        return rEval;
+  //return uyz(x,y,z,n,t);
 }
 real OGPolyFunction::
 zz(const real x, const real y, const real z, const int n, const real t )
 {
-    EVAL(0,0,2,0,n,t);
-//return uzz(x,y,z,n,t);
+  // EVAL(0,0,2,0,n,t);
+        Real rEval;
+        if( max(degreeX,degreeT) <= maxOptimizedDegree )
+        {
+            polyEvaluate(numberOfDimensions, rEval, x,y,z,n,t, cc.getLength(0),cc.getLength(1),cc.getLength(2), a.getLength(0),degreeX, degreeT,
+                  *a.getDataPointer(), *cc.getDataPointer(), 0,0,2,0);
+      // printF("eval: after polyEvaluate: r=%9.3e\n",r); 
+        }
+        else
+        {
+      // call non optimized general derivative routine
+            rEval = gd( 0, 0, 0, 2, x, y, z, n, t );
+      //  printF("eval: after gd: r=%9.3e\n",r); 
+        }
+        return rEval;
+  //return uzz(x,y,z,n,t);
 }
 real OGPolyFunction::
 xxx(const real x, const real y, const real z, const int n, const real t )
 {
-    EVAL(3,0,0,0,n,t);
-//return (6.*cc(3,0,0,n)+x*24.*cc(4,0,0,n))*TIME(n,t);
+  // EVAL(3,0,0,0,n,t);
+        Real rEval;
+        if( max(degreeX,degreeT) <= maxOptimizedDegree )
+        {
+            polyEvaluate(numberOfDimensions, rEval, x,y,z,n,t, cc.getLength(0),cc.getLength(1),cc.getLength(2), a.getLength(0),degreeX, degreeT,
+                  *a.getDataPointer(), *cc.getDataPointer(), 3,0,0,0);
+      // printF("eval: after polyEvaluate: r=%9.3e\n",r); 
+        }
+        else
+        {
+      // call non optimized general derivative routine
+            rEval = gd( 0, 3, 0, 0, x, y, z, n, t );
+      //  printF("eval: after gd: r=%9.3e\n",r); 
+        }
+        return rEval;
+  //return (6.*cc(3,0,0,n)+x*24.*cc(4,0,0,n))*TIME(n,t);
 }
 real OGPolyFunction::
 xxxx(const real x, const real y, const real z, const int n, const real t )
 {
-    EVAL(4,0,0,0,n,t);
-//return (24.*cc(4,0,0,n))*TIME(n,t);
+  // EVAL(4,0,0,0,n,t);
+        Real rEval;
+        if( max(degreeX,degreeT) <= maxOptimizedDegree )
+        {
+            polyEvaluate(numberOfDimensions, rEval, x,y,z,n,t, cc.getLength(0),cc.getLength(1),cc.getLength(2), a.getLength(0),degreeX, degreeT,
+                  *a.getDataPointer(), *cc.getDataPointer(), 4,0,0,0);
+      // printF("eval: after polyEvaluate: r=%9.3e\n",r); 
+        }
+        else
+        {
+      // call non optimized general derivative routine
+            rEval = gd( 0, 4, 0, 0, x, y, z, n, t );
+      //  printF("eval: after gd: r=%9.3e\n",r); 
+        }
+        return rEval;
+  //return (24.*cc(4,0,0,n))*TIME(n,t);
 }
 
-
-#define GET_TIME(result)switch (ntd)  {  case 0:  /*    result*=TIME(n,t); */  if( degreeT==0 )  result*=a(0,n);  else if( degreeT==1 )  result*=a(0,n)+t*(a(1,n));  else if( degreeT==2 )  result*=a(0,n)+t*(a(1,n)+t*(a(2,n)));  else if( degreeT==3 )  result*=a(0,n)+t*(a(1,n)+t*(a(2,n)+t*(a(3,n))));  else if( degreeT==4 )  result*=a(0,n)+t*(a(1,n)+t*(a(2,n)+t*(a(3,n)+t*(a(4,n)))));  else if( degreeT==5 )  result*=a(0,n)+t*(a(1,n)+t*(a(2,n)+t*(a(3,n)+t*(a(4,n)+t*(a(5,n))))));  else if( degreeT==6 )  result*=a(0,n)+t*(a(1,n)+t*(a(2,n)+t*(a(3,n)+t*(a(4,n)+t*(a(5,n)+t*(a(6,n)))))));  else  {  printf("ERROR invalid degreeTime\n");  Overture::abort("error");  }  break;  case 1:  /* result*=a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n)+t*(4.*a(4,n)))); */  if( degreeT==0 )  result*=0.;  else if( degreeT==1 )  result*=a(1,n);  else if( degreeT==2 )  result*=(a(1,n)+t*(2.*a(2,n)));  else if( degreeT==3 )  result*=(a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n))));  else if( degreeT==4 )  result*=(a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n)+t*(4.*a(4,n)))));  else if( degreeT==5 )  result*=(a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n)+t*(4.*a(4,n)+t*(5.*a(5,n))))));  else if( degreeT==6 )  result*=(a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n)+t*(4.*a(4,n)+t*(5.*a(5,n)+t*(6.*a(6,n)))))));  else  {  printf("ERROR invalid degreeTime\n");  Overture::abort("error");  }  break;  case 2:  /* result*=2.*a(2,n)+t*(6.*a(3,n)+t*(12.*a(4,n))); */  if( degreeT==0 )  result*=0.;  else if( degreeT==1 )  result*=0.;  else if( degreeT==2 )  result*=(2.*a(2,n));  else if( degreeT==3 )  result*=(2.*a(2,n)+t*(6.*a(3,n)));  else if( degreeT==4 )  result*=(2.*a(2,n)+t*(6.*a(3,n)+t*(12.*a(4,n))));  else if( degreeT==5 )  result*=(2.*a(2,n)+t*(6.*a(3,n)+t*(12.*a(4,n)+t*(20.*a(5,n)))));  else if( degreeT==6 )  result*=(2.*a(2,n)+t*(6.*a(3,n)+t*(12.*a(4,n)+t*(20.*a(5,n)+t*(30.*a(6,n))))));  else  {  printf("ERROR invalid degreeTime\n");  Overture::abort("error");  }  break;  case 3:  /* result*=6.*a(3,n)+t*(24.*a(4,n)); */  if( degreeT<=2 )  result*=0.;  else if( degreeT==3 )  result*=(6.*a(3,n));  else if( degreeT==4 )  result*=(6.*a(3,n)+t*(24.*a(4,n)));  else if( degreeT==5 )  result*=(6.*a(3,n)+t*(24.*a(4,n)+t*(60.*a(5,n))));  else if( degreeT==6 )  result*=(6.*a(3,n)+t*(24.*a(4,n)+t*(60.*a(5,n)+t*(120.*a(6,n)))));  else  {  printf("ERROR invalid degreeTime\n");  Overture::abort("error");  }  break;  case 4:  /* result*=24.*a(4,n); */  if( degreeT<=3 )  result*=0.;  else if( degreeT==4 )  result*=(24.*a(4,n));  else if( degreeT==5 )  result*=(24.*a(4,n)+t*(120.*a(5,n)));  else if( degreeT==6 )  result*=(24.*a(4,n)+t*(120.*a(5,n)+t*(360.*a(6,n))));  else  {  printf("ERROR invalid degreeTime\n");  Overture::abort("error");  }  break;  case 5:  /* result*=24.*a(4,n); */  if( degreeT<=4 )  result*=0.;  else if( degreeT==5 )  result*=(120.*a(5,n));  else if( degreeT==6 )  result*=(120.*a(5,n)+t*(720.*a(6,n)));  else  {  printf("ERROR invalid degreeTime\n");  Overture::abort("error");  }  break;  case 6:  /* result*=24.*a(4,n); */  if( degreeT<=5 )  result*=0.;  else if( degreeT==6 )  result*=(720.*a(6,n));  else  {  printf("ERROR invalid degreeTime\n");  Overture::abort("error");  }  break;  default:  printf("OGPolyFunction:ERROR: gd\n");  Overture::abort("error");  }
-
+// ====================================================================================
+// Macro: return the product of 'result' with a time derivative of the time polynomial
+// ====================================================================================
 
 
 
@@ -442,7 +650,9 @@ gd(const int & ntd,
 //\end{OGFunctionInclude.tex} 
 // ==========================================================================================
 {
-    if( ntd==0 && nxd==0 && nyd==0 && nzd==0 )
+  // printF("e.gd: ntd=%d, nxd=%d, nyd=%d, nzd=%d, degreeZ=%d\n",ntd,nxd,nyd,nzd,degreeZ);
+
+    if( ntd==0 && nxd==0 && nyd==0 && nzd==0 && max(degreeX,degreeT)<=maxOptimizedDegree )
     {
         return operator()(x,y,z,n,t);
     }
@@ -475,18 +685,224 @@ gd(const int & ntd,
             xPow=xFactorial;
             for( ix=nxd; ix<=degreeX; ix++ )
             {
-      	result+=cc(ix,iy,iz,n)*xPow*yPowZpow;
-      	if( ix<degreeX )
-        	  xPow*=(ix+1)*x/(ix-nxd+1);
+                result+=cc(ix,iy,iz,n)*xPow*yPowZpow;
+                if( ix<degreeX )
+                    xPow*=(ix+1)*x/(ix-nxd+1);
             }
             if( iy<degreeX )
-      	yPow*=(iy+1)*y/(iy-nyd+1);
+                yPow*=(iy+1)*y/(iy-nyd+1);
         }
         if( iz<degreeX )
             zPow*=(iz+1)*z/(iz-nzd+1);;
     }
     
-    GET_TIME(result)
+  // GET_TIME(result)
+        switch (ntd)  
+        {  
+        case 0:  
+      // ----- Eval the time polynomial ---
+            if( degreeT==0 )  
+                result*=a(0,n);  
+            else if( degreeT==1 )  
+                result*=a(0,n)+t*(a(1,n));  
+            else if( degreeT==2 )  
+                result*=a(0,n)+t*(a(1,n)+t*(a(2,n)));  
+            else if( degreeT==3 )  
+                result*=a(0,n)+t*(a(1,n)+t*(a(2,n)+t*(a(3,n))));  
+            else if( degreeT==4 )  
+                result*=a(0,n)+t*(a(1,n)+t*(a(2,n)+t*(a(3,n)+t*(a(4,n)))));  
+            else if( degreeT==5 )  
+                result*=a(0,n)+t*(a(1,n)+t*(a(2,n)+t*(a(3,n)+t*(a(4,n)+t*(a(5,n))))));  
+            else if( degreeT==6 )  
+                result*=a(0,n)+t*(a(1,n)+t*(a(2,n)+t*(a(3,n)+t*(a(4,n)+t*(a(5,n)+t*(a(6,n)))))));
+            else if( degreeT==7 )  
+                result*=a(0,n)+t*(a(1,n)+t*(a(2,n)+t*(a(3,n)+t*(a(4,n)+t*(a(5,n)+t*(a(6,n)+t*(a(7,n)))))))); 
+          else if( degreeT==8 )  
+                result*=a(0,n)+t*(a(1,n)+t*(a(2,n)+t*(a(3,n)+t*(a(4,n)+t*(a(5,n)+t*(a(6,n)+t*(a(7,n)+t*(a(8,n)))))))));  
+          else if( degreeT==9 )  
+                result*=a(0,n)+t*(a(1,n)+t*(a(2,n)+t*(a(3,n)+t*(a(4,n)+t*(a(5,n)+t*(a(6,n)+t*(a(7,n)+t*(a(8,n)+t*(a(9,n))))))))));
+          else if( degreeT==10 )  
+                result*=a(0,n)+t*(a(1,n)+t*(a(2,n)+t*(a(3,n)+t*(a(4,n)+t*(a(5,n)+t*(a(6,n)+t*(a(7,n)+t*(a(8,n)+t*(a(9,n)+t*(a(10,n)))))))))));                              
+            else  
+            {  
+                printF("ERROR invalid or unimplemented degreeT=%d\n",degreeT);  
+                OV_ABORT("error");  
+            }  
+            break;  
+        case 1: 
+      // ---- first time derivative --
+            if( degreeT==0 )  
+                result*=0.;  
+            else if( degreeT==1 ) 
+                result*=a(1,n); 
+            else if( degreeT==2 ) 
+                result*=(a(1,n)+t*(2.*a(2,n))); 
+            else if( degreeT==3 ) 
+                result*=(a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n)))); 
+            else if( degreeT==4 ) 
+                result*=(a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n)+t*(4.*a(4,n)))));  
+            else if( degreeT==5 )  
+                result*=(a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n)+t*(4.*a(4,n)+t*(5.*a(5,n))))));  
+            else if( degreeT==6 )  
+                result*=(a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n)+t*(4.*a(4,n)+t*(5.*a(5,n)+t*(6.*a(6,n)))))));
+            else if( degreeT==7 )  
+                result*=(a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n)+t*(4.*a(4,n)+t*(5.*a(5,n)+t*(6.*a(6,n)+t*(7.*a(7,n))))))));
+            else if( degreeT==8 )  
+                result*=(a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n)+t*(4.*a(4,n)+t*(5.*a(5,n)+t*(6.*a(6,n)+t*(7.*a(7,n)+t*(8.*a(8,n)))))))));
+            else if( degreeT==9 )  
+                result*=(a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n)+t*(4.*a(4,n)+t*(5.*a(5,n)+t*(6.*a(6,n)+t*(7.*a(7,n)+t*(8.*a(8,n)+t*(9.*a(9,n))))))))));
+            else if( degreeT==10 )  
+                result*=(a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n)+t*(4.*a(4,n)+t*(5.*a(5,n)+t*(6.*a(6,n)+t*(7.*a(7,n)+t*(8.*a(8,n)+t*(9.*a(9,n)+t*(10.*a(10,n)))))))))));        
+            else  
+            {  
+                printF("ERROR invalid or unimplemented degreeT=%d\n",degreeT);  
+                OV_ABORT("error");  
+            }  
+            break;  
+        case 2: 
+      // ---- second time derivative ---- 
+            if( degreeT==0 )  
+                result*=0.;  
+            else if( degreeT==1 )  
+                result*=0.;  
+            else if( degreeT==2 )  
+                result*=(2.*a(2,n));  
+            else if( degreeT==3 )  
+                result*=(2.*a(2,n)+t*(6.*a(3,n)));  
+            else if( degreeT==4 )  
+                result*=(2.*a(2,n)+t*(6.*a(3,n)+t*(12.*a(4,n))));  
+            else if( degreeT==5 )  
+                result*=(2.*a(2,n)+t*(6.*a(3,n)+t*(12.*a(4,n)+t*(20.*a(5,n)))));  
+            else if( degreeT==6 )  
+                result*=(2.*a(2,n)+t*(6.*a(3,n)+t*(12.*a(4,n)+t*(20.*a(5,n)+t*(30.*a(6,n)))))); 
+            else if( degreeT==7 )  
+                result*=(2.*a(2,n)+t*(6.*a(3,n)+t*(12.*a(4,n)+t*(20.*a(5,n)+t*(30.*a(6,n)+t*(42.*a(7,n)))))));
+            else if( degreeT==8 )  
+                result*=(2.*a(2,n)+t*(6.*a(3,n)+t*(12.*a(4,n)+t*(20.*a(5,n)+t*(30.*a(6,n)+t*(42.*a(7,n)+t*(56.*a(8,n))))))));
+            else if( degreeT==9 )  
+                result*=(2.*a(2,n)+t*(6.*a(3,n)+t*(12.*a(4,n)+t*(20.*a(5,n)+t*(30.*a(6,n)+t*(42.*a(7,n)+t*(56.*a(8,n)+t*(72.*a(9,n)))))))));
+            else if( degreeT==10 )  
+                result*=(2.*a(2,n)+t*(6.*a(3,n)+t*(12.*a(4,n)+t*(20.*a(5,n)+t*(30.*a(6,n)+t*(42.*a(7,n)+t*(56.*a(8,n)+t*(72.*a(9,n)+t*(90.*a(10,n))))))))));       
+            else  
+            {  
+                printF("ERROR invalid or unimplemented degreeT=%d\n",degreeT);
+                OV_ABORT("error");  
+            }  
+            break; 
+        case 3:
+      // ---- third time derivative ----   
+            if( degreeT<=2 )  
+                result*=0.;  
+            else if( degreeT==3 )  
+                result*=(6.*a(3,n));  
+            else if( degreeT==4 )  
+                result*=(6.*a(3,n)+t*(24.*a(4,n)));  
+            else if( degreeT==5 )  
+                result*=(6.*a(3,n)+t*(24.*a(4,n)+t*(60.*a(5,n))));  
+            else if( degreeT==6 )  
+                result*=(6.*a(3,n)+t*(24.*a(4,n)+t*(60.*a(5,n)+t*(120.*a(6,n))))); 
+            else if( degreeT==7 )  
+                result*=(6.*a(3,n)+t*(24.*a(4,n)+t*(60.*a(5,n)+t*(120.*a(6,n)+t*(7*6*5*a(7,n))))));
+            else if( degreeT==8 )  
+                result*=(6.*a(3,n)+t*(24.*a(4,n)+t*(60.*a(5,n)+t*(120.*a(6,n)+t*(7*6*5*a(7,n)+t*(8*7*6*a(8,n)))))));
+            else if( degreeT==9 )  
+                result*=(6.*a(3,n)+t*(24.*a(4,n)+t*(60.*a(5,n)+t*(120.*a(6,n)+t*(7*6*5*a(7,n)+t*(8*7*6*a(8,n)+t*(9*8*7*a(9,n))))))));
+            else if( degreeT==10 )  
+                result*=(6.*a(3,n)+t*(24.*a(4,n)+t*(60.*a(5,n)+t*(120.*a(6,n)+t*(7*6*5*a(7,n)+t*(8*7*6*a(8,n)+t*(9*8*7*a(9,n)+t*(10*9*8*a(10,n)))))))));                          
+            else  
+            {  
+                printF("ERROR invalid or unimplemented degreeT=%d\n",degreeT);
+                OV_ABORT("error");  
+            }  
+            break; 
+        case 4:  
+      // ---- fourth time derivative ----  
+            if( degreeT<=3 )  
+                result*=0.;  
+            else if( degreeT==4 )  
+                result*=(24.*a(4,n));  
+            else if( degreeT==5 )  
+                result*=(24.*a(4,n)+t*(120.*a(5,n)));  
+            else if( degreeT==6 )  
+                result*=(24.*a(4,n)+t*(120.*a(5,n)+t*(360.*a(6,n))));
+            else if( degreeT==7 )  
+                result*=(24.*a(4,n)+t*(120.*a(5,n)+t*(360.*a(6,n)+t*(7*6*5*4*a(7,n)))));
+            else if( degreeT==8 )  
+                result*=(24.*a(4,n)+t*(120.*a(5,n)+t*(360.*a(6,n)+t*(7*6*5*4*a(7,n)+t*(8*7*6*5*a(8,n))))));
+            else if( degreeT==9 )  
+                result*=(24.*a(4,n)+t*(120.*a(5,n)+t*(360.*a(6,n)+t*(7*6*5*4*a(7,n)+t*(8*7*6*5*a(8,n)+t*(9*8*7*6*a(9,n)))))));
+            else if( degreeT==10 )  
+                result*=(24.*a(4,n)+t*(120.*a(5,n)+t*(360.*a(6,n)+t*(7*6*5*4*a(7,n)+t*(8*7*6*5*a(8,n)+t*(9*8*7*6*a(9,n)+t*(10*9*8*7*a(10,n))))))));                                    
+            else  
+            {  
+                printF("ERROR invalid or unimplemented degreeT=%d\n",degreeT);
+                OV_ABORT("error");  
+            }  
+            break; 
+        case 5:  
+      // ---- fifth time derivative ---- 
+            if( degreeT<=4 )  
+                result*=0.;  
+            else if( degreeT==5 )  
+                result*=(120.*a(5,n));  
+            else if( degreeT==6 )  
+                result*=(120.*a(5,n)+t*(720.*a(6,n))); 
+            else if( degreeT==7 )  
+                result*=(120.*a(5,n)+t*(720.*a(6,n)+t*(7*6*5*4*3*a(7,n))));
+            else if( degreeT==8 )  
+                result*=(120.*a(5,n)+t*(720.*a(6,n)+t*(7*6*5*4*3*a(7,n)+t*(8*7*6*5*4*a(8,n)))));
+            else if( degreeT==9 )  
+                result*=(120.*a(5,n)+t*(720.*a(6,n)+t*(7*6*5*4*3*a(7,n)+t*(8*7*6*5*4*a(8,n)+t*(9*8*7*6*5*a(9,n))))));
+            else if( degreeT==10 )  
+                result*=(120.*a(5,n)+t*(720.*a(6,n)+t*(7*6*5*4*3*a(7,n)+t*(8*7*6*5*4*a(8,n)+t*(9*8*7*6*5*a(9,n)+t*(10*9*8*7*6*a(10,n)))))));                           
+            else  
+            {  
+                printF("ERROR invalid or unimplemented degreeT=%d\n",degreeT);
+                OV_ABORT("error");  
+            }  
+            break;
+        case 6:  
+      // ---- sixth time derivative ---- 
+            if( degreeT<=5 )  
+                result*=0.;  
+            else if( degreeT==6 )  
+                result*=(720.*a(6,n)); 
+            else if( degreeT==7 )  
+                result*=(720.*a(6,n)+t*(7*6*5*4*3*2*a(7,n)));
+            else if( degreeT==8 )  
+                result*=(720.*a(6,n)+t*(7*6*5*4*3*2*a(7,n)+t*(8*7*6*5*4*3*a(8,n))));
+            else if( degreeT==9 )  
+                result*=(720.*a(6,n)+t*(7*6*5*4*3*2*a(7,n)+t*(8*7*6*5*4*3*a(8,n)+t*(9*8*7*6*5*4*a(9,n)))));
+            else if( degreeT==10 )  
+                result*=(720.*a(6,n)+t*(7*6*5*4*3*2*a(7,n)+t*(8*7*6*5*4*3*a(8,n)+t*(9*8*7*6*5*4*a(9,n)+t*(10*9*8*7*6*5*a(10,n))))));        
+            else  
+            {  
+                printF("ERROR invalid or unimplemented degreeT=%d\n",degreeT);
+                OV_ABORT("error");  
+            }  
+            break;
+        default: 
+      // ----- GENERAL TIME DERIVATIVE --- *check me**  Dec 3, 2022
+            if( degreeT<=(ntd-1) )
+            {
+                result *= 0.;
+            }
+            else
+            {
+                Real factor=0.;
+                Real tPow=1.;
+                for( int i=ntd; i<=degreeT; i++ )  // i=ntd, ntd+1, ..., degreeT
+                {
+                      Real dfact=1.;
+                      for( int j=i; j>(i-ntd); j-- ){ dfact *= j; }  // dfact = (i)*(i-1)* ... *(i-ntd+1)
+                      factor = factor + tPow*dfact*a(i,n); 
+                      tPow*=t;
+                }
+                result *= factor;
+            }
+      // printF("ERROR invalid or unimplemented time derivative ntd=%d\n",ntd);
+      // OV_ABORT("error");  
+        }
 
     return result;
 }
@@ -507,18 +923,21 @@ operator()(const MappedGrid & c, const Index & I1,
 }
 
 
-//\begin{>>OGFunctionInclude.tex}{}
+//===================================================================
+// Macro: Eavluate the poly or derivatives at points on a MappedGrid
+//===================================================================
+
 RealDistributedArray OGPolyFunction::
 operator()(const MappedGrid & c,
-         	   const Index & I1,
-         	   const Index & I2,
-         	   const Index & I3, 
-         	   const Index & N, 
-         	   const real t /* =0. */ ,
-         	   const GridFunctionParameters::GridFunctionType & centering 
+                      const Index & I1,
+                      const Index & I2,
+                      const Index & I3, 
+                      const Index & N, 
+                      const real t /* =0. */ ,
+                      const GridFunctionParameters::GridFunctionType & centering 
                       /* =defaultCentering */ )
 //===================================================================================
-//\end{OGFunctionInclude.tex} 
+/// \brief Eavl poly at points on a MappedGrid
 // ==========================================================================================
 {
 //    printf(" ++++++++++++++OGPolyFunction::operator(): N=[%i,%i]\n",N.getBase(),N.getBound());
@@ -536,9 +955,9 @@ operator()(const MappedGrid & c,
             MappedGrid & mg = (MappedGrid &)c;
             result.partition(mg.getPartition());
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
             const realArray & center = c.center();
             #ifdef USE_PPP
                 const realSerialArray & xy = center.getLocalArrayWithGhostBoundaries();
@@ -563,9 +982,9 @@ operator()(const MappedGrid & c,
             getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,xd,yd,zd);  
             result.partition(xd.getPartition());  
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
           #ifndef USE_PPP
             const realSerialArray & x = xd;
             const realSerialArray & y = yd;
@@ -591,85 +1010,68 @@ operator()(const MappedGrid & c,
         #else
             const realSerialArray & r = result;
         #endif
-        polyFunction(c.numberOfDimensions(),  
-                                  ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
-                                  r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
-                                  r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
-                                  cc.getLength(0),cc.getLength(1),cc.getLength(2),  
-                 	       I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
-                                  N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
-                 	       *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
-                                  *xp,*yp,*zp,  
-                                  0,0,0,0 ); 
-    
-//   checkArguments( N );
-//   RealDistributedArray x,y,z;
-//   getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,x,y,z);
-
-//   RealDistributedArray result;
-//   result.partition(x.getPartition());
-//   result.redim(Range(I1.getBase(),I1.getBound()),
-// 	       Range(I2.getBase(),I2.getBound()),
-// 	       Range(I3.getBase(),I3.getBound()),
-// 	       Range( N.getBase(), N.getBound()));
-                                      
-//   bool useNew=true;
-//   if( useNew )
-//   {
-//     int ndra=x.getDataBase(0);
-//     int ndsa=x.getDataBase(1);
-//     int ndta=x.getDataBase(2);
-        
-//     int ndrb=x.getRawDataSize(0)+ndra-1;
-//     int ndsb=x.getRawDataSize(1)+ndsa-1;
-//     int ndtb=x.getRawDataSize(2)+ndta-1;
-        
-//     // x,y, and z are views we must play around to get the pointer we want
-//     real & xp = x(ndra,ndsa,ndta); // these are formally out of bounds!
-//     real & yp = y(ndra,ndsa,ndta);
-//     real & zp = z(ndra,ndsa,ndta);
-
-//     polyFunction(c.numberOfDimensions(),
-//                  ndra,ndrb,ndsa,ndsb,ndta,ndtb,
-//                  result.getBase(0),result.getBound(0),result.getBase(1),result.getBound(1),
-//                  result.getBase(2),result.getBound(2),
-//                  cc.getLength(0),cc.getLength(1),cc.getLength(2),
-// 		 I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),
-//                  N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,
-// 		 *a.getDataPointer(), *cc.getDataPointer(), *result.getDataPointer(),
-//                  xp,yp,zp,
-//                  0,0,0,0 ); // dx,dy,dz,dt
-
-//     // result.display("result from new");
-//   }
-//   else
-//   {
-//     int n;
-//     if( c.numberOfDimensions()==2 )     
-//       for( n=N.getBase(); n<=N.getBound(); n++ )
-// 	result(I1,I2,I3,n)=
-//           (cc(0,0,0,n)+x*(cc(1,0,0,n)+y*cc(1,1,0,n)+x*(cc(2,0,0,n)+x*(cc(3,0,0,n)+x*cc(4,0,0,n))))
-// 	   +y*(cc(0,1,0,n)+y*(cc(0,2,0,n)+y*(cc(0,3,0,n)+y*cc(0,4,0,n)))))*TIME(n,t);
-//     else if( c.numberOfDimensions()==3 )
-//       for( n=N.getBase(); n<=N.getBound(); n++ )
-// 	result(I1,I2,I3,n)=
-//           (cc(0,0,0,n)
-//            +x*(cc(1,0,0,n)+y*cc(1,1,0,n)+x*(cc(2,0,0,n)+x*(cc(3,0,0,n)+x*cc(4,0,0,n))))
-//            +y*(cc(0,1,0,n)+z*cc(0,1,1,n)+y*(cc(0,2,0,n)+y*(cc(0,3,0,n)+y*cc(0,4,0,n))))
-//   	   +z*(cc(0,0,1,n)+x*cc(1,0,1,n)+z*(cc(0,0,2,n)+z*(cc(0,0,3,n)+z*cc(0,0,4,n)))))*TIME(n,t);
-//     else
-//       for( n=N.getBase(); n<=N.getBound(); n++ )
-// 	result(I1,I2,I3,n)=
-// 	  (cc(0,0,0,n)+x*(cc(1,0,0,n)+x*(cc(2,0,0,n)+x*(cc(3,0,0,n)+x*cc(4,0,0,n)))))*TIME(n,t);
-
-//     // result.display("result from old");
-//   }
+        if( max(degreeX,degreeT)<=maxOptimizedDegree )
+        {
+            polyFunction(c.numberOfDimensions(),  
+                                      ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
+                                      r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
+                                      r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
+                                      cc.getLength(0),cc.getLength(1),cc.getLength(2),  
+                                      I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
+                                      N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
+                                      *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
+                                      *xp,*yp,*zp,  
+                                      0,0,0,0 );
+        }
+        else
+        {
+            if( centering!=GridFunctionParameters::defaultCentering )
+            {
+                printF("OGPolyFunction:ERROR: eval for MappedGrid not implemented yet for non default centering and high degree polynomials.\n");
+                OV_ABORT("error");
+            }
+            OV_GET_SERIAL_ARRAY_CONST(real,c.vertex(),xLocal);
+            const int numberOfDimensions = c.numberOfDimensions();
+            if( 0==-2 )
+            { // -- special case : Laplacian
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n)  = gd( 0, 2, 0, 0, x, y, z, n, t );
+                        if( numberOfDimensions>1 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 2, 0, x, y, z, n, t );
+                        if( numberOfDimensions>2 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 0, 2, x, y, z, n, t );
+                    }
+                }
+            }
+            else
+            {
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n) = gd( 0, 0, 0, 0, x, y, z, n, t );
+                    }
+                }
+            }
+        } 
     
     return result;
     
 }
 
-//\begin{>>OGFunctionInclude.tex}{}
 RealDistributedArray OGPolyFunction::
 x(const MappedGrid & c, 
     const Index & I1,
@@ -680,7 +1082,9 @@ x(const MappedGrid & c,
     const GridFunctionParameters::GridFunctionType & centering 
     /* = defaultCentering */)
 // ==========================================================================================
-// /Description: Evaluate the function or a derivative of the function at points on a MappedGrid
+/// \brief: Evaluate the poly function at points on a MappedGrid
+//  
+// Evaluate the function or a derivative of the function at points on a MappedGrid
 //    The function name {\bf x} can be replaced by any one of {\bf t}, {\bf x}, {\bf y}, {\bf z}, {\bf xx},
 //     {\bf yy}, {\bf zz}, {\bf xy}, {\bf xz}, {\bf yz}, {\bf laplacian}, {\bf xxx} or {\bf xxxx}.
 // /I1,I2,I3 (input) : Ranges that indicate points to use, for example by default the
@@ -704,7 +1108,6 @@ x(const MappedGrid & c,
 //    \item[faceCenteredAxis3] use the center of the cell face in the axis3 direction (defined
 //       by averaging the {\tt c.vertex() values} for the x,y coordinates).
 //  \end{description}
-//\end{OGFunctionInclude.tex} 
 // ==========================================================================================
 {
   // POLY(1,0,0,0);
@@ -718,9 +1121,9 @@ x(const MappedGrid & c,
             MappedGrid & mg = (MappedGrid &)c;
             result.partition(mg.getPartition());
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
             const realArray & center = c.center();
             #ifdef USE_PPP
                 const realSerialArray & xy = center.getLocalArrayWithGhostBoundaries();
@@ -745,9 +1148,9 @@ x(const MappedGrid & c,
             getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,xd,yd,zd);  
             result.partition(xd.getPartition());  
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
           #ifndef USE_PPP
             const realSerialArray & x = xd;
             const realSerialArray & y = yd;
@@ -773,40 +1176,64 @@ x(const MappedGrid & c,
         #else
             const realSerialArray & r = result;
         #endif
-        polyFunction(c.numberOfDimensions(),  
-                                  ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
-                                  r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
-                                  r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
-                                  cc.getLength(0),cc.getLength(1),cc.getLength(2),  
-                 	       I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
-                                  N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
-                 	       *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
-                                  *xp,*yp,*zp,  
-                                  1,0,0,0 ); 
+        if( max(degreeX,degreeT)<=maxOptimizedDegree )
+        {
+            polyFunction(c.numberOfDimensions(),  
+                                      ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
+                                      r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
+                                      r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
+                                      cc.getLength(0),cc.getLength(1),cc.getLength(2),  
+                                      I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
+                                      N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
+                                      *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
+                                      *xp,*yp,*zp,  
+                                      1,0,0,0 );
+        }
+        else
+        {
+            if( centering!=GridFunctionParameters::defaultCentering )
+            {
+                printF("OGPolyFunction:ERROR: eval for MappedGrid not implemented yet for non default centering and high degree polynomials.\n");
+                OV_ABORT("error");
+            }
+            OV_GET_SERIAL_ARRAY_CONST(real,c.vertex(),xLocal);
+            const int numberOfDimensions = c.numberOfDimensions();
+            if( 1==-2 )
+            { // -- special case : Laplacian
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n)  = gd( 0, 2, 0, 0, x, y, z, n, t );
+                        if( numberOfDimensions>1 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 2, 0, x, y, z, n, t );
+                        if( numberOfDimensions>2 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 0, 2, x, y, z, n, t );
+                    }
+                }
+            }
+            else
+            {
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n) = gd( 0, 1, 0, 0, x, y, z, n, t );
+                    }
+                }
+            }
+        } 
 
-//  result.display("result from new");
-
-//   checkArguments( N );
-//   RealDistributedArray x,y,z;
-//   getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,x,y,z);
-
-//   RealDistributedArray result(Range(I1.getBase(),I1.getBound()),
-//                    Range(I2.getBase(),I2.getBound()),
-//                    Range(I3.getBase(),I3.getBound()),
-//                    Range( N.getBase(), N.getBound()));
-//   if( c.numberOfDimensions()==2 )     
-//     for( int n=N.getBase(); n<=N.getBound(); n++ )
-//       result(I1,I2,I3,n)=(cc(1,0,0,n)+y*cc(1,1,0,n)+x*(2.*cc(2,0,0,n)+x*(3.*cc(3,0,0,n)+x*(4.*cc(4,0,0,n))))
-//                          )*TIME(n,t);
-//   else if( c.numberOfDimensions()==3 )
-//     for( int n=N.getBase(); n<=N.getBound(); n++ )
-//       result(I1,I2,I3,n)=(cc(1,0,0,n)+y*cc(1,1,0,n)+z*cc(1,0,1,n)+x*(2.*cc(2,0,0,n)+x*(3.*cc(3,0,0,n)
-//                           +x*(4.*cc(4,0,0,n)))))*TIME(n,t);
-//   else
-//     for( int n=N.getBase(); n<=N.getBound(); n++ )
-//       result(I1,I2,I3,n)=(cc(1,0,0,n)+x*(2.*cc(2,0,0,n)+x*(3.*cc(3,0,0,n)+x*(4.*cc(4,0,0,n))))
-//                          )*TIME(n,t);
-//   result.display("result from old");
     return result;
 }
 
@@ -828,9 +1255,9 @@ y(const MappedGrid & c, const Index & I1,
             MappedGrid & mg = (MappedGrid &)c;
             result.partition(mg.getPartition());
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
             const realArray & center = c.center();
             #ifdef USE_PPP
                 const realSerialArray & xy = center.getLocalArrayWithGhostBoundaries();
@@ -855,9 +1282,9 @@ y(const MappedGrid & c, const Index & I1,
             getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,xd,yd,zd);  
             result.partition(xd.getPartition());  
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
           #ifndef USE_PPP
             const realSerialArray & x = xd;
             const realSerialArray & y = yd;
@@ -883,35 +1310,63 @@ y(const MappedGrid & c, const Index & I1,
         #else
             const realSerialArray & r = result;
         #endif
-        polyFunction(c.numberOfDimensions(),  
-                                  ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
-                                  r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
-                                  r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
-                                  cc.getLength(0),cc.getLength(1),cc.getLength(2),  
-                 	       I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
-                                  N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
-                 	       *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
-                                  *xp,*yp,*zp,  
-                                  0,1,0,0 ); 
-//   checkArguments( N );
-//   RealDistributedArray x,y,z;
-//   getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,x,y,z);
-
-//   RealDistributedArray result(Range(I1.getBase(),I1.getBound()),
-//                    Range(I2.getBase(),I2.getBound()),
-//                    Range(I3.getBase(),I3.getBound()),
-//                    Range( N.getBase(), N.getBound()));
-//   if( c.numberOfDimensions()==2 )     
-//     for( int n=N.getBase(); n<=N.getBound(); n++ )
-//       result(I1,I2,I3,n)=(cc(0,1,0,n)+x*cc(1,1,0,n)+y*(2.*cc(0,2,0,n)+y*(3.*cc(0,3,0,n)+y*(4.*cc(0,4,0,n))))
-//                          )*TIME(n,t);
-//   else if( c.numberOfDimensions()==3 )
-//     for( int n=N.getBase(); n<=N.getBound(); n++ )
-//       result(I1,I2,I3,n)=(cc(0,1,0,n)+x*cc(1,1,0,n)+z*cc(0,1,1,n)+y*(2.*cc(0,2,0,n)+y*(3.*cc(0,3,0,n)
-//                           +y*(4.*cc(0,4,0,n)))))*TIME(n,t);
-//   else
-//     for( int n=N.getBase(); n<=N.getBound(); n++ )
-//       result(I1,I2,I3,n)=x*0.;
+        if( max(degreeX,degreeT)<=maxOptimizedDegree )
+        {
+            polyFunction(c.numberOfDimensions(),  
+                                      ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
+                                      r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
+                                      r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
+                                      cc.getLength(0),cc.getLength(1),cc.getLength(2),  
+                                      I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
+                                      N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
+                                      *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
+                                      *xp,*yp,*zp,  
+                                      0,1,0,0 );
+        }
+        else
+        {
+            if( centering!=GridFunctionParameters::defaultCentering )
+            {
+                printF("OGPolyFunction:ERROR: eval for MappedGrid not implemented yet for non default centering and high degree polynomials.\n");
+                OV_ABORT("error");
+            }
+            OV_GET_SERIAL_ARRAY_CONST(real,c.vertex(),xLocal);
+            const int numberOfDimensions = c.numberOfDimensions();
+            if( 0==-2 )
+            { // -- special case : Laplacian
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n)  = gd( 0, 2, 0, 0, x, y, z, n, t );
+                        if( numberOfDimensions>1 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 2, 0, x, y, z, n, t );
+                        if( numberOfDimensions>2 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 0, 2, x, y, z, n, t );
+                    }
+                }
+            }
+            else
+            {
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n) = gd( 0, 0, 1, 0, x, y, z, n, t );
+                    }
+                }
+            }
+        } 
 
     return result;
 }
@@ -934,9 +1389,9 @@ z(const MappedGrid & c, const Index & I1,
             MappedGrid & mg = (MappedGrid &)c;
             result.partition(mg.getPartition());
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
             const realArray & center = c.center();
             #ifdef USE_PPP
                 const realSerialArray & xy = center.getLocalArrayWithGhostBoundaries();
@@ -961,9 +1416,9 @@ z(const MappedGrid & c, const Index & I1,
             getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,xd,yd,zd);  
             result.partition(xd.getPartition());  
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
           #ifndef USE_PPP
             const realSerialArray & x = xd;
             const realSerialArray & y = yd;
@@ -989,31 +1444,63 @@ z(const MappedGrid & c, const Index & I1,
         #else
             const realSerialArray & r = result;
         #endif
-        polyFunction(c.numberOfDimensions(),  
-                                  ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
-                                  r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
-                                  r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
-                                  cc.getLength(0),cc.getLength(1),cc.getLength(2),  
-                 	       I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
-                                  N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
-                 	       *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
-                                  *xp,*yp,*zp,  
-                                  0,0,1,0 ); 
-//   checkArguments( N );
-//   RealDistributedArray x,y,z;
-//   getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,x,y,z);
-
-//   RealDistributedArray result(Range(I1.getBase(),I1.getBound()),
-//                    Range(I2.getBase(),I2.getBound()),
-//                    Range(I3.getBase(),I3.getBound()),
-//                    Range( N.getBase(), N.getBound()));
-//   if( c.numberOfDimensions()==3 )
-//     for( int n=N.getBase(); n<=N.getBound(); n++ )
-//       result(I1,I2,I3,n)=(cc(0,0,1,n)+x*cc(1,0,1,n)+y*cc(0,1,1,n)+z*(2.*cc(0,0,2,n)+z*(3.*cc(0,0,3,n)
-//                           +z*(4.*cc(0,0,4,n)))))*TIME(n,t);
-//   else
-//     for( int n=N.getBase(); n<=N.getBound(); n++ )
-//       result(I1,I2,I3,n)=x*0.;
+        if( max(degreeX,degreeT)<=maxOptimizedDegree )
+        {
+            polyFunction(c.numberOfDimensions(),  
+                                      ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
+                                      r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
+                                      r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
+                                      cc.getLength(0),cc.getLength(1),cc.getLength(2),  
+                                      I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
+                                      N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
+                                      *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
+                                      *xp,*yp,*zp,  
+                                      0,0,1,0 );
+        }
+        else
+        {
+            if( centering!=GridFunctionParameters::defaultCentering )
+            {
+                printF("OGPolyFunction:ERROR: eval for MappedGrid not implemented yet for non default centering and high degree polynomials.\n");
+                OV_ABORT("error");
+            }
+            OV_GET_SERIAL_ARRAY_CONST(real,c.vertex(),xLocal);
+            const int numberOfDimensions = c.numberOfDimensions();
+            if( 0==-2 )
+            { // -- special case : Laplacian
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n)  = gd( 0, 2, 0, 0, x, y, z, n, t );
+                        if( numberOfDimensions>1 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 2, 0, x, y, z, n, t );
+                        if( numberOfDimensions>2 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 0, 2, x, y, z, n, t );
+                    }
+                }
+            }
+            else
+            {
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n) = gd( 0, 0, 0, 1, x, y, z, n, t );
+                    }
+                }
+            }
+        } 
 
     return result;
 
@@ -1036,9 +1523,9 @@ t(const MappedGrid & c, const Index & I1,
             MappedGrid & mg = (MappedGrid &)c;
             result.partition(mg.getPartition());
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
             const realArray & center = c.center();
             #ifdef USE_PPP
                 const realSerialArray & xy = center.getLocalArrayWithGhostBoundaries();
@@ -1063,9 +1550,9 @@ t(const MappedGrid & c, const Index & I1,
             getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,xd,yd,zd);  
             result.partition(xd.getPartition());  
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
           #ifndef USE_PPP
             const realSerialArray & x = xd;
             const realSerialArray & y = yd;
@@ -1091,47 +1578,65 @@ t(const MappedGrid & c, const Index & I1,
         #else
             const realSerialArray & r = result;
         #endif
-        polyFunction(c.numberOfDimensions(),  
-                                  ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
-                                  r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
-                                  r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
-                                  cc.getLength(0),cc.getLength(1),cc.getLength(2),  
-                 	       I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
-                                  N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
-                 	       *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
-                                  *xp,*yp,*zp,  
-                                  0,0,0,1 ); 
+        if( max(degreeX,degreeT)<=maxOptimizedDegree )
+        {
+            polyFunction(c.numberOfDimensions(),  
+                                      ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
+                                      r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
+                                      r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
+                                      cc.getLength(0),cc.getLength(1),cc.getLength(2),  
+                                      I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
+                                      N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
+                                      *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
+                                      *xp,*yp,*zp,  
+                                      0,0,0,1 );
+        }
+        else
+        {
+            if( centering!=GridFunctionParameters::defaultCentering )
+            {
+                printF("OGPolyFunction:ERROR: eval for MappedGrid not implemented yet for non default centering and high degree polynomials.\n");
+                OV_ABORT("error");
+            }
+            OV_GET_SERIAL_ARRAY_CONST(real,c.vertex(),xLocal);
+            const int numberOfDimensions = c.numberOfDimensions();
+            if( 0==-2 )
+            { // -- special case : Laplacian
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n)  = gd( 1, 2, 0, 0, x, y, z, n, t );
+                        if( numberOfDimensions>1 )
+                            r(i1,i2,i3,n) += gd( 1, 0, 2, 0, x, y, z, n, t );
+                        if( numberOfDimensions>2 )
+                            r(i1,i2,i3,n) += gd( 1, 0, 0, 2, x, y, z, n, t );
+                    }
+                }
+            }
+            else
+            {
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n) = gd( 1, 0, 0, 0, x, y, z, n, t );
+                    }
+                }
+            }
+        } 
 //result.display("u.t result from new");
 
-//   checkArguments( N );
-//   RealDistributedArray x,y,z;
-//   getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,x,y,z);
-
-//   RealDistributedArray result(Range(I1.getBase(),I1.getBound()),
-//                    Range(I2.getBase(),I2.getBound()),
-//                    Range(I3.getBase(),I3.getBound()),
-//                    Range( N.getBase(), N.getBound()));
-//   int n;
-//   if( c.numberOfDimensions()==2 )     
-//     for( n=N.getBase(); n<=N.getBound(); n++ )
-//       result(I1,I2,I3,n)=
-//           (cc(0,0,0,n)+x*(cc(1,0,0,n)+y*cc(1,1,0,n)+x*(cc(2,0,0,n)+x*(cc(3,0,0,n)+x*cc(4,0,0,n))))
-//                       +y*(cc(0,1,0,n)+y*(cc(0,2,0,n)+y*(cc(0,3,0,n)+y*cc(0,4,0,n)))))*
-// 			(a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n)+t*(4.*a(4,n)))));
-//   else if( c.numberOfDimensions()==3 )
-//     for( n=N.getBase(); n<=N.getBound(); n++ )
-//       result(I1,I2,I3,n)=
-//           (cc(0,0,0,n)
-//            +x*(cc(1,0,0,n)+y*cc(1,1,0,n)+x*(cc(2,0,0,n)+x*(cc(3,0,0,n)+x*cc(4,0,0,n))))
-//            +y*(cc(0,1,0,n)+z*cc(0,1,1,n)+y*(cc(0,2,0,n)+y*(cc(0,3,0,n)+y*cc(0,4,0,n))))
-//   	   +z*(cc(0,0,1,n)+x*cc(1,0,1,n)+z*(cc(0,0,2,n)+z*(cc(0,0,3,n)+z*cc(0,0,4,n)))))*
-// 			(a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n)+t*(4.*a(4,n)))));
-//   else
-//     for( n=N.getBase(); n<=N.getBound(); n++ )
-//       result(I1,I2,I3,n)=
-//           (cc(0,0,0,n)+x*(cc(1,0,0,n)+x*(cc(2,0,0,n)+x*(cc(3,0,0,n)+x*cc(4,0,0,n))))
-//                       )*(a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n)+t*(4.*a(4,n)))));
-//result.display("u.t results from old");
 
     return result;
 }
@@ -1154,9 +1659,9 @@ xx(const MappedGrid & c, const Index & I1,
             MappedGrid & mg = (MappedGrid &)c;
             result.partition(mg.getPartition());
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
             const realArray & center = c.center();
             #ifdef USE_PPP
                 const realSerialArray & xy = center.getLocalArrayWithGhostBoundaries();
@@ -1181,9 +1686,9 @@ xx(const MappedGrid & c, const Index & I1,
             getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,xd,yd,zd);  
             result.partition(xd.getPartition());  
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
           #ifndef USE_PPP
             const realSerialArray & x = xd;
             const realSerialArray & y = yd;
@@ -1209,27 +1714,66 @@ xx(const MappedGrid & c, const Index & I1,
         #else
             const realSerialArray & r = result;
         #endif
-        polyFunction(c.numberOfDimensions(),  
-                                  ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
-                                  r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
-                                  r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
-                                  cc.getLength(0),cc.getLength(1),cc.getLength(2),  
-                 	       I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
-                                  N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
-                 	       *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
-                                  *xp,*yp,*zp,  
-                                  2,0,0,0 ); 
+        if( max(degreeX,degreeT)<=maxOptimizedDegree )
+        {
+            polyFunction(c.numberOfDimensions(),  
+                                      ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
+                                      r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
+                                      r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
+                                      cc.getLength(0),cc.getLength(1),cc.getLength(2),  
+                                      I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
+                                      N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
+                                      *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
+                                      *xp,*yp,*zp,  
+                                      2,0,0,0 );
+        }
+        else
+        {
+            if( centering!=GridFunctionParameters::defaultCentering )
+            {
+                printF("OGPolyFunction:ERROR: eval for MappedGrid not implemented yet for non default centering and high degree polynomials.\n");
+                OV_ABORT("error");
+            }
+            OV_GET_SERIAL_ARRAY_CONST(real,c.vertex(),xLocal);
+            const int numberOfDimensions = c.numberOfDimensions();
+            if( 2==-2 )
+            { // -- special case : Laplacian
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n)  = gd( 0, 2, 0, 0, x, y, z, n, t );
+                        if( numberOfDimensions>1 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 2, 0, x, y, z, n, t );
+                        if( numberOfDimensions>2 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 0, 2, x, y, z, n, t );
+                    }
+                }
+            }
+            else
+            {
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n) = gd( 0, 2, 0, 0, x, y, z, n, t );
+                    }
+                }
+            }
+        } 
 
 //   checkArguments( N );
-//   RealDistributedArray x,y,z;
-//   getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,x,y,z);
 
-//   RealDistributedArray result(Range(I1.getBase(),I1.getBound()),
-//                    Range(I2.getBase(),I2.getBound()),
-//                    Range(I3.getBase(),I3.getBound()),
-//                    Range( N.getBase(), N.getBound()));
-//   for( int n=N.getBase(); n<=N.getBound(); n++ )
-//     result(I1,I2,I3,n)=(2.*cc(2,0,0,n)+x*(6.*cc(3,0,0,n)+x*(12.*cc(4,0,0,n))))*TIME(n,t);
     return result;
 }
 
@@ -1251,9 +1795,9 @@ yy(const MappedGrid & c, const Index & I1,
             MappedGrid & mg = (MappedGrid &)c;
             result.partition(mg.getPartition());
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
             const realArray & center = c.center();
             #ifdef USE_PPP
                 const realSerialArray & xy = center.getLocalArrayWithGhostBoundaries();
@@ -1278,9 +1822,9 @@ yy(const MappedGrid & c, const Index & I1,
             getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,xd,yd,zd);  
             result.partition(xd.getPartition());  
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
           #ifndef USE_PPP
             const realSerialArray & x = xd;
             const realSerialArray & y = yd;
@@ -1306,30 +1850,65 @@ yy(const MappedGrid & c, const Index & I1,
         #else
             const realSerialArray & r = result;
         #endif
-        polyFunction(c.numberOfDimensions(),  
-                                  ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
-                                  r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
-                                  r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
-                                  cc.getLength(0),cc.getLength(1),cc.getLength(2),  
-                 	       I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
-                                  N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
-                 	       *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
-                                  *xp,*yp,*zp,  
-                                  0,2,0,0 ); 
+        if( max(degreeX,degreeT)<=maxOptimizedDegree )
+        {
+            polyFunction(c.numberOfDimensions(),  
+                                      ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
+                                      r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
+                                      r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
+                                      cc.getLength(0),cc.getLength(1),cc.getLength(2),  
+                                      I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
+                                      N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
+                                      *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
+                                      *xp,*yp,*zp,  
+                                      0,2,0,0 );
+        }
+        else
+        {
+            if( centering!=GridFunctionParameters::defaultCentering )
+            {
+                printF("OGPolyFunction:ERROR: eval for MappedGrid not implemented yet for non default centering and high degree polynomials.\n");
+                OV_ABORT("error");
+            }
+            OV_GET_SERIAL_ARRAY_CONST(real,c.vertex(),xLocal);
+            const int numberOfDimensions = c.numberOfDimensions();
+            if( 0==-2 )
+            { // -- special case : Laplacian
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n)  = gd( 0, 2, 0, 0, x, y, z, n, t );
+                        if( numberOfDimensions>1 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 2, 0, x, y, z, n, t );
+                        if( numberOfDimensions>2 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 0, 2, x, y, z, n, t );
+                    }
+                }
+            }
+            else
+            {
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n) = gd( 0, 0, 2, 0, x, y, z, n, t );
+                    }
+                }
+            }
+        } 
 //   checkArguments( N );
-//   RealDistributedArray x,y,z;
-//   getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,x,y,z);
 
-//   RealDistributedArray result(Range(I1.getBase(),I1.getBound()),
-//                    Range(I2.getBase(),I2.getBound()),
-//                    Range(I3.getBase(),I3.getBound()),
-//                    Range( N.getBase(), N.getBound()));
-//   if( c.numberOfDimensions()>1 )
-//     for( int n=N.getBase(); n<=N.getBound(); n++ )
-//       result(I1,I2,I3,n)=(2.*cc(0,2,0,n)+y*(6.*cc(0,3,0,n)+y*(12.*cc(0,4,0,n))))*TIME(n,t);
-//   else
-//     for( int n=N.getBase(); n<=N.getBound(); n++ )
-//       result(I1,I2,I3,n)=x*0.;
     return result;
 }
 
@@ -1351,9 +1930,9 @@ zz(const MappedGrid & c, const Index & I1,
             MappedGrid & mg = (MappedGrid &)c;
             result.partition(mg.getPartition());
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
             const realArray & center = c.center();
             #ifdef USE_PPP
                 const realSerialArray & xy = center.getLocalArrayWithGhostBoundaries();
@@ -1378,9 +1957,9 @@ zz(const MappedGrid & c, const Index & I1,
             getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,xd,yd,zd);  
             result.partition(xd.getPartition());  
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
           #ifndef USE_PPP
             const realSerialArray & x = xd;
             const realSerialArray & y = yd;
@@ -1406,31 +1985,64 @@ zz(const MappedGrid & c, const Index & I1,
         #else
             const realSerialArray & r = result;
         #endif
-        polyFunction(c.numberOfDimensions(),  
-                                  ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
-                                  r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
-                                  r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
-                                  cc.getLength(0),cc.getLength(1),cc.getLength(2),  
-                 	       I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
-                                  N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
-                 	       *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
-                                  *xp,*yp,*zp,  
-                                  0,0,2,0 ); 
+        if( max(degreeX,degreeT)<=maxOptimizedDegree )
+        {
+            polyFunction(c.numberOfDimensions(),  
+                                      ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
+                                      r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
+                                      r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
+                                      cc.getLength(0),cc.getLength(1),cc.getLength(2),  
+                                      I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
+                                      N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
+                                      *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
+                                      *xp,*yp,*zp,  
+                                      0,0,2,0 );
+        }
+        else
+        {
+            if( centering!=GridFunctionParameters::defaultCentering )
+            {
+                printF("OGPolyFunction:ERROR: eval for MappedGrid not implemented yet for non default centering and high degree polynomials.\n");
+                OV_ABORT("error");
+            }
+            OV_GET_SERIAL_ARRAY_CONST(real,c.vertex(),xLocal);
+            const int numberOfDimensions = c.numberOfDimensions();
+            if( 0==-2 )
+            { // -- special case : Laplacian
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n)  = gd( 0, 2, 0, 0, x, y, z, n, t );
+                        if( numberOfDimensions>1 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 2, 0, x, y, z, n, t );
+                        if( numberOfDimensions>2 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 0, 2, x, y, z, n, t );
+                    }
+                }
+            }
+            else
+            {
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n) = gd( 0, 0, 0, 2, x, y, z, n, t );
+                    }
+                }
+            }
+        } 
 
-//   checkArguments( N );
-//   RealDistributedArray x,y,z;
-//   getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,x,y,z);
-
-//   RealDistributedArray result(Range(I1.getBase(),I1.getBound()),
-//                    Range(I2.getBase(),I2.getBound()),
-//                    Range(I3.getBase(),I3.getBound()),
-//                    Range( N.getBase(), N.getBound()));
-//   if( c.numberOfDimensions()==3 )
-//     for( int n=N.getBase(); n<=N.getBound(); n++ )
-//       result(I1,I2,I3,n)=(2.*cc(0,0,2,n)+z*(6.*cc(0,0,3,n)+z*(12.*cc(0,0,4,n))))*TIME(n,t);
-//   else
-//     for( int n=N.getBase(); n<=N.getBound(); n++ )
-//       result(I1,I2,I3,n)=x*0.;
     return result;
 }
 
@@ -1452,9 +2064,9 @@ xy(const MappedGrid & c, const Index & I1,
             MappedGrid & mg = (MappedGrid &)c;
             result.partition(mg.getPartition());
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
             const realArray & center = c.center();
             #ifdef USE_PPP
                 const realSerialArray & xy = center.getLocalArrayWithGhostBoundaries();
@@ -1479,9 +2091,9 @@ xy(const MappedGrid & c, const Index & I1,
             getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,xd,yd,zd);  
             result.partition(xd.getPartition());  
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
           #ifndef USE_PPP
             const realSerialArray & x = xd;
             const realSerialArray & y = yd;
@@ -1507,31 +2119,65 @@ xy(const MappedGrid & c, const Index & I1,
         #else
             const realSerialArray & r = result;
         #endif
-        polyFunction(c.numberOfDimensions(),  
-                                  ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
-                                  r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
-                                  r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
-                                  cc.getLength(0),cc.getLength(1),cc.getLength(2),  
-                 	       I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
-                                  N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
-                 	       *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
-                                  *xp,*yp,*zp,  
-                                  1,1,0,0 ); 
+        if( max(degreeX,degreeT)<=maxOptimizedDegree )
+        {
+            polyFunction(c.numberOfDimensions(),  
+                                      ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
+                                      r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
+                                      r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
+                                      cc.getLength(0),cc.getLength(1),cc.getLength(2),  
+                                      I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
+                                      N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
+                                      *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
+                                      *xp,*yp,*zp,  
+                                      1,1,0,0 );
+        }
+        else
+        {
+            if( centering!=GridFunctionParameters::defaultCentering )
+            {
+                printF("OGPolyFunction:ERROR: eval for MappedGrid not implemented yet for non default centering and high degree polynomials.\n");
+                OV_ABORT("error");
+            }
+            OV_GET_SERIAL_ARRAY_CONST(real,c.vertex(),xLocal);
+            const int numberOfDimensions = c.numberOfDimensions();
+            if( 1==-2 )
+            { // -- special case : Laplacian
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n)  = gd( 0, 2, 0, 0, x, y, z, n, t );
+                        if( numberOfDimensions>1 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 2, 0, x, y, z, n, t );
+                        if( numberOfDimensions>2 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 0, 2, x, y, z, n, t );
+                    }
+                }
+            }
+            else
+            {
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n) = gd( 0, 1, 1, 0, x, y, z, n, t );
+                    }
+                }
+            }
+        } 
 
-//   checkArguments( N );
-//   RealDistributedArray x,y,z;
-//   getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,x,y,z);
 
-//   RealDistributedArray result(Range(I1.getBase(),I1.getBound()),
-//                    Range(I2.getBase(),I2.getBound()),
-//                    Range(I3.getBase(),I3.getBound()),
-//                    Range( N.getBase(), N.getBound()));
-//   if( c.numberOfDimensions()>1 )
-//     for( int n=N.getBase(); n<=N.getBound(); n++ )
-//       result(I1,I2,I3,n)=cc(1,1,0,n);
-//   else
-//     for( int n=N.getBase(); n<=N.getBound(); n++ )
-//       result(I1,I2,I3,n)=x*0.;
     return result;
 }
 
@@ -1553,9 +2199,9 @@ xz(const MappedGrid & c, const Index & I1,
             MappedGrid & mg = (MappedGrid &)c;
             result.partition(mg.getPartition());
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
             const realArray & center = c.center();
             #ifdef USE_PPP
                 const realSerialArray & xy = center.getLocalArrayWithGhostBoundaries();
@@ -1580,9 +2226,9 @@ xz(const MappedGrid & c, const Index & I1,
             getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,xd,yd,zd);  
             result.partition(xd.getPartition());  
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
           #ifndef USE_PPP
             const realSerialArray & x = xd;
             const realSerialArray & y = yd;
@@ -1608,30 +2254,64 @@ xz(const MappedGrid & c, const Index & I1,
         #else
             const realSerialArray & r = result;
         #endif
-        polyFunction(c.numberOfDimensions(),  
-                                  ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
-                                  r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
-                                  r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
-                                  cc.getLength(0),cc.getLength(1),cc.getLength(2),  
-                 	       I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
-                                  N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
-                 	       *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
-                                  *xp,*yp,*zp,  
-                                  1,0,1,0 ); 
-//   checkArguments( N );
-//   RealDistributedArray x,y,z;
-//   getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,x,y,z);
+        if( max(degreeX,degreeT)<=maxOptimizedDegree )
+        {
+            polyFunction(c.numberOfDimensions(),  
+                                      ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
+                                      r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
+                                      r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
+                                      cc.getLength(0),cc.getLength(1),cc.getLength(2),  
+                                      I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
+                                      N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
+                                      *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
+                                      *xp,*yp,*zp,  
+                                      1,0,1,0 );
+        }
+        else
+        {
+            if( centering!=GridFunctionParameters::defaultCentering )
+            {
+                printF("OGPolyFunction:ERROR: eval for MappedGrid not implemented yet for non default centering and high degree polynomials.\n");
+                OV_ABORT("error");
+            }
+            OV_GET_SERIAL_ARRAY_CONST(real,c.vertex(),xLocal);
+            const int numberOfDimensions = c.numberOfDimensions();
+            if( 1==-2 )
+            { // -- special case : Laplacian
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n)  = gd( 0, 2, 0, 0, x, y, z, n, t );
+                        if( numberOfDimensions>1 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 2, 0, x, y, z, n, t );
+                        if( numberOfDimensions>2 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 0, 2, x, y, z, n, t );
+                    }
+                }
+            }
+            else
+            {
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n) = gd( 0, 1, 0, 1, x, y, z, n, t );
+                    }
+                }
+            }
+        } 
 
-//   RealDistributedArray result(Range(I1.getBase(),I1.getBound()),
-//                    Range(I2.getBase(),I2.getBound()),
-//                    Range(I3.getBase(),I3.getBound()),
-//                    Range( N.getBase(), N.getBound()));
-//   if( c.numberOfDimensions()>1 )
-//     for( int n=N.getBase(); n<=N.getBound(); n++ )
-//       result(I1,I2,I3,n)=cc(1,0,1,n);
-//   else
-//     for( int n=N.getBase(); n<=N.getBound(); n++ )
-//       result(I1,I2,I3,n)=x*0.;
     return result;
 }
 
@@ -1653,9 +2333,9 @@ yz(const MappedGrid & c, const Index & I1,
             MappedGrid & mg = (MappedGrid &)c;
             result.partition(mg.getPartition());
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
             const realArray & center = c.center();
             #ifdef USE_PPP
                 const realSerialArray & xy = center.getLocalArrayWithGhostBoundaries();
@@ -1680,9 +2360,9 @@ yz(const MappedGrid & c, const Index & I1,
             getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,xd,yd,zd);  
             result.partition(xd.getPartition());  
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
           #ifndef USE_PPP
             const realSerialArray & x = xd;
             const realSerialArray & y = yd;
@@ -1708,30 +2388,64 @@ yz(const MappedGrid & c, const Index & I1,
         #else
             const realSerialArray & r = result;
         #endif
-        polyFunction(c.numberOfDimensions(),  
-                                  ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
-                                  r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
-                                  r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
-                                  cc.getLength(0),cc.getLength(1),cc.getLength(2),  
-                 	       I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
-                                  N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
-                 	       *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
-                                  *xp,*yp,*zp,  
-                                  0,1,1,0 ); 
-//   checkArguments( N );
-//   RealDistributedArray x,y,z;
-//   getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,x,y,z);
+        if( max(degreeX,degreeT)<=maxOptimizedDegree )
+        {
+            polyFunction(c.numberOfDimensions(),  
+                                      ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
+                                      r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
+                                      r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
+                                      cc.getLength(0),cc.getLength(1),cc.getLength(2),  
+                                      I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
+                                      N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
+                                      *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
+                                      *xp,*yp,*zp,  
+                                      0,1,1,0 );
+        }
+        else
+        {
+            if( centering!=GridFunctionParameters::defaultCentering )
+            {
+                printF("OGPolyFunction:ERROR: eval for MappedGrid not implemented yet for non default centering and high degree polynomials.\n");
+                OV_ABORT("error");
+            }
+            OV_GET_SERIAL_ARRAY_CONST(real,c.vertex(),xLocal);
+            const int numberOfDimensions = c.numberOfDimensions();
+            if( 0==-2 )
+            { // -- special case : Laplacian
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n)  = gd( 0, 2, 0, 0, x, y, z, n, t );
+                        if( numberOfDimensions>1 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 2, 0, x, y, z, n, t );
+                        if( numberOfDimensions>2 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 0, 2, x, y, z, n, t );
+                    }
+                }
+            }
+            else
+            {
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n) = gd( 0, 0, 1, 1, x, y, z, n, t );
+                    }
+                }
+            }
+        } 
 
-//   RealDistributedArray result(Range(I1.getBase(),I1.getBound()),
-//                    Range(I2.getBase(),I2.getBound()),
-//                    Range(I3.getBase(),I3.getBound()),
-//                    Range( N.getBase(), N.getBound()));
-//   if( c.numberOfDimensions()>1 )
-//     for( int n=N.getBase(); n<=N.getBound(); n++ )
-//       result(I1,I2,I3,n)=cc(0,1,1,n);
-//   else
-//     for( int n=N.getBase(); n<=N.getBound(); n++ )
-//       result(I1,I2,I3,n)=x*0.;
     return result;
 }
 
@@ -1755,9 +2469,9 @@ laplacian(const MappedGrid & c, const Index & I1,
             MappedGrid & mg = (MappedGrid &)c;
             result.partition(mg.getPartition());
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
             const realArray & center = c.center();
             #ifdef USE_PPP
                 const realSerialArray & xy = center.getLocalArrayWithGhostBoundaries();
@@ -1782,9 +2496,9 @@ laplacian(const MappedGrid & c, const Index & I1,
             getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,xd,yd,zd);  
             result.partition(xd.getPartition());  
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
           #ifndef USE_PPP
             const realSerialArray & x = xd;
             const realSerialArray & y = yd;
@@ -1810,43 +2524,65 @@ laplacian(const MappedGrid & c, const Index & I1,
         #else
             const realSerialArray & r = result;
         #endif
-        polyFunction(c.numberOfDimensions(),  
-                                  ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
-                                  r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
-                                  r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
-                                  cc.getLength(0),cc.getLength(1),cc.getLength(2),  
-                 	       I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
-                                  N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
-                 	       *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
-                                  *xp,*yp,*zp,  
-                                  -2,0,0,0 ); 
+        if( max(degreeX,degreeT)<=maxOptimizedDegree )
+        {
+            polyFunction(c.numberOfDimensions(),  
+                                      ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
+                                      r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
+                                      r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
+                                      cc.getLength(0),cc.getLength(1),cc.getLength(2),  
+                                      I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
+                                      N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
+                                      *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
+                                      *xp,*yp,*zp,  
+                                      -2,0,0,0 );
+        }
+        else
+        {
+            if( centering!=GridFunctionParameters::defaultCentering )
+            {
+                printF("OGPolyFunction:ERROR: eval for MappedGrid not implemented yet for non default centering and high degree polynomials.\n");
+                OV_ABORT("error");
+            }
+            OV_GET_SERIAL_ARRAY_CONST(real,c.vertex(),xLocal);
+            const int numberOfDimensions = c.numberOfDimensions();
+            if( -2==-2 )
+            { // -- special case : Laplacian
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n)  = gd( 0, 2, 0, 0, x, y, z, n, t );
+                        if( numberOfDimensions>1 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 2, 0, x, y, z, n, t );
+                        if( numberOfDimensions>2 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 0, 2, x, y, z, n, t );
+                    }
+                }
+            }
+            else
+            {
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n) = gd( 0, -2, 0, 0, x, y, z, n, t );
+                    }
+                }
+            }
+        } 
 
-//   checkArguments( N );
-//   RealDistributedArray x,y,z;
-//   getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,x,y,z);
 
-//   RealDistributedArray result(Range(I1.getBase(),I1.getBound()),
-//                    Range(I2.getBase(),I2.getBound()),
-//                    Range(I3.getBase(),I3.getBound()),
-//                    Range( N.getBase(), N.getBound()));
-//   if( c.numberOfDimensions()==1 )
-//   {
-//     for( int n=N.getBase(); n<=N.getBound(); n++ )
-//       result(I1,I2,I3,n)=(2.*cc(2,0,0,n)+x*(6.*cc(3,0,0,n)+x*(12.*cc(4,0,0,n))))*TIME(n,t);
-//   }
-//   else if( c.numberOfDimensions()==2 )
-//   {
-//     for( int n=N.getBase(); n<=N.getBound(); n++ )
-//       result(I1,I2,I3,n)=(2.*cc(2,0,0,n)+x*(6.*cc(3,0,0,n)+x*(12.*cc(4,0,0,n)))+
-//                           2.*cc(0,2,0,n)+y*(6.*cc(0,3,0,n)+y*(12.*cc(0,4,0,n))))*TIME(n,t);
-//   }
-//   else
-//   {
-//     for( int n=N.getBase(); n<=N.getBound(); n++ )
-//       result(I1,I2,I3,n)=(2.*cc(2,0,0,n)+x*(6.*cc(3,0,0,n)+x*(12.*cc(4,0,0,n)))+
-//                           2.*cc(0,2,0,n)+y*(6.*cc(0,3,0,n)+y*(12.*cc(0,4,0,n)))+
-//                           2.*cc(0,0,2,n)+z*(6.*cc(0,0,3,n)+z*(12.*cc(0,0,4,n))))*TIME(n,t);
-//   }
     
     return result;
 }
@@ -1871,9 +2607,9 @@ xxx(const MappedGrid & c, const Index & I1,
             MappedGrid & mg = (MappedGrid &)c;
             result.partition(mg.getPartition());
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
             const realArray & center = c.center();
             #ifdef USE_PPP
                 const realSerialArray & xy = center.getLocalArrayWithGhostBoundaries();
@@ -1898,9 +2634,9 @@ xxx(const MappedGrid & c, const Index & I1,
             getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,xd,yd,zd);  
             result.partition(xd.getPartition());  
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
           #ifndef USE_PPP
             const realSerialArray & x = xd;
             const realSerialArray & y = yd;
@@ -1926,16 +2662,63 @@ xxx(const MappedGrid & c, const Index & I1,
         #else
             const realSerialArray & r = result;
         #endif
-        polyFunction(c.numberOfDimensions(),  
-                                  ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
-                                  r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
-                                  r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
-                                  cc.getLength(0),cc.getLength(1),cc.getLength(2),  
-                 	       I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
-                                  N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
-                 	       *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
-                                  *xp,*yp,*zp,  
-                                  3,0,0,0 ); 
+        if( max(degreeX,degreeT)<=maxOptimizedDegree )
+        {
+            polyFunction(c.numberOfDimensions(),  
+                                      ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
+                                      r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
+                                      r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
+                                      cc.getLength(0),cc.getLength(1),cc.getLength(2),  
+                                      I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
+                                      N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
+                                      *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
+                                      *xp,*yp,*zp,  
+                                      3,0,0,0 );
+        }
+        else
+        {
+            if( centering!=GridFunctionParameters::defaultCentering )
+            {
+                printF("OGPolyFunction:ERROR: eval for MappedGrid not implemented yet for non default centering and high degree polynomials.\n");
+                OV_ABORT("error");
+            }
+            OV_GET_SERIAL_ARRAY_CONST(real,c.vertex(),xLocal);
+            const int numberOfDimensions = c.numberOfDimensions();
+            if( 3==-2 )
+            { // -- special case : Laplacian
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n)  = gd( 0, 2, 0, 0, x, y, z, n, t );
+                        if( numberOfDimensions>1 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 2, 0, x, y, z, n, t );
+                        if( numberOfDimensions>2 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 0, 2, x, y, z, n, t );
+                    }
+                }
+            }
+            else
+            {
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n) = gd( 0, 3, 0, 0, x, y, z, n, t );
+                    }
+                }
+            }
+        } 
 
 //   checkArguments( N );
 //   RealDistributedArray x,y,z;
@@ -1968,9 +2751,9 @@ xxxx(const MappedGrid & c, const Index & I1,
             MappedGrid & mg = (MappedGrid &)c;
             result.partition(mg.getPartition());
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
             const realArray & center = c.center();
             #ifdef USE_PPP
                 const realSerialArray & xy = center.getLocalArrayWithGhostBoundaries();
@@ -1995,9 +2778,9 @@ xxxx(const MappedGrid & c, const Index & I1,
             getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,xd,yd,zd);  
             result.partition(xd.getPartition());  
             result.redim(Range(I1.getBase(),I1.getBound()),  
-                 		 Range(I2.getBase(),I2.getBound()),  
-                 		 Range(I3.getBase(),I3.getBound()),  
-                 		 Range( N.getBase(), N.getBound()));  
+                                      Range(I2.getBase(),I2.getBound()),  
+                                      Range(I3.getBase(),I3.getBound()),  
+                                      Range( N.getBase(), N.getBound()));  
           #ifndef USE_PPP
             const realSerialArray & x = xd;
             const realSerialArray & y = yd;
@@ -2023,16 +2806,63 @@ xxxx(const MappedGrid & c, const Index & I1,
         #else
             const realSerialArray & r = result;
         #endif
-        polyFunction(c.numberOfDimensions(),  
-                                  ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
-                                  r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
-                                  r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
-                                  cc.getLength(0),cc.getLength(1),cc.getLength(2),  
-                 	       I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
-                                  N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
-                 	       *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
-                                  *xp,*yp,*zp,  
-                                  4,0,0,0 ); 
+        if( max(degreeX,degreeT)<=maxOptimizedDegree )
+        {
+            polyFunction(c.numberOfDimensions(),  
+                                      ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
+                                      r.getBase(0),r.getBound(0),r.getBase(1),r.getBound(1),
+                                      r.getBase(2),r.getBound(2),r.getBase(3),r.getBound(3),
+                                      cc.getLength(0),cc.getLength(1),cc.getLength(2),  
+                                      I1.getBase(),I1.getBound(),I2.getBase(),I2.getBound(),I3.getBase(),I3.getBound(),  
+                                      N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
+                                      *a.getDataPointer(), *cc.getDataPointer(), *r.getDataPointer(),  
+                                      *xp,*yp,*zp,  
+                                      4,0,0,0 );
+        }
+        else
+        {
+            if( centering!=GridFunctionParameters::defaultCentering )
+            {
+                printF("OGPolyFunction:ERROR: eval for MappedGrid not implemented yet for non default centering and high degree polynomials.\n");
+                OV_ABORT("error");
+            }
+            OV_GET_SERIAL_ARRAY_CONST(real,c.vertex(),xLocal);
+            const int numberOfDimensions = c.numberOfDimensions();
+            if( 4==-2 )
+            { // -- special case : Laplacian
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n)  = gd( 0, 2, 0, 0, x, y, z, n, t );
+                        if( numberOfDimensions>1 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 2, 0, x, y, z, n, t );
+                        if( numberOfDimensions>2 )
+                            r(i1,i2,i3,n) += gd( 0, 0, 0, 2, x, y, z, n, t );
+                    }
+                }
+            }
+            else
+            {
+                for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )
+                for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                {
+                    const Real x =                              xLocal(i1,i2,i3,0);
+                    const Real y = numberOfDimensions<=1 ? 0. : xLocal(i1,i2,i3,1);
+                    const Real z = numberOfDimensions<=2 ? 0. : xLocal(i1,i2,i3,2);
+                    for( int n=N.getBase(); n<=N.getBound(); n++ )
+                    {
+                        r(i1,i2,i3,n) = gd( 0, 4, 0, 0, x, y, z, n, t );
+                    }
+                }
+            }
+        } 
 //   checkArguments( N );
 //   RealDistributedArray x,y,z;
 //   getCoordinates(centering,c.numberOfDimensions(),c,I1,I2,I3,x,y,z);
@@ -2078,8 +2908,8 @@ gd(const int & ntd,
     if( ntd<0 || nxd<0 || nyd<0 || nzd <0 )
     {
         printf("OGPolyFunction::gd: ERROR: invalid derivative requested, ntd=%i, nxd=%i, nyd=%i, nzd=%i\n",
-         	   ntd,nxd,nyd,nzd);
-        Overture::abort("error");
+                      ntd,nxd,nyd,nzd);
+        OV_ABORT("error");
     }
     if( ntd==0 && nxd==0 && nyd==0 && nzd==0 )
     {
@@ -2096,9 +2926,9 @@ gd(const int & ntd,
         result.partition(mg.getPartition());
     #endif
     result.redim(Range(I1.getBase(),I1.getBound()),
-             	       Range(I2.getBase(),I2.getBound()),
-             	       Range(I3.getBase(),I3.getBound()),
-             	       Range( N.getBase(), N.getBound()));
+                              Range(I2.getBase(),I2.getBound()),
+                              Range(I3.getBase(),I3.getBound()),
+                              Range( N.getBase(), N.getBound()));
 
     if( nxd>degreeX || nyd>degreeY || nzd>degreeZ || ntd >degreeT )
     {
@@ -2130,7 +2960,7 @@ gd(const int & ntd,
         for( ix=nxd; ix<=degreeX; ix++ )
         {
             for( n=N.getBase(); n<=N.getBound(); n++ )
-      	result(I1,I2,I3,n)+=cc(ix,0,0,n)*xPow;
+                result(I1,I2,I3,n)+=cc(ix,0,0,n)*xPow;
             if( ix<degreeX )
                 xPow*=((ix+1.)/(ix-nxd+1.))*x;
         }
@@ -2152,14 +2982,14 @@ gd(const int & ntd,
             xPow=xFactorial;
             for( ix=nxd; ix<=degreeX; ix++ )
             {
-      	const RealDistributedArray & temp = evaluate( xPow*yPow );
-      	for( n=N.getBase(); n<=N.getBound(); n++ )
-        	  result(I1,I2,I3,n)+=cc(ix,iy,0,n)*temp;
-      	if( ix<degreeX )
-        	  xPow*=((ix+1.)/(ix-nxd+1.))*x;
+                const RealDistributedArray & temp = evaluate( xPow*yPow );
+                for( n=N.getBase(); n<=N.getBound(); n++ )
+                    result(I1,I2,I3,n)+=cc(ix,iy,0,n)*temp;
+                if( ix<degreeX )
+                    xPow*=((ix+1.)/(ix-nxd+1.))*x;
             }
             if( iy<degreeX )
-      	yPow*=((iy+1.)/(iy-nyd+1.))*y;
+                yPow*=((iy+1.)/(iy-nyd+1.))*y;
         }
     }
     else
@@ -2181,25 +3011,231 @@ gd(const int & ntd,
             yPow=yFactorial;
             for( iy=nyd; iy<=degreeX; iy++ )
             {
-      	const RealDistributedArray & yPowZpow = evaluate( yPow*zPow );
+                const RealDistributedArray & yPowZpow = evaluate( yPow*zPow );
                 xPow=xFactorial;
-      	for( ix=nxd; ix<=degreeX; ix++ )
-      	{
-        	  const RealDistributedArray & temp = evaluate( xPow*yPowZpow );
-        	  for( n=N.getBase(); n<=N.getBound(); n++ )
-          	    result(I1,I2,I3,n)+=cc(ix,iy,iz,n)*temp;
-        	  if( ix<degreeX )
-          	    xPow*=((ix+1.)/(ix-nxd+1.))*x;
-      	}
-      	if( iy<degreeX )
-        	  yPow*=((iy+1.)/(iy-nyd+1.))*y;
+                for( ix=nxd; ix<=degreeX; ix++ )
+                {
+                    const RealDistributedArray & temp = evaluate( xPow*yPowZpow );
+                    for( n=N.getBase(); n<=N.getBound(); n++ )
+                        result(I1,I2,I3,n)+=cc(ix,iy,iz,n)*temp;
+                    if( ix<degreeX )
+                        xPow*=((ix+1.)/(ix-nxd+1.))*x;
+                }
+                if( iy<degreeX )
+                    yPow*=((iy+1.)/(iy-nyd+1.))*y;
             }
             if( iz<degreeX )
                 zPow*=((iz+1.)/(iz-nzd+1.))*z;
         }
     }
     
-    GET_TIME(for( n=N.getBase(); n<=N.getBound(); n++ )result(I1,I2,I3,n))
+  // GET_TIME(for( n=N.getBase(); n<=N.getBound(); n++ )result(I1,I2,I3,n))
+        switch (ntd)  
+        {  
+        case 0:  
+      // ----- Eval the time polynomial ---
+            if( degreeT==0 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=a(0,n);  
+            else if( degreeT==1 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=a(0,n)+t*(a(1,n));  
+            else if( degreeT==2 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=a(0,n)+t*(a(1,n)+t*(a(2,n)));  
+            else if( degreeT==3 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=a(0,n)+t*(a(1,n)+t*(a(2,n)+t*(a(3,n))));  
+            else if( degreeT==4 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=a(0,n)+t*(a(1,n)+t*(a(2,n)+t*(a(3,n)+t*(a(4,n)))));  
+            else if( degreeT==5 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=a(0,n)+t*(a(1,n)+t*(a(2,n)+t*(a(3,n)+t*(a(4,n)+t*(a(5,n))))));  
+            else if( degreeT==6 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=a(0,n)+t*(a(1,n)+t*(a(2,n)+t*(a(3,n)+t*(a(4,n)+t*(a(5,n)+t*(a(6,n)))))));
+            else if( degreeT==7 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=a(0,n)+t*(a(1,n)+t*(a(2,n)+t*(a(3,n)+t*(a(4,n)+t*(a(5,n)+t*(a(6,n)+t*(a(7,n)))))))); 
+          else if( degreeT==8 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=a(0,n)+t*(a(1,n)+t*(a(2,n)+t*(a(3,n)+t*(a(4,n)+t*(a(5,n)+t*(a(6,n)+t*(a(7,n)+t*(a(8,n)))))))));  
+          else if( degreeT==9 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=a(0,n)+t*(a(1,n)+t*(a(2,n)+t*(a(3,n)+t*(a(4,n)+t*(a(5,n)+t*(a(6,n)+t*(a(7,n)+t*(a(8,n)+t*(a(9,n))))))))));
+          else if( degreeT==10 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=a(0,n)+t*(a(1,n)+t*(a(2,n)+t*(a(3,n)+t*(a(4,n)+t*(a(5,n)+t*(a(6,n)+t*(a(7,n)+t*(a(8,n)+t*(a(9,n)+t*(a(10,n)))))))))));                              
+            else  
+            {  
+                printF("ERROR invalid or unimplemented degreeT=%d\n",degreeT);  
+                OV_ABORT("error");  
+            }  
+            break;  
+        case 1: 
+      // ---- first time derivative --
+            if( degreeT==0 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=0.;  
+            else if( degreeT==1 ) 
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=a(1,n); 
+            else if( degreeT==2 ) 
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(a(1,n)+t*(2.*a(2,n))); 
+            else if( degreeT==3 ) 
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n)))); 
+            else if( degreeT==4 ) 
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n)+t*(4.*a(4,n)))));  
+            else if( degreeT==5 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n)+t*(4.*a(4,n)+t*(5.*a(5,n))))));  
+            else if( degreeT==6 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n)+t*(4.*a(4,n)+t*(5.*a(5,n)+t*(6.*a(6,n)))))));
+            else if( degreeT==7 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n)+t*(4.*a(4,n)+t*(5.*a(5,n)+t*(6.*a(6,n)+t*(7.*a(7,n))))))));
+            else if( degreeT==8 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n)+t*(4.*a(4,n)+t*(5.*a(5,n)+t*(6.*a(6,n)+t*(7.*a(7,n)+t*(8.*a(8,n)))))))));
+            else if( degreeT==9 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n)+t*(4.*a(4,n)+t*(5.*a(5,n)+t*(6.*a(6,n)+t*(7.*a(7,n)+t*(8.*a(8,n)+t*(9.*a(9,n))))))))));
+            else if( degreeT==10 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(a(1,n)+t*(2.*a(2,n)+t*(3.*a(3,n)+t*(4.*a(4,n)+t*(5.*a(5,n)+t*(6.*a(6,n)+t*(7.*a(7,n)+t*(8.*a(8,n)+t*(9.*a(9,n)+t*(10.*a(10,n)))))))))));        
+            else  
+            {  
+                printF("ERROR invalid or unimplemented degreeT=%d\n",degreeT);  
+                OV_ABORT("error");  
+            }  
+            break;  
+        case 2: 
+      // ---- second time derivative ---- 
+            if( degreeT==0 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=0.;  
+            else if( degreeT==1 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=0.;  
+            else if( degreeT==2 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(2.*a(2,n));  
+            else if( degreeT==3 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(2.*a(2,n)+t*(6.*a(3,n)));  
+            else if( degreeT==4 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(2.*a(2,n)+t*(6.*a(3,n)+t*(12.*a(4,n))));  
+            else if( degreeT==5 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(2.*a(2,n)+t*(6.*a(3,n)+t*(12.*a(4,n)+t*(20.*a(5,n)))));  
+            else if( degreeT==6 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(2.*a(2,n)+t*(6.*a(3,n)+t*(12.*a(4,n)+t*(20.*a(5,n)+t*(30.*a(6,n)))))); 
+            else if( degreeT==7 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(2.*a(2,n)+t*(6.*a(3,n)+t*(12.*a(4,n)+t*(20.*a(5,n)+t*(30.*a(6,n)+t*(42.*a(7,n)))))));
+            else if( degreeT==8 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(2.*a(2,n)+t*(6.*a(3,n)+t*(12.*a(4,n)+t*(20.*a(5,n)+t*(30.*a(6,n)+t*(42.*a(7,n)+t*(56.*a(8,n))))))));
+            else if( degreeT==9 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(2.*a(2,n)+t*(6.*a(3,n)+t*(12.*a(4,n)+t*(20.*a(5,n)+t*(30.*a(6,n)+t*(42.*a(7,n)+t*(56.*a(8,n)+t*(72.*a(9,n)))))))));
+            else if( degreeT==10 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(2.*a(2,n)+t*(6.*a(3,n)+t*(12.*a(4,n)+t*(20.*a(5,n)+t*(30.*a(6,n)+t*(42.*a(7,n)+t*(56.*a(8,n)+t*(72.*a(9,n)+t*(90.*a(10,n))))))))));       
+            else  
+            {  
+                printF("ERROR invalid or unimplemented degreeT=%d\n",degreeT);
+                OV_ABORT("error");  
+            }  
+            break; 
+        case 3:
+      // ---- third time derivative ----   
+            if( degreeT<=2 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=0.;  
+            else if( degreeT==3 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(6.*a(3,n));  
+            else if( degreeT==4 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(6.*a(3,n)+t*(24.*a(4,n)));  
+            else if( degreeT==5 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(6.*a(3,n)+t*(24.*a(4,n)+t*(60.*a(5,n))));  
+            else if( degreeT==6 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(6.*a(3,n)+t*(24.*a(4,n)+t*(60.*a(5,n)+t*(120.*a(6,n))))); 
+            else if( degreeT==7 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(6.*a(3,n)+t*(24.*a(4,n)+t*(60.*a(5,n)+t*(120.*a(6,n)+t*(7*6*5*a(7,n))))));
+            else if( degreeT==8 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(6.*a(3,n)+t*(24.*a(4,n)+t*(60.*a(5,n)+t*(120.*a(6,n)+t*(7*6*5*a(7,n)+t*(8*7*6*a(8,n)))))));
+            else if( degreeT==9 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(6.*a(3,n)+t*(24.*a(4,n)+t*(60.*a(5,n)+t*(120.*a(6,n)+t*(7*6*5*a(7,n)+t*(8*7*6*a(8,n)+t*(9*8*7*a(9,n))))))));
+            else if( degreeT==10 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(6.*a(3,n)+t*(24.*a(4,n)+t*(60.*a(5,n)+t*(120.*a(6,n)+t*(7*6*5*a(7,n)+t*(8*7*6*a(8,n)+t*(9*8*7*a(9,n)+t*(10*9*8*a(10,n)))))))));                          
+            else  
+            {  
+                printF("ERROR invalid or unimplemented degreeT=%d\n",degreeT);
+                OV_ABORT("error");  
+            }  
+            break; 
+        case 4:  
+      // ---- fourth time derivative ----  
+            if( degreeT<=3 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=0.;  
+            else if( degreeT==4 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(24.*a(4,n));  
+            else if( degreeT==5 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(24.*a(4,n)+t*(120.*a(5,n)));  
+            else if( degreeT==6 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(24.*a(4,n)+t*(120.*a(5,n)+t*(360.*a(6,n))));
+            else if( degreeT==7 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(24.*a(4,n)+t*(120.*a(5,n)+t*(360.*a(6,n)+t*(7*6*5*4*a(7,n)))));
+            else if( degreeT==8 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(24.*a(4,n)+t*(120.*a(5,n)+t*(360.*a(6,n)+t*(7*6*5*4*a(7,n)+t*(8*7*6*5*a(8,n))))));
+            else if( degreeT==9 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(24.*a(4,n)+t*(120.*a(5,n)+t*(360.*a(6,n)+t*(7*6*5*4*a(7,n)+t*(8*7*6*5*a(8,n)+t*(9*8*7*6*a(9,n)))))));
+            else if( degreeT==10 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(24.*a(4,n)+t*(120.*a(5,n)+t*(360.*a(6,n)+t*(7*6*5*4*a(7,n)+t*(8*7*6*5*a(8,n)+t*(9*8*7*6*a(9,n)+t*(10*9*8*7*a(10,n))))))));                                    
+            else  
+            {  
+                printF("ERROR invalid or unimplemented degreeT=%d\n",degreeT);
+                OV_ABORT("error");  
+            }  
+            break; 
+        case 5:  
+      // ---- fifth time derivative ---- 
+            if( degreeT<=4 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=0.;  
+            else if( degreeT==5 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(120.*a(5,n));  
+            else if( degreeT==6 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(120.*a(5,n)+t*(720.*a(6,n))); 
+            else if( degreeT==7 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(120.*a(5,n)+t*(720.*a(6,n)+t*(7*6*5*4*3*a(7,n))));
+            else if( degreeT==8 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(120.*a(5,n)+t*(720.*a(6,n)+t*(7*6*5*4*3*a(7,n)+t*(8*7*6*5*4*a(8,n)))));
+            else if( degreeT==9 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(120.*a(5,n)+t*(720.*a(6,n)+t*(7*6*5*4*3*a(7,n)+t*(8*7*6*5*4*a(8,n)+t*(9*8*7*6*5*a(9,n))))));
+            else if( degreeT==10 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(120.*a(5,n)+t*(720.*a(6,n)+t*(7*6*5*4*3*a(7,n)+t*(8*7*6*5*4*a(8,n)+t*(9*8*7*6*5*a(9,n)+t*(10*9*8*7*6*a(10,n)))))));                           
+            else  
+            {  
+                printF("ERROR invalid or unimplemented degreeT=%d\n",degreeT);
+                OV_ABORT("error");  
+            }  
+            break;
+        case 6:  
+      // ---- sixth time derivative ---- 
+            if( degreeT<=5 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=0.;  
+            else if( degreeT==6 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(720.*a(6,n)); 
+            else if( degreeT==7 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(720.*a(6,n)+t*(7*6*5*4*3*2*a(7,n)));
+            else if( degreeT==8 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(720.*a(6,n)+t*(7*6*5*4*3*2*a(7,n)+t*(8*7*6*5*4*3*a(8,n))));
+            else if( degreeT==9 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(720.*a(6,n)+t*(7*6*5*4*3*2*a(7,n)+t*(8*7*6*5*4*3*a(8,n)+t*(9*8*7*6*5*4*a(9,n)))));
+            else if( degreeT==10 )  
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n)*=(720.*a(6,n)+t*(7*6*5*4*3*2*a(7,n)+t*(8*7*6*5*4*3*a(8,n)+t*(9*8*7*6*5*4*a(9,n)+t*(10*9*8*7*6*5*a(10,n))))));        
+            else  
+            {  
+                printF("ERROR invalid or unimplemented degreeT=%d\n",degreeT);
+                OV_ABORT("error");  
+            }  
+            break;
+        default: 
+      // ----- GENERAL TIME DERIVATIVE --- *check me**  Dec 3, 2022
+            if( degreeT<=(ntd-1) )
+            {
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n) *= 0.;
+            }
+            else
+            {
+                Real factor=0.;
+                Real tPow=1.;
+                for( int i=ntd; i<=degreeT; i++ )  // i=ntd, ntd+1, ..., degreeT
+                {
+                      Real dfact=1.;
+                      for( int j=i; j>(i-ntd); j-- ){ dfact *= j; }  // dfact = (i)*(i-1)* ... *(i-ntd+1)
+                      factor = factor + tPow*dfact*a(i,n); 
+                      tPow*=t;
+                }
+                for(n=N.getBase();n<=N.getBound();n++)result(I1,I2,I3,n) *= factor;
+            }
+      // printF("ERROR invalid or unimplemented time derivative ntd=%d\n",ntd);
+      // OV_ABORT("error");  
+        }
 //   switch (ntd)
 //   {
 //   case 0:
@@ -2266,7 +3302,7 @@ gd( realSerialArray & result,
 
     if( i1a>i1b || i2a>i2b || i3a>i3b )
         return result;  // nothing to do
-                		    
+                                        
     Index J1=Range(i1a,i1b);
     Index J2=Range(i2a,i2b);
     Index J3=Range(i3a,i3b);
@@ -2290,25 +3326,47 @@ gd( realSerialArray & result,
 
   // if the result has only room for 1 variable and only one component is requested then put the
   // answer in the only component of result. (Pretend that result is dimensioned: result(.,.,.,N))
+    bool saveOneValue=false;
     int ndrca=result.getBase(3), ndrcb=result.getBound(3);
     if( result.getLength(3)==1 && N.length()==1 )
     {
+        saveOneValue=true;
         ndrca=N.getBase(); 
         ndrcb=N.getBound();
     }
 
-    polyFunction(numberOfDimensions,
-                              ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
-                              result.getBase(0),result.getBound(0),
-                              result.getBase(1),result.getBound(1),
-                              result.getBase(2),result.getBound(2),  
-                              ndrca,ndrcb,
-                              cc.getLength(0),cc.getLength(1),cc.getLength(2),  
-             	       J1.getBase(),J1.getBound(),J2.getBase(),J2.getBound(),J3.getBase(),J3.getBound(),  
-                              N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
-             	       *a.getDataPointer(), *cc.getDataPointer(), *result.getDataPointer(),  
-                              *xp,*yp,*zp,  
-                              nxd,nyd,nzd,ntd ); 
+    if( max(degreeX,degreeT)<=maxOptimizedDegree )
+    {
+        polyFunction(numberOfDimensions,
+                                  ndra,ndrb,ndsa,ndsb,ndta,ndtb,  
+                                  result.getBase(0),result.getBound(0),
+                                  result.getBase(1),result.getBound(1),
+                                  result.getBase(2),result.getBound(2),  
+                                  ndrca,ndrcb,
+                                  cc.getLength(0),cc.getLength(1),cc.getLength(2),  
+                                  J1.getBase(),J1.getBound(),J2.getBase(),J2.getBound(),J3.getBase(),J3.getBound(),  
+                                  N.getBase(),N.getBound(), a.getLength(0), degreeX, degreeT, t,  
+                                  *a.getDataPointer(), *cc.getDataPointer(), *result.getDataPointer(),  
+                                  *xp,*yp,*zp,  
+                                  nxd,nyd,nzd,ntd ); 
+    }
+    else
+    {
+        for( int i3=J3.getBase(); i3<=J3.getBound(); i3++ )
+        for( int i2=J2.getBase(); i2<=J2.getBound(); i2++ )
+        for( int i1=J1.getBase(); i1<=J1.getBound(); i1++ )
+        {
+            const Real x0 =                              x(i1,i2,i3,0);
+            const Real y0 = numberOfDimensions<=1 ? 0. : x(i1,i2,i3,1);
+            const Real z0 = numberOfDimensions<=2 ? 0. : x(i1,i2,i3,2);
+            for( int n=N.getBase(); n<=N.getBound(); n++ )
+            {
+                const int nr = saveOneValue ? result.getBase(3) : n;
+                result(i1,i2,i3,nr) = gd( ntd, nxd, nyd, nzd, x0, y0, z0, n, t );
+            }
+        }
+    } 
+
 
     return result;
 }
@@ -2317,8 +3375,8 @@ gd( realSerialArray & result,
 //\begin{>>OGFunctionInclude.tex}{\subsection{Evaluate the function or a derivative on a CompositeGrid}} 
 realCompositeGridFunction OGPolyFunction::
 operator()(CompositeGrid & cg, 
-         	   const Index & N, 
-         	   const real t,
+                      const Index & N, 
+                      const real t,
                       const GridFunctionParameters::
                       GridFunctionType & centering  /* = defaultCentering */ )
 // ==========================================================================================

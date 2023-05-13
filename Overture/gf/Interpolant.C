@@ -193,7 +193,7 @@ Interpolant::
 //   {
 //     printF("Interpolant::destructor:WARNING: rcData->getReferenceCount()!=0, value=%i\n"
 //            "      Reference counting for the interpolant is currently broken. Fix me Bill!\n",
-// 	   rcData->getReferenceCount());
+//         rcData->getReferenceCount());
 //     while( rcData->getReferenceCount()>0 )
 //       rcData->decrementReferenceCount();
 //   }
@@ -204,7 +204,7 @@ Interpolant::
 
 int Interpolant::
 getComponentRanges(const Range & C0, const Range & C1, const Range & C2, Range C[4],
-		   realCompositeGridFunction & u )
+                   realCompositeGridFunction & u )
 // ============================================================================================
 // /Access: protected
 // /Description:
@@ -226,7 +226,7 @@ getComponentRanges(const Range & C0, const Range & C1, const Range & C2, Range C
       C[u.positionOfComponent(2)]=C2;
     for( int i=0; i<4; i++ )
       if( C[i].length()<=0 )
-	C[i]=Range(u[0].getBase(i),u[0].getBound(i));
+        C[i]=Range(u[0].getBase(i),u[0].getBound(i));
   }
   else
   {
@@ -251,9 +251,9 @@ getComponentRanges(const Range & C0, const Range & C1, const Range & C2, Range C
 //\begin{>>InterpolateInclude.tex}{\subsubsection{interpolate a CompositeGridFunction}}  
 int Interpolant::
 interpolate( realCompositeGridFunction & u,
-		   const Range & C0 /* = nullRange */,     
-		   const Range & C1 /* = nullRange */, 
-		   const Range & C2 /* = nullRange */ )
+                   const Range & C0 /* = nullRange */,     
+                   const Range & C1 /* = nullRange */, 
+                   const Range & C2 /* = nullRange */ )
 //==============================================================================
 // /Description:
 //    Interpolate the interpolation boundary of a CompositeGridFunction
@@ -276,10 +276,10 @@ interpolate( realCompositeGridFunction & u,
 //\begin{>>InterpolateInclude.tex}{\subsubsection{interpolate a single grid from a CompositeGridFunction}}  
 int Interpolant::
 interpolate( int gridToInterpolate,             // only interpolate this grid.
-	     realCompositeGridFunction & u, 
-	     const Range & C0 /* = nullRange */,      // optionally specify components to interpolate
-	     const Range & C1 /* = nullRange */,  
-	     const Range & C2 /* = nullRange */ )
+             realCompositeGridFunction & u, 
+             const Range & C0 /* = nullRange */,      // optionally specify components to interpolate
+             const Range & C1 /* = nullRange */,  
+             const Range & C2 /* = nullRange */ )
 //==============================================================================
 // /Description:
 //    Interpolate the interpolation boundary of a CompositeGridFunction
@@ -313,9 +313,9 @@ interpolate( int gridToInterpolate,             // only interpolate this grid.
 int Interpolant::
 interpolate( realCompositeGridFunction & u, 
              const IntegerArray & gridsToInterpolate,        // only interpolate these grids.
-	     const Range & C0 /* = nullRange */,      // optionally specify components to interpolate
-	     const Range & C1 /* = nullRange */,  
-	     const Range & C2 /* = nullRange */ )
+             const Range & C0 /* = nullRange */,      // optionally specify components to interpolate
+             const Range & C1 /* = nullRange */,  
+             const Range & C2 /* = nullRange */ )
 //==============================================================================
 // /Description:
 //    Interpolate the interpolation boundary of a CompositeGridFunction
@@ -355,10 +355,10 @@ interpolate( realCompositeGridFunction & u,
 int Interpolant::
 interpolate( realCompositeGridFunction & u, 
              const IntegerArray & gridsToInterpolate,      // specify which grids to interpolate
-	     const IntegerArray & gridsToInterpolateFrom,  // specify which grids to interpolate from
-	     const Range & C0 /* = nullRange */,      // optionally specify components to interpolate
-	     const Range & C1 /* = nullRange */,  
-	     const Range & C2 /* = nullRange */)
+             const IntegerArray & gridsToInterpolateFrom,  // specify which grids to interpolate from
+             const Range & C0 /* = nullRange */,      // optionally specify components to interpolate
+             const Range & C1 /* = nullRange */,  
+             const Range & C2 /* = nullRange */)
 //==============================================================================
 // /Description:
 //    Interpolate the interpolation boundary of a CompositeGridFunction
@@ -404,12 +404,12 @@ interpolate( realCompositeGridFunction & u,
 //\begin{>>InterpolateInclude.tex}{\subsubsection{interpolate grid A from grid B}}  
 int Interpolant::
 interpolate( realArray & ug,                   
-	     int gridToInterpolate,            
-	     int interpoleeGrid,               
+             int gridToInterpolate,            
+             int interpoleeGrid,               
              realCompositeGridFunction & u, 
-	     const Range & C0 /* = nullRange */, 
-	     const Range & C1 /* = nullRange */,  
-	     const Range & C2 /* = nullRange */)
+             const Range & C0 /* = nullRange */, 
+             const Range & C1 /* = nullRange */,  
+             const Range & C2 /* = nullRange */)
 //==============================================================================
 // /Description:
 //    Interpolate points on grid "gridToInterpolate" that interpolate from 
@@ -458,77 +458,77 @@ interpolate( realArray & ug,
     {
 //      ** ug is a different shape here ***   
 //       interpOpt( cg.numberOfDimensions(),
-// 		 ui.getBase(0),ui.getBound(0),ui.getBase(1),ui.getBound(1),
-// 		 ui.getBase(2),ui.getBound(2),ui.getBase(3),ui.getBound(3),
-// 		 ug.getBase(0),ug.getBound(0),ug.getBase(1),ug.getBound(1),
-// 		 ug.getBase(2),ug.getBound(2),ug.getBase(3),ug.getBound(3),
-// 		 il.getLength(0),ip.getLength(0),
-// 		 coeffg.getLength(0),coeffg.getLength(1),coeffg.getLength(2),
-// 		 R.getBase(),R.getBound(),
-// 		 C[2].getBase(),C[2].getBound(),C[3].getBase(),C[3].getBound(),
-// 		 // *ui.getDataPointer(),
-// 		 ui(ui.getBase(0),ui.getBase(1),ui.getBase(2),ui.getBase(3),ui.getBase(4)),
-// 		 // *ug.getDataPointer(),
-// 		 ug(ug.getBase(0),ug.getBase(1),ug.getBase(2),ug.getBase(3),ug.getBase(4)),
-// 		 *coeffg.getDataPointer(),
-// 		 *il.getDataPointer(),
-// 		 *ip.getDataPointer(),
-// 		 width(0,grid) );
+//               ui.getBase(0),ui.getBound(0),ui.getBase(1),ui.getBound(1),
+//               ui.getBase(2),ui.getBound(2),ui.getBase(3),ui.getBound(3),
+//               ug.getBase(0),ug.getBound(0),ug.getBase(1),ug.getBound(1),
+//               ug.getBase(2),ug.getBound(2),ug.getBase(3),ug.getBound(3),
+//               il.getLength(0),ip.getLength(0),
+//               coeffg.getLength(0),coeffg.getLength(1),coeffg.getLength(2),
+//               R.getBase(),R.getBound(),
+//               C[2].getBase(),C[2].getBound(),C[3].getBase(),C[3].getBound(),
+//               // *ui.getDataPointer(),
+//               ui(ui.getBase(0),ui.getBase(1),ui.getBase(2),ui.getBase(3),ui.getBase(4)),
+//               // *ug.getDataPointer(),
+//               ug(ug.getBase(0),ug.getBase(1),ug.getBase(2),ug.getBase(3),ug.getBase(4)),
+//               *coeffg.getDataPointer(),
+//               *il.getDataPointer(),
+//               *ip.getDataPointer(),
+//               width(0,grid) );
     }
     else
     {
       if( cg.numberOfDimensions()==2 )
       {
-	ug.redim(R,C[3]);
-	assert( C[2].getLength()==1 );
+        ug.redim(R,C[3]);
+        assert( C[2].getLength()==1 );
       
-	if( width(axis1,grid)==3 && width(axis2,grid)==3 )
-	{
+        if( width(axis1,grid)==3 && width(axis2,grid)==3 )
+        {
 
-	  for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
-	    for( int c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
-	      ug(R,c3)=          
-		coeffg(R,0,0,0)*ui(il(R,axis1)  ,il(R,axis2)  ,c2,c3)
-		+coeffg(R,1,0,0)*ui(il(R,axis1)+1,il(R,axis2)  ,c2,c3)
-		+coeffg(R,2,0,0)*ui(il(R,axis1)+2,il(R,axis2)  ,c2,c3)
-		+coeffg(R,0,1,0)*ui(il(R,axis1)  ,il(R,axis2)+1,c2,c3)
-		+coeffg(R,1,1,0)*ui(il(R,axis1)+1,il(R,axis2)+1,c2,c3) 
-		+coeffg(R,2,1,0)*ui(il(R,axis1)+2,il(R,axis2)+1,c2,c3) 
-		+coeffg(R,0,2,0)*ui(il(R,axis1)  ,il(R,axis2)+2,c2,c3) 
-		+coeffg(R,1,2,0)*ui(il(R,axis1)+1,il(R,axis2)+2,c2,c3) 
-		+coeffg(R,2,2,0)*ui(il(R,axis1)+2,il(R,axis2)+2,c2,c3);
+          for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
+            for( int c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
+              ug(R,c3)=          
+                coeffg(R,0,0,0)*ui(il(R,axis1)  ,il(R,axis2)  ,c2,c3)
+                +coeffg(R,1,0,0)*ui(il(R,axis1)+1,il(R,axis2)  ,c2,c3)
+                +coeffg(R,2,0,0)*ui(il(R,axis1)+2,il(R,axis2)  ,c2,c3)
+                +coeffg(R,0,1,0)*ui(il(R,axis1)  ,il(R,axis2)+1,c2,c3)
+                +coeffg(R,1,1,0)*ui(il(R,axis1)+1,il(R,axis2)+1,c2,c3) 
+                +coeffg(R,2,1,0)*ui(il(R,axis1)+2,il(R,axis2)+1,c2,c3) 
+                +coeffg(R,0,2,0)*ui(il(R,axis1)  ,il(R,axis2)+2,c2,c3) 
+                +coeffg(R,1,2,0)*ui(il(R,axis1)+1,il(R,axis2)+2,c2,c3) 
+                +coeffg(R,2,2,0)*ui(il(R,axis1)+2,il(R,axis2)+2,c2,c3);
 
-	}
-	else if( width(axis1,grid)==2 && width(axis2,grid)==2 )
-	{
-	  for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
-	    for( int c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
-	      ug(R,c3)=                   
-		coeffg(R,0,0,0)*ui(il(R,axis1)  ,il(R,axis2)  ,c2,c3)
-		+coeffg(R,1,0,0)*ui(il(R,axis1)+1,il(R,axis2)  ,c2,c3)
-		+coeffg(R,0,1,0)*ui(il(R,axis1)  ,il(R,axis2)+1,c2,c3)
-		+coeffg(R,1,1,0)*ui(il(R,axis1)+1,il(R,axis2)+1,c2,c3);
-	}
-	else
-	{
-	  // Here is the general case
-	  const intArray & il00= il(R,axis1);       // make these references for efficiency
-	  const intArray & il01= il(R,axis2);
+        }
+        else if( width(axis1,grid)==2 && width(axis2,grid)==2 )
+        {
+          for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
+            for( int c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
+              ug(R,c3)=                   
+                coeffg(R,0,0,0)*ui(il(R,axis1)  ,il(R,axis2)  ,c2,c3)
+                +coeffg(R,1,0,0)*ui(il(R,axis1)+1,il(R,axis2)  ,c2,c3)
+                +coeffg(R,0,1,0)*ui(il(R,axis1)  ,il(R,axis2)+1,c2,c3)
+                +coeffg(R,1,1,0)*ui(il(R,axis1)+1,il(R,axis2)+1,c2,c3);
+        }
+        else
+        {
+          // Here is the general case
+          const intArray & il00= il(R,axis1);       // make these references for efficiency
+          const intArray & il01= il(R,axis2);
 
-	  for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
-	    for( int c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
-	    {
-	      ug(R,c3)= 0;
-	      for( int w2=0; w2<width(axis2,grid); w2++ )            
-		for( int w1=0; w1<width(axis1,grid); w1++ )
-		  ug(R,c3)+=coeffg(R,w1,w2)*ui(il00+w1,il01+w2,c2,c3);
-	    }
-	      
-	}
+          for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
+            for( int c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
+            {
+              ug(R,c3)= 0;
+              for( int w2=0; w2<width(axis2,grid); w2++ )            
+                for( int w1=0; w1<width(axis1,grid); w1++ )
+                  ug(R,c3)+=coeffg(R,w1,w2)*ui(il00+w1,il01+w2,c2,c3);
+            }
+              
+        }
       }
       else
       { // *** 3D ****
-	Overture::abort("error");
+        Overture::abort("error");
       }
     }
   }
@@ -545,10 +545,10 @@ interpolate( realArray & ug,
 //\begin{>>InterpolateInclude.tex}{\subsubsection{interpolate a refinement level}}  
 int Interpolant::
 interpolateRefinementLevel( const int refinementLevel,
-			    realCompositeGridFunction & u, 
-			    const Range & C0 /* = nullRange */,    
-			    const Range & C1 /* = nullRange */,  
-			    const Range & C2 /* = nullRange */ )
+                            realCompositeGridFunction & u, 
+                            const Range & C0 /* = nullRange */,    
+                            const Range & C1 /* = nullRange */,  
+                            const Range & C2 /* = nullRange */ )
 //==============================================================================
 // /Description:
 //    Interpolate points on the boundary of a refinement level -- only interpolate
@@ -608,8 +608,8 @@ interpolateRefinementLevel( const int refinementLevel,
 
 int Interpolant::
 internalInterpolate(realCompositeGridFunction & u, 
-		    const Range C[],
-		    const IntegerArray & gridsToInterpolate /* = Overture::nullIntArray() */,
+                    const Range C[],
+                    const IntegerArray & gridsToInterpolate /* = Overture::nullIntArray() */,
                     const IntegerArray & gridsToInterpolateFrom /* = Overture::nullIntArray() */ )  
 //==============================================================================
 // /Access: protected.
@@ -694,9 +694,9 @@ internalInterpolate(realCompositeGridFunction & u,
 
 int Interpolant::
 interpolate( realGridCollectionFunction & ,
-	     const Range & C0 /* = nullRange */,     
-	     const Range & C1 /* = nullRange */, 
-	     const Range & C2 /* = nullRange */ )
+             const Range & C0 /* = nullRange */,     
+             const Range & C1 /* = nullRange */, 
+             const Range & C2 /* = nullRange */ )
 {
   cout << "Interpolant::interpolate: sorry, don't know how to interpolate"
     " a GridCollectionFunction! \n";
@@ -955,34 +955,34 @@ printStatistics( FILE *file /* = stdout */ )
   if( myid==0 )
   {
     real totalTime=max(REAL_MIN*100.,timeForExplicitInterpolation+timeForImplicitInterpolation+
-		       timeForIterativeImplicitInterpolation+timeForInitializeInterpolation);
+                       timeForIterativeImplicitInterpolation+timeForInitializeInterpolation);
 
 
     fprintf(file,"\n"
-	    "==================== Interpolant Class Statistics ========================\n"
-	    " time for explicit interpolation..........................%8.2e %4.1f%%\n"
-	    " time for implicit interpolation..........................%8.2e %4.1f%%\n"
-	    " time for iterative implicit interpolation................%8.2e %4.1f%%\n"
-	    "    number of implicit interpolations = %i\n"
-	    "    average number of iterations per interpolation = %8.2e\n"
-	    "   time for AMR interpolation.(counted above).............%8.2e %4.1f%%\n"
-	    "     time for AMR extrap refine bndrys.(counted above)....%8.2e %4.1f%%\n"
-	    "     time for AMR extrap all.(counted above)..............%8.2e %4.1f%%\n"
-	    "     time for AMR extrap interp neigh.(counted above).....%8.2e %4.1f%%\n"
-	    "     time for AMR refinement bndrys.(counted above),,.....%8.2e %4.1f%%\n"
-	    " time for setup interpoilation............................%8.2e %4.1f%%\n"
-	    " total....................................................%8.2e %4.1f%%\n",
-	    timeForExplicitInterpolation,timeForExplicitInterpolation*100./totalTime,
-	    timeForImplicitInterpolation,timeForImplicitInterpolation*100./totalTime,
-	    timeForIterativeImplicitInterpolation,timeForIterativeImplicitInterpolation*100./totalTime,
-	    numberOfImplicitInterpolations,numberOfImplicitIterations/real(max(1,numberOfImplicitInterpolations)),
-	    timeForAMRInterpolation,timeForAMRInterpolation*100./totalTime,
-	    timeForAMRExtrapolateRefinementBoundaries,timeForAMRExtrapolateRefinementBoundaries*100./totalTime,
-	    timeForAMRExtrapolateAll,timeForAMRExtrapolateAll*100./totalTime,
-	    timeForAMRExtrapInterpolationNeighbours,timeForAMRExtrapInterpolationNeighbours*100./totalTime,
-	    timeForAMRRefinementBoundaries,timeForAMRRefinementBoundaries*100./totalTime,
-	    timeForInitializeInterpolation,timeForInitializeInterpolation*100./totalTime,
-	    totalTime,totalTime*100./totalTime );
+            "==================== Interpolant Class Statistics ========================\n"
+            " time for explicit interpolation..........................%8.2e %4.1f%%\n"
+            " time for implicit interpolation..........................%8.2e %4.1f%%\n"
+            " time for iterative implicit interpolation................%8.2e %4.1f%%\n"
+            "    number of implicit interpolations = %i\n"
+            "    average number of iterations per interpolation = %8.2e\n"
+            "   time for AMR interpolation.(counted above).............%8.2e %4.1f%%\n"
+            "     time for AMR extrap refine bndrys.(counted above)....%8.2e %4.1f%%\n"
+            "     time for AMR extrap all.(counted above)..............%8.2e %4.1f%%\n"
+            "     time for AMR extrap interp neigh.(counted above).....%8.2e %4.1f%%\n"
+            "     time for AMR refinement bndrys.(counted above),,.....%8.2e %4.1f%%\n"
+            " time for setup interpoilation............................%8.2e %4.1f%%\n"
+            " total....................................................%8.2e %4.1f%%\n",
+            timeForExplicitInterpolation,timeForExplicitInterpolation*100./totalTime,
+            timeForImplicitInterpolation,timeForImplicitInterpolation*100./totalTime,
+            timeForIterativeImplicitInterpolation,timeForIterativeImplicitInterpolation*100./totalTime,
+            numberOfImplicitInterpolations,numberOfImplicitIterations/real(max(1,numberOfImplicitInterpolations)),
+            timeForAMRInterpolation,timeForAMRInterpolation*100./totalTime,
+            timeForAMRExtrapolateRefinementBoundaries,timeForAMRExtrapolateRefinementBoundaries*100./totalTime,
+            timeForAMRExtrapolateAll,timeForAMRExtrapolateAll*100./totalTime,
+            timeForAMRExtrapInterpolationNeighbours,timeForAMRExtrapInterpolationNeighbours*100./totalTime,
+            timeForAMRRefinementBoundaries,timeForAMRRefinementBoundaries*100./totalTime,
+            timeForInitializeInterpolation,timeForInitializeInterpolation*100./totalTime,
+            totalTime,totalTime*100./totalTime );
     
   }
   
@@ -1037,24 +1037,24 @@ extern "C"
 {
 
   void interpOptRes( const int&nd,
-		  const int& ndui1a,const int& ndui1b,const int& ndui2a,const int& ndui2b,
-		  const int& ndui3a,const int& ndui3b,const int& ndui4a,const int& ndui4b,
-		  const int& ndug1a,const int& ndug1b,const int& ndug2a,const int& ndug2b,
-		  const int& ndug3a,const int& ndug3b,const int& ndug4a,const int& ndug4b,
-		  const int& ndil,const int&ndip,const int&ndc1,const int&ndc2,const int&ndc3,
-		  const int& ipar,
-		  const real& ui,real& ug,const real& c,real& r,const int& il,const int& ip,
-		  const int& varWidth, const int& width, real& resMax );
+                  const int& ndui1a,const int& ndui1b,const int& ndui2a,const int& ndui2b,
+                  const int& ndui3a,const int& ndui3b,const int& ndui4a,const int& ndui4b,
+                  const int& ndug1a,const int& ndug1b,const int& ndug2a,const int& ndug2b,
+                  const int& ndug3a,const int& ndug3b,const int& ndug4a,const int& ndug4b,
+                  const int& ndil,const int&ndip,const int&ndc1,const int&ndc2,const int&ndc3,
+                  const int& ipar,
+                  const real& ui,real& ug,const real& c,real& r,const int& il,const int& ip,
+                  const int& varWidth, const int& width, real& resMax );
 
   void interpOpt( const int&nd,
-		  const int& ndui1a,const int& ndui1b,const int& ndui2a,const int& ndui2b,
-		  const int& ndui3a,const int& ndui3b,const int& ndui4a,const int& ndui4b,
-		  const int& ndug1a,const int& ndug1b,const int& ndug2a,const int& ndug2b,
-		  const int& ndug3a,const int& ndug3b,const int& ndug4a,const int& ndug4b,
-		  const int& ndil,const int&ndip,const int&ndc1,const int&ndc2,const int&ndc3,
-		  const int& ipar,
-		  const real& ui,real& ug,const real& c,const int& il,const int& ip,
-		  const int& varWidth, const int& width );
+                  const int& ndui1a,const int& ndui1b,const int& ndui2a,const int& ndui2b,
+                  const int& ndui3a,const int& ndui3b,const int& ndui4a,const int& ndui4b,
+                  const int& ndug1a,const int& ndug1b,const int& ndug2a,const int& ndug2b,
+                  const int& ndug3a,const int& ndug3b,const int& ndug4a,const int& ndug4b,
+                  const int& ndil,const int&ndip,const int&ndc1,const int&ndc2,const int&ndc3,
+                  const int& ipar,
+                  const real& ui,real& ug,const real& c,const int& il,const int& ip,
+                  const int& varWidth, const int& width );
 }
 
 #define INTERPOLATE_THIS_GRID(grid) ((!onlyInterpolateSomeGrids || gridsToInterpolate(grid)) && \
@@ -1076,7 +1076,7 @@ extern "C"
 
 int Interpolant::
 explicitInterpolate(realCompositeGridFunction & u,
-		    const Range C[],
+                    const Range C[],
                     const IntegerArray & gridsToInterpolate /* = Overture::nullIntArray() */,
                     const IntegerArray & gridsToInterpolateFrom /* = Overture::nullIntArray() */ ) const
 //===================================================================================
@@ -1234,12 +1234,12 @@ explicitInterpolate(realCompositeGridFunction & u,
       for( grid=0; grid<cg.numberOfComponentGrids(); grid++ )
       {
         if( INTERPOLATE_THIS_GRID(grid) )
-	{
-	  // printF("Interpolant: grid=%i, bcParams.ghostLineToAssign=%i\n",grid,bcParams.ghostLineToAssign);
-	  // bcParams.ghostLineToAssign=1;
+        {
+          // printF("Interpolant: grid=%i, bcParams.ghostLineToAssign=%i\n",grid,bcParams.ghostLineToAssign);
+          // bcParams.ghostLineToAssign=1;
           u[grid].applyBoundaryCondition(C[3],BCTypes::extrapolateRefinementBoundaries,
-					 BCTypes::allBoundaries,0.,0.,bcParams);
-	}
+                                         BCTypes::allBoundaries,0.,0.,bcParams);
+        }
       }
       time0=getCPU()-time0;
       timeForAMRExtrapolateRefinementBoundaries+=time0;
@@ -1257,21 +1257,21 @@ explicitInterpolate(realCompositeGridFunction & u,
       int num=0;
       for( int gridi=0; gridi<cg.numberOfComponentGrids(); gridi++ )
       {
-	if( cg.interpolationStartEndIndex(0,grid,gridi)>=0 )
-	  num+=cg.interpolationStartEndIndex(1,grid,gridi)-cg.interpolationStartEndIndex(0,grid,gridi)+1;
-	else
-	{
-	  if( cg.interpolationStartEndIndex(0,grid,gridi)!= -1 )
-	  {
-	    printF("***ERROR in interpolationStartEndIndex : negative value not equal to -1!\n");
+        if( cg.interpolationStartEndIndex(0,grid,gridi)>=0 )
+          num+=cg.interpolationStartEndIndex(1,grid,gridi)-cg.interpolationStartEndIndex(0,grid,gridi)+1;
+        else
+        {
+          if( cg.interpolationStartEndIndex(0,grid,gridi)!= -1 )
+          {
+            printF("***ERROR in interpolationStartEndIndex : negative value not equal to -1!\n");
             cg.interpolationStartEndIndex.display("cg.interpolationStartEndIndex");
-	    Overture::abort("error");
-	  }
-	}
+            Overture::abort("error");
+          }
+        }
       }
       if( num!=cg.numberOfInterpolationPoints(grid) )
       {
-	printF("***ERROR grid=%i num=%i numberOfInterpolationPoints(grid)=%i\n",grid,num,
+        printF("***ERROR grid=%i num=%i numberOfInterpolationPoints(grid)=%i\n",grid,num,
               cg.numberOfInterpolationPoints(grid));
         cg.numberOfInterpolationPoints.display("cg.numberOfInterpolationPoints");
         cg.interpolationStartEndIndex.display("cg.interpolationStartEndIndex");
@@ -1281,16 +1281,16 @@ explicitInterpolate(realCompositeGridFunction & u,
       
       for( int i=0; i<cg.numberOfInterpolationPoints(grid); i++ )
       {
-	int gridi=ig(i);
-	if( i<cg.interpolationStartEndIndex(0,grid,gridi) || i>cg.interpolationStartEndIndex(1,grid,gridi) )
-	{
-	  printF("***ERROR in interpolationStartEndIndex: grid=%i gridi=%i i=%i start=%i end=%i\n",
-		 grid,gridi,i,cg.interpolationStartEndIndex(0,grid,gridi),
-		 cg.interpolationStartEndIndex(1,grid,gridi));
+        int gridi=ig(i);
+        if( i<cg.interpolationStartEndIndex(0,grid,gridi) || i>cg.interpolationStartEndIndex(1,grid,gridi) )
+        {
+          printF("***ERROR in interpolationStartEndIndex: grid=%i gridi=%i i=%i start=%i end=%i\n",
+                 grid,gridi,i,cg.interpolationStartEndIndex(0,grid,gridi),
+                 cg.interpolationStartEndIndex(1,grid,gridi));
           cg.interpolationStartEndIndex.display("cg.interpolationStartEndIndex");
-	  
+          
           Overture::abort("error");
-	}
+        }
       }
     }
   }
@@ -1360,23 +1360,23 @@ explicitInterpolate(realCompositeGridFunction & u,
     {  // ****** 1D **************
       if( u.positionOfComponent(0)==1 || u.positionOfComponent(0)==2 || u.positionOfComponent(0)==3 )
       {
-	int c1,c2,c3;
-	for( c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
-	  for( c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
-	    for( c1=C[1].getBase(); c1<=C[1].getBound(); c1++ )
-	    {
-	      ug(ip(I,axis1),c1,c2,c3)=0.;   
-	      for( int w1=0; w1<width(axis1,grid); w1++ )
-		for( int i=0; i<cg.numberOfInterpolationPoints(grid); i++ )
-		  ug(ip(i,axis1),c1,c2,c3)+=coeffg(i,w1)*u[ig(i)](il(i,axis1)+w1,c1,c2,c3);
-	    }
+        int c1,c2,c3;
+        for( c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
+          for( c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
+            for( c1=C[1].getBase(); c1<=C[1].getBound(); c1++ )
+            {
+              ug(ip(I,axis1),c1,c2,c3)=0.;   
+              for( int w1=0; w1<width(axis1,grid); w1++ )
+                for( int i=0; i<cg.numberOfInterpolationPoints(grid); i++ )
+                  ug(ip(i,axis1),c1,c2,c3)+=coeffg(i,w1)*u[ig(i)](il(i,axis1)+w1,c1,c2,c3);
+            }
       }
       else
       {
-	cout << "explicitInterpolate:ERROR: cannot interpolate in 1D when position of component 0 is = " << 
-	  "u.positionOfComponent(0) \n";
-	cout << "complain to Bill! \n";
-	Overture::abort("error");
+        cout << "explicitInterpolate:ERROR: cannot interpolate in 1D when position of component 0 is = " << 
+          "u.positionOfComponent(0) \n";
+        cout << "complain to Bill! \n";
+        Overture::abort("error");
       }
       continue;
     }
@@ -1384,7 +1384,7 @@ explicitInterpolate(realCompositeGridFunction & u,
     if( !( (cg.numberOfDimensions()==2 && u.positionOfComponent(0)==2) || u.positionOfComponent(0)==3) )
     {
       cout << "explicitInterpolate:ERROR: cannot interpolate when position of component 0 is = " << 
-	u.positionOfComponent(0) << "\n";
+        u.positionOfComponent(0) << "\n";
       cout << "complain to Bill! \n";
       Overture::abort("error");
     }
@@ -1401,98 +1401,98 @@ explicitInterpolate(realCompositeGridFunction & u,
       const int *ig_ = ig.getDataPointer();
       const int width0=coeffg.getLength(1);
       const int width1=coeffg.getLength(2);
-	
-	
+        
+        
       assert( ip.getLength(0)==numberOfInterpolationPoints );
       assert( il.getLength(0)==numberOfInterpolationPoints );
       assert( coeffg.getLength(0)==numberOfInterpolationPoints );
 
       if( cg.numberOfDimensions()==2 )
       {
-	// ****** 2D **************
-	
-	for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
-	{
-	    
-	  for( int c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
-	  {
+        // ****** 2D **************
+        
+        for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
+        {
+            
+          for( int c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
+          {
 
-	    int i;
-	    if( width(axis1,grid)==3 && width(axis2,grid)==3 )
-	    {
-	      for( i=0; i<numberOfInterpolationPoints; i++ )
-	      {
-		UG(IP(i,axis1),IP(i,axis2),c2,c3)=
-		  COEFFG2(i,0,0)*UU2(0,0)+COEFFG2(i,1,0)*UU2(1,0)+COEFFG2(i,2,0)*UU2(2,0)+
-		  COEFFG2(i,0,1)*UU2(0,1)+COEFFG2(i,1,1)*UU2(1,1)+COEFFG2(i,2,1)*UU2(2,1)+
-		  COEFFG2(i,0,2)*UU2(0,2)+COEFFG2(i,1,2)*UU2(1,2)+COEFFG2(i,2,2)*UU2(2,2);
-	      }
-	    }
-	    else
-	    {
-	      for( i=0; i<numberOfInterpolationPoints; i++ )
-		UG(IP(i,axis1),IP(i,axis2),c2,c3)=0.;   
+            int i;
+            if( width(axis1,grid)==3 && width(axis2,grid)==3 )
+            {
+              for( i=0; i<numberOfInterpolationPoints; i++ )
+              {
+                UG(IP(i,axis1),IP(i,axis2),c2,c3)=
+                  COEFFG2(i,0,0)*UU2(0,0)+COEFFG2(i,1,0)*UU2(1,0)+COEFFG2(i,2,0)*UU2(2,0)+
+                  COEFFG2(i,0,1)*UU2(0,1)+COEFFG2(i,1,1)*UU2(1,1)+COEFFG2(i,2,1)*UU2(2,1)+
+                  COEFFG2(i,0,2)*UU2(0,2)+COEFFG2(i,1,2)*UU2(1,2)+COEFFG2(i,2,2)*UU2(2,2);
+              }
+            }
+            else
+            {
+              for( i=0; i<numberOfInterpolationPoints; i++ )
+                UG(IP(i,axis1),IP(i,axis2),c2,c3)=0.;   
 
-	      for( int w2=0; w2<width(axis2,grid); w2++ )              // ***** optimize these *******
-	      {
-		for( int w1=0; w1<width(axis1,grid); w1++ )
-		{
-		  for( i=0; i<numberOfInterpolationPoints; i++ )
-		  {
-		    UG(IP(i,axis1),IP(i,axis2),c2,c3)+=
-		      COEFFG2(i,w1,w2)*UU(IG(i), IL(i,axis1)+w1,IL(i,axis2)+w2,c2,c3);
-		  }
-		    
-		}
-	      }
-	    }
-	  }
-	}
+              for( int w2=0; w2<width(axis2,grid); w2++ )              // ***** optimize these *******
+              {
+                for( int w1=0; w1<width(axis1,grid); w1++ )
+                {
+                  for( i=0; i<numberOfInterpolationPoints; i++ )
+                  {
+                    UG(IP(i,axis1),IP(i,axis2),c2,c3)+=
+                      COEFFG2(i,w1,w2)*UU(IG(i), IL(i,axis1)+w1,IL(i,axis2)+w2,c2,c3);
+                  }
+                    
+                }
+              }
+            }
+          }
+        }
       }
       else // 3D
       {
-	if( u.positionOfComponent(0)==3 )
-	{
-	  for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
-	  {
+        if( u.positionOfComponent(0)==3 )
+        {
+          for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
+          {
 
-	    int i;
-	    if( width(axis1,grid)==3 && width(axis2,grid)==3 && width(axis3,grid)==3 )
-	    {
-	      for( i=0; i<numberOfInterpolationPoints; i++ )
-	      {
-		UG(IP(i,axis1),IP(i,axis2),IP(i,axis3),c3)=
-		  COEFFG3(i,0,0,0)*UU3(0,0,0)+COEFFG3(i,1,0,0)*UU3(1,0,0)+COEFFG3(i,2,0,0)*UU3(2,0,0)+
-		  COEFFG3(i,0,1,0)*UU3(0,1,0)+COEFFG3(i,1,1,0)*UU3(1,1,0)+COEFFG3(i,2,1,0)*UU3(2,1,0)+
-		  COEFFG3(i,0,2,0)*UU3(0,2,0)+COEFFG3(i,1,2,0)*UU3(1,2,0)+COEFFG3(i,2,2,0)*UU3(2,2,0)+
+            int i;
+            if( width(axis1,grid)==3 && width(axis2,grid)==3 && width(axis3,grid)==3 )
+            {
+              for( i=0; i<numberOfInterpolationPoints; i++ )
+              {
+                UG(IP(i,axis1),IP(i,axis2),IP(i,axis3),c3)=
+                  COEFFG3(i,0,0,0)*UU3(0,0,0)+COEFFG3(i,1,0,0)*UU3(1,0,0)+COEFFG3(i,2,0,0)*UU3(2,0,0)+
+                  COEFFG3(i,0,1,0)*UU3(0,1,0)+COEFFG3(i,1,1,0)*UU3(1,1,0)+COEFFG3(i,2,1,0)*UU3(2,1,0)+
+                  COEFFG3(i,0,2,0)*UU3(0,2,0)+COEFFG3(i,1,2,0)*UU3(1,2,0)+COEFFG3(i,2,2,0)*UU3(2,2,0)+
 
-		  COEFFG3(i,0,0,1)*UU3(0,0,1)+COEFFG3(i,1,0,1)*UU3(1,0,1)+COEFFG3(i,2,0,1)*UU3(2,0,1)+
-		  COEFFG3(i,0,1,1)*UU3(0,1,1)+COEFFG3(i,1,1,1)*UU3(1,1,1)+COEFFG3(i,2,1,1)*UU3(2,1,1)+
-		  COEFFG3(i,0,2,1)*UU3(0,2,1)+COEFFG3(i,1,2,1)*UU3(1,2,1)+COEFFG3(i,2,2,1)*UU3(2,2,1)+
+                  COEFFG3(i,0,0,1)*UU3(0,0,1)+COEFFG3(i,1,0,1)*UU3(1,0,1)+COEFFG3(i,2,0,1)*UU3(2,0,1)+
+                  COEFFG3(i,0,1,1)*UU3(0,1,1)+COEFFG3(i,1,1,1)*UU3(1,1,1)+COEFFG3(i,2,1,1)*UU3(2,1,1)+
+                  COEFFG3(i,0,2,1)*UU3(0,2,1)+COEFFG3(i,1,2,1)*UU3(1,2,1)+COEFFG3(i,2,2,1)*UU3(2,2,1)+
 
-		  COEFFG3(i,0,0,2)*UU3(0,0,2)+COEFFG3(i,1,0,2)*UU3(1,0,2)+COEFFG3(i,2,0,2)*UU3(2,0,2)+
-		  COEFFG3(i,0,1,2)*UU3(0,1,2)+COEFFG3(i,1,1,2)*UU3(1,1,2)+COEFFG3(i,2,1,2)*UU3(2,1,2)+
-		  COEFFG3(i,0,2,2)*UU3(0,2,2)+COEFFG3(i,1,2,2)*UU3(1,2,2)+COEFFG3(i,2,2,2)*UU3(2,2,2);
-	      }
-	    }
-	    else
-	    {
-	      for( i=0; i<numberOfInterpolationPoints; i++ )
-		UG(IP(i,axis1),IP(i,axis2),IP(i,axis3),c3)=0.;   
+                  COEFFG3(i,0,0,2)*UU3(0,0,2)+COEFFG3(i,1,0,2)*UU3(1,0,2)+COEFFG3(i,2,0,2)*UU3(2,0,2)+
+                  COEFFG3(i,0,1,2)*UU3(0,1,2)+COEFFG3(i,1,1,2)*UU3(1,1,2)+COEFFG3(i,2,1,2)*UU3(2,1,2)+
+                  COEFFG3(i,0,2,2)*UU3(0,2,2)+COEFFG3(i,1,2,2)*UU3(1,2,2)+COEFFG3(i,2,2,2)*UU3(2,2,2);
+              }
+            }
+            else
+            {
+              for( i=0; i<numberOfInterpolationPoints; i++ )
+                UG(IP(i,axis1),IP(i,axis2),IP(i,axis3),c3)=0.;   
 
-	      for( int w3=0; w3<width(axis3,grid); w3++ )
-		for( int w2=0; w2<width(axis2,grid); w2++ )              // ***** optimize these *******
-		  for( int w1=0; w1<width(axis1,grid); w1++ )
-		    for( i=0; i<numberOfInterpolationPoints; i++ )
-		    {
-		      UG(IP(i,axis1),IP(i,axis2),IP(i,axis3),c3)+=
-			COEFFG3(i,w1,w2,w3)*UU(IG(i), IL(i,axis1)+w1,IL(i,axis2)+w2,IL(i,axis3)+w3,c3);
-		    }
-	      
-	    }
-	    
-	  }
-	}
+              for( int w3=0; w3<width(axis3,grid); w3++ )
+                for( int w2=0; w2<width(axis2,grid); w2++ )              // ***** optimize these *******
+                  for( int w1=0; w1<width(axis1,grid); w1++ )
+                    for( i=0; i<numberOfInterpolationPoints; i++ )
+                    {
+                      UG(IP(i,axis1),IP(i,axis2),IP(i,axis3),c3)+=
+                        COEFFG3(i,w1,w2,w3)*UU(IG(i), IL(i,axis1)+w1,IL(i,axis2)+w2,IL(i,axis3)+w3,c3);
+                    }
+              
+            }
+            
+          }
+        }
       }
 
     }
@@ -1501,211 +1501,211 @@ explicitInterpolate(realCompositeGridFunction & u,
       // use optimized explicit interpolation, this assumes that the points have been
       // ordered in the interpolation arrays to be in increasing order of the interpolee grid.
       // printF("Interpolant: use optimized explicit interpolation\n");
-	  
+          
       assert( useVariableWidthInterpolation!=NULL );
 
       Range R;
       int numInterpolated=0; // keep track of the number of points interpolated for a consistency check
       for( int gridi=0; gridi<cg.numberOfComponentGrids(); gridi++ )
       {
-	if( cg.interpolationStartEndIndex(0,grid,gridi) >= 0 &&
+        if( cg.interpolationStartEndIndex(0,grid,gridi) >= 0 &&
               (!onlyInterpolateFromSomeGrids || gridsToInterpolateFrom(gridi) ) )
-	{
+        {
          if( debug & 1 ) 
              printF("explicitInterp:interpOpt: interpolate grid %i from grid %i points=[%i,%i] width(0,grid)=%i,%i\n",
              grid,gridi,cg.interpolationStartEndIndex(0,grid,gridi),cg.interpolationStartEndIndex(1,grid,gridi),
              width(0,grid),width(1,grid));
  
-	  R=Range(cg.interpolationStartEndIndex(0,grid,gridi),cg.interpolationStartEndIndex(1,grid,gridi));
+          R=Range(cg.interpolationStartEndIndex(0,grid,gridi),cg.interpolationStartEndIndex(1,grid,gridi));
           numInterpolated+=R.getLength();
-	  
-	  const realArray & ui = u[ig(cg.interpolationStartEndIndex(0,grid,gridi))];
+          
+          const realArray & ui = u[ig(cg.interpolationStartEndIndex(0,grid,gridi))];
 
 
-	  if( true )
-	  {
+          if( true )
+          {
             int ipar[]={R.getBase(),
                         R.getBound(),
-			C[2].getBase(),
-			C[2].getBound(),
-			C[3].getBase(),
-			C[3].getBound(), 
+                        C[2].getBase(),
+                        C[2].getBound(),
+                        C[3].getBase(),
+                        C[3].getBound(), 
                         (int)explicitInterpolationStorageOption,
                         useVariableWidthInterpolation[grid]}; //
-	    interpOpt( cg.numberOfDimensions(),
-		       ui.getBase(0),ui.getBound(0),ui.getBase(1),ui.getBound(1),
-		       ui.getBase(2),ui.getBound(2),ui.getBase(3),ui.getBound(3),
-		       ug.getBase(0),ug.getBound(0),ug.getBase(1),ug.getBound(1),
-		       ug.getBase(2),ug.getBound(2),ug.getBase(3),ug.getBound(3),
-		       il.getLength(0),ip.getLength(0),
-		       coeffg.getLength(0),coeffg.getLength(1),coeffg.getLength(2),
-		       ipar[0],
-		       // *ui.getDataPointer(),
-		       ui(ui.getBase(0),ui.getBase(1),ui.getBase(2),ui.getBase(3),ui.getBase(4)),
-		       // *ug.getDataPointer(),
-		       ug(ug.getBase(0),ug.getBase(1),ug.getBase(2),ug.getBase(3),ug.getBase(4)),
-		       *coeffg.getDataPointer(),
-		       *il.getDataPointer(),*ip.getDataPointer(),*varWidth.getDataPointer(),
-		       width(0,grid) );
-	  }
+            interpOpt( cg.numberOfDimensions(),
+                       ui.getBase(0),ui.getBound(0),ui.getBase(1),ui.getBound(1),
+                       ui.getBase(2),ui.getBound(2),ui.getBase(3),ui.getBound(3),
+                       ug.getBase(0),ug.getBound(0),ug.getBase(1),ug.getBound(1),
+                       ug.getBase(2),ug.getBound(2),ug.getBase(3),ug.getBound(3),
+                       il.getLength(0),ip.getLength(0),
+                       coeffg.getLength(0),coeffg.getLength(1),coeffg.getLength(2),
+                       ipar[0],
+                       // *ui.getDataPointer(),
+                       ui(ui.getBase(0),ui.getBase(1),ui.getBase(2),ui.getBase(3),ui.getBase(4)),
+                       // *ug.getDataPointer(),
+                       ug(ug.getBase(0),ug.getBase(1),ug.getBase(2),ug.getBase(3),ug.getBase(4)),
+                       *coeffg.getDataPointer(),
+                       *il.getDataPointer(),*ip.getDataPointer(),*varWidth.getDataPointer(),
+                       width(0,grid) );
+          }
           else
-	  {
-	    // old opt version
+          {
+            // old opt version
 
-	    if( debug & 1 )
-	    {
-	      if( max(abs(ig(R)-gridi))!=0 )
-	      {
-		printF("explicitInterpolate:ERROR: ig(R)!=gridi=%i\n",gridi);
-		display(ig(R),"ig(R)");
-	      }
-	    }
-	  
+            if( debug & 1 )
+            {
+              if( max(abs(ig(R)-gridi))!=0 )
+              {
+                printF("explicitInterpolate:ERROR: ig(R)!=gridi=%i\n",gridi);
+                display(ig(R),"ig(R)");
+              }
+            }
+          
 
-	    if( cg.numberOfDimensions()==2 )
-	    {
-	      if( width(axis1,grid)==3 && width(axis2,grid)==3 )
-	      {
+            if( cg.numberOfDimensions()==2 )
+            {
+              if( width(axis1,grid)==3 && width(axis2,grid)==3 )
+              {
 
 // @PD realArray4[ug,ui,coeffg] Range[R] intArray2[ip,il]
 
-		// printF("opt:PA\n");
-		  
-		for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
-		  for( int c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
-		    ug(ip(R,axis1),ip(R,axis2),c2,c3)=                      // @PA
-		      coeffg(R,0,0,0)*ui(il(R,axis1)  ,il(R,axis2)  ,c2,c3)
-		      +coeffg(R,1,0,0)*ui(il(R,axis1)+1,il(R,axis2)  ,c2,c3)
-		      +coeffg(R,2,0,0)*ui(il(R,axis1)+2,il(R,axis2)  ,c2,c3)
-		      +coeffg(R,0,1,0)*ui(il(R,axis1)  ,il(R,axis2)+1,c2,c3)
-		      +coeffg(R,1,1,0)*ui(il(R,axis1)+1,il(R,axis2)+1,c2,c3) 
-		      +coeffg(R,2,1,0)*ui(il(R,axis1)+2,il(R,axis2)+1,c2,c3) 
-		      +coeffg(R,0,2,0)*ui(il(R,axis1)  ,il(R,axis2)+2,c2,c3) 
-		      +coeffg(R,1,2,0)*ui(il(R,axis1)+1,il(R,axis2)+2,c2,c3) 
-		      +coeffg(R,2,2,0)*ui(il(R,axis1)+2,il(R,axis2)+2,c2,c3);
+                // printF("opt:PA\n");
+                  
+                for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
+                  for( int c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
+                    ug(ip(R,axis1),ip(R,axis2),c2,c3)=                      // @PA
+                      coeffg(R,0,0,0)*ui(il(R,axis1)  ,il(R,axis2)  ,c2,c3)
+                      +coeffg(R,1,0,0)*ui(il(R,axis1)+1,il(R,axis2)  ,c2,c3)
+                      +coeffg(R,2,0,0)*ui(il(R,axis1)+2,il(R,axis2)  ,c2,c3)
+                      +coeffg(R,0,1,0)*ui(il(R,axis1)  ,il(R,axis2)+1,c2,c3)
+                      +coeffg(R,1,1,0)*ui(il(R,axis1)+1,il(R,axis2)+1,c2,c3) 
+                      +coeffg(R,2,1,0)*ui(il(R,axis1)+2,il(R,axis2)+1,c2,c3) 
+                      +coeffg(R,0,2,0)*ui(il(R,axis1)  ,il(R,axis2)+2,c2,c3) 
+                      +coeffg(R,1,2,0)*ui(il(R,axis1)+1,il(R,axis2)+2,c2,c3) 
+                      +coeffg(R,2,2,0)*ui(il(R,axis1)+2,il(R,axis2)+2,c2,c3);
 
-	      }
-	      else if( width(axis1,grid)==2 && width(axis2,grid)==2 )
-	      {
-		for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
-		  for( int c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
-		    ug(ip(R,axis1),ip(R,axis2),c2,c3)=                      // @PA
-		      coeffg(R,0,0,0)*ui(il(R,axis1)  ,il(R,axis2)  ,c2,c3)
-		      +coeffg(R,1,0,0)*ui(il(R,axis1)+1,il(R,axis2)  ,c2,c3)
-		      +coeffg(R,0,1,0)*ui(il(R,axis1)  ,il(R,axis2)+1,c2,c3)
-		      +coeffg(R,1,1,0)*ui(il(R,axis1)+1,il(R,axis2)+1,c2,c3);
-	      }
-	      else
-	      {
-		// Here is the general case
-		const intArray & il00= il(R,axis1);       // make these references for efficiency
-		const intArray & il01= il(R,axis2);
+              }
+              else if( width(axis1,grid)==2 && width(axis2,grid)==2 )
+              {
+                for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
+                  for( int c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
+                    ug(ip(R,axis1),ip(R,axis2),c2,c3)=                      // @PA
+                      coeffg(R,0,0,0)*ui(il(R,axis1)  ,il(R,axis2)  ,c2,c3)
+                      +coeffg(R,1,0,0)*ui(il(R,axis1)+1,il(R,axis2)  ,c2,c3)
+                      +coeffg(R,0,1,0)*ui(il(R,axis1)  ,il(R,axis2)+1,c2,c3)
+                      +coeffg(R,1,1,0)*ui(il(R,axis1)+1,il(R,axis2)+1,c2,c3);
+              }
+              else
+              {
+                // Here is the general case
+                const intArray & il00= il(R,axis1);       // make these references for efficiency
+                const intArray & il01= il(R,axis2);
 
-		const intArray & ip0 = ip(R,axis1);
-		const intArray & ip1 = ip(R,axis2);
-		for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
-		  for( int c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
-		  {
-		    ug(ip0,ip1,c2,c3)= 0;
-		    for( int w2=0; w2<width(axis2,grid); w2++ )            
-		      for( int w1=0; w1<width(axis1,grid); w1++ )
-			ug(ip(R,axis1),ip(R,axis2),c2,c3)+=coeffg(R,w1,w2)*ui(il00+w1,il01+w2,c2,c3);
-		  }
-	      
-	      }
-	    }
-	    else
-	    { // *** 3D ****
-	      if( width(axis1,grid)==3 && width(axis2,grid)==3 && width(axis3,grid)==3 )
-	      {
-		for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
-		  ug(ip(R,axis1),ip(R,axis2),ip(R,axis3),c3)=                      // @PA
-		    coeffg(R,0,0,0)*ui(il(R,axis1)  ,il(R,axis2)  ,il(R,axis3)  ,c3)
-		    +coeffg(R,1,0,0)*ui(il(R,axis1)+1,il(R,axis2)  ,il(R,axis3)  ,c3)
-		    +coeffg(R,2,0,0)*ui(il(R,axis1)+2,il(R,axis2)  ,il(R,axis3)  ,c3)
-		    +coeffg(R,0,1,0)*ui(il(R,axis1)  ,il(R,axis2)+1,il(R,axis3)  ,c3)
-		    +coeffg(R,1,1,0)*ui(il(R,axis1)+1,il(R,axis2)+1,il(R,axis3)  ,c3) 
-		    +coeffg(R,2,1,0)*ui(il(R,axis1)+2,il(R,axis2)+1,il(R,axis3)  ,c3) 
-		    +coeffg(R,0,2,0)*ui(il(R,axis1)  ,il(R,axis2)+2,il(R,axis3)  ,c3) 
-		    +coeffg(R,1,2,0)*ui(il(R,axis1)+1,il(R,axis2)+2,il(R,axis3)  ,c3) 
-		    +coeffg(R,2,2,0)*ui(il(R,axis1)+2,il(R,axis2)+2,il(R,axis3)  ,c3)
-		    +coeffg(R,0,0,1)*ui(il(R,axis1)  ,il(R,axis2)  ,il(R,axis3)+1,c3)
-		    +coeffg(R,1,0,1)*ui(il(R,axis1)+1,il(R,axis2)  ,il(R,axis3)+1,c3)
-		    +coeffg(R,2,0,1)*ui(il(R,axis1)+2,il(R,axis2)  ,il(R,axis3)+1,c3)
-		    +coeffg(R,0,1,1)*ui(il(R,axis1)  ,il(R,axis2)+1,il(R,axis3)+1,c3)
-		    +coeffg(R,1,1,1)*ui(il(R,axis1)+1,il(R,axis2)+1,il(R,axis3)+1,c3) 
-		    +coeffg(R,2,1,1)*ui(il(R,axis1)+2,il(R,axis2)+1,il(R,axis3)+1,c3) 
-		    +coeffg(R,0,2,1)*ui(il(R,axis1)  ,il(R,axis2)+2,il(R,axis3)+1,c3) 
-		    +coeffg(R,1,2,1)*ui(il(R,axis1)+1,il(R,axis2)+2,il(R,axis3)+1,c3) 
-		    +coeffg(R,2,2,1)*ui(il(R,axis1)+2,il(R,axis2)+2,il(R,axis3)+1,c3)
-		    +coeffg(R,0,0,2)*ui(il(R,axis1)  ,il(R,axis2)  ,il(R,axis3)+2,c3)
-		    +coeffg(R,1,0,2)*ui(il(R,axis1)+1,il(R,axis2)  ,il(R,axis3)+2,c3)
-		    +coeffg(R,2,0,2)*ui(il(R,axis1)+2,il(R,axis2)  ,il(R,axis3)+2,c3)
-		    +coeffg(R,0,1,2)*ui(il(R,axis1)  ,il(R,axis2)+1,il(R,axis3)+2,c3)
-		    +coeffg(R,1,1,2)*ui(il(R,axis1)+1,il(R,axis2)+1,il(R,axis3)+2,c3) 
-		    +coeffg(R,2,1,2)*ui(il(R,axis1)+2,il(R,axis2)+1,il(R,axis3)+2,c3) 
-		    +coeffg(R,0,2,2)*ui(il(R,axis1)  ,il(R,axis2)+2,il(R,axis3)+2,c3) 
-		    +coeffg(R,1,2,2)*ui(il(R,axis1)+1,il(R,axis2)+2,il(R,axis3)+2,c3) 
-		    +coeffg(R,2,2,2)*ui(il(R,axis1)+2,il(R,axis2)+2,il(R,axis3)+2,c3);
+                const intArray & ip0 = ip(R,axis1);
+                const intArray & ip1 = ip(R,axis2);
+                for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
+                  for( int c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
+                  {
+                    ug(ip0,ip1,c2,c3)= 0;
+                    for( int w2=0; w2<width(axis2,grid); w2++ )            
+                      for( int w1=0; w1<width(axis1,grid); w1++ )
+                        ug(ip(R,axis1),ip(R,axis2),c2,c3)+=coeffg(R,w1,w2)*ui(il00+w1,il01+w2,c2,c3);
+                  }
+              
+              }
+            }
+            else
+            { // *** 3D ****
+              if( width(axis1,grid)==3 && width(axis2,grid)==3 && width(axis3,grid)==3 )
+              {
+                for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
+                  ug(ip(R,axis1),ip(R,axis2),ip(R,axis3),c3)=                      // @PA
+                    coeffg(R,0,0,0)*ui(il(R,axis1)  ,il(R,axis2)  ,il(R,axis3)  ,c3)
+                    +coeffg(R,1,0,0)*ui(il(R,axis1)+1,il(R,axis2)  ,il(R,axis3)  ,c3)
+                    +coeffg(R,2,0,0)*ui(il(R,axis1)+2,il(R,axis2)  ,il(R,axis3)  ,c3)
+                    +coeffg(R,0,1,0)*ui(il(R,axis1)  ,il(R,axis2)+1,il(R,axis3)  ,c3)
+                    +coeffg(R,1,1,0)*ui(il(R,axis1)+1,il(R,axis2)+1,il(R,axis3)  ,c3) 
+                    +coeffg(R,2,1,0)*ui(il(R,axis1)+2,il(R,axis2)+1,il(R,axis3)  ,c3) 
+                    +coeffg(R,0,2,0)*ui(il(R,axis1)  ,il(R,axis2)+2,il(R,axis3)  ,c3) 
+                    +coeffg(R,1,2,0)*ui(il(R,axis1)+1,il(R,axis2)+2,il(R,axis3)  ,c3) 
+                    +coeffg(R,2,2,0)*ui(il(R,axis1)+2,il(R,axis2)+2,il(R,axis3)  ,c3)
+                    +coeffg(R,0,0,1)*ui(il(R,axis1)  ,il(R,axis2)  ,il(R,axis3)+1,c3)
+                    +coeffg(R,1,0,1)*ui(il(R,axis1)+1,il(R,axis2)  ,il(R,axis3)+1,c3)
+                    +coeffg(R,2,0,1)*ui(il(R,axis1)+2,il(R,axis2)  ,il(R,axis3)+1,c3)
+                    +coeffg(R,0,1,1)*ui(il(R,axis1)  ,il(R,axis2)+1,il(R,axis3)+1,c3)
+                    +coeffg(R,1,1,1)*ui(il(R,axis1)+1,il(R,axis2)+1,il(R,axis3)+1,c3) 
+                    +coeffg(R,2,1,1)*ui(il(R,axis1)+2,il(R,axis2)+1,il(R,axis3)+1,c3) 
+                    +coeffg(R,0,2,1)*ui(il(R,axis1)  ,il(R,axis2)+2,il(R,axis3)+1,c3) 
+                    +coeffg(R,1,2,1)*ui(il(R,axis1)+1,il(R,axis2)+2,il(R,axis3)+1,c3) 
+                    +coeffg(R,2,2,1)*ui(il(R,axis1)+2,il(R,axis2)+2,il(R,axis3)+1,c3)
+                    +coeffg(R,0,0,2)*ui(il(R,axis1)  ,il(R,axis2)  ,il(R,axis3)+2,c3)
+                    +coeffg(R,1,0,2)*ui(il(R,axis1)+1,il(R,axis2)  ,il(R,axis3)+2,c3)
+                    +coeffg(R,2,0,2)*ui(il(R,axis1)+2,il(R,axis2)  ,il(R,axis3)+2,c3)
+                    +coeffg(R,0,1,2)*ui(il(R,axis1)  ,il(R,axis2)+1,il(R,axis3)+2,c3)
+                    +coeffg(R,1,1,2)*ui(il(R,axis1)+1,il(R,axis2)+1,il(R,axis3)+2,c3) 
+                    +coeffg(R,2,1,2)*ui(il(R,axis1)+2,il(R,axis2)+1,il(R,axis3)+2,c3) 
+                    +coeffg(R,0,2,2)*ui(il(R,axis1)  ,il(R,axis2)+2,il(R,axis3)+2,c3) 
+                    +coeffg(R,1,2,2)*ui(il(R,axis1)+1,il(R,axis2)+2,il(R,axis3)+2,c3) 
+                    +coeffg(R,2,2,2)*ui(il(R,axis1)+2,il(R,axis2)+2,il(R,axis3)+2,c3);
 
-	      }
-	      else if( width(axis1,grid)==2 && width(axis2,grid)==2 && width(axis3,grid)==2 )
-	      {
-		const intArray & il00=il(R,axis1);    
-		const intArray & il10=evaluate(il00+1);
-		const intArray & il01=il(R,axis2);
-		const intArray & il11=evaluate(il01+1);
-		const intArray & il02=il(R,axis3); 
-		const intArray & il12=evaluate(il02+1);
+              }
+              else if( width(axis1,grid)==2 && width(axis2,grid)==2 && width(axis3,grid)==2 )
+              {
+                const intArray & il00=il(R,axis1);    
+                const intArray & il10=evaluate(il00+1);
+                const intArray & il01=il(R,axis2);
+                const intArray & il11=evaluate(il01+1);
+                const intArray & il02=il(R,axis3); 
+                const intArray & il12=evaluate(il02+1);
 
-		const intArray & ip0 = ip(R,axis1);
-		const intArray & ip1 = ip(R,axis2);
-		const intArray & ip2 = ip(R,axis3);
-		for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
-		{
-		  ug(ip0,ip1,ip2,c3)= 
-		    coeffg(R,0,0,0)*ui(il00,il01,il02,c3)
-		    +coeffg(R,1,0,0)*ui(il10,il01,il02,c3)
-		    +coeffg(R,0,1,0)*ui(il00,il11,il02,c3)
-		    +coeffg(R,1,1,0)*ui(il10,il11,il02,c3)
-		    +coeffg(R,0,0,1)*ui(il00,il01,il12,c3)
-		    +coeffg(R,1,0,1)*ui(il10,il01,il12,c3)
-		    +coeffg(R,0,1,1)*ui(il00,il11,il12,c3)
-		    +coeffg(R,1,1,1)*ui(il10,il11,il12,c3);
-		}
-	      }
-	      else
-	      {
-		const intArray & il00=il(R,axis1);    
-		const intArray & il01=il(R,axis2);
-		const intArray & il02=il(R,axis3); 
+                const intArray & ip0 = ip(R,axis1);
+                const intArray & ip1 = ip(R,axis2);
+                const intArray & ip2 = ip(R,axis3);
+                for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
+                {
+                  ug(ip0,ip1,ip2,c3)= 
+                    coeffg(R,0,0,0)*ui(il00,il01,il02,c3)
+                    +coeffg(R,1,0,0)*ui(il10,il01,il02,c3)
+                    +coeffg(R,0,1,0)*ui(il00,il11,il02,c3)
+                    +coeffg(R,1,1,0)*ui(il10,il11,il02,c3)
+                    +coeffg(R,0,0,1)*ui(il00,il01,il12,c3)
+                    +coeffg(R,1,0,1)*ui(il10,il01,il12,c3)
+                    +coeffg(R,0,1,1)*ui(il00,il11,il12,c3)
+                    +coeffg(R,1,1,1)*ui(il10,il11,il12,c3);
+                }
+              }
+              else
+              {
+                const intArray & il00=il(R,axis1);    
+                const intArray & il01=il(R,axis2);
+                const intArray & il02=il(R,axis3); 
 
-		const intArray & ip0 = ip(R,axis1);
-		const intArray & ip1 = ip(R,axis2);
-		const intArray & ip2 = ip(R,axis3);
-		for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
-		{
-		  ug(ip0,ip1,ip2,c3)=0.;
-		  for( int w3=0; w3<width(axis3,grid); w3++ )            
-		    for( int w2=0; w2<width(axis2,grid); w2++ )            
-		      for( int w1=0; w1<width(axis1,grid); w1++ )
-			ug(ip0,ip1,ip2,c3)+=coeffg(R,w1,w2,w3)*ui(il00+w1,il01+w2,il02+w3,c3);
-		}
-	      }
-	    }
-	  }
-	}
+                const intArray & ip0 = ip(R,axis1);
+                const intArray & ip1 = ip(R,axis2);
+                const intArray & ip2 = ip(R,axis3);
+                for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
+                {
+                  ug(ip0,ip1,ip2,c3)=0.;
+                  for( int w3=0; w3<width(axis3,grid); w3++ )            
+                    for( int w2=0; w2<width(axis2,grid); w2++ )            
+                      for( int w1=0; w1<width(axis1,grid); w1++ )
+                        ug(ip0,ip1,ip2,c3)+=coeffg(R,w1,w2,w3)*ui(il00+w1,il01+w2,il02+w3,c3);
+                }
+              }
+            }
+          }
+        }
       } // end for grid i
       // consistency check: *wdh* 090429
       if( !onlyInterpolateFromSomeGrids && numInterpolated!=cg.numberOfInterpolationPoints(grid) )
       {
-	printF("Interpolant:explicitInterpolate:ERROR: grid=%i numInterpolated=%i but numberOfInterpolationPoints=%i\n"
+        printF("Interpolant:explicitInterpolate:ERROR: grid=%i numInterpolated=%i but numberOfInterpolationPoints=%i\n"
                " There is probably an error in the interpolationStartEndIndex array!\n",
                            grid,numInterpolated,cg.numberOfInterpolationPoints(grid) );
-	display(cg.interpolationStartEndIndex,"cg.interpolationStartEndIndex(0:1,grid,gridi)");
-	display(cg.numberOfInterpolationPoints,"cg.numberOfInterpolationPoints");
-	
-	OV_ABORT("error");
+        display(cg.interpolationStartEndIndex,"cg.interpolationStartEndIndex(0:1,grid,gridi)");
+        display(cg.numberOfInterpolationPoints,"cg.numberOfInterpolationPoints");
+        
+        OV_ABORT("error");
       }
     }
     else
@@ -1713,34 +1713,34 @@ explicitInterpolate(realCompositeGridFunction & u,
       //  ========================  old way  ==================================
       if( cg.numberOfDimensions()==2 )
       {// ****** 2D **************
-	for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
-	  for( int c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
-	  {
-	    ug(ip(I,axis1),ip(I,axis2),c2,c3)=0.;   
-	    for( int w2=0; w2<width(axis2,grid); w2++ )              // ***** optimize these *******
-	      for( int w1=0; w1<width(axis1,grid); w1++ )
-		for( int i=0; i<cg.numberOfInterpolationPoints(grid); i++ )
-		  ug(ip(i,axis1),ip(i,axis2),c2,c3)+=coeffg(i,w1,w2)*
-		    u[ig(i)](il(i,axis1)+w1,il(i,axis2)+w2,c2,c3);
-	  }
+        for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
+          for( int c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
+          {
+            ug(ip(I,axis1),ip(I,axis2),c2,c3)=0.;   
+            for( int w2=0; w2<width(axis2,grid); w2++ )              // ***** optimize these *******
+              for( int w1=0; w1<width(axis1,grid); w1++ )
+                for( int i=0; i<cg.numberOfInterpolationPoints(grid); i++ )
+                  ug(ip(i,axis1),ip(i,axis2),c2,c3)+=coeffg(i,w1,w2)*
+                    u[ig(i)](il(i,axis1)+w1,il(i,axis2)+w2,c2,c3);
+          }
       }
       else // 3D
       {
-	if( u.positionOfComponent(0)==3 )
-	{
-	  for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
-	  {
-	    int i;
-	    for( i=0; i<cg.numberOfInterpolationPoints(grid); i++ )
-	      u[grid](ip(i,axis1),ip(i,axis2),ip(i,axis3),c3)=0.;
-	    for( int w3=0; w3<width(axis3,grid); w3++ )
-	      for( int w2=0; w2<width(axis2,grid); w2++ )
-		for( int w1=0; w1<width(axis1,grid); w1++ )
-		  for( i=0; i<cg.numberOfInterpolationPoints(grid); i++ )
-		    u[grid](ip(i,axis1),ip(i,axis2),ip(i,axis3),c3)+=coeff[grid](i,w1,w2,w3)*
-		      u[ig(i)](il(i,axis1)+w1,il(i,axis2)+w2,il(i,axis3)+w3,c3);
-	  }
-	}
+        if( u.positionOfComponent(0)==3 )
+        {
+          for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
+          {
+            int i;
+            for( i=0; i<cg.numberOfInterpolationPoints(grid); i++ )
+              u[grid](ip(i,axis1),ip(i,axis2),ip(i,axis3),c3)=0.;
+            for( int w3=0; w3<width(axis3,grid); w3++ )
+              for( int w2=0; w2<width(axis2,grid); w2++ )
+                for( int w1=0; w1<width(axis1,grid); w1++ )
+                  for( i=0; i<cg.numberOfInterpolationPoints(grid); i++ )
+                    u[grid](ip(i,axis1),ip(i,axis2),ip(i,axis3),c3)+=coeff[grid](i,w1,w2,w3)*
+                      u[ig(i)](il(i,axis1)+w1,il(i,axis2)+w2,il(i,axis3)+w3,c3);
+          }
+        }
       }
     }
   }
@@ -1769,17 +1769,17 @@ explicitInterpolate(realCompositeGridFunction & u,
     {
       if( INTERPOLATE_THIS_GRID(grid) )
       {
-	// if( true ) printF(" ---- Interpolant:explicitInterpolate: extrapolateInterpolationNeighbours -----\n");
-	
+        // if( true ) printF(" ---- Interpolant:explicitInterpolate: extrapolateInterpolationNeighbours -----\n");
+        
 
         real time1=getCPU();
-	u[grid].applyBoundaryCondition(C[3],BCTypes::extrapolate,BCTypes::allBoundaries,0.,0.,bcParams);
+        u[grid].applyBoundaryCondition(C[3],BCTypes::extrapolate,BCTypes::allBoundaries,0.,0.,bcParams);
         real time2=getCPU();
-	timeForAMRExtrapolateAll+=time2-time1;
-	u[grid].applyBoundaryCondition(C[3],BCTypes::extrapolateInterpolationNeighbours,BCTypes::allBoundaries,0.,0.,
-				       bcParams);
-	timeForAMRExtrapInterpolationNeighbours+=getCPU()-time2;
-	u[grid].finishBoundaryConditions(bcParams,C[3]);
+        timeForAMRExtrapolateAll+=time2-time1;
+        u[grid].applyBoundaryCondition(C[3],BCTypes::extrapolateInterpolationNeighbours,BCTypes::allBoundaries,0.,0.,
+                                       bcParams);
+        timeForAMRExtrapInterpolationNeighbours+=getCPU()-time2;
+        u[grid].finishBoundaryConditions(bcParams,C[3]);
 
       }
     }
@@ -1791,7 +1791,7 @@ explicitInterpolate(realCompositeGridFunction & u,
     else
     {
       for( int level=1; level<=maximumRefinementLevelToInterpolate; level++ )
-	interpRefinements->interpolateRefinementBoundaries( u,level,C[3] );
+        interpRefinements->interpolateRefinementBoundaries( u,level,C[3] );
     }
     timeForAMRRefinementBoundaries+=getCPU()-time1;
 
@@ -1805,7 +1805,7 @@ explicitInterpolate(realCompositeGridFunction & u,
     for( grid=0; grid<cg.numberOfComponentGrids(); grid++ )
     {
       if( INTERPOLATE_THIS_GRID(grid) )
-	u[grid].updateGhostBoundaries();  // *wdh* 060302 this updates all components, does this matter?
+        u[grid].updateGhostBoundaries();  // *wdh* 060302 this updates all components, does this matter?
     }
     
   }
@@ -1818,9 +1818,9 @@ explicitInterpolate(realCompositeGridFunction & u,
 
 int Interpolant::
 implicitInterpolateByIteration(realCompositeGridFunction & u,
-			       const Range C[],
-			       const IntegerArray & gridsToInterpolate /* = Overture::nullIntArray() */,
-			       const IntegerArray & gridsToInterpolateFrom /* = Overture::nullIntArray() */ ) const
+                               const Range C[],
+                               const IntegerArray & gridsToInterpolate /* = Overture::nullIntArray() */,
+                               const IntegerArray & gridsToInterpolateFrom /* = Overture::nullIntArray() */ ) const
 // ===================================================================================================
 // /Description:
 //   Iterate to solve the implicit interpolation equations.
@@ -1871,7 +1871,7 @@ implicitInterpolateByIteration(realCompositeGridFunction & u,
     if( !(u.positionOfComponent(0)==1 || u.positionOfComponent(0)==2 || u.positionOfComponent(0)==3) )
     {
       cout << "implicitInterpolate:ERROR: cannot interpolate in 1D when position of component 0 is = " << 
-	"u.positionOfComponent(0) \n";
+        "u.positionOfComponent(0) \n";
       cout << "complain to Bill! \n";
       Overture::abort("error");
     }
@@ -1961,21 +1961,21 @@ implicitInterpolateByIteration(realCompositeGridFunction & u,
       int num=0;
       for( int gridi=0; gridi<cg.numberOfComponentGrids(); gridi++ )
       {
-	if( cg.interpolationStartEndIndex(0,grid,gridi)>=0 )
-	  num+=cg.interpolationStartEndIndex(1,grid,gridi)-cg.interpolationStartEndIndex(0,grid,gridi)+1;
-	else
-	{
-	  if( cg.interpolationStartEndIndex(0,grid,gridi)!= -1 )
-	  {
-	    printF("***ERROR in interpolationStartEndIndex : negative value not equal to -1!\n");
+        if( cg.interpolationStartEndIndex(0,grid,gridi)>=0 )
+          num+=cg.interpolationStartEndIndex(1,grid,gridi)-cg.interpolationStartEndIndex(0,grid,gridi)+1;
+        else
+        {
+          if( cg.interpolationStartEndIndex(0,grid,gridi)!= -1 )
+          {
+            printF("***ERROR in interpolationStartEndIndex : negative value not equal to -1!\n");
             cg.interpolationStartEndIndex.display("cg.interpolationStartEndIndex");
-	    Overture::abort("error");
-	  }
-	}
+            Overture::abort("error");
+          }
+        }
       }
       if( num!=cg.numberOfInterpolationPoints(grid) )
       {
-	printF("***ERROR grid=%i num=%i numberOfInterpolationPoints(grid)=%i\n",grid,num,
+        printF("***ERROR grid=%i num=%i numberOfInterpolationPoints(grid)=%i\n",grid,num,
               cg.numberOfInterpolationPoints(grid));
         cg.numberOfInterpolationPoints.display("cg.numberOfInterpolationPoints");
         cg.interpolationStartEndIndex.display("cg.interpolationStartEndIndex");
@@ -1985,16 +1985,16 @@ implicitInterpolateByIteration(realCompositeGridFunction & u,
       
       for( int i=0; i<cg.numberOfInterpolationPoints(grid); i++ )
       {
-	int gridi=ig(i);
-	if( i<cg.interpolationStartEndIndex(0,grid,gridi) || i>cg.interpolationStartEndIndex(1,grid,gridi) )
-	{
-	  printF("***ERROR in interpolationStartEndIndex: grid=%i gridi=%i i=%i start=%i end=%i\n",
-		 grid,gridi,i,cg.interpolationStartEndIndex(0,grid,gridi),
-		 cg.interpolationStartEndIndex(1,grid,gridi));
+        int gridi=ig(i);
+        if( i<cg.interpolationStartEndIndex(0,grid,gridi) || i>cg.interpolationStartEndIndex(1,grid,gridi) )
+        {
+          printF("***ERROR in interpolationStartEndIndex: grid=%i gridi=%i i=%i start=%i end=%i\n",
+                 grid,gridi,i,cg.interpolationStartEndIndex(0,grid,gridi),
+                 cg.interpolationStartEndIndex(1,grid,gridi));
           cg.interpolationStartEndIndex.display("cg.interpolationStartEndIndex");
-	  
+          
           Overture::abort("error");
-	}
+        }
       }
     }
   }
@@ -2006,7 +2006,7 @@ implicitInterpolateByIteration(realCompositeGridFunction & u,
   real resMax, resMaxOld=1.;
 
 //   printF(" Interpolant: interpolationMethod=%s\n",(interpolationMethod==optimizedC ?
-// 		  "opt C" : interpolationMethod==standard? "standard" : "opt"));
+//                "opt C" : interpolationMethod==standard? "standard" : "opt"));
   int it;
   for(it=0; it<maximumNumberOfIterations; it++ )
   {
@@ -2014,10 +2014,10 @@ implicitInterpolateByIteration(realCompositeGridFunction & u,
     {
       for( grid=0; grid<cg.numberOfComponentGrids(); grid++ )
         if( INTERPOLATE_THIS_GRID(grid) ) // !onlyInterpolateSomeGrids || gridsToInterpolate(grid) )
-	{
-  	  u[grid].periodicUpdate(C[3]); 
+        {
+          u[grid].periodicUpdate(C[3]); 
           u[grid].updateGhostBoundaries();  // this updates all components, does this matter?
- 	}
+        }
     }
     
     
@@ -2062,13 +2062,13 @@ implicitInterpolateByIteration(realCompositeGridFunction & u,
     {
       if( debug & 2 )
       {
-	printF("Interpolant:INFO: using iteration to solve the interpolation equations in parallel, maxit=%i.\n",
-	       maximumNumberOfIterations);
+        printF("Interpolant:INFO: using iteration to solve the interpolation equations in parallel, maxit=%i.\n",
+               maximumNumberOfIterations);
       }
       
       if( rcData->parallelInterpolator==NULL )
       {
-	rcData->parallelInterpolator = new ParallelOverlappingGridInterpolator();
+        rcData->parallelInterpolator = new ParallelOverlappingGridInterpolator();
       }
       
       // *wdh* 100417 rcData->parallelInterpolator->setup(u);
@@ -2096,7 +2096,7 @@ implicitInterpolateByIteration(realCompositeGridFunction & u,
     for( grid=0; grid<cg.numberOfComponentGrids(); grid++ )
     {
       if( cg.numberOfInterpolationPoints(grid) <= 0 || !INTERPOLATE_THIS_GRID(grid)) // (onlyInterpolateSomeGrids && !gridsToInterpolate(grid)) )
-	continue;
+        continue;
     
       const int numberOfInterpolationPoints = cg.numberOfInterpolationPoints(grid);
       realArray r(numberOfInterpolationPoints);
@@ -2119,372 +2119,372 @@ implicitInterpolateByIteration(realCompositeGridFunction & u,
       if( true && (interpolationMethod==optimizedC || interpolationMethod==standard) )
       {
 
-	real *ug_ = u_[grid];
-	const real *coeffg_ = coeffg.getDataPointer();
+        real *ug_ = u_[grid];
+        const real *coeffg_ = coeffg.getDataPointer();
 
-	const int *ip_ = ip.getDataPointer();
-	const int *il_ = il.getDataPointer();
-	const int *ig_ = ig.getDataPointer();
-	const int width0=coeffg.getLength(1);
-	const int width1=coeffg.getLength(2);
-	
-	if( cg.numberOfDimensions()==1 )
-	{  // ****** 1D **************
-	  int c1,c2,c3;
-	  for( c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
-	    for( c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
-	      for( c1=C[1].getBase(); c1<=C[1].getBound(); c1++ )
-	      {
-		ug(ip(I,axis1),c1,c2,c3)=0.;   
-		for( int w1=0; w1<width(axis1,grid); w1++ )
-		  for( int i=0; i<numberOfInterpolationPoints; i++ )
-		    ug(ip(i,axis1),c1,c2,c3)+=coeffg(i,w1)*u[ig(i)](il(i,axis1)+w1,c1,c2,c3);
-	      }
-	}
-	else if( cg.numberOfDimensions()==2 )
-	{
-	  // ****** 2D **************
-	
-	  for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
-	  {
-	    
-	    for( int c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
-	    {
+        const int *ip_ = ip.getDataPointer();
+        const int *il_ = il.getDataPointer();
+        const int *ig_ = ig.getDataPointer();
+        const int width0=coeffg.getLength(1);
+        const int width1=coeffg.getLength(2);
+        
+        if( cg.numberOfDimensions()==1 )
+        {  // ****** 1D **************
+          int c1,c2,c3;
+          for( c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
+            for( c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
+              for( c1=C[1].getBase(); c1<=C[1].getBound(); c1++ )
+              {
+                ug(ip(I,axis1),c1,c2,c3)=0.;   
+                for( int w1=0; w1<width(axis1,grid); w1++ )
+                  for( int i=0; i<numberOfInterpolationPoints; i++ )
+                    ug(ip(i,axis1),c1,c2,c3)+=coeffg(i,w1)*u[ig(i)](il(i,axis1)+w1,c1,c2,c3);
+              }
+        }
+        else if( cg.numberOfDimensions()==2 )
+        {
+          // ****** 2D **************
+        
+          for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
+          {
+            
+            for( int c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
+            {
 
-	      int i;
-	      if( width(axis1,grid)==3 && width(axis2,grid)==3 )
-	      {
-		for( i=0; i<numberOfInterpolationPoints; i++ )
-		{
-		  r(i)=
-		    COEFFG2(i,0,0)*UU2(0,0)+COEFFG2(i,1,0)*UU2(1,0)+COEFFG2(i,2,0)*UU2(2,0)+
-		    COEFFG2(i,0,1)*UU2(0,1)+COEFFG2(i,1,1)*UU2(1,1)+COEFFG2(i,2,1)*UU2(2,1)+
-		    COEFFG2(i,0,2)*UU2(0,2)+COEFFG2(i,1,2)*UU2(1,2)+COEFFG2(i,2,2)*UU2(2,2);
-		  resMax=max(resMax,fabs(UG(IP(i,axis1),IP(i,axis2),c2,c3)-r(i)));
-		  UG(IP(i,axis1),IP(i,axis2),c2,c3)=r(i);
-		}
-	      }
-	      else
-	      {
-		r=0.;
-		for( int w2=0; w2<width(axis2,grid); w2++ )              // ***** optimize these *******
-		{
-		  for( int w1=0; w1<width(axis1,grid); w1++ )
-		  {
-		    for( i=0; i<numberOfInterpolationPoints; i++ )
-		    {
-		      r(i)+=COEFFG2(i,w1,w2)*UU(IG(i), IL(i,axis1)+w1,IL(i,axis2)+w2,c2,c3);
-		    }
-		    
-		  }
-		}
-		for( i=0; i<numberOfInterpolationPoints; i++ )
-		{
-		  resMax=max(resMax,fabs(UG(IP(i,axis1),IP(i,axis2),c2,c3)-r(i)));
-		  UG(IP(i,axis1),IP(i,axis2),c2,c3)=r(i);
-		}
-	      }
-	    }
-	  }
-	}
-	else // 3D
-	{
-	  if( u.positionOfComponent(0)==3 )
-	  {
-	    for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
-	    {
-	      int i;
-	      if( width(axis1,grid)==3 && width(axis2,grid)==3 && width(axis3,grid)==3 )
-	      {
-		// printF("Interpolant: optimized 3d..\n");
-		for( i=0; i<numberOfInterpolationPoints; i++ )
-		{
-		  r(i)=
-		    COEFFG3(i,0,0,0)*UU3(0,0,0)+COEFFG3(i,1,0,0)*UU3(1,0,0)+COEFFG3(i,2,0,0)*UU3(2,0,0)+
-		    COEFFG3(i,0,1,0)*UU3(0,1,0)+COEFFG3(i,1,1,0)*UU3(1,1,0)+COEFFG3(i,2,1,0)*UU3(2,1,0)+
-		    COEFFG3(i,0,2,0)*UU3(0,2,0)+COEFFG3(i,1,2,0)*UU3(1,2,0)+COEFFG3(i,2,2,0)*UU3(2,2,0)+
+              int i;
+              if( width(axis1,grid)==3 && width(axis2,grid)==3 )
+              {
+                for( i=0; i<numberOfInterpolationPoints; i++ )
+                {
+                  r(i)=
+                    COEFFG2(i,0,0)*UU2(0,0)+COEFFG2(i,1,0)*UU2(1,0)+COEFFG2(i,2,0)*UU2(2,0)+
+                    COEFFG2(i,0,1)*UU2(0,1)+COEFFG2(i,1,1)*UU2(1,1)+COEFFG2(i,2,1)*UU2(2,1)+
+                    COEFFG2(i,0,2)*UU2(0,2)+COEFFG2(i,1,2)*UU2(1,2)+COEFFG2(i,2,2)*UU2(2,2);
+                  resMax=max(resMax,fabs(UG(IP(i,axis1),IP(i,axis2),c2,c3)-r(i)));
+                  UG(IP(i,axis1),IP(i,axis2),c2,c3)=r(i);
+                }
+              }
+              else
+              {
+                r=0.;
+                for( int w2=0; w2<width(axis2,grid); w2++ )              // ***** optimize these *******
+                {
+                  for( int w1=0; w1<width(axis1,grid); w1++ )
+                  {
+                    for( i=0; i<numberOfInterpolationPoints; i++ )
+                    {
+                      r(i)+=COEFFG2(i,w1,w2)*UU(IG(i), IL(i,axis1)+w1,IL(i,axis2)+w2,c2,c3);
+                    }
+                    
+                  }
+                }
+                for( i=0; i<numberOfInterpolationPoints; i++ )
+                {
+                  resMax=max(resMax,fabs(UG(IP(i,axis1),IP(i,axis2),c2,c3)-r(i)));
+                  UG(IP(i,axis1),IP(i,axis2),c2,c3)=r(i);
+                }
+              }
+            }
+          }
+        }
+        else // 3D
+        {
+          if( u.positionOfComponent(0)==3 )
+          {
+            for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
+            {
+              int i;
+              if( width(axis1,grid)==3 && width(axis2,grid)==3 && width(axis3,grid)==3 )
+              {
+                // printF("Interpolant: optimized 3d..\n");
+                for( i=0; i<numberOfInterpolationPoints; i++ )
+                {
+                  r(i)=
+                    COEFFG3(i,0,0,0)*UU3(0,0,0)+COEFFG3(i,1,0,0)*UU3(1,0,0)+COEFFG3(i,2,0,0)*UU3(2,0,0)+
+                    COEFFG3(i,0,1,0)*UU3(0,1,0)+COEFFG3(i,1,1,0)*UU3(1,1,0)+COEFFG3(i,2,1,0)*UU3(2,1,0)+
+                    COEFFG3(i,0,2,0)*UU3(0,2,0)+COEFFG3(i,1,2,0)*UU3(1,2,0)+COEFFG3(i,2,2,0)*UU3(2,2,0)+
 
-		    COEFFG3(i,0,0,1)*UU3(0,0,1)+COEFFG3(i,1,0,1)*UU3(1,0,1)+COEFFG3(i,2,0,1)*UU3(2,0,1)+
-		    COEFFG3(i,0,1,1)*UU3(0,1,1)+COEFFG3(i,1,1,1)*UU3(1,1,1)+COEFFG3(i,2,1,1)*UU3(2,1,1)+
-		    COEFFG3(i,0,2,1)*UU3(0,2,1)+COEFFG3(i,1,2,1)*UU3(1,2,1)+COEFFG3(i,2,2,1)*UU3(2,2,1)+
+                    COEFFG3(i,0,0,1)*UU3(0,0,1)+COEFFG3(i,1,0,1)*UU3(1,0,1)+COEFFG3(i,2,0,1)*UU3(2,0,1)+
+                    COEFFG3(i,0,1,1)*UU3(0,1,1)+COEFFG3(i,1,1,1)*UU3(1,1,1)+COEFFG3(i,2,1,1)*UU3(2,1,1)+
+                    COEFFG3(i,0,2,1)*UU3(0,2,1)+COEFFG3(i,1,2,1)*UU3(1,2,1)+COEFFG3(i,2,2,1)*UU3(2,2,1)+
 
-		    COEFFG3(i,0,0,2)*UU3(0,0,2)+COEFFG3(i,1,0,2)*UU3(1,0,2)+COEFFG3(i,2,0,2)*UU3(2,0,2)+
-		    COEFFG3(i,0,1,2)*UU3(0,1,2)+COEFFG3(i,1,1,2)*UU3(1,1,2)+COEFFG3(i,2,1,2)*UU3(2,1,2)+
-		    COEFFG3(i,0,2,2)*UU3(0,2,2)+COEFFG3(i,1,2,2)*UU3(1,2,2)+COEFFG3(i,2,2,2)*UU3(2,2,2);
-		  resMax=max(resMax,fabs(UG(IP(i,axis1),IP(i,axis2),IP(i,axis3),c3)-r(i)));
-		  UG(IP(i,axis1),IP(i,axis2),IP(i,axis3),c3)=r(i);
-		}
-	      }
-	      else
-	      {
-		r=0.;
-		for( int w3=0; w3<width(axis3,grid); w3++ )
-		{
-		  for( int w2=0; w2<width(axis2,grid); w2++ )              // ***** optimize these *******
-		  {
-		    for( int w1=0; w1<width(axis1,grid); w1++ )
-		    {
-		      for( i=0; i<numberOfInterpolationPoints; i++ )
-		      {
-			r(i)+=COEFFG3(i,w1,w2,w3)*UU(IG(i), IL(i,axis1)+w1,IL(i,axis2)+w2,IL(i,axis3)+w3,c3);
-		      }
-		    
-		    }
-		  }
-		}
-		for( i=0; i<numberOfInterpolationPoints; i++ )
-		{
-		  resMax=max(resMax,fabs(UG(IP(i,axis1),IP(i,axis2),IP(i,axis3),c3)-r(i)));
-		  UG(IP(i,axis1),IP(i,axis2),IP(i,axis3),c3)=r(i);
-		}
-	      }
-	    
-	    }
-	  }
-	}
+                    COEFFG3(i,0,0,2)*UU3(0,0,2)+COEFFG3(i,1,0,2)*UU3(1,0,2)+COEFFG3(i,2,0,2)*UU3(2,0,2)+
+                    COEFFG3(i,0,1,2)*UU3(0,1,2)+COEFFG3(i,1,1,2)*UU3(1,1,2)+COEFFG3(i,2,1,2)*UU3(2,1,2)+
+                    COEFFG3(i,0,2,2)*UU3(0,2,2)+COEFFG3(i,1,2,2)*UU3(1,2,2)+COEFFG3(i,2,2,2)*UU3(2,2,2);
+                  resMax=max(resMax,fabs(UG(IP(i,axis1),IP(i,axis2),IP(i,axis3),c3)-r(i)));
+                  UG(IP(i,axis1),IP(i,axis2),IP(i,axis3),c3)=r(i);
+                }
+              }
+              else
+              {
+                r=0.;
+                for( int w3=0; w3<width(axis3,grid); w3++ )
+                {
+                  for( int w2=0; w2<width(axis2,grid); w2++ )              // ***** optimize these *******
+                  {
+                    for( int w1=0; w1<width(axis1,grid); w1++ )
+                    {
+                      for( i=0; i<numberOfInterpolationPoints; i++ )
+                      {
+                        r(i)+=COEFFG3(i,w1,w2,w3)*UU(IG(i), IL(i,axis1)+w1,IL(i,axis2)+w2,IL(i,axis3)+w3,c3);
+                      }
+                    
+                    }
+                  }
+                }
+                for( i=0; i<numberOfInterpolationPoints; i++ )
+                {
+                  resMax=max(resMax,fabs(UG(IP(i,axis1),IP(i,axis2),IP(i,axis3),c3)-r(i)));
+                  UG(IP(i,axis1),IP(i,axis2),IP(i,axis3),c3)=r(i);
+                }
+              }
+            
+            }
+          }
+        }
       }
       else
       {
-	// optimized version
+        // optimized version
         // printF(" Interpolant: opt version\n");
 
         assert( useVariableWidthInterpolation!=NULL );
-	
-	Range R;
+        
+        Range R;
         const int endIndex= it==0 ? 1 : 2;  // after first time thru only do implicit points.
 
-	int numInterpolated=0; // for a consistency check -- compare numInterpolated to numberOfInterpolationPoints
-	for( int gridi=0; gridi<cg.numberOfComponentGrids(); gridi++ )
-	{
+        int numInterpolated=0; // for a consistency check -- compare numInterpolated to numberOfInterpolationPoints
+        for( int gridi=0; gridi<cg.numberOfComponentGrids(); gridi++ )
+        {
           // note: a cgrid can interpolate from itself
           if( false ) 
             printF("opt: it=%i grid=%i gridi=%i startIndex=%i end=%i (end for implicit=%i)\n",it,grid,gridi,
             cg.interpolationStartEndIndex(0,grid,gridi), cg.interpolationStartEndIndex(1,grid,gridi), 
             cg.interpolationStartEndIndex(2,grid,gridi));
-	  
+          
           if( cg.interpolationStartEndIndex(endIndex,grid,gridi) >= 0 )
-	  { // for a consistency check -- compare numInterpolated to numberOfInterpolationPoints
-	    numInterpolated+=cg.interpolationStartEndIndex(endIndex,grid,gridi)-
-	      cg.interpolationStartEndIndex(0,grid,gridi)+1;
-	  }
-	  
+          { // for a consistency check -- compare numInterpolated to numberOfInterpolationPoints
+            numInterpolated+=cg.interpolationStartEndIndex(endIndex,grid,gridi)-
+              cg.interpolationStartEndIndex(0,grid,gridi)+1;
+          }
+          
 
-	  if( cg.interpolationStartEndIndex(endIndex,grid,gridi) >= 0 && 
+          if( cg.interpolationStartEndIndex(endIndex,grid,gridi) >= 0 && 
                 (!onlyInterpolateFromSomeGrids || gridsToInterpolateFrom(gridi) ) )
-	  {
-	    R=Range(cg.interpolationStartEndIndex(0,grid,gridi),cg.interpolationStartEndIndex(endIndex,grid,gridi));
+          {
+            R=Range(cg.interpolationStartEndIndex(0,grid,gridi),cg.interpolationStartEndIndex(endIndex,grid,gridi));
             // printF("opt: it=%i, grid=%i gridi=%i n=%i\n",it,grid,gridi,R.getLength());
-	    
-	    const realArray & ui = u[ig(cg.interpolationStartEndIndex(0,grid,gridi))];
+            
+            const realArray & ui = u[ig(cg.interpolationStartEndIndex(0,grid,gridi))];
 
 //             realArray r2;
 //             real resMax2=resMax;
-// 	    r2=r;
+//          r2=r;
 //             r2=-1.;
             if( true ) 
-	    {
-	      int ipar[]={R.getBase(),
-			  R.getBound(),
-			  C[2].getBase(),
-			  C[2].getBound(),
-			  C[3].getBase(),
-			  C[3].getBound(), 
-			  (int) explicitInterpolationStorageOption,
+            {
+              int ipar[]={R.getBase(),
+                          R.getBound(),
+                          C[2].getBase(),
+                          C[2].getBound(),
+                          C[3].getBase(),
+                          C[3].getBound(), 
+                          (int) explicitInterpolationStorageOption,
                           useVariableWidthInterpolation[grid]}; //
 
-	      interpOptRes( cg.numberOfDimensions(),
-			 ui.getBase(0),ui.getBound(0),ui.getBase(1),ui.getBound(1),
-			 ui.getBase(2),ui.getBound(2),ui.getBase(3),ui.getBound(3),
-			 ug.getBase(0),ug.getBound(0),ug.getBase(1),ug.getBound(1),
-			 ug.getBase(2),ug.getBound(2),ug.getBase(3),ug.getBound(3),
-			 il.getLength(0),ip.getLength(0),
-			 coeffg.getLength(0),coeffg.getLength(1),coeffg.getLength(2),
-			    ipar[0],
-			 // *ui.getDataPointer(),
+              interpOptRes( cg.numberOfDimensions(),
+                         ui.getBase(0),ui.getBound(0),ui.getBase(1),ui.getBound(1),
+                         ui.getBase(2),ui.getBound(2),ui.getBase(3),ui.getBound(3),
+                         ug.getBase(0),ug.getBound(0),ug.getBase(1),ug.getBound(1),
+                         ug.getBase(2),ug.getBound(2),ug.getBase(3),ug.getBound(3),
+                         il.getLength(0),ip.getLength(0),
+                         coeffg.getLength(0),coeffg.getLength(1),coeffg.getLength(2),
+                            ipar[0],
+                         // *ui.getDataPointer(),
                          ui(ui.getBase(0),ui.getBase(1),ui.getBase(2),ui.getBase(3),ui.getBase(4)),
-			 // *ug.getDataPointer(),
+                         // *ug.getDataPointer(),
                          ug(ug.getBase(0),ug.getBase(1),ug.getBase(2),ug.getBase(3),ug.getBase(4)),
-			 *coeffg.getDataPointer(),
-			 *r.getDataPointer(),
-			 *il.getDataPointer(),*ip.getDataPointer(),*varWidth.getDataPointer(),
-			 width(0,grid),resMax );
+                         *coeffg.getDataPointer(),
+                         *r.getDataPointer(),
+                         *il.getDataPointer(),*ip.getDataPointer(),*varWidth.getDataPointer(),
+                         width(0,grid),resMax );
 
-	    }
+            }
             else 
             {
 
 // @PD realArray4[ug,ui,coeffg,r] Range[R] intArray2[ip,il]
-	      if( cg.numberOfDimensions()==2 )
-	      {
-		if( width(axis1,grid)==3 && width(axis2,grid)==3 )
-		{
-		  for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
-		    for( int c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
-		    {
-		      r(R,0,0,0)=                                                        // @PA
-			coeffg(R,0,0,0)*ui(il(R,axis1)  ,il(R,axis2)  ,c2,c3)
-			+coeffg(R,1,0,0)*ui(il(R,axis1)+1,il(R,axis2)  ,c2,c3)
-			+coeffg(R,2,0,0)*ui(il(R,axis1)+2,il(R,axis2)  ,c2,c3)
-			+coeffg(R,0,1,0)*ui(il(R,axis1)  ,il(R,axis2)+1,c2,c3)
-			+coeffg(R,1,1,0)*ui(il(R,axis1)+1,il(R,axis2)+1,c2,c3) 
-			+coeffg(R,2,1,0)*ui(il(R,axis1)+2,il(R,axis2)+1,c2,c3) 
-			+coeffg(R,0,2,0)*ui(il(R,axis1)  ,il(R,axis2)+2,c2,c3) 
-			+coeffg(R,1,2,0)*ui(il(R,axis1)+1,il(R,axis2)+2,c2,c3) 
-			+coeffg(R,2,2,0)*ui(il(R,axis1)+2,il(R,axis2)+2,c2,c3);
+              if( cg.numberOfDimensions()==2 )
+              {
+                if( width(axis1,grid)==3 && width(axis2,grid)==3 )
+                {
+                  for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
+                    for( int c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
+                    {
+                      r(R,0,0,0)=                                                        // @PA
+                        coeffg(R,0,0,0)*ui(il(R,axis1)  ,il(R,axis2)  ,c2,c3)
+                        +coeffg(R,1,0,0)*ui(il(R,axis1)+1,il(R,axis2)  ,c2,c3)
+                        +coeffg(R,2,0,0)*ui(il(R,axis1)+2,il(R,axis2)  ,c2,c3)
+                        +coeffg(R,0,1,0)*ui(il(R,axis1)  ,il(R,axis2)+1,c2,c3)
+                        +coeffg(R,1,1,0)*ui(il(R,axis1)+1,il(R,axis2)+1,c2,c3) 
+                        +coeffg(R,2,1,0)*ui(il(R,axis1)+2,il(R,axis2)+1,c2,c3) 
+                        +coeffg(R,0,2,0)*ui(il(R,axis1)  ,il(R,axis2)+2,c2,c3) 
+                        +coeffg(R,1,2,0)*ui(il(R,axis1)+1,il(R,axis2)+2,c2,c3) 
+                        +coeffg(R,2,2,0)*ui(il(R,axis1)+2,il(R,axis2)+2,c2,c3);
 
-		      resMax=max(resMax,max(fabs(ug(ip(R,axis1),ip(R,axis2),c2,c3)-r(R))));
+                      resMax=max(resMax,max(fabs(ug(ip(R,axis1),ip(R,axis2),c2,c3)-r(R))));
 
-		      ug(ip(R,axis1),ip(R,axis2),c2,c3)= r(R,0,0,0);                     // @PA
-		    }
-		}
-		else if( width(axis1,grid)==2 && width(axis2,grid)==2 )
-		{
-		  for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
-		    for( int c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
-		    {
-		      r(R,0,0,0)=                                                        // @PA
-			coeffg(R,0,0,0)*ui(il(R,axis1)  ,il(R,axis2)  ,c2,c3)
-			+coeffg(R,1,0,0)*ui(il(R,axis1)+1,il(R,axis2)  ,c2,c3)
-			+coeffg(R,0,1,0)*ui(il(R,axis1)  ,il(R,axis2)+1,c2,c3)
-			+coeffg(R,1,1,0)*ui(il(R,axis1)+1,il(R,axis2)+1,c2,c3);
+                      ug(ip(R,axis1),ip(R,axis2),c2,c3)= r(R,0,0,0);                     // @PA
+                    }
+                }
+                else if( width(axis1,grid)==2 && width(axis2,grid)==2 )
+                {
+                  for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
+                    for( int c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
+                    {
+                      r(R,0,0,0)=                                                        // @PA
+                        coeffg(R,0,0,0)*ui(il(R,axis1)  ,il(R,axis2)  ,c2,c3)
+                        +coeffg(R,1,0,0)*ui(il(R,axis1)+1,il(R,axis2)  ,c2,c3)
+                        +coeffg(R,0,1,0)*ui(il(R,axis1)  ,il(R,axis2)+1,c2,c3)
+                        +coeffg(R,1,1,0)*ui(il(R,axis1)+1,il(R,axis2)+1,c2,c3);
 
-		      resMax=max(resMax,max(fabs(ug(ip(R,axis1),ip(R,axis2),c2,c3)-r(R))));
+                      resMax=max(resMax,max(fabs(ug(ip(R,axis1),ip(R,axis2),c2,c3)-r(R))));
 
-		      ug(ip(R,axis1),ip(R,axis2),c2,c3)= r(R,0,0,0);                     // @PA
-		    }
-		}
-		else
-		{
-		  // general case in 2D
-		  for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
-		    for( int c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
-		    {
-		      r=0.;
-		      for( int w2=0; w2<width(axis2,grid); w2++ )              
-		      {
-			for( int w1=0; w1<width(axis1,grid); w1++ )
-			{
-			  r(R,0,0,0)+=coeffg(R,w1,w2,0)*ui(il(R,axis1)+w1,il(R,axis2)+w2,c2,c3); 
-			}
-		      }
-		      resMax=max(resMax,max(fabs(ug(ip(R,axis1),ip(R,axis2),c2,c3)-r(R))));
+                      ug(ip(R,axis1),ip(R,axis2),c2,c3)= r(R,0,0,0);                     // @PA
+                    }
+                }
+                else
+                {
+                  // general case in 2D
+                  for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
+                    for( int c2=C[2].getBase(); c2<=C[2].getBound(); c2++ )
+                    {
+                      r=0.;
+                      for( int w2=0; w2<width(axis2,grid); w2++ )              
+                      {
+                        for( int w1=0; w1<width(axis1,grid); w1++ )
+                        {
+                          r(R,0,0,0)+=coeffg(R,w1,w2,0)*ui(il(R,axis1)+w1,il(R,axis2)+w2,c2,c3); 
+                        }
+                      }
+                      resMax=max(resMax,max(fabs(ug(ip(R,axis1),ip(R,axis2),c2,c3)-r(R))));
 
-		      ug(ip(R,axis1),ip(R,axis2),c2,c3)= r(R,0,0,0);                   
-		    }
-		}
-	      }
-	      else
-	      { // *** 3D ****
-		if( width(axis1,grid)==3 && width(axis2,grid)==3 && width(axis3,grid)==3 )
-		{
-		  for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
-		  {
-		    r(R,0,0,0)=                       // @PA
-		      coeffg(R,0,0,0)*ui(il(R,axis1)  ,il(R,axis2)  ,il(R,axis3)  ,c3)
-		      +coeffg(R,1,0,0)*ui(il(R,axis1)+1,il(R,axis2)  ,il(R,axis3)  ,c3)
-		      +coeffg(R,2,0,0)*ui(il(R,axis1)+2,il(R,axis2)  ,il(R,axis3)  ,c3)
-		      +coeffg(R,0,1,0)*ui(il(R,axis1)  ,il(R,axis2)+1,il(R,axis3)  ,c3)
-		      +coeffg(R,1,1,0)*ui(il(R,axis1)+1,il(R,axis2)+1,il(R,axis3)  ,c3) 
-		      +coeffg(R,2,1,0)*ui(il(R,axis1)+2,il(R,axis2)+1,il(R,axis3)  ,c3) 
-		      +coeffg(R,0,2,0)*ui(il(R,axis1)  ,il(R,axis2)+2,il(R,axis3)  ,c3) 
-		      +coeffg(R,1,2,0)*ui(il(R,axis1)+1,il(R,axis2)+2,il(R,axis3)  ,c3) 
-		      +coeffg(R,2,2,0)*ui(il(R,axis1)+2,il(R,axis2)+2,il(R,axis3)  ,c3)
-		      +coeffg(R,0,0,1)*ui(il(R,axis1)  ,il(R,axis2)  ,il(R,axis3)+1,c3)
-		      +coeffg(R,1,0,1)*ui(il(R,axis1)+1,il(R,axis2)  ,il(R,axis3)+1,c3)
-		      +coeffg(R,2,0,1)*ui(il(R,axis1)+2,il(R,axis2)  ,il(R,axis3)+1,c3)
-		      +coeffg(R,0,1,1)*ui(il(R,axis1)  ,il(R,axis2)+1,il(R,axis3)+1,c3)
-		      +coeffg(R,1,1,1)*ui(il(R,axis1)+1,il(R,axis2)+1,il(R,axis3)+1,c3) 
-		      +coeffg(R,2,1,1)*ui(il(R,axis1)+2,il(R,axis2)+1,il(R,axis3)+1,c3) 
-		      +coeffg(R,0,2,1)*ui(il(R,axis1)  ,il(R,axis2)+2,il(R,axis3)+1,c3) 
-		      +coeffg(R,1,2,1)*ui(il(R,axis1)+1,il(R,axis2)+2,il(R,axis3)+1,c3) 
-		      +coeffg(R,2,2,1)*ui(il(R,axis1)+2,il(R,axis2)+2,il(R,axis3)+1,c3)
-		      +coeffg(R,0,0,2)*ui(il(R,axis1)  ,il(R,axis2)  ,il(R,axis3)+2,c3)
-		      +coeffg(R,1,0,2)*ui(il(R,axis1)+1,il(R,axis2)  ,il(R,axis3)+2,c3)
-		      +coeffg(R,2,0,2)*ui(il(R,axis1)+2,il(R,axis2)  ,il(R,axis3)+2,c3)
-		      +coeffg(R,0,1,2)*ui(il(R,axis1)  ,il(R,axis2)+1,il(R,axis3)+2,c3)
-		      +coeffg(R,1,1,2)*ui(il(R,axis1)+1,il(R,axis2)+1,il(R,axis3)+2,c3) 
-		      +coeffg(R,2,1,2)*ui(il(R,axis1)+2,il(R,axis2)+1,il(R,axis3)+2,c3) 
-		      +coeffg(R,0,2,2)*ui(il(R,axis1)  ,il(R,axis2)+2,il(R,axis3)+2,c3) 
-		      +coeffg(R,1,2,2)*ui(il(R,axis1)+1,il(R,axis2)+2,il(R,axis3)+2,c3) 
-		      +coeffg(R,2,2,2)*ui(il(R,axis1)+2,il(R,axis2)+2,il(R,axis3)+2,c3);
+                      ug(ip(R,axis1),ip(R,axis2),c2,c3)= r(R,0,0,0);                   
+                    }
+                }
+              }
+              else
+              { // *** 3D ****
+                if( width(axis1,grid)==3 && width(axis2,grid)==3 && width(axis3,grid)==3 )
+                {
+                  for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
+                  {
+                    r(R,0,0,0)=                       // @PA
+                      coeffg(R,0,0,0)*ui(il(R,axis1)  ,il(R,axis2)  ,il(R,axis3)  ,c3)
+                      +coeffg(R,1,0,0)*ui(il(R,axis1)+1,il(R,axis2)  ,il(R,axis3)  ,c3)
+                      +coeffg(R,2,0,0)*ui(il(R,axis1)+2,il(R,axis2)  ,il(R,axis3)  ,c3)
+                      +coeffg(R,0,1,0)*ui(il(R,axis1)  ,il(R,axis2)+1,il(R,axis3)  ,c3)
+                      +coeffg(R,1,1,0)*ui(il(R,axis1)+1,il(R,axis2)+1,il(R,axis3)  ,c3) 
+                      +coeffg(R,2,1,0)*ui(il(R,axis1)+2,il(R,axis2)+1,il(R,axis3)  ,c3) 
+                      +coeffg(R,0,2,0)*ui(il(R,axis1)  ,il(R,axis2)+2,il(R,axis3)  ,c3) 
+                      +coeffg(R,1,2,0)*ui(il(R,axis1)+1,il(R,axis2)+2,il(R,axis3)  ,c3) 
+                      +coeffg(R,2,2,0)*ui(il(R,axis1)+2,il(R,axis2)+2,il(R,axis3)  ,c3)
+                      +coeffg(R,0,0,1)*ui(il(R,axis1)  ,il(R,axis2)  ,il(R,axis3)+1,c3)
+                      +coeffg(R,1,0,1)*ui(il(R,axis1)+1,il(R,axis2)  ,il(R,axis3)+1,c3)
+                      +coeffg(R,2,0,1)*ui(il(R,axis1)+2,il(R,axis2)  ,il(R,axis3)+1,c3)
+                      +coeffg(R,0,1,1)*ui(il(R,axis1)  ,il(R,axis2)+1,il(R,axis3)+1,c3)
+                      +coeffg(R,1,1,1)*ui(il(R,axis1)+1,il(R,axis2)+1,il(R,axis3)+1,c3) 
+                      +coeffg(R,2,1,1)*ui(il(R,axis1)+2,il(R,axis2)+1,il(R,axis3)+1,c3) 
+                      +coeffg(R,0,2,1)*ui(il(R,axis1)  ,il(R,axis2)+2,il(R,axis3)+1,c3) 
+                      +coeffg(R,1,2,1)*ui(il(R,axis1)+1,il(R,axis2)+2,il(R,axis3)+1,c3) 
+                      +coeffg(R,2,2,1)*ui(il(R,axis1)+2,il(R,axis2)+2,il(R,axis3)+1,c3)
+                      +coeffg(R,0,0,2)*ui(il(R,axis1)  ,il(R,axis2)  ,il(R,axis3)+2,c3)
+                      +coeffg(R,1,0,2)*ui(il(R,axis1)+1,il(R,axis2)  ,il(R,axis3)+2,c3)
+                      +coeffg(R,2,0,2)*ui(il(R,axis1)+2,il(R,axis2)  ,il(R,axis3)+2,c3)
+                      +coeffg(R,0,1,2)*ui(il(R,axis1)  ,il(R,axis2)+1,il(R,axis3)+2,c3)
+                      +coeffg(R,1,1,2)*ui(il(R,axis1)+1,il(R,axis2)+1,il(R,axis3)+2,c3) 
+                      +coeffg(R,2,1,2)*ui(il(R,axis1)+2,il(R,axis2)+1,il(R,axis3)+2,c3) 
+                      +coeffg(R,0,2,2)*ui(il(R,axis1)  ,il(R,axis2)+2,il(R,axis3)+2,c3) 
+                      +coeffg(R,1,2,2)*ui(il(R,axis1)+1,il(R,axis2)+2,il(R,axis3)+2,c3) 
+                      +coeffg(R,2,2,2)*ui(il(R,axis1)+2,il(R,axis2)+2,il(R,axis3)+2,c3);
 
-		    resMax=max(resMax,max(fabs(ug(ip(R,axis1),ip(R,axis2),ip(R,axis3),c3)-r(R))));
-		
-		    ug(ip(R,axis1),ip(R,axis2),ip(R,axis3),c3)=r(R,0,0,0);  // @PA
-		  }
-		}
-		else if( width(axis1,grid)==2 && width(axis2,grid)==2 && width(axis3,grid)==2 )
-		{
-		  for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
-		  {
-		    r(R,0,0,0)=                       // @PA
-		      coeffg(R,0,0,0)*ui(il(R,axis1)  ,il(R,axis2)  ,il(R,axis3)  ,c3)
-		      +coeffg(R,1,0,0)*ui(il(R,axis1)+1,il(R,axis2)  ,il(R,axis3)  ,c3)
-		      +coeffg(R,0,1,0)*ui(il(R,axis1)  ,il(R,axis2)+1,il(R,axis3)  ,c3)
-		      +coeffg(R,1,1,0)*ui(il(R,axis1)+1,il(R,axis2)+1,il(R,axis3)  ,c3) 
-		      +coeffg(R,0,0,1)*ui(il(R,axis1)  ,il(R,axis2)  ,il(R,axis3)+1,c3)
-		      +coeffg(R,1,0,1)*ui(il(R,axis1)+1,il(R,axis2)  ,il(R,axis3)+1,c3)
-		      +coeffg(R,0,1,1)*ui(il(R,axis1)  ,il(R,axis2)+1,il(R,axis3)+1,c3)
-		      +coeffg(R,1,1,1)*ui(il(R,axis1)+1,il(R,axis2)+1,il(R,axis3)+1,c3);
+                    resMax=max(resMax,max(fabs(ug(ip(R,axis1),ip(R,axis2),ip(R,axis3),c3)-r(R))));
+                
+                    ug(ip(R,axis1),ip(R,axis2),ip(R,axis3),c3)=r(R,0,0,0);  // @PA
+                  }
+                }
+                else if( width(axis1,grid)==2 && width(axis2,grid)==2 && width(axis3,grid)==2 )
+                {
+                  for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
+                  {
+                    r(R,0,0,0)=                       // @PA
+                      coeffg(R,0,0,0)*ui(il(R,axis1)  ,il(R,axis2)  ,il(R,axis3)  ,c3)
+                      +coeffg(R,1,0,0)*ui(il(R,axis1)+1,il(R,axis2)  ,il(R,axis3)  ,c3)
+                      +coeffg(R,0,1,0)*ui(il(R,axis1)  ,il(R,axis2)+1,il(R,axis3)  ,c3)
+                      +coeffg(R,1,1,0)*ui(il(R,axis1)+1,il(R,axis2)+1,il(R,axis3)  ,c3) 
+                      +coeffg(R,0,0,1)*ui(il(R,axis1)  ,il(R,axis2)  ,il(R,axis3)+1,c3)
+                      +coeffg(R,1,0,1)*ui(il(R,axis1)+1,il(R,axis2)  ,il(R,axis3)+1,c3)
+                      +coeffg(R,0,1,1)*ui(il(R,axis1)  ,il(R,axis2)+1,il(R,axis3)+1,c3)
+                      +coeffg(R,1,1,1)*ui(il(R,axis1)+1,il(R,axis2)+1,il(R,axis3)+1,c3);
 
-		    resMax=max(resMax,max(fabs(ug(ip(R,axis1),ip(R,axis2),ip(R,axis3),c3)-r(R))));
-		
-		    ug(ip(R,axis1),ip(R,axis2),ip(R,axis3),c3)=r(R,0,0,0);  // @PA
-		  }
-		}
-		else
-		{
-		  // general case in 3D
-		  for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
-		  {
-		    r=0.;
-		    for( int w3=0; w3<width(axis3,grid); w3++ )              
-		    {
-		      for( int w2=0; w2<width(axis2,grid); w2++ )              
-		      {
-			for( int w1=0; w1<width(axis1,grid); w1++ )
-			{
-			  r(R,0,0,0)+=coeffg(R,w1,w2,w3)*ui(il(R,axis1)+w1,il(R,axis2)+w2,il(R,axis3)+w3,c3); 
-			}
-		      }
-		    }
-		    resMax=max(resMax,max(fabs(ug(ip(R,axis1),ip(R,axis2),ip(R,axis3),c3)-r(R))));
+                    resMax=max(resMax,max(fabs(ug(ip(R,axis1),ip(R,axis2),ip(R,axis3),c3)-r(R))));
+                
+                    ug(ip(R,axis1),ip(R,axis2),ip(R,axis3),c3)=r(R,0,0,0);  // @PA
+                  }
+                }
+                else
+                {
+                  // general case in 3D
+                  for( int c3=C[3].getBase(); c3<=C[3].getBound(); c3++ )
+                  {
+                    r=0.;
+                    for( int w3=0; w3<width(axis3,grid); w3++ )              
+                    {
+                      for( int w2=0; w2<width(axis2,grid); w2++ )              
+                      {
+                        for( int w1=0; w1<width(axis1,grid); w1++ )
+                        {
+                          r(R,0,0,0)+=coeffg(R,w1,w2,w3)*ui(il(R,axis1)+w1,il(R,axis2)+w2,il(R,axis3)+w3,c3); 
+                        }
+                      }
+                    }
+                    resMax=max(resMax,max(fabs(ug(ip(R,axis1),ip(R,axis2),ip(R,axis3),c3)-r(R))));
 
-		    ug(ip(R,axis1),ip(R,axis2),ip(R,axis3),c3)= r(R,0,0,0);                   
-		  }
+                    ug(ip(R,axis1),ip(R,axis2),ip(R,axis3),c3)= r(R,0,0,0);                   
+                  }
 
-		}
-	      }
-	    }
+                }
+              }
+            }
 //             real err=max(fabs(r-r2));
-// 	    printF("******Error in interpOpt: %8.2e, resMax=%e, resmax2=%e \n",err,resMax,resMax2);
-// 	    r.display("r");
-// 	    r2.display("r2");
-	    
-	  }
-	}  // end for gridi
+//          printF("******Error in interpOpt: %8.2e, resMax=%e, resmax2=%e \n",err,resMax,resMax2);
+//          r.display("r");
+//          r2.display("r2");
+            
+          }
+        }  // end for gridi
 
 
         // ==================================================================
         // === Only check for it==0 that we have interpolated all points. ===
         // === For it>0 only implicit pts are interpolated.               ===
         // ==================================================================
-	if( it==0 && numInterpolated!=numberOfInterpolationPoints )
-	{
-	  printF("Interpolate:implicitInterpolateByIteration: Consistency ERROR: \n"
+        if( it==0 && numInterpolated!=numberOfInterpolationPoints )
+        {
+          printF("Interpolate:implicitInterpolateByIteration: Consistency ERROR: \n"
                  "   numInterpolated=%i is NOT equal to numberOfInterpolationPoints=%i for grid=%i\n"
                  "   There is likely a mistake in cg.interpolationStartEndIndex\n",
                   numInterpolated,numberOfInterpolationPoints,grid);
-	  for( int gridi=0; gridi<cg.numberOfComponentGrids(); gridi++ )
-	  {
-	    if( grid!=gridi )
-	      printF("opt: it=%i grid=%i gridi=%i startIndex=%i end=%i (end=%i for implicit pts)\n",it,grid,gridi,
-		     cg.interpolationStartEndIndex(0,grid,gridi), cg.interpolationStartEndIndex(1,grid,gridi),
+          for( int gridi=0; gridi<cg.numberOfComponentGrids(); gridi++ )
+          {
+            if( grid!=gridi )
+              printF("opt: it=%i grid=%i gridi=%i startIndex=%i end=%i (end=%i for implicit pts)\n",it,grid,gridi,
+                     cg.interpolationStartEndIndex(0,grid,gridi), cg.interpolationStartEndIndex(1,grid,gridi),
                      cg.interpolationStartEndIndex(2,grid,gridi));
-	  }
+          }
           ::display(cg.interpolationStartEndIndex,"cg.interpolationStartEndIndex","%6i");
-	  OV_ABORT("error");
-	}
+          OV_ABORT("error");
+        }
       }
       
       
@@ -2498,16 +2498,16 @@ implicitInterpolateByIteration(realCompositeGridFunction & u,
       for( grid=0; grid<cg.numberOfComponentGrids(); grid++ )
       {
         if( INTERPOLATE_THIS_GRID(grid) )
-	{
+        {
           real time1=getCPU();
-	  u[grid].applyBoundaryCondition(C[3],BCTypes::extrapolate,BCTypes::allBoundaries,0.,0.,bcParams);
-	  real time2=getCPU();
-	  timeForAMRExtrapolateAll+=time2-time1;
-	  u[grid].applyBoundaryCondition(C[3],BCTypes::extrapolateInterpolationNeighbours,BCTypes::allBoundaries,0.,0.,
-					 bcParams);
-	  timeForAMRExtrapInterpolationNeighbours+=getCPU()-time2;
-	  u[grid].finishBoundaryConditions(bcParams,C[3]);
-	}
+          u[grid].applyBoundaryCondition(C[3],BCTypes::extrapolate,BCTypes::allBoundaries,0.,0.,bcParams);
+          real time2=getCPU();
+          timeForAMRExtrapolateAll+=time2-time1;
+          u[grid].applyBoundaryCondition(C[3],BCTypes::extrapolateInterpolationNeighbours,BCTypes::allBoundaries,0.,0.,
+                                         bcParams);
+          timeForAMRExtrapInterpolationNeighbours+=getCPU()-time2;
+          u[grid].finishBoundaryConditions(bcParams,C[3]);
+        }
       }
       
       // printF("implicitInterpolate it=%2i call interpolateRefinementBoundaries\n",it);
@@ -2547,7 +2547,7 @@ implicitInterpolateByIteration(realCompositeGridFunction & u,
   delete [] d0;
   delete [] d1;
   delete [] d2;
-	
+        
 
   if( !(amrInterpolation && interpolateRefinementBoundaries) )
   {
@@ -2556,8 +2556,8 @@ implicitInterpolateByIteration(realCompositeGridFunction & u,
     {
       if( INTERPOLATE_THIS_GRID(grid) ) // !onlyInterpolateSomeGrids || gridsToInterpolate(grid) )
       {
-	u[grid].periodicUpdate(C[3]); 
-	u[grid].updateGhostBoundaries();  // *wdh* 060302 this updates all components, does this matter?
+        u[grid].periodicUpdate(C[3]); 
+        u[grid].updateGhostBoundaries();  // *wdh* 060302 this updates all components, does this matter?
       }
     }
   }
@@ -2573,7 +2573,7 @@ extern "C"
   void initExplicitInterp(const int&ndc1,const int&ndc2,const int&ndc3,const int&ndci,
           const int&ipar,real&coeff,const real&ci,real&pr,real&ps,real&pt,
           const real&gridSpacing,const int&indexStart,
-	  const int&variableInterpolationWidth,const int&interpoleeLocation,const int&interpoleeGrid);
+          const int&variableInterpolationWidth,const int&interpoleeLocation,const int&interpoleeGrid);
 }
 
 int Interpolant::
@@ -2638,8 +2638,8 @@ initializeExplicitInterpolation()
       MappedGrid & mg = cg[grid];
       for( axis=0; axis<3; axis++ )
       {
-	indexStart(axis,grid)=mg.gridIndexRange(0,axis);
-	gridSpacing(axis,grid)=mg.gridSpacing(axis);
+        indexStart(axis,grid)=mg.gridIndexRange(0,axis);
+        gridSpacing(axis,grid)=mg.gridSpacing(axis);
       }
       
     }
@@ -2651,35 +2651,35 @@ initializeExplicitInterpolation()
     {
 
       if( grid >= coeff.getLength() ||
-	  cg.refinementLevelNumber(grid) >= min(1,updateForAdaptiveGrid) ) // **** fix for updateForAdaptiveGrid>1
+          cg.refinementLevelNumber(grid) >= min(1,updateForAdaptiveGrid) ) // **** fix for updateForAdaptiveGrid>1
       {
-	MappedGrid & mg = cg[grid];
+        MappedGrid & mg = cg[grid];
 
         int ni=cg.numberOfInterpolationPoints(grid);
-	if( ni==0 ) continue;
-	
+        if( ni==0 ) continue;
+        
         Range R=ni;
-	while( coeff.getLength()<=grid )
-	{
-	  // RealDistributedArray cl(R,width(axis1,grid),width(axis2,grid),width(axis3,grid));
-	  RealDistributedArray cl;
-	  coeff.addElement(cl);
-	}
+        while( coeff.getLength()<=grid )
+        {
+          // RealDistributedArray cl(R,width(axis1,grid),width(axis2,grid),width(axis3,grid));
+          RealDistributedArray cl;
+          coeff.addElement(cl);
+        }
 
         // allocate space according to the storage option.
         if( explicitInterpolationStorageOption==precomputeAllCoefficients )
-	{
-	  coeff[grid].redim(R,width(axis1,grid),width(axis2,grid),width(axis3,grid));
-	}
-	else if( explicitInterpolationStorageOption==precomputeSomeCoefficients )
-	{
-	  coeff[grid].redim(R,width(axis1,grid),numberOfDimensions,1);
-	}
-	else 
-	{
-	  coeff[grid].redim(R,numberOfDimensions,1,1);
-	}
-	
+        {
+          coeff[grid].redim(R,width(axis1,grid),width(axis2,grid),width(axis3,grid));
+        }
+        else if( explicitInterpolationStorageOption==precomputeSomeCoefficients )
+        {
+          coeff[grid].redim(R,width(axis1,grid),numberOfDimensions,1);
+        }
+        else 
+        {
+          coeff[grid].redim(R,numberOfDimensions,1,1);
+        }
+        
 
         int ipar[7]={numberOfDimensions,
                     grid,
@@ -2691,21 +2691,21 @@ initializeExplicitInterpolation()
 
         realArray & cc = coeff[grid];
         // cc=0.; // ********
-	
+        
         realArray & ci = cg.interpolationCoordinates[grid];
         RealArray pr(R),ps(R),pt(R);
-	initExplicitInterp(cc.getLength(0),cc.getLength(1),cc.getLength(2),ci.getLength(0),
-			   ipar[0], 
+        initExplicitInterp(cc.getLength(0),cc.getLength(1),cc.getLength(2),ci.getLength(0),
+                           ipar[0], 
                            *cc.getDataPointer(),
                            *ci.getDataPointer(),pr(0),ps(0),pt(0),gridSpacing(0,0),indexStart(0,0),
-			   *(cg.variableInterpolationWidth[grid].getDataPointer()),
+                           *(cg.variableInterpolationWidth[grid].getDataPointer()),
                            *(cg.interpoleeLocation[grid].getDataPointer()),
                            *(cg.interpoleeGrid[grid].getDataPointer()));
-	
+        
          useVariableWidthInterpolation[grid]=ipar[6]; 
 
-	 // useVariableWidthInterpolation[grid]=1;
-	 
+         // useVariableWidthInterpolation[grid]=1;
+         
         // cc.display("coeff after initExplicitInterp");
       }
     }
@@ -2717,7 +2717,7 @@ initializeExplicitInterpolation()
     {
       printF(" **** initializeExplicitInterpolation: useVariableWidthInterpolation=");
       for( grid=0; grid<cg.numberOfComponentGrids(); grid++ )
-	printF(" %i, ",useVariableWidthInterpolation[grid]);
+        printF(" %i, ",useVariableWidthInterpolation[grid]);
       printF(" ******\n");
     }
     
@@ -2767,83 +2767,83 @@ initializeExplicitInterpolation()
       real relativeOffset;
       for( axis=axis1; axis<numberOfDimensions; axis++ ) 
       {
-	for( i=0; i<cg.numberOfInterpolationPoints(grid); i++ )
-	{
-	  gridi = cg.interpoleeGrid[grid](i);   // **** could vectorize this loop since list is sorted by interpolee
-	  MappedGrid & cgridi = cg[gridi];
-	  indexPosition=cg.interpoleeLocation[grid](i,axis);
-	  relativeOffset=cg.interpolationCoordinates[grid](i,axis)/cgridi.gridSpacing(axis)
-	    +cgridi.indexRange(Start,axis);
-	  px(i)= cgridi.isCellCentered(axis)  ? relativeOffset-indexPosition-.5 
-	    : relativeOffset-indexPosition;
-//	if( width(axis,grid) < interpWidth(axis,grid,gridi) )
-//	{
-//	  //......interpolation width less than maximum allowed
-//	  if( px(i) > width(axis,grid)/2. )
-//	  {
-//	    int ipx=min(int(px(i)-(width(axis,grid)-2)/2.),interpWidth(axis,grid,gridi)-width(axis,grid));
-//	    px(i)-=ipx;
-//	  }
-//	}
-	}
-	if( widthIsConstant )
-	{
-	  switch (width(axis,grid))
-	  {
-	  case 3:
-	    //........quadratic interpolation
-	    q(I,axis,0)=Q12(px(I));
-	    q(I,axis,1)=Q22(px(I));
-	    q(I,axis,2)=Q32(px(I));
-	    break;
-	  case 2:
-	    //.......linear interpolation
-	    q(I,axis,0)=Q11(px(I));
-	    q(I,axis,1)=Q21(px(I));
-	    break;
-	  default:
-	    // .....order >3 - compute lagrange interpolation
-	    for(m1=0; m1<width(axis,grid); m1++ ) 
-	    {
-	      q(I,axis,m1)=1.;
-	      for( m2=0; m2<width(axis,grid); m2++ )
-		if( m1 != m2  )
-		  q(I,axis,m1)*=(px(I)-m2)/(m1-m2);
-	    }
-	  }
-	}
-	else
-	{
-	  // printF(" Interpolant: **** variableInterpolationWidth **** \n");
-	  for( i=0; i<cg.numberOfInterpolationPoints(grid); i++ )
-	  {
-	    switch( variableInterpolationWidth(i) )
-	    {
-	    case 3:
-	      //........quadratic interpolation
-	      q(i,axis,0)=Q12(px(i));
-	      q(i,axis,1)=Q22(px(i));
-	      q(i,axis,2)=Q32(px(i));
-	      break;
-	    case 2:
-	      //.......linear interpolation
-	      q(i,axis,0)=Q11(px(i));
-	      q(i,axis,1)=Q21(px(i));
-	      break;
-	    default:
-	      // .....order >3 - compute lagrange interpolation
-	      for(m1=0; m1<width(axis,grid); m1++ ) 
-	      {
-		q(i,axis,m1)=1.;
-		for( m2=0; m2<width(axis,grid); m2++ )
-		  if( m1 != m2  )
-		    q(i,axis,m1)*=(px(i)-m2)/(m1-m2);
-	      }
-	    }
+        for( i=0; i<cg.numberOfInterpolationPoints(grid); i++ )
+        {
+          gridi = cg.interpoleeGrid[grid](i);   // **** could vectorize this loop since list is sorted by interpolee
+          MappedGrid & cgridi = cg[gridi];
+          indexPosition=cg.interpoleeLocation[grid](i,axis);
+          relativeOffset=cg.interpolationCoordinates[grid](i,axis)/cgridi.gridSpacing(axis)
+            +cgridi.indexRange(Start,axis);
+          px(i)= cgridi.isCellCentered(axis)  ? relativeOffset-indexPosition-.5 
+            : relativeOffset-indexPosition;
+//      if( width(axis,grid) < interpWidth(axis,grid,gridi) )
+//      {
+//        //......interpolation width less than maximum allowed
+//        if( px(i) > width(axis,grid)/2. )
+//        {
+//          int ipx=min(int(px(i)-(width(axis,grid)-2)/2.),interpWidth(axis,grid,gridi)-width(axis,grid));
+//          px(i)-=ipx;
+//        }
+//      }
+        }
+        if( widthIsConstant )
+        {
+          switch (width(axis,grid))
+          {
+          case 3:
+            //........quadratic interpolation
+            q(I,axis,0)=Q12(px(I));
+            q(I,axis,1)=Q22(px(I));
+            q(I,axis,2)=Q32(px(I));
+            break;
+          case 2:
+            //.......linear interpolation
+            q(I,axis,0)=Q11(px(I));
+            q(I,axis,1)=Q21(px(I));
+            break;
+          default:
+            // .....order >3 - compute lagrange interpolation
+            for(m1=0; m1<width(axis,grid); m1++ ) 
+            {
+              q(I,axis,m1)=1.;
+              for( m2=0; m2<width(axis,grid); m2++ )
+                if( m1 != m2  )
+                  q(I,axis,m1)*=(px(I)-m2)/(m1-m2);
+            }
+          }
+        }
+        else
+        {
+          // printF(" Interpolant: **** variableInterpolationWidth **** \n");
+          for( i=0; i<cg.numberOfInterpolationPoints(grid); i++ )
+          {
+            switch( variableInterpolationWidth(i) )
+            {
+            case 3:
+              //........quadratic interpolation
+              q(i,axis,0)=Q12(px(i));
+              q(i,axis,1)=Q22(px(i));
+              q(i,axis,2)=Q32(px(i));
+              break;
+            case 2:
+              //.......linear interpolation
+              q(i,axis,0)=Q11(px(i));
+              q(i,axis,1)=Q21(px(i));
+              break;
+            default:
+              // .....order >3 - compute lagrange interpolation
+              for(m1=0; m1<width(axis,grid); m1++ ) 
+              {
+                q(i,axis,m1)=1.;
+                for( m2=0; m2<width(axis,grid); m2++ )
+                  if( m1 != m2  )
+                    q(i,axis,m1)*=(px(i)-m2)/(m1-m2);
+              }
+            }
 
 
-	  }
-	}
+          }
+        }
       
       }
       //.......Now form the interpolation coefficients
@@ -2860,24 +2860,24 @@ initializeExplicitInterpolation()
       }
       if( numberOfDimensions==2 )
       {
-	for( m3=0; m3< width(axis3,grid); m3++ ) 
-	  for( m2=0; m2< width(axis2,grid); m2++ ) 
-	    for( m1=0; m1< width(axis1,grid); m1++ ) 
-	      coeff[grid](I,m1,m2,m3)=q(I,axis1,m1)*q(I,axis2,m2);
+        for( m3=0; m3< width(axis3,grid); m3++ ) 
+          for( m2=0; m2< width(axis2,grid); m2++ ) 
+            for( m1=0; m1< width(axis1,grid); m1++ ) 
+              coeff[grid](I,m1,m2,m3)=q(I,axis1,m1)*q(I,axis2,m2);
       }
       else if( numberOfDimensions==3 )
       {
-	for( m3=0; m3< width(axis3,grid); m3++ ) 
-	  for( m2=0; m2< width(axis2,grid); m2++ ) 
-	    for( m1=0; m1< width(axis1,grid); m1++ ) 
-	      coeff[grid](I,m1,m2,m3)=q(I,axis1,m1)*q(I,axis2,m2)*q(I,axis3,m3);
+        for( m3=0; m3< width(axis3,grid); m3++ ) 
+          for( m2=0; m2< width(axis2,grid); m2++ ) 
+            for( m1=0; m1< width(axis1,grid); m1++ ) 
+              coeff[grid](I,m1,m2,m3)=q(I,axis1,m1)*q(I,axis2,m2)*q(I,axis3,m3);
       }
       else
       {
-	for( m3=0; m3< width(axis3,grid); m3++ ) 
-	  for( m2=0; m2< width(axis2,grid); m2++ ) 
-	    for( m1=0; m1< width(axis1,grid); m1++ ) 
-	      coeff[grid](I,m1,m2,m3)=q(I,axis1,m1);
+        for( m3=0; m3< width(axis3,grid); m3++ ) 
+          for( m2=0; m2< width(axis2,grid); m2++ ) 
+            for( m1=0; m1< width(axis1,grid); m1++ ) 
+              coeff[grid](I,m1,m2,m3)=q(I,axis1,m1);
       }
     
 
@@ -3018,7 +3018,7 @@ updateToMatchGrid(CompositeGrid & cg0, int refinementLevel /* =0  */ )
       {
         implicitInterpolation=cg.interpolationIsImplicit(toGrid,fromGrid);
         if( implicitInterpolation )
-	  break;
+          break;
       }
     }
   }
@@ -3032,7 +3032,7 @@ updateToMatchGrid(CompositeGrid & cg0, int refinementLevel /* =0  */ )
     if( ei!=explicitInterpolation )
     {
       printf("Interpolant::updateToMatchGrid:ERROR: myid=%i, explicitInterpolation is not the same on"
-	     "all processors!\n",myid);
+             "all processors!\n",myid);
       OV_ABORT("error");
     }
   }
@@ -3100,12 +3100,12 @@ initializeInterpolation()
       rcData->implicitInterpolant->updateToMatchGrid( cg ); 
 
     // printF(" *************** Interpolant: cg.numberOfRefinementLevels()=%i \n",cg.numberOfRefinementLevels());
-	
+        
     Range all;
     const int stencilWidth=max(3,max(cg.interpolationWidth(all,all,all))); // fix this
     const int diagonal=int(pow(stencilWidth,cg.numberOfDimensions())+.5)/2;  // center point
     int stencilSize=int( pow(stencilWidth,cg.numberOfDimensions())+1 );  // add 1 for interpolation equations
-	
+        
     realCompositeGridFunction interpCoeff(cg,stencilSize,all,all,all); 
 
     // interpCoeff.setIsACoefficientMatrix(TRUE,stencilSize);   // *wdh* 030120
@@ -3141,34 +3141,34 @@ initializeInterpolation()
       // set classify for ghost line values. We just want to copy these values when we solve.
       for( int axis=0; axis<cg.numberOfDimensions(); axis++ )
       {
-	for( int side=Start; side<=End; side++ )
-	{
-	  getBoundaryIndex(mg.dimension(),side,axis,I1,I2,I3);
-	  Iv[axis]= side==Start ? Range(mg.dimension(side,axis),mg.indexRange(side,axis)-1)
-	    : Range(mg.indexRange(side,axis)+1,mg.dimension(side,axis));
-	  interpCoeff[grid].sparse->setClassify(SparseRepForMGF::ghost1,I1,I2,I3);
-	}
+        for( int side=Start; side<=End; side++ )
+        {
+          getBoundaryIndex(mg.dimension(),side,axis,I1,I2,I3);
+          Iv[axis]= side==Start ? Range(mg.dimension(side,axis),mg.indexRange(side,axis)-1)
+            : Range(mg.indexRange(side,axis)+1,mg.dimension(side,axis));
+          interpCoeff[grid].sparse->setClassify(SparseRepForMGF::ghost1,I1,I2,I3);
+        }
       }
     }
-	
+        
     bcParams.interpolateRefinementBoundaries=interpolateRefinementBoundaries;
     bcParams.interpolateHidden=interpolateHidden;
     
     interpCoeff.finishBoundaryConditions(bcParams);  // this will fill in interpolation equations
     // interpCoeff.display("Interpolant: Here is interpCoeff after finishBoundaryConditions");
-//	if( cg.numberOfRefinementLevels()>1 )
-//	  interpolateRefinements(interpCoeff);     // ***** this may not be correct, should form the full matrix??
+//      if( cg.numberOfRefinementLevels()>1 )
+//        interpolateRefinements(interpCoeff);     // ***** this may not be correct, should form the full matrix??
 
     rcData->implicitInterpolant->setCoefficientArray( interpCoeff );   // supply coefficients
     rcData->implicitInterpolant->set(OgesParameters::THEbestDirectSolver );
-	
+        
     if( cg.numberOfDimensions()==3 )
     {
       rcData->implicitInterpolant->set(OgesParameters::THEbestIterativeSolver);
       // rcData->implicitInterpolant->set(OgesParameters::THEsolverType,OgesParameters::PETSc);
       rcData->implicitInterpolant->set(OgesParameters::THEtolerance,tolerance);  // max(1.e-8,REAL_EPSILON*10.));
     }
-	
+        
     // rcData->implicitInterpolant->initialize( ); 
   }
   else
@@ -3232,7 +3232,7 @@ testInterpolation( CompositeGrid & cg, int problemType )
     int degreeOfTimePolynomial = 0;
     int numberOfComponents = cg.numberOfDimensions();
     OGPolyFunction poly(degreeOfSpacePolynomial,cg.numberOfDimensions(),numberOfComponents,
-					degreeOfTimePolynomial);
+                                        degreeOfTimePolynomial);
     OGFunction & exact= poly;
     OGFunction *exactPointer=&exact;
     
@@ -3243,10 +3243,10 @@ testInterpolation( CompositeGrid & cg, int problemType )
 
       for( grid=0; grid<cg.numberOfComponentGrids(); grid++ )
       {
-	MappedGrid & mg = cg[grid];
-	const intArray & mask = mg.mask();
-	getIndex(mg.dimension(),I1,I2,I3);  
-	u[grid](I1,I2,I3)=exact(mg,I1,I2,I3);
+        MappedGrid & mg = cg[grid];
+        const intArray & mask = mg.mask();
+        getIndex(mg.dimension(),I1,I2,I3);  
+        u[grid](I1,I2,I3)=exact(mg,I1,I2,I3);
 
 /* ----
    where( mask<=0 || (mask & MappedGrid::IShiddenByRefinement) )
@@ -3277,21 +3277,21 @@ testInterpolation( CompositeGrid & cg, int problemType )
       real error=0.;
       for( grid=0; grid<cg.numberOfComponentGrids(); grid++ )
       {
-	getIndex(cg[grid].indexRange(),I1,I2,I3,1);   // note indexRange+1
-	where( cg[grid].mask()(I1,I2,I3)!=0 )
-	  error=max(error,max(abs(u[grid](I1,I2,I3)-exact(cg[grid],I1,I2,I3,0))));    
-	if( Oges::debug & 8 )
-	{
-	  cg[grid].mask().display("Here is the mask");
-	  realArray err(I1,I2,I3);
-	  err(I1,I2,I3)=abs(u[grid](I1,I2,I3)-exact(cg[grid],I1,I2,I3,0));
-	  where( cg[grid].mask()(I1,I2,I3)==0 )
-	    err(I1,I2,I3)=0.;
-	  printF(" ** max error on grid %i = %e \n",grid,max(err(I1,I2,I3)));
-	  // display(err,"abs(error on indexRange +1)","%5.1e ");
-	  display(err,"abs(error on indexRange +1)","%3.1f ");
-	  // abs(u[grid](I1,I2,I3)-exact(cg[grid],I1,I2,I3,0)).display("abs(error)");
-	}
+        getIndex(cg[grid].indexRange(),I1,I2,I3,1);   // note indexRange+1
+        where( cg[grid].mask()(I1,I2,I3)!=0 )
+          error=max(error,max(abs(u[grid](I1,I2,I3)-exact(cg[grid],I1,I2,I3,0))));    
+        if( Oges::debug & 8 )
+        {
+          cg[grid].mask().display("Here is the mask");
+          realArray err(I1,I2,I3);
+          err(I1,I2,I3)=abs(u[grid](I1,I2,I3)-exact(cg[grid],I1,I2,I3,0));
+          where( cg[grid].mask()(I1,I2,I3)==0 )
+            err(I1,I2,I3)=0.;
+          printF(" ** max error on grid %i = %e \n",grid,max(err(I1,I2,I3)));
+          // display(err,"abs(error on indexRange +1)","%5.1e ");
+          display(err,"abs(error on indexRange +1)","%3.1f ");
+          // abs(u[grid](I1,I2,I3)-exact(cg[grid],I1,I2,I3,0)).display("abs(error)");
+        }
       }
       printF("Maximum error in interpolateRefinements(u)= %e\n",error);  
 
@@ -3299,22 +3299,22 @@ testInterpolation( CompositeGrid & cg, int problemType )
 
       for( grid=0; grid<cg.numberOfComponentGrids(); grid++ )
       {
-	MappedGrid & mg = cg[grid];
-	const intArray & mask = mg.mask();
-	getIndex(mg.dimension(),I1,I2,I3);  
-	u[grid](I1,I2,I3)=exact(mg,I1,I2,I3);
+        MappedGrid & mg = cg[grid];
+        const intArray & mask = mg.mask();
+        getIndex(mg.dimension(),I1,I2,I3);  
+        u[grid](I1,I2,I3)=exact(mg,I1,I2,I3);
 
-	if( grid!=cg.baseGridNumber(grid) )
-	{ // for refinement grids, set bogus values on the interpolation points.
-	  ForBoundary(side,axis)
-	  {
-	    if( mg.boundaryCondition(side,axis) == 0 )
-	    {
-	      getBoundaryIndex(mg.extendedIndexRange(),side,axis,Ib1,Ib2,Ib3);
-	      u[grid](Ib1,Ib2,Ib3)=999.;
-	    }
-	  }
-	}
+        if( grid!=cg.baseGridNumber(grid) )
+        { // for refinement grids, set bogus values on the interpolation points.
+          ForBoundary(side,axis)
+          {
+            if( mg.boundaryCondition(side,axis) == 0 )
+            {
+              getBoundaryIndex(mg.extendedIndexRange(),side,axis,Ib1,Ib2,Ib3);
+              u[grid](Ib1,Ib2,Ib3)=999.;
+            }
+          }
+        }
       }
 
 
@@ -3338,24 +3338,24 @@ testInterpolation( CompositeGrid & cg, int problemType )
       error=0.;
       for( grid=0; grid<cg.numberOfComponentGrids(); grid++ )
       {
-	getIndex(cg[grid].indexRange(),I1,I2,I3,1);   // note indexRange+1
-	where( cg[grid].mask()(I1,I2,I3)!=0 )
-	  error=max(error,max(abs(u[grid](I1,I2,I3)-exact(cg[grid],I1,I2,I3,0))));    
-	if( Oges::debug & 8 )
-	{
-	  cg[grid].mask().display("Here is the mask");
-	  realArray err(I1,I2,I3);
-	  err(I1,I2,I3)=abs(u[grid](I1,I2,I3)-exact(cg[grid],I1,I2,I3,0));
-	  where( cg[grid].mask()(I1,I2,I3)==0 )
-	    err(I1,I2,I3)=0.;
-	  printF(" ** max error on grid %i = %e \n",grid,max(err(I1,I2,I3)));
-	  // display(err,"abs(error on indexRange +1)","%5.1e ");
-	  display(err,"abs(error on indexRange +1)","%3.1f ");
-	  // abs(u[grid](I1,I2,I3)-exact(cg[grid],I1,I2,I3,0)).display("abs(error)");
-	}
+        getIndex(cg[grid].indexRange(),I1,I2,I3,1);   // note indexRange+1
+        where( cg[grid].mask()(I1,I2,I3)!=0 )
+          error=max(error,max(abs(u[grid](I1,I2,I3)-exact(cg[grid],I1,I2,I3,0))));    
+        if( Oges::debug & 8 )
+        {
+          cg[grid].mask().display("Here is the mask");
+          realArray err(I1,I2,I3);
+          err(I1,I2,I3)=abs(u[grid](I1,I2,I3)-exact(cg[grid],I1,I2,I3,0));
+          where( cg[grid].mask()(I1,I2,I3)==0 )
+            err(I1,I2,I3)=0.;
+          printF(" ** max error on grid %i = %e \n",grid,max(err(I1,I2,I3)));
+          // display(err,"abs(error on indexRange +1)","%5.1e ");
+          display(err,"abs(error on indexRange +1)","%3.1f ");
+          // abs(u[grid](I1,I2,I3)-exact(cg[grid],I1,I2,I3,0)).display("abs(error)");
+        }
       }
       printF("Maximum error in interp.interpolateRefinementBoundaries(u)= %e (degree=%i) \n",error,
-	     degreeOfSpacePolynomial);  
+             degreeOfSpacePolynomial);  
 
       continue;
     }
@@ -3369,59 +3369,59 @@ testInterpolation( CompositeGrid & cg, int problemType )
 
       for( grid=0; grid<cg.numberOfComponentGrids(); grid++ )
       {
-	MappedGrid & mg = cg[grid];
-	const intArray & mask = mg.mask();
-	getIndex(mg.dimension(),I1,I2,I3);  
-	u[grid](I1,I2,I3)=exact(mg,I1,I2,I3);
+        MappedGrid & mg = cg[grid];
+        const intArray & mask = mg.mask();
+        getIndex(mg.dimension(),I1,I2,I3);  
+        u[grid](I1,I2,I3)=exact(mg,I1,I2,I3);
 
-	where( cg[grid].mask()(I1,I2,I3)<=0 )
-	  u[grid](I1,I2,I3)=-99.;
+        where( cg[grid].mask()(I1,I2,I3)<=0 )
+          u[grid](I1,I2,I3)=-99.;
       }
 
       if( debug & 4 )
       {
-	display(u[3],"u[3] before interpolation","%6.2e ");
-	displayMask(cg[3].mask(),"mask");
+        display(u[3],"u[3] before interpolation","%6.2e ");
+        displayMask(cg[3].mask(),"mask");
       }
     
       u.interpolate();
     
 //        if( debug & 4 )
 //        {
-//  	display(u[3],"u[3] after interpolation","%6.2e ");
+//      display(u[3],"u[3] after interpolation","%6.2e ");
 //        }
     
       Index J1,J2,J3;
       real error=0., err=0.;
       for( grid=0; grid<cg.numberOfComponentGrids(); grid++ )
       {
-	getIndex(cg[grid].indexRange(),I1,I2,I3,1);   // note indexRange+1
-	where( cg[grid].mask()(I1,I2,I3)!=0 )
-	{
-	  err=max(abs(u[grid](I1,I2,I3)-exact(cg[grid],I1,I2,I3,0)));    
-	  error=max(error,err);
-	}
-	getIndex(cg[grid].gridIndexRange(),J1,J2,J3);
-	real uMax=0., uMin=0.;
-	where( cg[grid].mask()(J1,J2,J3)!=0 )
-	{
-	  uMin=min(u[grid](J1,J2,J3));
-	  uMax=max(u[grid](J1,J2,J3));
-	}
-	printF("testInterp: degree=%i grid=%i uMin=%8.2e uMax=%8.2e err=%8.2e \n",degree,grid,uMin,uMax,err);  
+        getIndex(cg[grid].indexRange(),I1,I2,I3,1);   // note indexRange+1
+        where( cg[grid].mask()(I1,I2,I3)!=0 )
+        {
+          err=max(abs(u[grid](I1,I2,I3)-exact(cg[grid],I1,I2,I3,0)));    
+          error=max(error,err);
+        }
+        getIndex(cg[grid].gridIndexRange(),J1,J2,J3);
+        real uMax=0., uMin=0.;
+        where( cg[grid].mask()(J1,J2,J3)!=0 )
+        {
+          uMin=min(u[grid](J1,J2,J3));
+          uMax=max(u[grid](J1,J2,J3));
+        }
+        printF("testInterp: degree=%i grid=%i uMin=%8.2e uMax=%8.2e err=%8.2e \n",degree,grid,uMin,uMax,err);  
       
-	if( Oges::debug & 8 )
-	{
-	  cg[grid].mask().display("Here is the mask");
-	  realArray err(I1,I2,I3);
-	  err(I1,I2,I3)=abs(u[grid](I1,I2,I3)-exact(cg[grid],I1,I2,I3,0));
-	  where( cg[grid].mask()(I1,I2,I3)==0 )
-	    err(I1,I2,I3)=0.;
-	  printF(" ** max error on grid %i = %e \n",grid,max(err(I1,I2,I3)));
-	  // display(err,"abs(error on indexRange +1)","%5.1e ");
-	  display(err,"abs(error on indexRange +1)","%3.1f ");
-	  // abs(u[grid](I1,I2,I3)-exact(cg[grid],I1,I2,I3,0)).display("abs(error)");
-	}
+        if( Oges::debug & 8 )
+        {
+          cg[grid].mask().display("Here is the mask");
+          realArray err(I1,I2,I3);
+          err(I1,I2,I3)=abs(u[grid](I1,I2,I3)-exact(cg[grid],I1,I2,I3,0));
+          where( cg[grid].mask()(I1,I2,I3)==0 )
+            err(I1,I2,I3)=0.;
+          printF(" ** max error on grid %i = %e \n",grid,max(err(I1,I2,I3)));
+          // display(err,"abs(error on indexRange +1)","%5.1e ");
+          display(err,"abs(error on indexRange +1)","%3.1f ");
+          // abs(u[grid](I1,I2,I3)-exact(cg[grid],I1,I2,I3,0)).display("abs(error)");
+        }
       }
       printF("Maximum error in interpolate= %e (degree=%i)\n",error,degreeOfSpacePolynomial);  
 

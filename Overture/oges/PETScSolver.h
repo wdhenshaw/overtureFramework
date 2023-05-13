@@ -5,19 +5,17 @@
 // ***********         PARALLEL VERSION                      ****************
 // **************************************************************************
 
-// extern "C"
-// {
-#include "petscksp.h"
-// }
+// // extern "C"
+// // {
+// #include "petscksp.h"
+// // }
 
 #include "Overture.h"
 #include "ParallelUtility.h"
 #include "EquationSolver.h"
 
-//extern "C"
-//{
-//#include "petscksp.h"
-//}
+
+#include "petscksp.h"
 
 class PETScSolver : public EquationSolver
 {
@@ -45,12 +43,12 @@ int buildGlobalIndexing(CompositeGrid & cg );
 int buildGlobalIndexingOld(CompositeGrid & cg, realCompositeGridFunction & uu );
 
 // Return the current memory usage in Mb:
-static real getCurrentMemoryUsage();
+static Real getCurrentMemoryUsage();
 
 inline int getGlobalIndex( int n, int *iv, int grid, int p ) const;
 int getGlobalIndex( int n, int *iv, int grid, realArray & ug ) const;
 
-real getMaximumResidual();
+Real getMaximumResidual();
 
 int getNumberOfIterations() const; 
 
@@ -73,11 +71,11 @@ int fillInterpolationCoefficients(realCompositeGridFunction & uu);
 virtual int findExtraEquations();
 
 // assign values to rhs for the the extra equations 
-virtual int setExtraEquationRightHandSideValues( realCompositeGridFunction & f, real *value );
+virtual int setExtraEquationRightHandSideValues( realCompositeGridFunction & f, Real *value );
 
 // return solution values from the extra equations
 // Old way:
-virtual int getExtraEquationValues( const realCompositeGridFunction & u, real *value, const int maxNumberToReturn=1 );
+virtual int getExtraEquationValues( const realCompositeGridFunction & u, Real *value, const int maxNumberToReturn=1 );
 
 // Convert an Equation Number to a point on a grid (inverse of equationNo)
 virtual void equationToIndex( const int eqnNo0, int & n, int & i1, int & i2, int & i3, int & grid );
@@ -86,12 +84,12 @@ virtual void equationToIndex( const int eqnNo0, int & n, int & i1, int & i2, int
 virtual int equationNo( const int n, const int i1, const int i2, const int i3, const int grid );
 
 // evaluate the dot product of an extra equation times u 
-virtual int evaluateExtraEquation( const realCompositeGridFunction & u, real & value, int extraEquation=0 );
+virtual int evaluateExtraEquation( const realCompositeGridFunction & u, Real & value, int extraEquation=0 );
 
-virtual int evaluateExtraEquation( const realCompositeGridFunction & u, real & value, 
-                                   real & sumOfExtraEquationCoefficients, int extraEquation=0 );
+virtual int evaluateExtraEquation( const realCompositeGridFunction & u, Real & value, 
+                                   Real & sumOfExtraEquationCoefficients, int extraEquation=0 );
 
-virtual real sizeOf( FILE *file=NULL ); // return number of bytes allocated 
+virtual Real sizeOf( FILE *file=NULL ); // return number of bytes allocated 
 
 int setPetscParameters();
 int setPetscRunTimeParameters();
@@ -120,7 +118,7 @@ static int instancesOfPETSc;  // keeps count of how many different applications 
 
   bool turnOnPETScMemoryTracing;    // have PETSc keep track of allocated memory.
 
-real relativeTol;
+Real relativeTol;
 int numberOfProcessors; 
 int numberOfGridPoints,numberOfGridPointsThisProcessor, numberOfUnknowns, numberOfUnknownsThisProcessor;
 int *pnab,*pnoffset; 

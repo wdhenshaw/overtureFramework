@@ -373,15 +373,15 @@ getInternalInterpolationInfo(CompositeGrid & cg, IntegerArray & indexValues,Inte
 
       for( int i=0; i<num; i++ )
       {
-	for( int axis=0; axis<domainDimension; axis++ )
-	  indexValues(IA(i),axis)=IP(i,axis);
-	interpoleeGrid(IA(i))=grid;
-	if( option==1 )
-	{
-	  for( int axis=0; axis<domainDimension; axis++ )
-	    interpolationCoords(IA(i),axis)=CI(i,axis);
-	}
-	
+        for( int axis=0; axis<domainDimension; axis++ )
+          indexValues(IA(i),axis)=IP(i,axis);
+        interpoleeGrid(IA(i))=grid;
+        if( option==1 )
+        {
+          for( int axis=0; axis<domainDimension; axis++ )
+            interpolationCoords(IA(i),axis)=CI(i,axis);
+        }
+        
       }
       
     }
@@ -408,19 +408,19 @@ getInterpolationStencil( MappedGrid & mg, const int width, const real *rv, int *
   {
     // Get the lower-left corner of the interpolation cube.
     int intLoc=int(floor(rv[axis]/mg.gridSpacing(axis) + mg.indexRange(0,axis) -
-			 .5 * width + (mg.isCellCentered(axis) ? .5 : 1.)));
+                         .5 * width + (mg.isCellCentered(axis) ? .5 : 1.)));
     if (!mg.isPeriodic(axis)) 
     {
       if( (intLoc < mg.extendedIndexRange(0,axis)) && (mg.boundaryCondition(Start,axis)>0) )
       {
-	// Point is close to a BC side, one-sided interpolation used.
-	intLoc = mg.extendedIndexRange(0,axis);
+        // Point is close to a BC side, one-sided interpolation used.
+        intLoc = mg.extendedIndexRange(0,axis);
       }
       if( (intLoc + width - 1 > mg.extendedIndexRange(1,axis))
-	  && (mg.boundaryCondition(End,axis)>0) )
+          && (mg.boundaryCondition(End,axis)>0) )
       {
-	// Point is close to a BC side, one-sided interpolation used.
-	intLoc = mg.extendedIndexRange(1,axis) - width + 1;
+        // Point is close to a BC side, one-sided interpolation used.
+        intLoc = mg.extendedIndexRange(1,axis) - width + 1;
       }
     } // end if
     iv[axis] = intLoc;
@@ -432,10 +432,10 @@ getInterpolationStencil( MappedGrid & mg, const int width, const real *rv, int *
 // *********** this is no longer used: 
 // int InterpolatePointsOnAGrid::
 // checkCanInterpolate(CompositeGrid & cg ,
-// 		    int grid, int donor, 
+//                  int grid, int donor, 
 //                     RealArray & r, 
 //                     IntegerArray & interpolates,
-// 		    IntegerArray & useBackupRules )
+//                  IntegerArray & useBackupRules )
 // // ========================================================================================
 // // /Description:
 // //    Here is the new (serial/parallel) canInterpolate function
@@ -578,16 +578,16 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
     plogFile = fopen(sPrintF("ipogNP%i.p%i.log",np,myid),"w" ); 
     fprintf(plogFile,
             " ********************************************************************************************* \n"
-	    " **** InterpolatePointsOnAGrid log file, myid=%i, NP=%i interp-width=%i pts=%i ********* \n"
-	    " ********************************************************************************************* \n\n",
+            " **** InterpolatePointsOnAGrid log file, myid=%i, NP=%i interp-width=%i pts=%i ********* \n"
+            " ********************************************************************************************* \n\n",
                                  myid,np,interpolationWidth,positionToInterpolate.getLength(0));
    #else
     logFile = fopen("ipog.log","w" ); 
     plogFile=logFile;
     fprintf(plogFile,
             " *************************************************************************************** \n"
-	    " **** InterpolatePointsOnAGrid log file, interp-width=%i pts=%i ********* \n"
-	    " *************************************************************************************** \n\n",
+            " **** InterpolatePointsOnAGrid log file, interp-width=%i pts=%i ********* \n"
+            " *************************************************************************************** \n\n",
                                  interpolationWidth,positionToInterpolate.getLength(0));
    #endif
   }
@@ -761,13 +761,13 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
 
       for( int side=0; side<=1; side++ )
       {
-	rbb(side,axis)= side + (egir(side,axis)-mg.gridIndexRange(side,axis))*mg.gridSpacing(axis) - (1-2*side)*REAL_EPSILON*100.;
-	// rbb(side,axis)= side + (egir(side,axis)-mg.gridIndexRange(side,axis))*mg.gridSpacing(axis);
+        rbb(side,axis)= side + (egir(side,axis)-mg.gridIndexRange(side,axis))*mg.gridSpacing(axis) - (1-2*side)*REAL_EPSILON*100.;
+        // rbb(side,axis)= side + (egir(side,axis)-mg.gridIndexRange(side,axis))*mg.gridSpacing(axis);
       }
     }
     
     // printF(" ********  grid=%i r-bounding box=[%9.3e,%9.3e][%9.3e,%9.3e][%9.3e,%9.3e]\n",
-    // 	   grid,rbb(0,0),rbb(1,0),rbb(0,1),rbb(1,1),rbb(0,2),rbb(1,2));
+    //     grid,rbb(0,0),rbb(1,0),rbb(0,1),rbb(1,1),rbb(0,2),rbb(1,2));
 
 
     // make a list of points inside the bounding box
@@ -776,36 +776,36 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
     {
       for( int i=0; i<numberOfPointsToInterpolate; i++ )
       {
-	if( STATUS(i) < interpolationWidth )  // either not interpolated or not accurate enough
-	{
-	  real x0=X(i,0);
-	  real y0=X(i,1);
-	  if( x0>=bb[0][0] && x0<=bb[1][0] &&
-	      y0>=bb[0][1] && y0<=bb[1][1] ) 
-	  {
-	    IA0(j)=i;
-	    j++;
-	  }
-	}
+        if( STATUS(i) < interpolationWidth )  // either not interpolated or not accurate enough
+        {
+          real x0=X(i,0);
+          real y0=X(i,1);
+          if( x0>=bb[0][0] && x0<=bb[1][0] &&
+              y0>=bb[0][1] && y0<=bb[1][1] ) 
+          {
+            IA0(j)=i;
+            j++;
+          }
+        }
       }
     }
     else
     {
       for( int i=0; i<numberOfPointsToInterpolate; i++ )
       {
-	if( STATUS(i) < interpolationWidth )  // either not interpolated or not accurate enough
-	{
-	  real x0=X(i,0);
-	  real y0=X(i,1);
-	  real z0=X(i,2);
-	  if( x0>=bb[0][0] && x0<=bb[1][0] &&
-	      y0>=bb[0][1] && y0<=bb[1][1] &&
-	      z0>=bb[0][2] && z0<=bb[1][2] ) 
-	  {
-	    IA0(j)=i;
-	    j++;
-	  }
-	}
+        if( STATUS(i) < interpolationWidth )  // either not interpolated or not accurate enough
+        {
+          real x0=X(i,0);
+          real y0=X(i,1);
+          real z0=X(i,2);
+          if( x0>=bb[0][0] && x0<=bb[1][0] &&
+              y0>=bb[0][1] && y0<=bb[1][1] &&
+              z0>=bb[0][2] && z0<=bb[1][2] ) 
+          {
+            IA0(j)=i;
+            j++;
+          }
+        }
       }
     }
     
@@ -842,20 +842,20 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
 
       if( rangeDimension==2 )
       {
-	for( int i=0; i<numberToCheck; i++ )
-	{
-	  XA(i,0)=X(IA(i),0);
-	  XA(i,1)=X(IA(i),1);
-	}
+        for( int i=0; i<numberToCheck; i++ )
+        {
+          XA(i,0)=X(IA(i),0);
+          XA(i,1)=X(IA(i),1);
+        }
       }
       else
       {
-	for( int i=0; i<numberToCheck; i++ )
-	{
-	  XA(i,0)=X(IA(i),0);
-	  XA(i,1)=X(IA(i),1);
-	  XA(i,2)=X(IA(i),2);
-	}
+        for( int i=0; i<numberToCheck; i++ )
+        {
+          XA(i,0)=X(IA(i),0);
+          XA(i,1)=X(IA(i),1);
+          XA(i,2)=X(IA(i),2);
+        }
       }
       
       ra=-1;
@@ -889,8 +889,8 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
 
       for( int i=0; i<numberToCheck; i++ )
       {
-	RA(i,0)=RPROJECT(i,0);
-	RA(i,1)=RPROJECT(i,1); 
+        RA(i,0)=RPROJECT(i,0);
+        RA(i,1)=RPROJECT(i,1); 
       }
     }
     timeMap+= getCPU()-timea;
@@ -899,7 +899,7 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
     {
       ::display(ra,sPrintF("InterpolatePointsOnAGrid:: ra after inversion (grid=%i)",grid),"%6.3f ");
       if( surfaceGrid )
-	::display(xa,sPrintF("InterpolatePointsOnAGrid:: xa after projection (grid=%i)",grid),"%6.3f ");
+        ::display(xa,sPrintF("InterpolatePointsOnAGrid:: xa after projection (grid=%i)",grid),"%6.3f ");
     }
       
 
@@ -931,43 +931,43 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
     {
       for( int i=0; i<numberToCheck; i++ )
       {
-	if( fabs(RA(i,0)-.5)<offset0 && fabs(RA(i,1)-.5)<offset1 )
-	{
-	  if( i!=j )
-	  {
-	    IA(j)=IA(i);
-	    RA(j,0)=RA(i,0);
-	    RA(j,1)=RA(i,1);
-	    if( projectSurfaceGridPoints )
-	    { // we need to save the projected xa points too in this case
-	      XA(j,0)=XA(i,0);
-	      XA(j,1)=XA(i,1);
-	      XA(j,2)=XA(i,2);
-	    }
-	      
-	  }
-	  j++;
-	}
+        if( fabs(RA(i,0)-.5)<offset0 && fabs(RA(i,1)-.5)<offset1 )
+        {
+          if( i!=j )
+          {
+            IA(j)=IA(i);
+            RA(j,0)=RA(i,0);
+            RA(j,1)=RA(i,1);
+            if( projectSurfaceGridPoints )
+            { // we need to save the projected xa points too in this case
+              XA(j,0)=XA(i,0);
+              XA(j,1)=XA(i,1);
+              XA(j,2)=XA(i,2);
+            }
+              
+          }
+          j++;
+        }
       }
     }
     else
     {
       for( int i=0; i<numberToCheck; i++ )
       {
-	if( fabs(RA(i,0)-.5)<offset0 && fabs(RA(i,1)-.5)<offset1 && fabs(RA(i,2)-.5)<offset2 )
-	{
+        if( fabs(RA(i,0)-.5)<offset0 && fabs(RA(i,1)-.5)<offset1 && fabs(RA(i,2)-.5)<offset2 )
+        {
           // printF(" InterpolatePointsOnAGrid: grid=%i i=%i IA=%i x=(%9.3e,%9.3e,%9.3e) r=(%9.3e,%9.3e,%9.3e)\n",grid,i,IA(i),
           //         XA(i,0),XA(i,1),XA(i,2),RA(i,0),RA(i,1),RA(i,2));
-	  
-	  if( i!=j )
-	  {
-	    IA(j)=IA(i);
-	    RA(j,0)=RA(i,0);
-	    RA(j,1)=RA(i,1);
-	    RA(j,2)=RA(i,2);
-	  }
-	  j++;
-	}
+          
+          if( i!=j )
+          {
+            IA(j)=IA(i);
+            RA(j,0)=RA(i,0);
+            RA(j,1)=RA(i,1);
+            RA(j,2)=RA(i,2);
+          }
+          j++;
+        }
       }
     }
       
@@ -1081,7 +1081,7 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
       cid[n].grid=receptor; 
       cid[n].donor=donor;  // NOTE: we could process multiple donor grids at once as an optimization
       for( int axis=0; axis<numberOfDimensions; axis++ )
-	cid[n].rv[axis]=RA(i,axis);
+        cid[n].rv[axis]=RA(i,axis);
 
     }
     // Allocate space for results
@@ -1102,7 +1102,7 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
     // #ifdef USE_PPP
     //   Ogen::checkCanInterpolate(cg,receptor,donor, rv, interpolates, useBackupRules);
     // #else
-    // 	cg.rcData->canInterpolate(receptor,donor, rv, interpolates, useBackupRules, checkForOneSided );
+    //  cg.rcData->canInterpolate(receptor,donor, rv, interpolates, useBackupRules, checkForOneSided );
     // #endif
 
     // reset
@@ -1113,23 +1113,23 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
     {
       if( numberToCheck>0 )
       {
-	fprintf(plogFile,"--- buildInterpolationInfo: attempt to interp from donor grid=%i : \n",donor);
-	for( int i=I.getBase(); i<=I.getBound(); i++ )
-	{
+        fprintf(plogFile,"--- buildInterpolationInfo: attempt to interp from donor grid=%i : \n",donor);
+        for( int i=I.getBase(); i<=I.getBound(); i++ )
+        {
           // XA not valid here -- not compressed --
           int iai=IA(i);
-	  fprintf(plogFile," pt %i interpolates=%i width=%i from donor=%i il=(%i,%i,%i) "
-		  " r=(%8.2e,%8.2e,%8.2e), x=(%8.2e,%8.2e,%8.2e)\n",
-		  iai,int(cir[i].width>0),cir[i].width,donor,cir[i].il[0],cir[i].il[1],cir[i].il[2],
-		  RA(i,0),RA(i,1),(numberOfDimensions==2 ? 0. : RA(i,2)),
-		  X(iai,0),X(iai,1),(numberOfDimensions==2 ? 0. : X(iai,2)));
+          fprintf(plogFile," pt %i interpolates=%i width=%i from donor=%i il=(%i,%i,%i) "
+                  " r=(%8.2e,%8.2e,%8.2e), x=(%8.2e,%8.2e,%8.2e)\n",
+                  iai,int(cir[i].width>0),cir[i].width,donor,cir[i].il[0],cir[i].il[1],cir[i].il[2],
+                  RA(i,0),RA(i,1),(numberOfDimensions==2 ? 0. : RA(i,2)),
+                  X(iai,0),X(iai,1),(numberOfDimensions==2 ? 0. : X(iai,2)));
           // *** TEMP ***
-	  // printF("POGIG: pt %i interpolates=%i width=%i from donor=%i il=(%i,%i,%i) "
-	// 	  " r=(%8.2e,%8.2e,%8.2e), x=(%8.2e,%8.2e,%8.2e)\n",
-	// 	  iai,int(cir[i].width>0),cir[i].width,donor,cir[i].il[0],cir[i].il[1],cir[i].il[2],
-	// 	  RA(i,0),RA(i,1),(numberOfDimensions==2 ? 0. : RA(i,2)),
-	// 	  X(iai,0),X(iai,1),(numberOfDimensions==2 ? 0. : X(iai,2)));
-	}
+          // printF("POGIG: pt %i interpolates=%i width=%i from donor=%i il=(%i,%i,%i) "
+        //        " r=(%8.2e,%8.2e,%8.2e), x=(%8.2e,%8.2e,%8.2e)\n",
+        //        iai,int(cir[i].width>0),cir[i].width,donor,cir[i].il[0],cir[i].il[1],cir[i].il[2],
+        //        RA(i,0),RA(i,1),(numberOfDimensions==2 ? 0. : RA(i,2)),
+        //        X(iai,0),X(iai,1),(numberOfDimensions==2 ? 0. : X(iai,2)));
+        }
       }
     }
     
@@ -1144,34 +1144,34 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
 
       if( width>STATUS(IA(i)) ) // Is this a better interpolation width ? 
       {
-	viw(j)=width;
+        viw(j)=width;
 
-        // 	for( int axis=0; axis<domainDimension; axis++ )
-        // 	  rrv[axis]=RA(i,axis);
-        // 	getInterpolationStencil( mg, interpolationWidth, rrv, iv );
+        //      for( int axis=0; axis<domainDimension; axis++ )
+        //        rrv[axis]=RA(i,axis);
+        //      getInterpolationStencil( mg, interpolationWidth, rrv, iv );
 
-	for( int axis=0; axis<domainDimension; axis++ )
-	{
-	  CI(j,axis)=RA(i,axis); // rrv[axis];
-	  IP(j,axis)=cir[i].il[axis]; // iv[axis]; // lower left corner of the interpolation stencil
-	}
+        for( int axis=0; axis<domainDimension; axis++ )
+        {
+          CI(j,axis)=RA(i,axis); // rrv[axis];
+          IP(j,axis)=cir[i].il[axis]; // iv[axis]; // lower left corner of the interpolation stencil
+        }
         // we need to check the quality of the result:
         //  smaller width than requested?
         //  extrapolated? <- will likely mean width=2 and CI outside [il..il+1]
 
 
-	// STATUS(IA(i)) = insideUnitSquare ? interpolated : extrapolated;
-	// STATUS(IA(i)) = interpolated;  // do this for now 
+        // STATUS(IA(i)) = insideUnitSquare ? interpolated : extrapolated;
+        // STATUS(IA(i)) = interpolated;  // do this for now 
         if( debug & 2 && STATUS(IA(i)) > 0  )
-	{
+        {
           fprintf(plogFile,"**** improved status point found, grid=%i, i=%i, old-width=%i, new-width=%i****\n",grid,i,
               STATUS(IA(i)),width  );
-	}
-	
-	STATUS(IA(i)) = width;  // if staus==interpolationWidth then we have the best possible donor
+        }
+        
+        STATUS(IA(i)) = width;  // if staus==interpolationWidth then we have the best possible donor
 
-	IA(j)=IA(i);
-	j++;
+        IA(j)=IA(i);
+        j++;
       }
     }
     NUMBEROFINTERPOLATIONPOINTS(grid)=j;  // number of pts interpolated from "grid"
@@ -1198,7 +1198,7 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
     {
       if( STATUS(i)==0 )
       {
-	numNotAssigned++;
+        numNotAssigned++;
       }
     }
     int totalNotAssigned=ParallelUtility::getSum(numNotAssigned);
@@ -1208,14 +1208,14 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
       numberOfPointsNotAssignedMessages++;
       if( numberOfPointsNotAssignedMessages<10 )
       {
-	printF("InterpPtsOnAGrid:INFO: some points not assigned by interpolation. These are likely outside the domain. "
-	       "numberOfPointsToInterpolate=%i, totalNotAssigned=%i.\n",numberOfPointsToInterpolate,totalNotAssigned);
+        printF("InterpPtsOnAGrid:INFO: some points not assigned by interpolation. These are likely outside the domain. "
+               "numberOfPointsToInterpolate=%i, totalNotAssigned=%i.\n",numberOfPointsToInterpolate,totalNotAssigned);
       }
       else
       {
-	printF("InterpPtsOnAGrid:INFO: Too many `some points not assigned by interpolation.' I am not printing anymore.\n");
+        printF("InterpPtsOnAGrid:INFO: Too many `some points not assigned by interpolation.' I am not printing anymore.\n");
       }
-	  
+          
     }
 
     
@@ -1225,7 +1225,7 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
 
       if( false )
       {  // ************ for testing return here ****************
-	return -totalNotAssigned;
+        return -totalNotAssigned;
       }
       
 
@@ -1263,19 +1263,19 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
 
       if( numNotAssigned>0 )
       {
-	// -- make a list of any un-assigned pts --
+        // -- make a list of any un-assigned pts --
         int j=0;
-	for( int i=0; i<numberOfPointsToInterpolate; i++ )
-	{
-	  if( STATUS(i)==0 )
-	  {
-	    IA0(j)=i; 
+        for( int i=0; i<numberOfPointsToInterpolate; i++ )
+        {
+          if( STATUS(i)==0 )
+          {
+            IA0(j)=i; 
             for( int axis=0; axis<numberOfDimensions; axis++ )
-	      XA(j,axis)=X(i,axis);
-	    j++;
-	  }
-	}
-	assert( j==numNotAssigned );
+              XA(j,axis)=X(i,axis);
+            j++;
+          }
+        }
+        assert( j==numNotAssigned );
       }
 
 
@@ -1298,7 +1298,7 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
 
 //       if( numNotAssigned<numberOfPointsToInterpolate )
 //       {
-// 	OV_ABORT("IPOG:ERROR: finish me ");
+//      OV_ABORT("IPOG:ERROR: finish me ");
 //       }
 
 
@@ -1314,7 +1314,7 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
 //       {
 
 //         MappedGrid & mg = cg[grid];
-// 	Mapping & map = mg.mapping().getMapping();
+//      Mapping & map = mg.mapping().getMapping();
 //         const IntegerArray & gridIndexRange = mg.gridIndexRange();
 //         const RealArray & dr = mg.gridSpacing();
 
@@ -1323,114 +1323,114 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
 
 
 
-// 	const bool isRectangular=mg.isRectangular();
-// 	if( !isRectangular )
-// 	  mg.update(MappedGrid::THEvertex | MappedGrid::THEcenter);
-// 	if( isRectangular )
-// 	{
-// 	  mg.getRectangularGridParameters( dx, xab );
-// 	  iv0[0]=mg.gridIndexRange(0,0);
-// 	  iv0[1]=mg.gridIndexRange(0,1);
-// 	  iv0[2]=mg.gridIndexRange(0,2);
-// 	}
+//      const bool isRectangular=mg.isRectangular();
+//      if( !isRectangular )
+//        mg.update(MappedGrid::THEvertex | MappedGrid::THEcenter);
+//      if( isRectangular )
+//      {
+//        mg.getRectangularGridParameters( dx, xab );
+//        iv0[0]=mg.gridIndexRange(0,0);
+//        iv0[1]=mg.gridIndexRange(0,1);
+//        iv0[2]=mg.gridIndexRange(0,2);
+//      }
 
 //         // Here are the grid points for rectangular grids:
 //         #define COORD(i0,i1,i2,axis) (xab[0][axis]+dx[axis]*(i0-iv0[axis]))
 
 //         #ifdef USE_PPP
 //           intSerialArray mask; getLocalArrayWithGhostBoundaries(mg.mask(),mask);
-// 	  realSerialArray center; if( !isRectangular ){ getLocalArrayWithGhostBoundaries(mg.center(),center);} //
+//        realSerialArray center; if( !isRectangular ){ getLocalArrayWithGhostBoundaries(mg.center(),center);} //
 //         #else
 //           const intSerialArray & mask = mg.mask();
-// 	  const realSerialArray & center = mg.center();
+//        const realSerialArray & center = mg.center();
 //         #endif
 
-// 	const real *centerp = center.Array_Descriptor.Array_View_Pointer3;
-// 	const int centerDim0=center.getRawDataSize(0);
-// 	const int centerDim1=center.getRawDataSize(1);
-// 	const int centerDim2=center.getRawDataSize(2);
+//      const real *centerp = center.Array_Descriptor.Array_View_Pointer3;
+//      const int centerDim0=center.getRawDataSize(0);
+//      const int centerDim1=center.getRawDataSize(1);
+//      const int centerDim2=center.getRawDataSize(2);
 // #define CENTER(i0,i1,i2,i3) centerp[i0+centerDim0*(i1+centerDim1*(i2+centerDim2*(i3)))]
 
-// 	const int *maskp = mask.Array_Descriptor.Array_View_Pointer2;
-// 	const int maskDim0=mask.getRawDataSize(0);
-// 	const int maskDim1=mask.getRawDataSize(1);
+//      const int *maskp = mask.Array_Descriptor.Array_View_Pointer2;
+//      const int maskDim0=mask.getRawDataSize(0);
+//      const int maskDim1=mask.getRawDataSize(1);
 // #define MASK(i0,i1,i2) maskp[i0+maskDim0*(i1+maskDim1*(i2))]
 
 
 //         // Do not check the bounding box when finding the nearest grid point:
 //         map.setParameter( MappingParameters::THEfindBestGuess,true );
-	
+        
 //         // we really want the nearest VALID grid point (mask!=0) and the distance to it.
 //         // This is not yet parallel: *** FIX ME FOR PARALLEL **
 //         map.approximateGlobalInverse->findNearestGridPoint(0,numNotAssigned-1,xa,ra );
-	
-// 	real rv[3]={0.,0.,0.}, xv[3]={0.,0.,0.};
-// 	int iv[3]={0,0,0};
+        
+//      real rv[3]={0.,0.,0.}, xv[3]={0.,0.,0.};
+//      int iv[3]={0,0,0};
 //         for( int j=0; j<numNotAssigned; j++ )
-// 	{
+//      {
 //           // nearest point:
-// 	  for( int axis=0; axis<numberOfDimensions; axis++ )
-// 	  {
-// 	    iv[axis]=int( ra(j,axis)/dr(axis)+gridIndexRange(0,axis) +.5 ); // nearest grid point
+//        for( int axis=0; axis<numberOfDimensions; axis++ )
+//        {
+//          iv[axis]=int( ra(j,axis)/dr(axis)+gridIndexRange(0,axis) +.5 ); // nearest grid point
 //             // limit the location to valid values: 
 //             iv[axis]=max( gridIndexRange(0,axis)-numberOfValidGhostPoints,
 //                      min( gridIndexRange(1,axis)+numberOfValidGhostPoints,iv[axis]));
 //             iv[axis]=max( mask.getBase(axis),min( mask.getBound(axis), iv[axis] ));
-// 	  }
-	  
-// 	  if( debug & 2 )
-// 	  {
-// 	    fprintf(plogFile,"Check unassigned pt:=%i x=(%8.2e,%8.2e) donor=%i closest pt=(%i,%i) mask=%i :",
-// 		    j,XA(j,0),XA(j,1),grid,iv[0],iv[1],MASK(iv[0],iv[1],iv[2]));
-// 	  }
-	  
+//        }
+          
+//        if( debug & 2 )
+//        {
+//          fprintf(plogFile,"Check unassigned pt:=%i x=(%8.2e,%8.2e) donor=%i closest pt=(%i,%i) mask=%i :",
+//                  j,XA(j,0),XA(j,1),grid,iv[0],iv[1],MASK(iv[0],iv[1],iv[2]));
+//        }
+          
 
-// 	  // check the mask on the nearest point
+//        // check the mask on the nearest point
 //           if( MASK(iv[0],iv[1],iv[2])!=0 ) // *** FIX ME FOR PARALLEL **
-// 	  {
+//        {
 //             // we can extrapolate from this valid point
 //             real dist=0;
-// 	    for( int axis=0; axis<numberOfDimensions; axis++ )
-// 	    {
+//          for( int axis=0; axis<numberOfDimensions; axis++ )
+//          {
 //               if( isRectangular )
-// 	        xv[axis]=COORD(iv[0],iv[1],iv[2],axis);
+//              xv[axis]=COORD(iv[0],iv[1],iv[2],axis);
 //               else
 //                 xv[axis]=CENTER(iv[0],iv[1],iv[2],axis);
 //               dist+= SQR( xv[axis]-XA(j,axis) );
-// 	    }
+//          }
 //             if( dist< dista(j) )
-// 	    {
+//          {
 //               // save this point
 //               STATUS(IA0(j))=extrapolated;  // this point can now be extrapolated
-	      
+              
 //               dista(j)=dist;  // current smallest distance
 //               // save donor, il(j,axis)=iv[axis];
 //               IL(j,0)=grid;   // donor grid 
 //               for( int axis=0; axis<numberOfDimensions; axis++ )
-// 		IL(j,axis+1)=iv[axis];
-	      
-// 	      if( debug & 2 )
-// 		fprintf(plogFile," ... can extrap, dist=%8.2e \n",sqrt(dist));
+//              IL(j,axis+1)=iv[axis];
+              
+//            if( debug & 2 )
+//              fprintf(plogFile," ... can extrap, dist=%8.2e \n",sqrt(dist));
 
-// 	    }
-// 	    else
-// 	    {
-// 	      if( debug & 2 )
-// 		fprintf(plogFile," ... dist=%8.2e > current dist=%8.2e .\n",sqrt(dist),sqrt(dista(j)));
-// 	    }
-	    
-// 	  }
+//          }
+//          else
+//          {
+//            if( debug & 2 )
+//              fprintf(plogFile," ... dist=%8.2e > current dist=%8.2e .\n",sqrt(dist),sqrt(dista(j)));
+//          }
+            
+//        }
 //           else
-// 	  {
+//        {
 //             // The nearest point has mask==0 : we could look nearby for a pt with mask!=0 
-// 	      if( debug & 2 )
-// 		fprintf(plogFile," ... CANNOT extrap\n");
-// 	  }
-// 	}
+//            if( debug & 2 )
+//              fprintf(plogFile," ... CANNOT extrap\n");
+//        }
+//      }
 
 //         // reset:
 //         map.setParameter( MappingParameters::THEfindBestGuess,false );
-	
+        
 //       } // end for grid
 
       
@@ -1439,56 +1439,56 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
         // Count up the number of extrapolate points for each grid so we can
         // allocate extra space if needed.
         int *numExtra = new int [numberOfComponentGrids];
-	for( int grid=0; grid<numberOfComponentGrids; grid++ )
-	  numExtra[grid]=0;
+        for( int grid=0; grid<numberOfComponentGrids; grid++ )
+          numExtra[grid]=0;
  
-	for( int j=0; j<numNotAssigned; j++ )
-	{
+        for( int j=0; j<numNotAssigned; j++ )
+        {
           int iaj = IA0(j);
-	  if( RA(j,0)==Mapping::bogus ) 
-	  {
-	    // this point is still NOT assigned -- this should be unlikely to happen
+          if( RA(j,0)==Mapping::bogus ) 
+          {
+            // this point is still NOT assigned -- this should be unlikely to happen
             OV_ABORT("*** IPOG: Failure to find a closest grid point! This should not happen! ***");
-	  }
+          }
 
           STATUS(iaj)=extrapolated;  // this point can now be extrapolated
 
-	  const int donor=IL(j,0);
-	  assert( donor>=0 && donor <numberOfComponentGrids );
-	  numExtra[donor]++;
+          const int donor=IL(j,0);
+          assert( donor>=0 && donor <numberOfComponentGrids );
+          numExtra[donor]++;
 
-	}
-	for( int grid=0; grid<numberOfComponentGrids; grid++ )
-	{
-  	  IntegerArray & viw = variableInterpolationWidth[grid];
+        }
+        for( int grid=0; grid<numberOfComponentGrids; grid++ )
+        {
+          IntegerArray & viw = variableInterpolationWidth[grid];
             int numNew=NUMBEROFINTERPOLATIONPOINTS(grid)+numExtra[grid];
-	  if( numNew > viw.getBound(0) )
-	  {
-	    // increase array sizes : indirection[grid], variableInterpolationWidth[grid], ...
-	    if( false )
-	      printF("IPOG: numNotAssigned=%i, donor=%i, numInterp=%i, numExtra=%i, viw.getBound(0)=%i\n",
-		     numNotAssigned,grid,NUMBEROFINTERPOLATIONPOINTS(grid),numExtra[grid],viw.getBound(0));
-	    
-	    IntegerArray & ia = indirection[grid];
-	    IntegerArray & ip  = interpolationLocation[grid];
-	    IntegerArray & viw = variableInterpolationWidth[grid];
-	    RealArray & ci = interpolationCoordinates[grid];
+          if( numNew > viw.getBound(0) )
+          {
+            // increase array sizes : indirection[grid], variableInterpolationWidth[grid], ...
+            if( false )
+              printF("IPOG: numNotAssigned=%i, donor=%i, numInterp=%i, numExtra=%i, viw.getBound(0)=%i\n",
+                     numNotAssigned,grid,NUMBEROFINTERPOLATIONPOINTS(grid),numExtra[grid],viw.getBound(0));
+            
+            IntegerArray & ia = indirection[grid];
+            IntegerArray & ip  = interpolationLocation[grid];
+            IntegerArray & viw = variableInterpolationWidth[grid];
+            RealArray & ci = interpolationCoordinates[grid];
 
             // ia.resize(numNew);
-	    // assert( ia.getLength(0)>=numNew );  // ia should be big enough already
+            // assert( ia.getLength(0)>=numNew );  // ia should be big enough already
             if( ia.getLength(0)<numNew )
-	    {
+            {
               ia.resize(numNew);  // *wdh* 100723
-	    }
-	    ip.resize(numNew,numberOfDimensions);
-	    viw.resize(numNew);
-	    ci.resize(numNew,numberOfDimensions);
+            }
+            ip.resize(numNew,numberOfDimensions);
+            viw.resize(numNew);
+            ci.resize(numNew,numberOfDimensions);
 
-	    // OV_ABORT("IPOG: increase array sizes for extrapolate points, finish me");
-	  }
-	  
-	}
-	delete [] numExtra;
+            // OV_ABORT("IPOG: increase array sizes for extrapolate points, finish me");
+          }
+          
+        }
+        delete [] numExtra;
       } // end if numNotAssigned>0
       
 
@@ -1496,39 +1496,39 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
       for( int grid=numberOfComponentGrids-1; grid>=0; grid-- )
       {
         IntegerArray & ia = indirection[grid];
-	int *iap = ia.Array_Descriptor.Array_View_Pointer0;
+        int *iap = ia.Array_Descriptor.Array_View_Pointer0;
 #define IA(i0) iap[i0]
 
-	IntegerArray & ip  = interpolationLocation[grid];
-	IntegerArray & viw = variableInterpolationWidth[grid];
-	int *ipp = ip.Array_Descriptor.Array_View_Pointer1;
-	const int ipDim0=ip.getRawDataSize(0);
+        IntegerArray & ip  = interpolationLocation[grid];
+        IntegerArray & viw = variableInterpolationWidth[grid];
+        int *ipp = ip.Array_Descriptor.Array_View_Pointer1;
+        const int ipDim0=ip.getRawDataSize(0);
 #define IP(i0,i1) ipp[i0+ipDim0*(i1)]
-	RealArray & ci = interpolationCoordinates[grid];
-	real *cip = ci.Array_Descriptor.Array_View_Pointer1;
-	const int ciDim0=ci.getRawDataSize(0);
+        RealArray & ci = interpolationCoordinates[grid];
+        real *cip = ci.Array_Descriptor.Array_View_Pointer1;
+        const int ciDim0=ci.getRawDataSize(0);
 #define CI(i0,i1) cip[i0+ciDim0*(i1)]
 
-	for( int j=0; j<numNotAssigned; j++ )
-	{
-	  const int donor=IL(j,0);
-	  if( donor==grid )
-	  {
-	    int & num = NUMBEROFINTERPOLATIONPOINTS(grid);
-	    assert( num<=viw.getBound(0) );
+        for( int j=0; j<numNotAssigned; j++ )
+        {
+          const int donor=IL(j,0);
+          if( donor==grid )
+          {
+            int & num = NUMBEROFINTERPOLATIONPOINTS(grid);
+            assert( num<=viw.getBound(0) );
 
             IA(num)=IA0(j);
-	    int width=1;  // extrap to order 1
-	    viw(num)=width;
-	    for( int axis=0; axis<domainDimension; axis++ )
-	    {
-	      CI(num,axis)=0.; // this value doesn't matter
-	      IP(num,axis)=IL(j,axis+1);
-	    }
-	    num++;
+            int width=1;  // extrap to order 1
+            viw(num)=width;
+            for( int axis=0; axis<domainDimension; axis++ )
+            {
+              CI(num,axis)=0.; // this value doesn't matter
+              IP(num,axis)=IL(j,axis+1);
+            }
+            num++;
 
-	  }
-	}
+          }
+        }
       } // end for grid
     } // end if totalUnassigned>0
     
@@ -1558,20 +1558,20 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
     else
     {
       if( STATUS(i)==extrapolated ) 
-	numberExtrapolated++;
+        numberExtrapolated++;
       else
       {
-	if( infoLevel & 2 )
-	  printF("buildInterpolationInfo: WARNING: point not assigned: i=%i xv=(%9.3e,%9.3e,%9.3e)\n",
-		 i,x(i,0),x(i,1),(numberOfDimensions==2 ? 0 : x(i,2)));
-	
-	if( debug )
-	  fprintf(plogFile,"buildInterpolationInfo: WARNING: point not assigned: i=%i xv=(%9.3e,%9.3e,%9.3e)\n",
-		 i,x(i,0),x(i,1),(numberOfDimensions==2 ? 0 : x(i,2)));
-	
+        if( infoLevel & 2 )
+          printF("buildInterpolationInfo: WARNING: point not assigned: i=%i xv=(%9.3e,%9.3e,%9.3e)\n",
+                 i,x(i,0),x(i,1),(numberOfDimensions==2 ? 0 : x(i,2)));
+        
+        if( debug )
+          fprintf(plogFile,"buildInterpolationInfo: WARNING: point not assigned: i=%i xv=(%9.3e,%9.3e,%9.3e)\n",
+                 i,x(i,0),x(i,1),(numberOfDimensions==2 ? 0 : x(i,2)));
+        
       }
       
-	
+        
       // IA0(j)=i;
       // j++;
     }
@@ -1586,7 +1586,7 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
     int numNot         = ParallelUtility::getSum( numNotAssigned );
     printF("InterpolatePointsOnAGrid::buildInterpolationInfo: total interpolated=%i, backup=%i, extrapolated=%i "
            "not assigned=%i\n",
-	   numInterpolated,numBackup,numExtrap,numNot);
+           numInterpolated,numBackup,numExtrap,numNot);
 
     if( numNot>0 )  
       printF("InterpolatePointsOnAGrid::buildInterpolationInfo: WARNING: %i points not assigned!\n",numNotAssigned);
@@ -1604,8 +1604,8 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
       for( int i=0; i<numberOfInterpolationPoints(grid); i++ )
       {
         int iai=IA(i);
-	fprintf(plogFile," grid=%i, i=%i, IA(i)=%i x=(%8.2e,%8.2e,%8.2e) status=%i (=interp. width)\n",
-		grid,i,iai,x(iai,0),x(iai,1),(numberOfDimensions==2 ? 0. : x(iai,2)),STATUS(iai));
+        fprintf(plogFile," grid=%i, i=%i, IA(i)=%i x=(%8.2e,%8.2e,%8.2e) status=%i (=interp. width)\n",
+                grid,i,iai,x(iai,0),x(iai,1),(numberOfDimensions==2 ? 0. : x(iai,2)),STATUS(iai));
       }
       
     }
@@ -1638,7 +1638,7 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
 
   // --- Now build a parallel communication schedule for interpolating the points ---
   parallelSetup( cg,x, numberOfInterpolationPoints, interpolationCoordinates, 
-		indirection,interpolationLocation,variableInterpolationWidth );
+                indirection,interpolationLocation,variableInterpolationWidth );
 
   // In parallel we can destroy the arrays interpolationCoordinates, indirection, etc. 
   delete [] indirection;              
@@ -1696,7 +1696,7 @@ buildInterpolationInfo(const RealArray & positionToInterpolate,
 
 int InterpolatePointsOnAGrid::
 interpolationCoefficients(const CompositeGrid &cg,
-			  RealArray & uInterpolationCoeff )
+                          RealArray & uInterpolationCoeff )
 
 //=======================================================================================================
 /// \details 
@@ -1725,13 +1725,13 @@ interpolationCoefficients(const CompositeGrid &cg,
 
 int InterpolatePointsOnAGrid::
 interpolatePoints(const RealArray & positionToInterpolate,
-		     const realCompositeGridFunction & u,
-		     RealArray & uInterpolated, 
-		     const Range & R0/* =nullRange */,           
-		     const Range & R1/* =nullRange */,
-		     const Range & R2/* =nullRange */,
-		     const Range & R3/* =nullRange */,
-		     const Range & R4/* =nullRange */ )
+                     const realCompositeGridFunction & u,
+                     RealArray & uInterpolated, 
+                     const Range & R0/* =nullRange */,           
+                     const Range & R1/* =nullRange */,
+                     const Range & R2/* =nullRange */,
+                     const Range & R3/* =nullRange */,
+                     const Range & R4/* =nullRange */ )
 //=======================================================================================================
 /// \details 
 ///     Given some points in space, determine the values of a grid function u. If interpolation
@@ -1788,9 +1788,9 @@ interpolatePoints(const RealArray & positionToInterpolate,
 
 int InterpolatePointsOnAGrid::
 interpolateAllPoints(const realCompositeGridFunction & uFrom,
-		     realCompositeGridFunction & uTo, 
-		     const Range & componentsFrom /* =nullRange */, 
-		     const Range & componentsTo /* =nullRange */,
+                     realCompositeGridFunction & uTo, 
+                     const Range & componentsFrom /* =nullRange */, 
+                     const Range & componentsTo /* =nullRange */,
                      const int numberOfGhostPointsToInterpolate /* =interpolateAllGhostPoints */ )
 //==============================================================================
 /// 
@@ -1846,7 +1846,7 @@ interpolateAllPoints(const realCompositeGridFunction & uFrom,
     printF("InterpolatePointsOnAGrid::interpolateAllPoints:ERROR: Trying to interpolate %i components "
            "from uFrom to %i components in uTo\n"
            "                                               These must be the same number of components!\n",
-	   C1.getLength(),C0.getLength());
+           C1.getLength(),C0.getLength());
     OV_ABORT("InterpolatePointsOnAGrid::interpolateAllPoints:ERROR");
   }
 
@@ -1884,20 +1884,20 @@ interpolateAllPoints(const realCompositeGridFunction & uFrom,
       Index Iv[3], &I1=Iv[0], &I2=Iv[1], &I3=Iv[2];
       if( numberOfGhostPointsToInterpolate==interpolateAllGhostPoints )
       {
-	getIndex(mg.dimension(),I1,I2,I3);
+        getIndex(mg.dimension(),I1,I2,I3);
       }
       else
       {
-	assert( numberOfGhostPointsToInterpolate>-20 && numberOfGhostPointsToInterpolate<20 );  // sanity check 
+        assert( numberOfGhostPointsToInterpolate>-20 && numberOfGhostPointsToInterpolate<20 );  // sanity check 
     
-	getIndex(extendedGridIndexRange(mg),I1,I2,I3,numberOfGhostPointsToInterpolate);
-	for( int axis=0; axis<mg.numberOfDimensions(); axis++ )
-	{ // limit bounds to the dimension array
-	  int ia=max(Iv[axis].getBase() ,mg.dimension(0,axis));
-	  int ib=min(Iv[axis].getBound(),mg.dimension(1,axis));
-	  if( ib<ia ) ib=ia;  // what should we do in this case? Just return ?
-	  Iv[axis]=Range(ia,ib);
-	}
+        getIndex(extendedGridIndexRange(mg),I1,I2,I3,numberOfGhostPointsToInterpolate);
+        for( int axis=0; axis<mg.numberOfDimensions(); axis++ )
+        { // limit bounds to the dimension array
+          int ia=max(Iv[axis].getBase() ,mg.dimension(0,axis));
+          int ib=min(Iv[axis].getBound(),mg.dimension(1,axis));
+          if( ib<ia ) ib=ia;  // what should we do in this case? Just return ?
+          Iv[axis]=Range(ia,ib);
+        }
       }
   
       int includeGhost=0;
@@ -1906,43 +1906,43 @@ interpolateAllPoints(const realCompositeGridFunction & uFrom,
       intSerialArray &  ia = pInterpAllIndirection[grid];
       if( ok ) // there are pts on this processor
       {
-	const int count = I1.getLength()*I2.getLength()*I3.getLength();
-	ia.redim(count,3);
-	// ia = (mask!=0).indexMap();   // interpolate pts with mask!=0 
+        const int count = I1.getLength()*I2.getLength()*I3.getLength();
+        ia.redim(count,3);
+        // ia = (mask!=0).indexMap();   // interpolate pts with mask!=0 
 
-	int *iap = ia.Array_Descriptor.Array_View_Pointer1;
-	const int iaDim0=ia.getRawDataSize(0);
+        int *iap = ia.Array_Descriptor.Array_View_Pointer1;
+        const int iaDim0=ia.getRawDataSize(0);
 #define IA(i0,i1) iap[i0+iaDim0*(i1)]
 
-	const int *maskp = mask.Array_Descriptor.Array_View_Pointer2;
-	const int maskDim0=mask.getRawDataSize(0);
-	const int maskDim1=mask.getRawDataSize(1);
+        const int *maskp = mask.Array_Descriptor.Array_View_Pointer2;
+        const int maskDim0=mask.getRawDataSize(0);
+        const int maskDim1=mask.getRawDataSize(1);
 #define MASK(i0,i1,i2) maskp[i0+maskDim0*(i1+maskDim1*(i2))]
 
-	// Here is the list of points that we will try to interpolate: 
-	int i=0;
-	int i1,i2,i3;
-	FOR_3D(i1,i2,i3,I1,I2,I3)
-	{
-	  if( MASK(i1,i2,i3)!=0 )
-	  {
-	    IA(i,0)=i1; IA(i,1)=i2; IA(i,2)=i3;
-	    i++;
-	  }
-	}
-	numToInterpolatePerGrid[grid]=i;
+        // Here is the list of points that we will try to interpolate: 
+        int i=0;
+        int i1,i2,i3;
+        FOR_3D(i1,i2,i3,I1,I2,I3)
+        {
+          if( MASK(i1,i2,i3)!=0 )
+          {
+            IA(i,0)=i1; IA(i,1)=i2; IA(i,2)=i3;
+            i++;
+          }
+        }
+        numToInterpolatePerGrid[grid]=i;
       }
       else
       {
         numToInterpolatePerGrid[grid]=0;
-	ia.redim(0);
+        ia.redim(0);
       }
       
       totalNumToInterpolate+=numToInterpolatePerGrid[grid];
 
       if( debug & 2 )
       {
-	printf("== myid=%i, interpolateAllPoints:INFO: interp %i pts from grid=%i\n",myid,numToInterpolatePerGrid[grid],grid);
+        printf("== myid=%i, interpolateAllPoints:INFO: interp %i pts from grid=%i\n",myid,numToInterpolatePerGrid[grid],grid);
       }
       
     } // end for grid 
@@ -1980,7 +1980,7 @@ interpolateAllPoints(const realCompositeGridFunction & uFrom,
       MappedGrid & mg= cgTo[grid];
       bool isRectangular=mg.isRectangular();
       if( !isRectangular )
-	mg.update(MappedGrid::THEvertex | MappedGrid::THEcenter);
+        mg.update(MappedGrid::THEvertex | MappedGrid::THEcenter);
 
       if( numToInterpolatePerGrid[grid]==0 ) continue;
 
@@ -1991,75 +1991,75 @@ interpolateAllPoints(const realCompositeGridFunction & uFrom,
 
       if( isRectangular )
       {
-	real dx[3],xab[2][3];
-	mg.getRectangularGridParameters( dx, xab );
+        real dx[3],xab[2][3];
+        mg.getRectangularGridParameters( dx, xab );
 
-	const int i0a=mg.gridIndexRange(0,0);
-	const int i1a=mg.gridIndexRange(0,1);
-	const int i2a=mg.gridIndexRange(0,2);
+        const int i0a=mg.gridIndexRange(0,0);
+        const int i1a=mg.gridIndexRange(0,1);
+        const int i2a=mg.gridIndexRange(0,2);
 
-	const real xa=xab[0][0], dx0=dx[0];
-	const real ya=xab[0][1], dy0=dx[1];
-	const real za=xab[0][2], dz0=dx[2];
-	
+        const real xa=xab[0][0], dx0=dx[0];
+        const real ya=xab[0][1], dy0=dx[1];
+        const real za=xab[0][2], dz0=dx[2];
+        
 #define COORD0(i0,i1,i2) (xa+dx0*(i0-i0a))
 #define COORD1(i0,i1,i2) (ya+dy0*(i1-i1a))
 #define COORD2(i0,i1,i2) (za+dz0*(i2-i2a))
 
-	if( mg.numberOfDimensions()==2 )
-	{
-	  for( int i=0; i<numToInterpolatePerGrid[grid]; i++ )
-	  {
-	    X(k,0)=COORD0(IA(i,0),IA(i,1),0);
-	    X(k,1)=COORD1(IA(i,0),IA(i,1),0);
-	    k++;
-	  }
-	}
-	else
-	{
-	  for( int i=0; i<numToInterpolatePerGrid[grid]; i++ )
-	  {
-	    X(k,0)=COORD0(IA(i,0),IA(i,1),IA(i,2));
-	    X(k,1)=COORD1(IA(i,0),IA(i,1),IA(i,2));
-	    X(k,2)=COORD2(IA(i,0),IA(i,1),IA(i,2));
-	    k++;
-	  }
-	}
+        if( mg.numberOfDimensions()==2 )
+        {
+          for( int i=0; i<numToInterpolatePerGrid[grid]; i++ )
+          {
+            X(k,0)=COORD0(IA(i,0),IA(i,1),0);
+            X(k,1)=COORD1(IA(i,0),IA(i,1),0);
+            k++;
+          }
+        }
+        else
+        {
+          for( int i=0; i<numToInterpolatePerGrid[grid]; i++ )
+          {
+            X(k,0)=COORD0(IA(i,0),IA(i,1),IA(i,2));
+            X(k,1)=COORD1(IA(i,0),IA(i,1),IA(i,2));
+            X(k,2)=COORD2(IA(i,0),IA(i,1),IA(i,2));
+            k++;
+          }
+        }
       }
       else
       {
       
 #ifdef USE_PPP
-	realSerialArray center; getLocalArrayWithGhostBoundaries(mg.center(),center);
+        realSerialArray center; getLocalArrayWithGhostBoundaries(mg.center(),center);
 #else
-	const realSerialArray & center = mg.center();
+        const realSerialArray & center = mg.center();
 #endif
 
-	const real *centerp = center.Array_Descriptor.Array_View_Pointer3;
-	const int centerDim0=center.getRawDataSize(0);
-	const int centerDim1=center.getRawDataSize(1);
-	const int centerDim2=center.getRawDataSize(2);
+        const real *centerp = center.Array_Descriptor.Array_View_Pointer3;
+        const int centerDim0=center.getRawDataSize(0);
+        const int centerDim1=center.getRawDataSize(1);
+        const int centerDim2=center.getRawDataSize(2);
 #define CENTER(i0,i1,i2,i3) centerp[i0+centerDim0*(i1+centerDim1*(i2+centerDim2*(i3)))]
-	const int i3=center.getBase(2);
-	if( mg.numberOfDimensions()==2 )
-	{
-	  for( int i=0; i<numToInterpolatePerGrid[grid]; i++ )
-	  {
-	    X(k,0)=CENTER(IA(i,0),IA(i,1),i3,0);
-	    X(k,1)=CENTER(IA(i,0),IA(i,1),i3,1);
-	    k++;
-	  }
-	}
-	else
-	{
-	  for( int i=0; i<numToInterpolatePerGrid[grid]; i++ )
-	  {
-	    X(k,0)=CENTER(IA(i,0),IA(i,1),IA(i,2),0);
-	    X(k,1)=CENTER(IA(i,0),IA(i,1),IA(i,2),1);
-	    X(k,2)=CENTER(IA(i,0),IA(i,1),IA(i,2),2);
-	    k++;
-	  }
-	}
+        const int i3=center.getBase(2);
+        if( mg.numberOfDimensions()==2 )
+        {
+          for( int i=0; i<numToInterpolatePerGrid[grid]; i++ )
+          {
+            X(k,0)=CENTER(IA(i,0),IA(i,1),i3,0);
+            X(k,1)=CENTER(IA(i,0),IA(i,1),i3,1);
+            k++;
+          }
+        }
+        else
+        {
+          for( int i=0; i<numToInterpolatePerGrid[grid]; i++ )
+          {
+            X(k,0)=CENTER(IA(i,0),IA(i,1),IA(i,2),0);
+            X(k,1)=CENTER(IA(i,0),IA(i,1),IA(i,2),1);
+            X(k,2)=CENTER(IA(i,0),IA(i,1),IA(i,2),2);
+            k++;
+          }
+        }
       }
       assert( k<=totalNumToInterpolate );
       
@@ -2067,7 +2067,7 @@ interpolateAllPoints(const realCompositeGridFunction & uFrom,
       //     {
       //       int i=26112;
       //       printF(" @@@ Interp: fill point i=%i IA=(%i,%i,%i) x=(%9.3e,%9.3e,%9.3e) \n",i,IA(i,0),IA(i,1),IA(i,2),
-      // 	     X(i,0),X(i,1),X(i,2));
+      //             X(i,0),X(i,1),X(i,2));
       //     }
       
     } // end for grid
@@ -2136,27 +2136,27 @@ interpolateAllPoints(const realCompositeGridFunction & uFrom,
 
       if( mg.numberOfDimensions()==2 )
       {
-	const int i3=u.getBase(2);
-	for( int i=0; i<numToInterpolatePerGrid[grid]; i++ )
-	{
-	  for( int c0=C0.getBase(), c1=C1.getBase(); c0<=C0.getBound(); c0++,c1++ ) 
-	  {
-	    U(IA(i,0),IA(i,1),i3,c0)=UINTERPOLATED(k,c1);
-	    // if( debug & 2 )
-	    //  printF(" -- assign interp: grid=%i u(%i,%i)=%8.2e (k=%i)\n",grid,IA(i,0),IA(i,1),UINTERPOLATED(k,c1),k);
-	  
-	  }
-	  k++;
-	}
+        const int i3=u.getBase(2);
+        for( int i=0; i<numToInterpolatePerGrid[grid]; i++ )
+        {
+          for( int c0=C0.getBase(), c1=C1.getBase(); c0<=C0.getBound(); c0++,c1++ ) 
+          {
+            U(IA(i,0),IA(i,1),i3,c0)=UINTERPOLATED(k,c1);
+            // if( debug & 2 )
+            //  printF(" -- assign interp: grid=%i u(%i,%i)=%8.2e (k=%i)\n",grid,IA(i,0),IA(i,1),UINTERPOLATED(k,c1),k);
+          
+          }
+          k++;
+        }
       }
       else
       {
-	for( int i=0; i<numToInterpolatePerGrid[grid]; i++ )
-	{
-	  for( int c0=C0.getBase(), c1=C1.getBase(); c0<=C0.getBound(); c0++,c1++ ) 
-	    U(IA(i,0),IA(i,1),IA(i,2),c0)=UINTERPOLATED(k,c1);
-	  k++;
-	}
+        for( int i=0; i<numToInterpolatePerGrid[grid]; i++ )
+        {
+          for( int c0=C0.getBase(), c1=C1.getBase(); c0<=C0.getBound(); c0++,c1++ ) 
+            U(IA(i,0),IA(i,1),IA(i,2),c0)=UINTERPOLATED(k,c1);
+          k++;
+        }
       
       }
     }
@@ -2176,8 +2176,8 @@ interpolateAllPoints(const realCompositeGridFunction & uFrom,
 int InterpolatePointsOnAGrid::
 interpolateAllPoints(const realCompositeGridFunction & uFrom,
                      realMappedGridFunction & uTo, 
-		     const Range & componentsFrom /* =nullRange */, 
-		     const Range & componentsTo /* =nullRange */,
+                     const Range & componentsFrom /* =nullRange */, 
+                     const Range & componentsTo /* =nullRange */,
                      const int numberOfGhostPointsToInterpolate /* =interpolateAllGhostPoints */ )
 //==============================================================================
 /// 
@@ -2231,12 +2231,12 @@ interpolateAllPoints(const realCompositeGridFunction & uFrom,
 
 int InterpolatePointsOnAGrid::
 interpolatePoints(const realCompositeGridFunction & u,
-		  RealArray & uInterpolated, 
-		  const Range & R0/* =nullRange */,           
-		  const Range & R1/* =nullRange */,
-		  const Range & R2/* =nullRange */,
-		  const Range & R3/* =nullRange */,
-		  const Range & R4/* =nullRange */ )
+                  RealArray & uInterpolated, 
+                  const Range & R0/* =nullRange */,           
+                  const Range & R1/* =nullRange */,
+                  const Range & R2/* =nullRange */,
+                  const Range & R3/* =nullRange */,
+                  const Range & R4/* =nullRange */ )
 //=======================================================================================================
 /// \brief Given some points in space, determine the values of a grid function u.
 ///
@@ -2290,14 +2290,14 @@ interpolatePoints(const realCompositeGridFunction & u,
     {
       cout << "interpolatePoints:ERROR: the component Range R" << i << " is out of range! \n";
       printf("R%i =(%i,%i) but the dimensions for component %i of u are (%i,%i) \n",i,
-	     Ra[i].getBase(),Ra[i].getBound(),i,u.getComponentBase(i),u.getComponentBound(i));
+             Ra[i].getBase(),Ra[i].getBound(),i,u.getComponentBase(i),u.getComponentBound(i));
       Overture::abort("error");
     }
     else if( i<3 && (Ra[i].getBase()<uInterpolated.getBase(i+1) || Ra[i].getBound()>uInterpolated.getBound(i+1)) )
     {
       cout << "interpolatePoints:ERROR: the component Range R" << i << " is out of range! \n";
       printf("R%i =(%i,%i) but the dimensions for index %i of uInterpolated are (%i,%i) \n",i,
-	     Ra[i].getBase(),Ra[i].getBound(),i+1,uInterpolated.getBase(i+1),uInterpolated.getBound(i+1));
+             Ra[i].getBase(),Ra[i].getBound(),i+1,uInterpolated.getBase(i+1),uInterpolated.getBound(i+1));
       Overture::abort("error");
     }
   }
@@ -2354,83 +2354,83 @@ interpolatePoints(const realCompositeGridFunction & u,
 //       // ...........Bi-Linear Interpolation:
 //       if( domainDimension==2 )
 //       {
-// 	const real *ugp = ug.Array_Descriptor.Array_View_Pointer2;
-// 	const int ugDim0=ug.getRawDataSize(0);
-// 	const int ugDim1=ug.getRawDataSize(1);
+//      const real *ugp = ug.Array_Descriptor.Array_View_Pointer2;
+//      const int ugDim0=ug.getRawDataSize(0);
+//      const int ugDim1=ug.getRawDataSize(1);
 // #define UG(i0,i1,i2) ugp[i0+ugDim0*(i1+ugDim1*(i2))]
 
-// 	for( int c0=Ra[0].getBase(); c0<=Ra[0].getBound(); c0++)  // *** add more components ****
-// 	{
-// 	  for( int i=0; i<num; i++ )
-// 	  {
-// 	    UINTERPOLATED(IA(i),c0)= 
-// 	      (1.-DRA(i,1))*(
-// 		(1.-DRA(i,0))*UG(IP (i,0),IP(i,1),c0)
-// 		   +DRA(i,0) *UG(IP1(i,0),IP(i,1),c0))
-// 	      + DRA(i,1) *(
-// 		(1.-DRA(i,0))*UG( IP(i,0),IP1(i,1),c0)
-// 		   +DRA(i,0) *UG(IP1(i,0),IP1(i,1),c0));
+//      for( int c0=Ra[0].getBase(); c0<=Ra[0].getBound(); c0++)  // *** add more components ****
+//      {
+//        for( int i=0; i<num; i++ )
+//        {
+//          UINTERPOLATED(IA(i),c0)= 
+//            (1.-DRA(i,1))*(
+//              (1.-DRA(i,0))*UG(IP (i,0),IP(i,1),c0)
+//                 +DRA(i,0) *UG(IP1(i,0),IP(i,1),c0))
+//            + DRA(i,1) *(
+//              (1.-DRA(i,0))*UG( IP(i,0),IP1(i,1),c0)
+//                 +DRA(i,0) *UG(IP1(i,0),IP1(i,1),c0));
 
-// //  	    if( c0==3 )
-// //  	    {
-// //  	      printf(" grid=%i i=%i ia=%i dra=(%7.1e,%7.1e) ip=(%i,%i) ip1=(%i,%i) gid=%i,%i "
+// //       if( c0==3 )
+// //       {
+// //         printf(" grid=%i i=%i ia=%i dra=(%7.1e,%7.1e) ip=(%i,%i) ip1=(%i,%i) gid=%i,%i "
 // //                       "u=(%9.3e,%9.3e,%9.3e,%9.3e) uI=%9.3e\n",
-// //  		     grid,i,ia(i),dra(i,0),dra(i,1),
-// //  		     ip(i,0),ip(i,1),ip1(i,0),ip1(i,1),
+// //                grid,i,ia(i),dra(i,0),dra(i,1),
+// //                ip(i,0),ip(i,1),ip1(i,0),ip1(i,1),
 // //                       gid(0,0),gid(1,0),
 // //                       UG(IP (i,0),IP(i,1),c0),UG(IP1(i,0),IP(i,1),c0),
 // //                       UG( IP(i,0),IP1(i,1),c0),UG(IP1(i,0),IP1(i,1),c0),
 // //                       uInterpolated(ia(i),c0));
-// //  	    }
+// //       }
 
-// 	  }
-// 	}
+//        }
+//      }
 //       }
 //       else // 3D
 //       {
-// 	const real *ugp = ug.Array_Descriptor.Array_View_Pointer3;
-// 	const int ugDim0=ug.getRawDataSize(0);
-// 	const int ugDim1=ug.getRawDataSize(1);
-// 	const int ugDim2=ug.getRawDataSize(2);
+//      const real *ugp = ug.Array_Descriptor.Array_View_Pointer3;
+//      const int ugDim0=ug.getRawDataSize(0);
+//      const int ugDim1=ug.getRawDataSize(1);
+//      const int ugDim2=ug.getRawDataSize(2);
 // #undef UG
 // #define UG(i0,i1,i2,i3) ugp[i0+ugDim0*(i1+ugDim1*(i2+ugDim2*(i3)))]
 
-// 	for( int c0=Ra[0].getBase(); c0<=Ra[0].getBound(); c0++)  // *** add more components ****
-// 	{
-// 	  for( int i=0; i<num; i++ )
-// 	  {
+//      for( int c0=Ra[0].getBase(); c0<=Ra[0].getBound(); c0++)  // *** add more components ****
+//      {
+//        for( int i=0; i<num; i++ )
+//        {
 
-// 	    UINTERPOLATED(IA(i),c0)= 
+//          UINTERPOLATED(IA(i),c0)= 
 //               (1.-DRA(i,2))*(
-//   	        (1.-DRA(i,1))*(
-// 		  (1.-DRA(i,0))*UG(IP (i,0),IP(i,1),IP(i,2),c0)
-// 		     +DRA(i,0) *UG(IP1(i,0),IP(i,1),IP(i,2),c0))
-// 	          + DRA(i,1) *(
-// 	  	  (1.-DRA(i,0))*UG( IP(i,0),IP1(i,1),IP(i,2),c0)
-// 		     +DRA(i,0) *UG(IP1(i,0),IP1(i,1),IP(i,2),c0))
-// 		            )
+//              (1.-DRA(i,1))*(
+//                (1.-DRA(i,0))*UG(IP (i,0),IP(i,1),IP(i,2),c0)
+//                   +DRA(i,0) *UG(IP1(i,0),IP(i,1),IP(i,2),c0))
+//                + DRA(i,1) *(
+//                (1.-DRA(i,0))*UG( IP(i,0),IP1(i,1),IP(i,2),c0)
+//                   +DRA(i,0) *UG(IP1(i,0),IP1(i,1),IP(i,2),c0))
+//                          )
 //                  + DRA(i,2)*(
-//   	        (1.-DRA(i,1))*(
-// 	  	  (1.-DRA(i,0))*UG(IP (i,0),IP(i,1),IP1(i,2),c0)
-// 		     +DRA(i,0) *UG(IP1(i,0),IP(i,1),IP1(i,2),c0))
-// 	         + DRA(i,1) *(
-// 	  	  (1.-DRA(i,0))*UG( IP(i,0),IP1(i,1),IP1(i,2),c0)
-// 		     +DRA(i,0) *UG(IP1(i,0),IP1(i,1),IP1(i,2),c0))
-// 		           );
+//              (1.-DRA(i,1))*(
+//                (1.-DRA(i,0))*UG(IP (i,0),IP(i,1),IP1(i,2),c0)
+//                   +DRA(i,0) *UG(IP1(i,0),IP(i,1),IP1(i,2),c0))
+//               + DRA(i,1) *(
+//                (1.-DRA(i,0))*UG( IP(i,0),IP1(i,1),IP1(i,2),c0)
+//                   +DRA(i,0) *UG(IP1(i,0),IP1(i,1),IP1(i,2),c0))
+//                         );
 
-// // 	    if( i==26112 ) // IA(i)==30843 )
-// // 	    {
-// // 	      printF(" @@interp: i=%i ia=%i ip=(%i,%i,%i) ip1=(%i,%i,%i) dra=(%9.3e,%9.3e,%9.3e)\n",
-// // 		     i,IA(i),IP (i,0),IP(i,1),IP(i,2),IP1(i,0),IP1(i,1),IP1(i,2),DRA(i,0),DRA(i,1),DRA(i,2));
+// //       if( i==26112 ) // IA(i)==30843 )
+// //       {
+// //         printF(" @@interp: i=%i ia=%i ip=(%i,%i,%i) ip1=(%i,%i,%i) dra=(%9.3e,%9.3e,%9.3e)\n",
+// //                i,IA(i),IP (i,0),IP(i,1),IP(i,2),IP1(i,0),IP1(i,1),IP1(i,2),DRA(i,0),DRA(i,1),DRA(i,2));
 // //               printF(" @@interp:  uInterp=%9.3e  u=[%9.3e,%9.3e][%9.3e,%9.3e][%9.3e,%9.3e][%9.3e,%9.3e]\n",
-// // 		     UINTERPOLATED(IA(i),c0), UG(IP (i,0),IP(i,1),IP(i,2),c0),UG(IP1(i,0),IP(i,1),IP(i,2),c0),
-// // 		     UG( IP(i,0),IP1(i,1),IP(i,2),c0),UG(IP1(i,0),IP1(i,1),IP(i,2),c0),
+// //                UINTERPOLATED(IA(i),c0), UG(IP (i,0),IP(i,1),IP(i,2),c0),UG(IP1(i,0),IP(i,1),IP(i,2),c0),
+// //                UG( IP(i,0),IP1(i,1),IP(i,2),c0),UG(IP1(i,0),IP1(i,1),IP(i,2),c0),
 // //                      UG(IP (i,0),IP(i,1),IP1(i,2),c0),UG(IP1(i,0),IP(i,1),IP1(i,2),c0),
 // //                      UG( IP(i,0),IP1(i,1),IP1(i,2),c0),UG(IP1(i,0),IP1(i,1),IP1(i,2),c0));
-// // 	    }
+// //       }
 
-// 	  }
-// 	}
+//        }
+//      }
 //       }
 //     } // end if num>0
     
