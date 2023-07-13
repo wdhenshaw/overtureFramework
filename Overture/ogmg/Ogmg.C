@@ -3015,9 +3015,11 @@ printStatistics(FILE *file_ /* =stdout */) const
                 (const char *)parameters.smootherName[smooth],
                  parameters.numberOfSmooths(0,level),parameters.numberOfSmooths(1,level));
       }
+      aString activeStatus =  parameters.activeGrids(grid) ? "active" : "inactive";
       fPrintF(file,
-              " : %s \n"
-              "         bc=",(const char*)mgcg[grid].getName());
+              " : %s (%s)\n"
+              "         bc=",(const char*)mgcg[grid].getName(),(const char*)activeStatus);
+
       for( int axis=0; axis<mgcg.numberOfDimensions(); axis++ )
       {
         fPrintF(file,"[");

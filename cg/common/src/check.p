@@ -292,7 +292,7 @@ foreach $cmdCommand ( @cmdFiles )
         }
         else
         {
-          if( $verbose ){ printf("      ... \"$checkFilePrefix\" appears to be correct\n"); }
+          if( $verbose ){ printf("      ... \"$checkFilePrefix\" appears to be correct\n"); }else{ printf("%d,",$m+1); }
         }
       }
       else
@@ -312,7 +312,7 @@ foreach $cmdCommand ( @cmdFiles )
     printf("check.p: ERROR: The command file $cmdName.cmd not found!\n");
   }
 }
-
+if( $verbose == 0 ){ printf("\n"); }
 if ( $numberOfErrors == 0 )
 {
   printf("========================================================\n");

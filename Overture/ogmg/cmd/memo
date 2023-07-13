@@ -1,8 +1,149 @@
 set ogmgt = $ogmg/ogmgt
 
+set ogmgOld = $ogmg/ogmgOld
+
 set ogmgt = /home/liuc10/overtureFramework/Overture/ogmg/ogmgt
 
 set ogmgp = $ogmg/ogmgt
+
+
+****************************
+****** Sat May 20, 2023
+
+
+TEST: OK
+$ogmgt tz -noplot -g=darkCornerRoom3dGride2.order2.ml2.hdf -autoChoose=1 -debug=1 
+Iteration=1..10 : Total WU=5.09e+01, total res reduction=2.60e-13, ave CR=0.0551 ave ECR=0.566 np=1
+
+
+TEST: OK
+$ogmgt tz -noplot -g=darkCornerRoom3dGride2.order2.ml1.hdf -autoChoose=1 -debug=1 
+
+Iteration=1..10 : Total WU=5.38e+01, total res reduction=6.72e-14, ave CR=0.0482 ave ECR=0.569 np=1
+
+
+CONTINUE : activeGrids
+
+DO NOT SMOOTH if in-active
+DO NOT COMPUTE DEFECT if in-active
+
+Converges but can be flow
+$ogmgt tz -noplot -g=sise8.order2 -autoChoose=1 -autoSmooth=1 -maxIt=200 -orderCoarse=2 -debug=1 -ssr=1 -eqn=heat -inactive=0
+
+Iteration=1..14 : Total WU=1.21e+02, total res reduction=1.28e-11, ave CR=0.1667 ave ECR=0.813 np=1
+Maximum error on grid:    outer-square = 6.41e-06, max relative error=6.41e-06 (includes 0 ghost)
+Maximum error on grid:    inner-square = 8.67e-05, max relative error=8.67e-05 (includes 0 ghost)
+Maximum error on grid:    outer-square = 6.41e-06, max relative error=6.41e-06 (includes 1 ghost)
+Maximum error on grid:    inner-square = 8.67e-05, max relative error=8.67e-05 (includes 1 ghost)
+
+
+$ogmgt tz -noplot -g=sise8.order2 -autoChoose=1 -autoSmooth=1 -maxIt=200 -orderCoarse=2 -debug=1 -ssr=1 -eqn=heat -inactive=1
+Iteration=1..95 : Total WU=4.35e+02, total res reduction=6.98e-14, ave CR=0.7270 ave ECR=0.933 np=1
+  MaxRes=8.95e-11, TR10=2.31e-02 (time to reduce residual by a factor of 10) TR10/(M/np)=6.70e-01
+Maximum error on grid:    outer-square = 3.67e-05, max relative error=3.67e-05 (includes 0 ghost)
+Maximum error on grid:    inner-square = 0.00e+00, max relative error=0.00e+00 (includes 0 ghost)
+Maximum error on grid:    outer-square = 3.67e-05, max relative error=3.67e-05 (includes 1 ghost)
+Maximum error on grid:    inner-square = 4.39e-06, max relative error=4.39e-06 (includes 1 ghost)
+
+
+
+$ogmgOld tz -noplot -g=sise8.order2 -autoChoose=1 -autoSmooth=1 -maxIt=9 -orderCoarse=2 -debug=1 -ssr=1 -eqn=heat -inactive=1
+
+AUTO-SMOOTH is messed up if grid=0 is inactive
+
+$ogmgOld tz -noplot -g=sise4.order2 -autoChoose=0 -autoSmooth=0 -maxIt=9 -orderCoarse=2 -debug=1 -ssr=1 -eqn=heat -inactive=1
+
+$ogmgt tz -noplot -g=sise4.order2 -autoChoose=0 -autoSmooth=0 -maxIt=9 -orderCoarse=2 -debug=1 -ssr=1 -eqn=heat -inactive=1
+
+0=aCTIVE
+Maximum error on grid:    outer-square = 8.04e-03, max relative error=8.04e-03 (includes 0 ghost)
+Maximum error on grid:    inner-square = 0.00e+00, max relative error=0.00e+00 (includes 0 ghost)
+Maximum error on grid:    outer-square = 8.04e-03, max relative error=8.04e-03 (includes 1 ghost)
+Maximum error on grid:    inner-square = 8.04e-03, max relative error=8.04e-03 (includes 1 ghost)
+
+ALL ACTIVE: 
+Maximum error on grid:    outer-square = 1.34e-04, max relative error=1.34e-04 (includes 0 ghost)
+Maximum error on grid:    inner-square = 3.62e-04, max relative error=3.62e-04 (includes 0 ghost)
+Maximum error on grid:    outer-square = 1.34e-04, max relative error=1.34e-04 (includes 1 ghost)
+Maximum error on grid:    inner-square = 3.62e-04, max relative error=3.62e-04 (includes 1 ghost)
+
+
+
+$ogmgt tz -noplot -g=sise2.order2 -autoChoose=0 -autoSmooth=0 -maxIt=9 -orderCoarse=2 -debug=1 -ssr=1 -eqn=heat -inactive=0
+
+teration=1..9 : Total WU=2.26e+01, total res reduction=1.26e-06, ave CR=0.2211 ave ECR=0.548 np=1
+
+
+$ogmgt tz -noplot -g=sise2.order2 -autoChoose=0 -autoSmooth=0 -maxIt=9 -orderCoarse=2 -debug=1 -ssr=1 -eqn=heat -inactive=1
+
+inactive=0 : trouble: 
+Iteration=1..9 : Total WU=2.81e+01, total res reduction=1.09e-06, ave CR=0.2176 ave ECR=0.614 np=1
+
+inactive=1
+Iteration=1..9 : Total WU=3.50e+01, total res reduction=5.85e-10, ave CR=0.0942 ave ECR=0.545 np=1
+
+$ogmgt tz -noplot -g=sise1.order2 -autoChoose=0 -maxIt=2 -orderCoarse=2 -debug=3 -ssr=1 -eqn=heat -inactive=1
+
+
+$ogmgt tz -noplot -g=sise2.order2 -autoChoose=0 -maxIt=9 -orderCoarse=2 -debug=1 -ssr=1 -eqn=heat -inactive=1
+
+
+NUMBER OF SUB-SMOOTHS IS WRONG 
+grid 0 : rb[1,1] rb[1,1] rb[1,1]  : outer-square (inactive)
+         bc=[dirichlet,dirichlet] [dirichlet,dirichlet] 
+         ave no. of subSmooths: l0= 1.0, l1= 1.0, l2= 0.0, 
+         gid=[0,40][0,40][0,0], gridPoints=2025 ( 76.42%).
+grid 1 : rb[1,1] rb[1,1] rb[1,1]  : inner-square (active)
+         bc=[interp,interp] [interp,interp] 
+         ave no. of subSmooths: l0= 7.9, l1= 7.8, l2= 0.0, 
+         gid=[0,20][0,20][0,0], gridPoints=625 ( 23.58%).
+
+
+
+
+
+-inactive=1: 
+Iteration=1..9 : Total WU=3.98e+01, total res reduction=3.34e-05, ave CR=0.3182 ave ECR=0.772 np=1
+-inactive=0
+Iteration=1..8 : Total WU=6.64e+01, total res reduction=1.03e-11, ave CR=0.0423 ave ECR=0.683 np=1
+
+all active: 
+Iteration=1..9 : Total WU=3.98e+01, total res reduction=1.28e-10, ave CR=0.0796 ave ECR=0.565 np=1
+
+****************************
+****** Fri May 19, 2023
+
+START FIXES FOR ACTIVE OR INACTIVE GRIDS (from explicit-implicit timestepping)
+
+ogmgt : SET INITIAL GUESS FOR INACTIVE GRIDS --> COULD ALSO DO IN OGMG ***************
+
+$ogmgt tz -noplot -g=sise2.order2 -autoChoose=0 -maxIt=9 -orderCoarse=2 -debug=1 -ssr=1 -eqn=heat 
+
+Iteration=1..9 : Total WU=3.98e+01, total res reduction=1.28e-10, ave CR=0.0796 ave ECR=0.565 np=1
+
+
+
+$ogmgt tz -noplot -g=square8.order2 -autoChoose=1 -maxIt=2 -debug=7 -ssr=1 -eqn=heat -inactive=0
+
+$ogmgt tz -noplot -g=square16.order2 -autoChoose=1 -maxIt=9 -orderCoarse=2 -debug=3 -eqn=heat -inactive=0
+
+
+$ogmgt tz -noplot -g=sise2.order2 -autoChoose=0 -maxIt=9 -orderCoarse=2 -debug=1 -eqn=heat
+
+
+$ogmgt tz -noplot -g=sise2.order2 -autoChoose=0 -maxIt=9 -orderCoarse=2 -debug=1 -eqn=heat
+
+
+Heat:
+Equation: I + c0*Delta.
+# set coefficient in the heat equation operator : I - nuDt*Delta
+nuDt $nuDt
+Setting nuDt= 1.00e-01 for the heat equation option
+
+Iteration=1..9 : Total WU=3.98e+01, total res reduction=7.72e-11, ave CR=0.0752 ave ECR=0.557 np=1
+
+Laplace:
+Iteration=1..9 : Total WU=4.00e+01, total res reduction=1.57e-10, ave CR=0.0814 ave ECR=0.568 np=1
 
 
 ****************************

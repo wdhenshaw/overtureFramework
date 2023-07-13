@@ -41,6 +41,7 @@ public:
     ghost2=4,
     ghost3=5,
     ghost4=6,
+    active=7,  // make an unused point active
     interpolation=-1,
     periodic=-2,
     extrapolation=-3,

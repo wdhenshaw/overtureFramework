@@ -110,8 +110,8 @@ smooth(const int & level, int numberOfSmoothingSteps, int cycleNumber )
 
           if( debug & 4 ) printF("Ogmg:smooth:INFO:compute defect for auto-smooth: cycleNumber=%i level=%i\n",cycleNumber,level);
           
-    // **** should compute defect and l2norms on a sub-set of points for speed.
-    if( false )
+          // **** should compute defect and l2norms on a sub-set of points for speed.
+          if( false )
           {
             defect(level);  // we could probably avoid this sometimes *****************************************
 
@@ -121,7 +121,7 @@ smooth(const int & level, int numberOfSmoothingSteps, int cycleNumber )
 
             // printF(" smooth: compute defect for autosmooth: iteration=%i level=%i \n",iteration,level);
           
-          // **workUnits(level)+=1.;  // *wdh* added 030711 
+            // **workUnits(level)+=1.;  // *wdh* added 030711 
             for( int grid=0; grid<mgcg.multigridLevel[level].numberOfComponentGrids(); grid++ )
             {
               defectRatio(grid,level)=l2Norm(defectMG.multigridLevel[level][grid]);
@@ -354,11 +354,18 @@ smooth(const int & level, int numberOfSmoothingSteps, int cycleNumber )
       const OgmgParameters::SmootherTypeEnum smootherType =  
                    OgmgParameters::SmootherTypeEnum(parameters.smootherType(grid,level));
       
-      if( false && !active(grid) && cycleNumber>0 && level==0 )
-      {
+      if( !active(grid) )   // *wdh* May 20, 2023
+      { // skip this grid
         interpolate(uMG.multigridLevel[level],grid,level);
-        continue;   // skip this grid if it is not active and it is not the first cycle.
+        continue; 
       }
+      
+      // OLD: 
+      // if( false && !active(grid) && cycleNumber>0 && level==0 )
+      // {
+      //   interpolate(uMG.multigridLevel[level],grid,level);
+      //   continue;   // skip this grid if it is not active and it is not the first cycle.
+      // }
       
       if( grid!=gridStart || ( newInterpolationMethod && iteration>0 ) || !parameters.interpolateAfterSmoothing)
       {
@@ -542,7 +549,8 @@ applyOgesSmoother(const int level, const int grid)
 {
   // printF("Entering applyOgesSmoother: level=%i grid=%i\n",level,grid);
 
-  if( grid!=parameters.activeGrids(0) )  // This smooth does all grids in the activeGrids list at once.
+  IntegerArray & ogesActiveGrids = parameters.dbase.get<IntegerArray>("ogesActiveGrids");
+  if( grid!=ogesActiveGrids(0) )  // This smooth does all grids in the ogesActiveGrids list at once.
     return; 
 
   CompositeGrid & mgcg = multigridCompositeGrid();
@@ -561,7 +569,7 @@ applyOgesSmoother(const int level, const int grid)
       ogesSmoother[l].updateToMatchGrid( cg );
       ogesSmoother[l].setOgesParameters(*parameters.ogesSmoothParameters);
 
-      ogesSmoother[l].setGridsToUse(parameters.activeGrids);
+      ogesSmoother[l].setGridsToUse(ogesActiveGrids);
 
       realCompositeGridFunction & coeff =  cMG.multigridLevel[l];
       // the coeff array needs to have the interpolation equations set for the active grids.
@@ -569,7 +577,7 @@ applyOgesSmoother(const int level, const int grid)
       // printF("***applyOgesSmoother:before finishBC coeff.getIsACoefficientMatrix()=%i\n",coeff.getIsACoefficientMatrix());
 
       CompositeGridOperators & op = operatorsForExtraLevels[l];
-      op.finishBoundaryConditions(coeff,bcParams,nullRange,parameters.activeGrids);
+      op.finishBoundaryConditions(coeff,bcParams,nullRange,ogesActiveGrids);
       
       ogesSmoother[l].setCoefficientArray(coeff);
 

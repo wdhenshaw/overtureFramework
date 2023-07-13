@@ -313,28 +313,28 @@ sub outputMacroDefinitions {
     # -- output inline macros ---
     for( $ii=0;  $ii< $numberOfInlineMacros; $ii++ )
     {
-	print MFILE "#defineMacro $inlineMacroNames[$ii]($inlineMacroArgs[$ii]) ";
-	@macro = @{@inlineMacroDefinitions[$ii]};
+        print MFILE "#defineMacro $inlineMacroNames[$ii]($inlineMacroArgs[$ii]) ";
+        @macro = @{@inlineMacroDefinitions[$ii]};
 
-	foreach $line ( @macro ) 
+        foreach $line ( @macro ) 
         {
-	  print MFILE $line;
-	}
+          print MFILE $line;
+        }
         print MFILE "\n\n"; 
     }
 
     # -- output normal macros ---
     for( $ii=0;  $ii< $numberOfMacros; $ii++ )
     {
-	# print MFILE "****** MACRO $ii ($macroNames[$ii]) (args=$macroArgs[$ii]) ***** \n";
-	print MFILE "#beginMacro $macroNames[$ii]($macroArgs[$ii])\n";
-	@macro = @{@macroDefinitions[$ii]};
+        # print MFILE "****** MACRO $ii ($macroNames[$ii]) (args=$macroArgs[$ii]) ***** \n";
+        print MFILE "#beginMacro $macroNames[$ii]($macroArgs[$ii])\n";
+        @macro = @{@macroDefinitions[$ii]};
 
-	foreach $line ( @macro ) 
+        foreach $line ( @macro ) 
         {
-	  print MFILE $line;
-	}
-	print MFILE "#endMacro\n\n";
+          print MFILE $line;
+        }
+        print MFILE "#endMacro\n\n";
     }
 
 
@@ -376,21 +376,21 @@ sub getArguments # ($s,$a)
         # printf("s=[$s], c=[$c]\n");
         if( $c eq '(' )
         {
-	  $l++; 
+          $l++; 
         }
-	elsif( $c eq ')' )
-	{
-	  if( $l == 0 ){ last; }
-	  $l--;
-	}
-	if( $l==0 && $c eq ',' )
-	{
-	  $n++; 
-	}
-	else
-	{
-	  $ag[$n] .= $1;
-	}
+        elsif( $c eq ')' )
+        {
+          if( $l == 0 ){ last; }
+          $l--;
+        }
+        if( $l==0 && $c eq ',' )
+        {
+          $n++; 
+        }
+        else
+        {
+          $ag[$n] .= $1;
+        }
       }
       # printf("expr = [$r]\n");
     }
@@ -450,20 +450,20 @@ sub replaceArgument # ($s,$a,$replace)
       # printf("s=[$s], c=[$c]\n");
       if( $c eq '(' )
       {
-	$l++; 
+        $l++; 
       }
       elsif( $c eq ')' )
       {
-	if( $l == 0 ){ last; }
-	$l--;
+        if( $l == 0 ){ last; }
+        $l--;
       }
       if( $l==0 && $c eq ',' )
       {
-	$n++; 
+        $n++; 
       }
       else
       {
-	# $ag[$n] .= $1;
+        # $ag[$n] .= $1;
       }
     }
     # printf("expr = [$r]\n");
@@ -547,64 +547,64 @@ sub splitfor # ($_)
       $c = substr($s,$i,1); # get i th character
       if( $c =~/[,\(\)\+\-\* ]/ ) # split at these characters
       {
-	$j=$i+1;  # remember this position
+        $j=$i+1;  # remember this position
       }
       
       if( $i >$maxNum-3 )
       {
-	# split the string at $j
-	if( $j==-1 )
-	{
-	  printf("splitfor:ERROR: unable to split the string: s=[$s]\n ...perhaps you can add a blank to the line.\n");
-	  exit 1;
-	}
+        # split the string at $j
+        if( $j==-1 )
+        {
+          printf("splitfor:ERROR: unable to split the string: s=[$s]\n ...perhaps you can add a blank to the line.\n");
+          exit 1;
+        }
         # print "splitfor: split at j=$j, i=$i\n";
-	# kkc 100928 added fortran free format continuations
-	if ( $fortranFreeForm==0 ) 
-	{
-	    if( $num==0 )
-	    {
-		printout(substr($s,0,$j)."\n");
-		$maxNum=$maxNum-8;  #  we allow fewer on subsequent lines since we add "    & "
-	    }
-	    else
-	    {
-		printout("     & ".substr($s,0,$j)."\n");
-	    }
-	} else 
-	{
-	    if( $num==0 )
-	    {
-		printout(substr($s,0,$j));
-		$maxNum=$maxNum-8;  #  we allow fewer on subsequent lines since we add "    & "
-	    }
-	    else
-	    {
-		printout("     &\n".substr($s,0,$j));
-	    }
-	}
+        # kkc 100928 added fortran free format continuations
+        if ( $fortranFreeForm==0 ) 
+        {
+            if( $num==0 )
+            {
+                printout(substr($s,0,$j)."\n");
+                $maxNum=$maxNum-8;  #  we allow fewer on subsequent lines since we add "    & "
+            }
+            else
+            {
+                printout("     & ".substr($s,0,$j)."\n");
+            }
+        } else 
+        {
+            if( $num==0 )
+            {
+                printout(substr($s,0,$j));
+                $maxNum=$maxNum-8;  #  we allow fewer on subsequent lines since we add "    & "
+            }
+            else
+            {
+                printout("     &\n".substr($s,0,$j));
+            }
+        }
 
         $num++;
-	$s=substr($s,$j);  # get the rest of the string
-	$i=0;
-	$j=-1;
-	$len=length($s);
+        $s=substr($s,$j);  # get the rest of the string
+        $i=0;
+        $j=-1;
+        $len=length($s);
       }
       if( $len>0 && $len < $maxNum )
       { # print final part of line now that it is short enough
         if( $num==0 )
         {
-	  printout("      ".$s."\n");
+          printout("      ".$s."\n");
         }
         else
         {
-	    # kkc 100928 added fortran free format continuations
-	    if ( $fortranFreeForm==0 ) 
-	    {
-		printout("     & ".$s."\n");
-	    } else {
-		printout("     &\n".$s."\n");
-	    }
+            # kkc 100928 added fortran free format continuations
+            if ( $fortranFreeForm==0 ) 
+            {
+                printout("     & ".$s."\n");
+            } else {
+                printout("     &\n".$s."\n");
+            }
         }
         $len=-1;
       }
@@ -667,7 +667,7 @@ sub substituteInlineMacros
       {  
         for( $jj=$ii+1; $jj<=$#margs; $jj++ )
         {
-	  if( $ag[$ii] eq $margs[$jj] )
+          if( $ag[$ii] eq $margs[$jj] )
           {
             printf("bpp:substituteMacros:ERROR: at line $. :macro=[$name] actual args conflict with dummy args\n");
             printf(" The actual arg $ag[$ii] equals a later dummy arg, $margs[$jj]\n");
@@ -733,38 +733,38 @@ sub substituteInlineMacros
           
           }
           $ii++;
- 	}
+        }
         # wdh 041121 $line =~ s/[ \t]\#\#[ \t]*//g;   # replace Stuff ## stuff by Stuffstuff
         $line =~ s/[ \t]?\#\#[ \t]?//g;   # replace Stuff ## stuff by Stuffstuff
 
         if( $debug > 1 ){printf("inline: After replacing args: line=[$line]\n");}
 
- 	if( $line =~ /^[ \t]*\#peval / )
- 	{   # kkc 090225 if the line begins with peval evaluate the perl first
- 	    # evaluate any embedded perl expressions and then continue processing the line
+        if( $line =~ /^[ \t]*\#peval / )
+        {   # kkc 090225 if the line begins with peval evaluate the perl first
+            # evaluate any embedded perl expressions and then continue processing the line
 
- 	    $line =~ s/\#peval //;  # note: leave blanks for indentation
- 	    # chop($line);
- 	    # printf(" bpp: ORDER=$ORDER\n");
- 	    if( $debug>1 ){ printf("peval: evaluate the line : [$line]\n"); }
+            $line =~ s/\#peval //;  # note: leave blanks for indentation
+            # chop($line);
+            # printf(" bpp: ORDER=$ORDER\n");
+            if( $debug>1 ){ printf("peval: evaluate the line : [$line]\n"); }
     
- 	    $line = eval('"' . $line . '";');
- 	    # $_ =~ s/^[ \t]*\#peval//; # for indentation
- 	    if( $debug>1 ){ printf("peval: result: $line"); }
- 	}
+            $line = eval('"' . $line . '";');
+            # $_ =~ s/^[ \t]*\#peval//; # for indentation
+            if( $debug>1 ){ printf("peval: result: $line"); }
+        }
 
         # printouti($line);    # should really push this onto the inputStack
 
-	# splitfor($line);
+        # splitfor($line);
         # printout($line);
         # if( $fortran==1 && $line =~ /^[cC]/ )
         # {
           push(@newMacro,$line);  # do not indent comments
-	# } 
+        # } 
         # else
         # {
           push(@newMacro,$indent.$line);  # should we bother indenting the line?
-	# }
+        # }
       }    
 
       # put this new macro onto the input stack -- push lines in reverse order since this is a FIFO queue
@@ -852,7 +852,7 @@ sub substituteMacros
       {  
         for( $jj=$ii+1; $jj<=$#margs; $jj++ )
         {
-	  if( $ag[$ii] eq $margs[$jj] )
+          if( $ag[$ii] eq $margs[$jj] )
           {
             printf("bpp:substituteMacros:ERROR: at line $. :macro=[$name] actual args conflict with dummy args\n");
             printf(" The actual arg $ag[$ii] equals a later dummy arg, $margs[$jj]\n");
@@ -915,14 +915,14 @@ sub substituteMacros
           
           }
           $ii++;
- 	}
+        }
         $line =~ s/[ \t]\#\#[ \t]*//g;   # replace Stuff ## stuff by Stuffstuff
 
         # printf("After line=[$line]\n");
 
         # printouti($line);    # should really push this onto the inputStack: 
 
-	# splitfor($line);
+        # splitfor($line);
         # printout($line);
         if( $fortran==1 && ( $line =~ /^[cC]/ || $line =~/^[ \t]*\#/ ) )
         {
@@ -934,11 +934,11 @@ sub substituteMacros
           {
             push(@newMacro,$line);  # do not indent comments or lines beginning with #  (preprocessor directives)
           }
-	} 
+        } 
         else
         {
           push(@newMacro,$indent.$line);  # should we bother indenting the line?
-	}
+        }
       }    
 
       # put this new macro onto the input stack -- push lines in reverse order since this is a FIFO queue
@@ -1004,7 +1004,7 @@ sub processIfStatement()
       if( $line =~ /^[ \t]*#If\b/ ){ $level++; } # nested #IF, increase level
       if( $line =~ /^[ \t]*#End\b/ )
       { 
-  	if( $level==0 ){ if( $clean==0 ){ printouti("! $line");} last;}  # End found
+        if( $level==0 ){ if( $clean==0 ){ printouti("! $line");} last;}  # End found
         $level--; 
       }
 
@@ -1057,7 +1057,7 @@ sub processIfStatement()
       if( $line =~ /^[ \t]*#If\b/ ){ $level++; } # nested #IF, increase level
       if( $line =~ /^[ \t]*#End\b/ )
       { 
-	if( $level==0 ){ if( $clean==0 ){ printouti("! $line");} last;}  # End found
+        if( $level==0 ){ if( $clean==0 ){ printouti("! $line");} last;}  # End found
         $level--; 
       }
 
@@ -1097,10 +1097,10 @@ sub openOutputFile
       # printf(" first line =$_");
       if( !( $_ =~ /$header/) )
       {
-	printf("ERROR:output file=[$outfile]  already exists but has not been generated by bpp!\n");
-	printf("  I will not over-write it.\n");
-	printf(" first line =[$_]");
-	exit (1);
+        printf("ERROR:output file=[$outfile]  already exists but has not been generated by bpp!\n");
+        printf("  I will not over-write it.\n");
+        printf(" first line =[$_]");
+        exit (1);
       }
       close(OUTFILE);
     }
@@ -1397,13 +1397,13 @@ foreach $fileName ( @fileNames )  # process all files
       while( <INCLUDE> )
       {
            
-	while( /\\$/ )
-	{ # concatentate continuation lines
-	  $cc = <INCLUDE>;
-	  $cc =~ s/^[ ]*//; # remove leading blanks
-	  chop($_); chop($_);
-	  $_ = $_ . $cc;
-	}
+        while( /\\$/ )
+        { # concatentate continuation lines
+          $cc = <INCLUDE>;
+          $cc =~ s/^[ ]*//; # remove leading blanks
+          chop($_); chop($_);
+          $_ = $_ . $cc;
+        }
 
         push(@block,$_);
       }          

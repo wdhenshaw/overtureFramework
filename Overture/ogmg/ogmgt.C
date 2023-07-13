@@ -369,6 +369,7 @@ main(int argc, char *argv[])
       "neumann",
       "mixed",
       "neumann2",
+      "inactive grids",
     "<bc(side,axis,grid)=[1=dirichlet][2=neumann][3=mixed]",
     "bcNumber<num>=[d|n|m|e]",
     "change parameters",
@@ -382,7 +383,7 @@ main(int argc, char *argv[])
     "adjust singular equations",
     "nuDt",
     "random initial conditions",
-// too late    "order of accuracy",
+    // too late    "order of accuracy",
     "exit",
     ""
   };
@@ -400,6 +401,10 @@ main(int argc, char *argv[])
   bool initialConditionsExact=false;
   bool randomInitialConditions =false;
   
+
+  IntegerArray activeGrids(cg.numberOfComponentGrids());
+  activeGrids=1; // all grids are active by default
+
   //  equationCoefficients(1,0)=0.;  // Grid 0 has the identity operator
   
 
@@ -590,6 +595,30 @@ main(int argc, char *argv[])
       sScanF(answer(len,answer.length()-1),"%e",&nuDt);
       printF("Setting nuDt=%9.2e for the heat equation option\n",nuDt);
     }
+    else if( len=answer.matches("inactive grids") )
+    {
+      printF("Set inactive grids : the operator is set to the identity on these grids.\n");
+      const int maxInactive=5;  //do this for now 
+      int ig[maxInactive]={-1,-1,-1,-1,-1};
+      sScanF(answer(len,answer.length()-1),"%i %i %i %i %i",&ig[0],&ig[1],&ig[2],&ig[3],&ig[4]);
+      for( int i=0; i<maxInactive; i++ )
+      {
+        int inactive = ig[i];
+        if( inactive>=0 && inactive<cg.numberOfComponentGrids() )
+        {
+          activeGrids(inactive)=0;
+          printF("Set inactive: set grid=%d to be inactive\n",inactive);          
+        }
+        else if( inactive>=cg.numberOfComponentGrids() )
+        {
+          printF("Set inactive: grid=%d is invalid, numberOfComponentGrids=%d\n",inactive,cg.numberOfComponentGrids());
+        }
+      }
+
+
+      if( sum(activeGrids)<cg.numberOfComponentGrids() )
+        par.setActiveGrids( activeGrids );
+    }
     else
     {
       printF("unknown response: [%s]\n",(const char*)answer);
@@ -601,7 +630,9 @@ main(int argc, char *argv[])
   printF("............... solvePredefined=%i\n",(int)solvePredefined);
 
   equationCoefficients(0,G)= 1.;  
-  equationCoefficients(1,G)=-nuDt;
+  equationCoefficients(1,G)=-nuDt; 
+  for( int grid=0; grid<cg.numberOfComponentGrids(); grid++ )
+    equationCoefficients(1,grid) *= 1.*activeGrids(grid); // turn off this coeff on inactive grids
 
   // Now build the multigrid levels
   printF("\n >>>>> Build the multigrid levels ...\n");
@@ -1276,6 +1307,10 @@ main(int argc, char *argv[])
         ffLocal(I1,I2,I3)=uLap;
       }
       
+      if( activeGrids(grid)==0 )
+      { // *wdh* May 19, 2023 -- inactive grid : set solution to true
+        uLocal(I1,I2,I3)=ue;
+      }
 
       if( false )
         ff[grid]=1.;

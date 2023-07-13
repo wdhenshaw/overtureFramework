@@ -36,6 +36,20 @@ int SparseRepForMGF::debug=0;
 //
 //\end{SparseRepInclude.tex}
 
+#define FOR_3D(i1,i2,i3,I1,I2,I3) \
+int I1Base =I1.getBase(),   I2Base =I2.getBase(),  I3Base =I3.getBase();  \
+int I1Bound=I1.getBound(),  I2Bound=I2.getBound(), I3Bound=I3.getBound(); \
+for(int i3=I3Base; i3<=I3Bound; i3++) \
+for(int i2=I2Base; i2<=I2Bound; i2++) \
+for(int i1=I1Base; i1<=I1Bound; i1++)
+
+#define FOR_3(i1,i2,i3,I1,I2,I3) \
+I1Base =I1.getBase(),   I2Base =I2.getBase(),  I3Base =I3.getBase();  \
+I1Bound=I1.getBound(),  I2Bound=I2.getBound(), I3Bound=I3.getBound(); \
+for(int i3=I3Base; i3<=I3Bound; i3++) \
+for(int i2=I2Base; i2<=I2Bound; i2++) \
+for(int i1=I1Base; i1<=I1Bound; i1++)
+
 //\begin{>>SparseRepInclude.tex}{\subsubsection{Constructors}}  
 SparseRepForMGF::
 SparseRepForMGF()
@@ -279,9 +293,9 @@ setOffset(int number)
 //\begin{>>SparseRepInclude.tex}{\subsubsection{updateToMatchGrid}}  
 int SparseRepForMGF::
 updateToMatchGrid(MappedGrid & mg, 
-		  int stencilSize0,        /* = unchanged */
-		  int numberOfGhostLines0, /* = unchanged */
-		  int numberOfComponents0, /* = unchanged */
+                  int stencilSize0,        /* = unchanged */
+                  int numberOfGhostLines0, /* = unchanged */
+                  int numberOfComponents0, /* = unchanged */
                   int offset0 /* = unchanged */ )
 //===============================================================================================
 // /Description:
@@ -360,11 +374,11 @@ updateToMatchGrid(MappedGrid & mg,
     for( e=0; e<numberOfComponents; e++ )                        
       for( c=0; c<numberOfComponents; c++ )                        
       {
-	ForStencil(m1,m2,m3)  
-	  setCoefficientIndex(M123CE(m1,m2,m3,c,e), e,I1,I2,I3, c,(I1+m1),(I2+m2),(I3+m3) );  
-	// fill in any extra values for oges, give a default value
-	for( int m=M123(halfWidth1,halfWidth2,halfWidth3)+1; m<stencilSize; m++ )
-	  setCoefficientIndex(m+CE(c,e), e,I1,I2,I3, c,I1,I2,I3 );  
+        ForStencil(m1,m2,m3)  
+          setCoefficientIndex(M123CE(m1,m2,m3,c,e), e,I1,I2,I3, c,(I1+m1),(I2+m2),(I3+m3) );  
+        // fill in any extra values for oges, give a default value
+        for( int m=M123(halfWidth1,halfWidth2,halfWidth3)+1; m<stencilSize; m++ )
+          setCoefficientIndex(m+CE(c,e), e,I1,I2,I3, c,I1,I2,I3 );  
       }
   }
   
@@ -397,10 +411,10 @@ updateToMatchGrid(MappedGrid & mg,
       // (first mark ghost line 1 as extrapolation so we mark the corner)
       for( int ghost=1; ghost<=numberOfGhostLines; ghost++ )
       {
-	getGhostIndex(mg.indexRange(),side,axis,I1,I2,I3,ghost,ghost);
+        getGhostIndex(mg.indexRange(),side,axis,I1,I2,I3,ghost,ghost);
         bool ok = ParallelUtility::getLocalArrayBounds(classify,classifyLocal,I1,I2,I3,includeGhost);
         if( ok )
-  	  classifyLocal(I1,I2,I3,N)=extrapolation;
+          classifyLocal(I1,I2,I3,N)=extrapolation;
       }
       getGhostIndex(mg.indexRange(),side,axis,I1,I2,I3,1);
       bool ok = ParallelUtility::getLocalArrayBounds(classify,classifyLocal,I1,I2,I3,includeGhost);
@@ -416,7 +430,7 @@ updateToMatchGrid(MappedGrid & mg,
         classifyLocal(I1,I2,I3,N)=boundary;
       for( int ghost=1; ghost<=numberOfGhostLines; ghost++ )
       {
-	getGhostIndex(mg.gridIndexRange(),side,axis,I1,I2,I3,ghost,ghost);
+        getGhostIndex(mg.gridIndexRange(),side,axis,I1,I2,I3,ghost,ghost);
         bool ok = ParallelUtility::getLocalArrayBounds(classify,classifyLocal,I1,I2,I3,includeGhost);
         if( ok )
           classifyLocal(I1,I2,I3,N)=extrapolation;
@@ -437,9 +451,9 @@ updateToMatchGrid(MappedGrid & mg,
 //\begin{>>SparseRepInclude.tex}{\subsubsection{setParameters}}  
 void SparseRepForMGF::
 setParameters(int stencilSize0,        /* = unchanged */
-	      int numberOfGhostLines0, /* = unchanged */
-	      int numberOfComponents0, /* = unchanged */
-	      int offset0 /* = unchanged */ )
+              int numberOfGhostLines0, /* = unchanged */
+              int numberOfComponents0, /* = unchanged */
+              int offset0 /* = unchanged */ )
 //===============================================================================================
 // /Description:
 //   Set various parameters. Use this routine if you want to set the properties of the
@@ -598,7 +612,7 @@ extendedRange(End  ,Rx)=max(extendedRange(End  ,Rx),c.extendedIndexRange()(End  
     where( mask(I1,I2,I3) < 0 )
     {
       for( n=0; n<numberOfComponents; n++ )
-	classifyLocal(I1,I2,I3,n)=interpolation;
+        classifyLocal(I1,I2,I3,n)=interpolation;
     }
     
     // mark periodic sides
@@ -606,19 +620,19 @@ extendedRange(End  ,Rx)=max(extendedRange(End  ,Rx),c.extendedIndexRange()(End  
     {
       if( c.boundaryCondition(side,axis)<0 )
       {
-	for( int ghost=1; ghost<=numberOfGhostLines+side; ghost++ )  // for each ghost line
-	{
-	  getGhostIndex(c.indexRange(),side,axis,Ig1,Ig2,Ig3,ghost,numberOfGhostLines);  
-	  for( int dir=1; dir<c.numberOfDimensions(); dir++ ) // *wdh* 990715 we need to catch corners if doubly periodic
-	  {
-	    int axisp= (axis+dir) % c.numberOfDimensions();   // tangential direction to axis
-	    if( c.boundaryCondition(side,axisp)<0 )
-	      Igv[axisp]=Range(Igv[axisp].getBase(),Igv[axisp].getBound()+1); // add one if a periodic tangential direction
-	  }
+        for( int ghost=1; ghost<=numberOfGhostLines+side; ghost++ )  // for each ghost line
+        {
+          getGhostIndex(c.indexRange(),side,axis,Ig1,Ig2,Ig3,ghost,numberOfGhostLines);  
+          for( int dir=1; dir<c.numberOfDimensions(); dir++ ) // *wdh* 990715 we need to catch corners if doubly periodic
+          {
+            int axisp= (axis+dir) % c.numberOfDimensions();   // tangential direction to axis
+            if( c.boundaryCondition(side,axisp)<0 )
+              Igv[axisp]=Range(Igv[axisp].getBase(),Igv[axisp].getBound()+1); // add one if a periodic tangential direction
+          }
           bool ok = ParallelUtility::getLocalArrayBounds(classify,classifyLocal,Ig1,Ig2,Ig3,includeGhost);
           if( ok ) 
-	    classifyLocal(Ig1,Ig2,Ig3,In)=periodic;
-	}
+            classifyLocal(Ig1,Ig2,Ig3,In)=periodic;
+        }
       }
     }
     // mark unused points
@@ -626,10 +640,32 @@ extendedRange(End  ,Rx)=max(extendedRange(End  ,Rx),c.extendedIndexRange()(End  
     ok = ParallelUtility::getLocalArrayBounds(classify,classifyLocal,I1,I2,I3,includeGhost);
     if( ok )
     {
-      where( mask(I1,I2,I3)==0 )
+      if( true )
       {
-	for( n=0; n<numberOfComponents; n++ )
-	  classifyLocal(I1,I2,I3,n)=unused;
+        // *wdh* new way : July 10, 2023
+        // Allow for active points where mask==0 (e.g. to extrapolate interpolation neighbours )
+        FOR_3D(i1,i2,i3,I1,I2,I3)
+        {
+          if( mask(i1,i2,i3)==0 )
+          {
+            for( int n=0; n<numberOfComponents; n++ )
+            {
+              if( classifyLocal(i1,i2,i3,n)!=active )
+              {
+                classifyLocal(i1,i2,i3,n)=unused;
+              }
+            }
+          }
+        }
+
+      }
+      else
+      {
+        where( mask(I1,I2,I3)==0 )
+        {
+          for( n=0; n<numberOfComponents; n++ )
+            classifyLocal(I1,I2,I3,n)=unused;
+        }
       }
     }
     

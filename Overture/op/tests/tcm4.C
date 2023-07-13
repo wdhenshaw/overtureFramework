@@ -3,7 +3,7 @@
 //    Solve a System of Equations on a CompositeGrid
 //
 //Usage: tcm4 [<gridName>] [-solver=<yale|harwell|slap|petsc>] [-debug=<value>] [-noTiming] [-trig] 
-//	      [-dirichlet] [-neumann] [-freq=<value>][-outputMatrix]
+//            [-dirichlet] [-neumann] [-freq=<value>][-outputMatrix]
 //==============================================================================
 #include "Overture.h"  
 #include "Oges.h"
@@ -71,23 +71,23 @@ namespace {
     
     if ( problem==dirichletFlag )
       {
-	coeff.applyBoundaryConditionCoefficients(0,0,dirichlet,  allBoundaries);  
-	coeff.applyBoundaryConditionCoefficients(0,0,extrapolate,allBoundaries);  
-	
-	coeff.applyBoundaryConditionCoefficients(1,1,dirichlet,  allBoundaries);
-	coeff.applyBoundaryConditionCoefficients(1,1,extrapolate,allBoundaries);
+        coeff.applyBoundaryConditionCoefficients(0,0,dirichlet,  allBoundaries);  
+        coeff.applyBoundaryConditionCoefficients(0,0,extrapolate,allBoundaries);  
+        
+        coeff.applyBoundaryConditionCoefficients(1,1,dirichlet,  allBoundaries);
+        coeff.applyBoundaryConditionCoefficients(1,1,extrapolate,allBoundaries);
       }
     else if ( problem==neumannFlag )
       {
-	coeff.applyBoundaryConditionCoefficients(0,0,neumann,  allBoundaries);  
-	coeff.applyBoundaryConditionCoefficients(1,1,neumann,  allBoundaries);
+        coeff.applyBoundaryConditionCoefficients(0,0,neumann,  allBoundaries);  
+        coeff.applyBoundaryConditionCoefficients(1,1,neumann,  allBoundaries);
       }
     else if ( problem==neumannDirichletFlag )
       {
-	coeff.applyBoundaryConditionCoefficients(0,0,neumann,  allBoundaries);  
+        coeff.applyBoundaryConditionCoefficients(0,0,neumann,  allBoundaries);  
 
-	coeff.applyBoundaryConditionCoefficients(1,1,dirichlet,  allBoundaries);
-	coeff.applyBoundaryConditionCoefficients(1,1,extrapolate,allBoundaries);
+        coeff.applyBoundaryConditionCoefficients(1,1,dirichlet,  allBoundaries);
+        coeff.applyBoundaryConditionCoefficients(1,1,extrapolate,allBoundaries);
       }
 
     coeff.finishBoundaryConditions();
@@ -108,105 +108,105 @@ namespace {
     Index Ig1,Ig2,Ig3;
     for( int grid=0; grid<cg.numberOfComponentGrids(); grid++ )
       {
-	MappedGrid & mg = cg[grid];
-	getIndex(mg.indexRange(),I1,I2,I3);  
-	realArray & x= mg.center();
+        MappedGrid & mg = cg[grid];
+        getIndex(mg.indexRange(),I1,I2,I3);  
+        realArray & x= mg.center();
 #ifdef USE_PPP
-	realSerialArray xLocal; getLocalArrayWithGhostBoundaries(x,xLocal);
+        realSerialArray xLocal; getLocalArrayWithGhostBoundaries(x,xLocal);
 #else
-	const realSerialArray & xLocal = x;
+        const realSerialArray & xLocal = x;
 #endif
-	f[grid](I1,I2,I3,0)=a1*(exact.xx(mg,I1,I2,I3,0)+exact.yy(mg,I1,I2,I3,0))+a2*exact.x(mg,I1,I2,I3,1);
-	f[grid](I1,I2,I3,1)=a3*(exact.xx(mg,I1,I2,I3,1)+exact.yy(mg,I1,I2,I3,1))+a4*exact.y(mg,I1,I2,I3,0);
-	if( cg.numberOfDimensions()==3 )
-	  {
-	    f[grid](I1,I2,I3,0)+=a1*exact.zz(mg,I1,I2,I3,0);
-	    f[grid](I1,I2,I3,1)+=a3*exact.zz(mg,I1,I2,I3,1);
-	  }
-	
-	if ( problem==dirichletFlag )
-	  {
-	    ForBoundary(side,axis)
-	      {
-		if( mg.boundaryCondition()(side,axis) > 0 )
-		  {
-		    getBoundaryIndex(mg.gridIndexRange(),side,axis,Ib1,Ib2,Ib3);
-		    f[grid](Ib1,Ib2,Ib3,0)=exact(mg,Ib1,Ib2,Ib3,0);
-		    f[grid](Ib1,Ib2,Ib3,1)=exact(mg,Ib1,Ib2,Ib3,1);
-		  }
-	      }
-	  }
-	else if ( problem==neumannFlag )
-	  {
-	    ForBoundary(side,axis)
-	      {
+        f[grid](I1,I2,I3,0)=a1*(exact.xx(mg,I1,I2,I3,0)+exact.yy(mg,I1,I2,I3,0))+a2*exact.x(mg,I1,I2,I3,1);
+        f[grid](I1,I2,I3,1)=a3*(exact.xx(mg,I1,I2,I3,1)+exact.yy(mg,I1,I2,I3,1))+a4*exact.y(mg,I1,I2,I3,0);
+        if( cg.numberOfDimensions()==3 )
+          {
+            f[grid](I1,I2,I3,0)+=a1*exact.zz(mg,I1,I2,I3,0);
+            f[grid](I1,I2,I3,1)+=a3*exact.zz(mg,I1,I2,I3,1);
+          }
+        
+        if ( problem==dirichletFlag )
+          {
+            ForBoundary(side,axis)
+              {
+                if( mg.boundaryCondition()(side,axis) > 0 )
+                  {
+                    getBoundaryIndex(mg.gridIndexRange(),side,axis,Ib1,Ib2,Ib3);
+                    f[grid](Ib1,Ib2,Ib3,0)=exact(mg,Ib1,Ib2,Ib3,0);
+                    f[grid](Ib1,Ib2,Ib3,1)=exact(mg,Ib1,Ib2,Ib3,1);
+                  }
+              }
+          }
+        else if ( problem==neumannFlag )
+          {
+            ForBoundary(side,axis)
+              {
 #ifdef USE_PPP
-		const realSerialArray & normal  = mg.vertexBoundaryNormalArray(side,axis);
+                const realSerialArray & normal  = mg.vertexBoundaryNormalArray(side,axis);
 #else
-		const realSerialArray & normal  = mg.vertexBoundaryNormal(side,axis);
+                const realSerialArray & normal  = mg.vertexBoundaryNormal(side,axis);
 #endif
 
-		getGhostIndex(mg.gridIndexRange(),side,axis,Ig1,Ig2,Ig3);
-		getBoundaryIndex(mg.gridIndexRange(),side,axis,Ib1,Ib2,Ib3);
-		//		realSerialArray fLocal; 
-		//		bool ok = ParallelUtility::getLocalArrayBounds(f[grid],fLocal,Ig1,Ig2,Ig3,includeGhost);
-		//		if( !ok ) continue; // there are no points on this processor.
-		const int rectangularForTZ=0;
-		realSerialArray uex(Ib1,Ib2,Ib3), uey(Ib1,Ib2,Ib3);
-		if( mg.boundaryCondition()(side,axis) > 0 )
-		  {
-		    for ( int n=0; n<numberOfComponents; n++ )
-		      {
-			exact.gd( uex,xLocal,numberOfDimensions,rectangularForTZ,0,1,0,0,Ib1,Ib2,Ib3,n,0.);
-			exact.gd( uey,xLocal,numberOfDimensions,rectangularForTZ,0,0,1,0,Ib1,Ib2,Ib3,n,0.);
-			f[grid](Ig1,Ig2,Ig3,n) = normal(Ib1,Ib2,Ib3,0)*uex + normal(Ib1,Ib2,Ib3,1)*uey;
-			if( numberOfDimensions==3 )
-			  {
-			    exact.gd( uex,xLocal,numberOfDimensions,rectangularForTZ,0,0,0,1,Ib1,Ib2,Ib3,n,0.);  // uex = T.z
-			    f[grid](Ig1,Ig2,Ig3,n) +=normal(Ib1,Ib2,Ib3,2)*uex;
-			  }
-		      } // for each component
-		  } // if a real boundary
-	      } // for boundary
-	  } // if neumann
-	else if ( problem==neumannDirichletFlag )
-	  {
-	    ForBoundary(side,axis)
-	      {
+                getGhostIndex(mg.gridIndexRange(),side,axis,Ig1,Ig2,Ig3);
+                getBoundaryIndex(mg.gridIndexRange(),side,axis,Ib1,Ib2,Ib3);
+                //              realSerialArray fLocal; 
+                //              bool ok = ParallelUtility::getLocalArrayBounds(f[grid],fLocal,Ig1,Ig2,Ig3,includeGhost);
+                //              if( !ok ) continue; // there are no points on this processor.
+                const int rectangularForTZ=0;
+                realSerialArray uex(Ib1,Ib2,Ib3), uey(Ib1,Ib2,Ib3);
+                if( mg.boundaryCondition()(side,axis) > 0 )
+                  {
+                    for ( int n=0; n<numberOfComponents; n++ )
+                      {
+                        exact.gd( uex,xLocal,numberOfDimensions,rectangularForTZ,0,1,0,0,Ib1,Ib2,Ib3,n,0.);
+                        exact.gd( uey,xLocal,numberOfDimensions,rectangularForTZ,0,0,1,0,Ib1,Ib2,Ib3,n,0.);
+                        f[grid](Ig1,Ig2,Ig3,n) = normal(Ib1,Ib2,Ib3,0)*uex + normal(Ib1,Ib2,Ib3,1)*uey;
+                        if( numberOfDimensions==3 )
+                          {
+                            exact.gd( uex,xLocal,numberOfDimensions,rectangularForTZ,0,0,0,1,Ib1,Ib2,Ib3,n,0.);  // uex = T.z
+                            f[grid](Ig1,Ig2,Ig3,n) +=normal(Ib1,Ib2,Ib3,2)*uex;
+                          }
+                      } // for each component
+                  } // if a real boundary
+              } // for boundary
+          } // if neumann
+        else if ( problem==neumannDirichletFlag )
+          {
+            ForBoundary(side,axis)
+              {
 #ifdef USE_PPP
-		const realSerialArray & normal  = mg.vertexBoundaryNormalArray(side,axis);
+                const realSerialArray & normal  = mg.vertexBoundaryNormalArray(side,axis);
 #else
-		const realSerialArray & normal  = mg.vertexBoundaryNormal(side,axis);
+                const realSerialArray & normal  = mg.vertexBoundaryNormal(side,axis);
 #endif
-		if( mg.boundaryCondition()(side,axis) > 0 )
-		  {
-		    getBoundaryIndex(mg.gridIndexRange(),side,axis,Ib1,Ib2,Ib3);
-		    getGhostIndex(mg.gridIndexRange(),side,axis,Ig1,Ig2,Ig3);
+                if( mg.boundaryCondition()(side,axis) > 0 )
+                  {
+                    getBoundaryIndex(mg.gridIndexRange(),side,axis,Ib1,Ib2,Ib3);
+                    getGhostIndex(mg.gridIndexRange(),side,axis,Ig1,Ig2,Ig3);
 
-		    // neumann condition on the first variable
-		    const int rectangularForTZ=0;
-		    realSerialArray uex(Ib1,Ib2,Ib3), uey(Ib1,Ib2,Ib3);
-		    exact.gd( uex,xLocal,numberOfDimensions,rectangularForTZ,0,1,0,0,Ib1,Ib2,Ib3,0,0.);
-		    exact.gd( uey,xLocal,numberOfDimensions,rectangularForTZ,0,0,1,0,Ib1,Ib2,Ib3,0,0.);
-		    f[grid](Ig1,Ig2,Ig3,0) = normal(Ib1,Ib2,Ib3,0)*uex + normal(Ib1,Ib2,Ib3,1)*uey;
-		    if( numberOfDimensions==3 )
-		      {
-			exact.gd( uex,xLocal,numberOfDimensions,rectangularForTZ,0,0,0,1,Ib1,Ib2,Ib3,0,0.);  // uex = T.z
-			f[grid](Ig1,Ig2,Ig3,0) +=normal(Ib1,Ib2,Ib3,2)*uex;
-		      }
+                    // neumann condition on the first variable
+                    const int rectangularForTZ=0;
+                    realSerialArray uex(Ib1,Ib2,Ib3), uey(Ib1,Ib2,Ib3);
+                    exact.gd( uex,xLocal,numberOfDimensions,rectangularForTZ,0,1,0,0,Ib1,Ib2,Ib3,0,0.);
+                    exact.gd( uey,xLocal,numberOfDimensions,rectangularForTZ,0,0,1,0,Ib1,Ib2,Ib3,0,0.);
+                    f[grid](Ig1,Ig2,Ig3,0) = normal(Ib1,Ib2,Ib3,0)*uex + normal(Ib1,Ib2,Ib3,1)*uey;
+                    if( numberOfDimensions==3 )
+                      {
+                        exact.gd( uex,xLocal,numberOfDimensions,rectangularForTZ,0,0,0,1,Ib1,Ib2,Ib3,0,0.);  // uex = T.z
+                        f[grid](Ig1,Ig2,Ig3,0) +=normal(Ib1,Ib2,Ib3,2)*uex;
+                      }
 
-		    // dirichlet condition on the second variable
-		    f[grid](Ib1,Ib2,Ib3,1)=exact(mg,Ib1,Ib2,Ib3,1);
-		  }
-	      }
-	  } // if neumann+dirichlet
+                    // dirichlet condition on the second variable
+                    f[grid](Ib1,Ib2,Ib3,1)=exact(mg,Ib1,Ib2,Ib3,1);
+                  }
+              }
+          } // if neumann+dirichlet
 
       } // makeForcing
     
   } // anonymous namespace
 
   void solveSystem(int solverType, int numberOfConstraints, OGFunction &exact, 
-		   realCompositeGridFunction &coeff, realCompositeGridFunction &f, realCompositeGridFunction &u, const real tol )
+                   realCompositeGridFunction &coeff, realCompositeGridFunction &f, realCompositeGridFunction &u, const real tol )
   {
     CompositeGrid &cg = *coeff.getCompositeGrid();
     Oges solver( cg );                     // create a solver
@@ -216,68 +216,68 @@ namespace {
     solver.set(OgesParameters::THEsolverType,solverType); 
     if( solverType==OgesParameters::SLAP ||  solverType==OgesParameters::PETSc )
       {
-	solver.set(OgesParameters::THEpreconditioner,OgesParameters::incompleteLUPreconditioner);
-	solver.set(OgesParameters::THEtolerance,max(tol,REAL_EPSILON*10.));
+        solver.set(OgesParameters::THEpreconditioner,OgesParameters::incompleteLUPreconditioner);
+        solver.set(OgesParameters::THEtolerance,max(tol,REAL_EPSILON*10.));
       } 
 
     if ( numberOfConstraints==1 )
       {
-	// this should cause the automatic creation of the compatibility constraint on the first equation...
-	solver.set(OgesParameters::THEcompatibilityConstraint,true);
-	solver.initialize(); // this will form the right null vector
-	realCompositeGridFunction ue(cg);
-	exact.assignGridFunction(ue,0.);
-	real value=0.;
-	solver.evaluateExtraEquation(ue,value);
+        // this should cause the automatic creation of the compatibility constraint on the first equation...
+        solver.set(OgesParameters::THEcompatibilityConstraint,true);
+        solver.initialize(); // this will form the right null vector
+        realCompositeGridFunction ue(cg);
+        exact.assignGridFunction(ue,0.);
+        real value=0.;
+        solver.evaluateExtraEquation(ue,value);
 
-	solver.setExtraEquationValues(f,&value );
+        solver.setExtraEquationValues(f,&value );
       }
     else if ( numberOfConstraints==2 )
       {
-	// kkc 090903
-	// Because we have a system of two equations we cannot use the built-in compatibility constraint (which assumes one constraint).
-	// The following code sets up a constraint for each equation (total of two extra equations) and adds them as a user supplied constraint.
-	solver.initialize();
-	Range all;
-	real nullVectorScaling = 0;
-	solver.get(OgesParameters::THEnullVectorScaling, nullVectorScaling);
-	realCompositeGridFunction &constraint = solver.rightNullVector;
-	constraint.updateToMatchGrid(cg,all,all,all,numberOfComponents);
-	constraint=0.;
-	Index I1,I2,I3;
-	for ( int n=0; n<numberOfComponents; n++ )
-	  {
-	    for( int grid=numberOfGrids-1; grid>=0; grid-- ) // why is this loop backwards? I took it directly from makeRightNullVector...
-	      {
-		MappedGrid & c = cg[grid];
-		IntegerDistributedArray & classifyX = coeff[grid].sparse->classify;
-		
-		getIndex(c.dimension(),I1,I2,I3);
-		real scale = (n+1)*nullVectorScaling; // multiply by n+1 so that each equation gets a different scaling and we can see it in the matix
-		// do not include the ghost line so that we retain u.n=0 as a BC!
-		where( classifyX(I1,I2,I3,n)==SparseRepForMGF::interior || classifyX(I1,I2,I3,n)==SparseRepForMGF::boundary )
-		  constraint[grid](I1,I2,I3,n)=scale;
-	      }
-	  }
-	solver.numberOfExtraEquations = 2; // this should probably be in OgesParameters...
-	solver.set(OgesParameters::THEcompatibilityConstraint,true);
-	solver.set(OgesParameters::THEuserSuppliedCompatibilityConstraint,true);
-	solver.updateToMatchGrid( cg ); // why do we need this? it will call initialize...
+        // kkc 090903
+        // Because we have a system of two equations we cannot use the built-in compatibility constraint (which assumes one constraint).
+        // The following code sets up a constraint for each equation (total of two extra equations) and adds them as a user supplied constraint.
+        solver.initialize();
+        Range all;
+        real nullVectorScaling = 0;
+        solver.get(OgesParameters::THEnullVectorScaling, nullVectorScaling);
+        realCompositeGridFunction &constraint = solver.rightNullVector;
+        constraint.updateToMatchGrid(cg,all,all,all,numberOfComponents);
+        constraint=0.;
+        Index I1,I2,I3;
+        for ( int n=0; n<numberOfComponents; n++ )
+          {
+            for( int grid=numberOfGrids-1; grid>=0; grid-- ) // why is this loop backwards? I took it directly from makeRightNullVector...
+              {
+                MappedGrid & c = cg[grid];
+                IntegerDistributedArray & classifyX = coeff[grid].sparse->classify;
+                
+                getIndex(c.dimension(),I1,I2,I3);
+                real scale = (n+1)*nullVectorScaling; // multiply by n+1 so that each equation gets a different scaling and we can see it in the matix
+                // do not include the ghost line so that we retain u.n=0 as a BC!
+                where( classifyX(I1,I2,I3,n)==SparseRepForMGF::interior || classifyX(I1,I2,I3,n)==SparseRepForMGF::boundary )
+                  constraint[grid](I1,I2,I3,n)=scale;
+              }
+          }
+        solver.numberOfExtraEquations = 2; // this should probably be in OgesParameters...
+        solver.set(OgesParameters::THEcompatibilityConstraint,true);
+        solver.set(OgesParameters::THEuserSuppliedCompatibilityConstraint,true);
+        solver.updateToMatchGrid( cg ); // why do we need this? it will call initialize...
 
-	realCompositeGridFunction ue(cg,all,all,all,numberOfComponents);
-	exact.assignGridFunction(ue,0.);
-	ArraySimple<real> value(numberOfComponents);
-	value = 0.;
-	for ( int n=0; n<numberOfComponents; n++ )
-	  {
-	    solver.evaluateExtraEquation(ue,value[n],n);
-	  }
-	solver.setExtraEquationValues(f,value.ptr());
-	if( Oges::debug & 16 ) 
-	  {
-	    constraint.display("here are the constraint coefficients");
-	    cout<<"here are the extra equation values"<<value<<endl;
-	  }
+        realCompositeGridFunction ue(cg,all,all,all,numberOfComponents);
+        exact.assignGridFunction(ue,0.);
+        ArraySimple<real> value(numberOfComponents);
+        value = 0.;
+        for ( int n=0; n<numberOfComponents; n++ )
+          {
+            solver.evaluateExtraEquation(ue,value[n],n);
+          }
+        solver.setExtraEquationValues(f,value.ptr());
+        if( Oges::debug & 16 ) 
+          {
+            constraint.display("here are the constraint coefficients");
+            cout<<"here are the extra equation values"<<value<<endl;
+          }
       }
 
     if( outputMatrix )
@@ -288,15 +288,15 @@ namespace {
     solver.solve( u,f );   // solve the equations
     
     printf("residual=%8.2e, time for solve = %8.2e (iterations=%i)\n",
-	   solver.getMaximumResidual(),getCPU()-time0,solver.getNumberOfIterations());
+           solver.getMaximumResidual(),getCPU()-time0,solver.getNumberOfIterations());
     
     if( false ) // kkc 090903, changed from true to false, why was solve being called twice??
       {
-	solver.solve( u,f );   // solve the equations
-	
-	printf("residual=%8.2e, time for 2nd solve = %8.2e (iterations=%i)\n",
-	       solver.getMaximumResidual(),getCPU()-time0,solver.getNumberOfIterations());
-	
+        solver.solve( u,f );   // solve the equations
+        
+        printf("residual=%8.2e, time for 2nd solve = %8.2e (iterations=%i)\n",
+               solver.getMaximumResidual(),getCPU()-time0,solver.getNumberOfIterations());
+        
       }
   }
 
@@ -309,22 +309,22 @@ namespace {
     real error=0.;
     for( int grid=0; grid<cg.numberOfComponentGrids(); grid++ )
       {
-	getIndex(cg[grid].indexRange(),I1,I2,I3);  
-	realArray err = (u[grid](I1,I2,I3,n)-exact(cg[grid],I1,I2,I3,n))/max(abs(exact(cg[grid],I1,I2,I3,n)));
-	where( cg[grid].mask()(I1,I2,I3)!=0 )
-	  {
-	    error=max(error,max(abs(err)));
-	  }
-	if( Oges::debug & 4 ) 
-	  {
-	    abs(u[grid](I1,I2,I3,n)-exact(cg[grid],I1,I2,I3,n)).display("abs(error)");
-	    u.display("u");
+        getIndex(cg[grid].indexRange(),I1,I2,I3);  
+        realArray err = (u[grid](I1,I2,I3,n)-exact(cg[grid],I1,I2,I3,n))/max(abs(exact(cg[grid],I1,I2,I3,n)));
+        where( cg[grid].mask()(I1,I2,I3)!=0 )
+          {
+            error=max(error,max(abs(err)));
+          }
+        if( Oges::debug & 4 ) 
+          {
+            abs(u[grid](I1,I2,I3,n)-exact(cg[grid],I1,I2,I3,n)).display("abs(error)");
+            u.display("u");
 
-	  }
+          }
       }
-    //	PlotIt::contour(*Overture::getGraphicsInterface(),u);
-    //	printf("Maximum relative error in component %i with dirichlet bc's= %e\n",n,error);  
-    //	checker.printMessage(msg,error,time);
+    //  PlotIt::contour(*Overture::getGraphicsInterface(),u);
+    //  printf("Maximum relative error in component %i with dirichlet bc's= %e\n",n,error);  
+    //  checker.printMessage(msg,error,time);
     return error;
   }
   //  }
@@ -345,7 +345,7 @@ main(int argc, char **argv)
   Overture::start(argc,argv);  // initialize Overture
 
   printF("Usage: tcm4 [<gridName>] [-solver=<yale|harwell|slap|petsc>] [-debug=<value>] [-noTiming] [-trig] \n"
-	 "            [-dirichlet] [-neumann] [-neumann+dirichlet] [-freq=<value>][-outputMatrix] [-check]\n");
+         "            [-dirichlet] [-neumann] [-neumann+dirichlet] [-freq=<value>][-outputMatrix] [-check]\n");
 
   const int maxNumberOfGridsToTest=3;
   int numberOfGridsToTest=maxNumberOfGridsToTest;
@@ -354,9 +354,9 @@ main(int argc, char **argv)
   int numberOfSolversToTest = maxNumberOfSolversToTest;
   aString solverName[maxNumberOfSolversToTest] = {"yale","harwell","slap","petsc"};
   int solverType[maxNumberOfSolversToTest] = {OgesParameters::yale,
-					      OgesParameters::harwell,
-					      OgesParameters::SLAP,
-					      OgesParameters::PETSc};
+                                              OgesParameters::harwell,
+                                              OgesParameters::SLAP,
+                                              OgesParameters::PETSc};
   
   real tol=1.e-8;
   BCTypes::BCNames bcTest = dirichlet;
@@ -376,70 +376,70 @@ main(int argc, char **argv)
       else if( arg(0,6)=="-debug=" )
       {
         sScanF(arg(7,arg.length()-1),"%i",&Oges::debug);
-	printf("Setting Oges::debug=%i\n",Oges::debug);
+        printf("Setting Oges::debug=%i\n",Oges::debug);
       }
       else if (arg=="outputMatrix" )
       {
-	outputMatrix=true;
+        outputMatrix=true;
       }
       else if ( arg=="-dirichlet" )
       {
-	problemsToSolve = dirichletFlag;
+        problemsToSolve = dirichletFlag;
       }
       else if ( arg=="-neumann" )
       {
-	problemsToSolve = neumannFlag;
+        problemsToSolve = neumannFlag;
       }
       else if ( arg=="-neumann+dirichlet" )
       {
-	problemsToSolve = neumannDirichletFlag;
+        problemsToSolve = neumannDirichletFlag;
       }
       else if ( arg=="-trig" )
       {
-	twType = TWTrig;
+        twType = TWTrig;
       }
       else if( arg(0,7)=="-solver=" )
       {
         aString solver=arg(8,arg.length()-1);
         if( solver=="yale" )
           solverType[0]=OgesParameters::yale;
-	else if( solver=="harwell" )
+        else if( solver=="harwell" )
           solverType[0]=OgesParameters::harwell;
-	else if( solver=="slap" )
+        else if( solver=="slap" )
           solverType[0]=OgesParameters::SLAP;
         else if( solver=="petsc" )
           solverType[0]=OgesParameters::PETSc;
-	else
-	{
-	  printf("Unknown solver=%s \n",(const char*)solver);
-	  throw "error";
-	}
-	
-	numberOfSolversToTest = 1;
-	solverName[0] = solver;
+        else
+        {
+          printf("Unknown solver=%s \n",(const char*)solver);
+          throw "error";
+        }
+        
+        numberOfSolversToTest = 1;
+        solverName[0] = solver;
 
-	//	printf("Setting solverType=%i\n",solver);
+        //      printf("Setting solverType=%i\n",solver);
       }
       else if ( arg=="-check" )
       {
-	//numberOfSolversToTest=2;
-	//solverName[0] = "yale"; solverType[0] = OgesParameters::yale;
-	//solverName[1] = "slap"; solverType[1] = OgesParameters::SLAP;
+        //numberOfSolversToTest=2;
+        //solverName[0] = "yale"; solverType[0] = OgesParameters::yale;
+        //solverName[1] = "slap"; solverType[1] = OgesParameters::SLAP;
         // *wdh* 100608 -- only check slap to make the test faster
-	numberOfSolversToTest=1;
-	solverName[0] = "slap"; solverType[0] = OgesParameters::SLAP;
+        numberOfSolversToTest=1;
+        solverName[0] = "slap"; solverType[0] = OgesParameters::SLAP;
         tol=1.e-3;
       }
       else if( (len=arg.matches("-freq=")) )
       {
-	sScanF(arg(len,arg.length()-1),"%e",&fx);
-	fy=fx; fz=fx;
-	printF("Setting fx=fy=fz=%e\n",fx);
+        sScanF(arg(len,arg.length()-1),"%e",&fx);
+        fy=fx; fz=fx;
+        printF("Setting fx=fy=fz=%e\n",fx);
       }
       else
       {
-	numberOfGridsToTest=1;
-	gridName[0]=arg;
+        numberOfGridsToTest=1;
+        gridName[0]=arg;
       }
     }
   }
@@ -460,120 +460,120 @@ main(int argc, char **argv)
     {
       checker.setLabel(solverName[ls],0);
       for( int it=0; it<numberOfGridsToTest; it++ )
-	{
-	  aString nameOfOGFile=gridName[it];
-	  checker.setLabel(nameOfOGFile,1);
-	  
-	  cout << "\n *****************************************************************\n";
-	  cout << " ******** Checking grid: " << nameOfOGFile << " ************ \n";
-	  cout << " *****************************************************************\n\n";
-	  
-	  CompositeGrid cg;
-	  getFromADataBase(cg,nameOfOGFile);
-	  cg.update(MappedGrid::THEvertex | MappedGrid::THEcenter | MappedGrid::THEvertexBoundaryNormal);
-	  
-	  const int inflow=1, outflow=2, wall=3;
-	  int grid;
-	  for( grid=0; grid<cg.numberOfComponentGrids(); grid++ )
-	    {
-	      if( cg[grid].boundaryCondition()(Start,axis1) > 0 )
-		cg[grid].boundaryCondition()(Start,axis1)=inflow;
-	      if( cg[grid].boundaryCondition()(End  ,axis1) > 0 )
-		cg[grid].boundaryCondition()(End  ,axis1)=inflow;
-	      if( cg[grid].boundaryCondition()(Start,axis2) > 0 )
-		cg[grid].boundaryCondition()(Start,axis2)=wall;
-	      if( cg[grid].boundaryCondition()(End  ,axis2) > 0 )
-		cg[grid].boundaryCondition()(End  ,axis2)=wall;
-	    }    
+        {
+          aString nameOfOGFile=gridName[it];
+          checker.setLabel(nameOfOGFile,1);
+          
+          cout << "\n *****************************************************************\n";
+          cout << " ******** Checking grid: " << nameOfOGFile << " ************ \n";
+          cout << " *****************************************************************\n\n";
+          
+          CompositeGrid cg;
+          getFromADataBase(cg,nameOfOGFile);
+          cg.update(MappedGrid::THEvertex | MappedGrid::THEcenter | MappedGrid::THEvertexBoundaryNormal);
+          
+          const int inflow=1, outflow=2, wall=3;
+          int grid;
+          for( grid=0; grid<cg.numberOfComponentGrids(); grid++ )
+            {
+              if( cg[grid].boundaryCondition()(Start,axis1) > 0 )
+                cg[grid].boundaryCondition()(Start,axis1)=inflow;
+              if( cg[grid].boundaryCondition()(End  ,axis1) > 0 )
+                cg[grid].boundaryCondition()(End  ,axis1)=inflow;
+              if( cg[grid].boundaryCondition()(Start,axis2) > 0 )
+                cg[grid].boundaryCondition()(Start,axis2)=wall;
+              if( cg[grid].boundaryCondition()(End  ,axis2) > 0 )
+                cg[grid].boundaryCondition()(End  ,axis2)=wall;
+            }    
 
-	  // create a twilight-zone function
-	  OGFunction *exactP = (twType==TWPoly) ? (OGFunction *)new OGPolyFunction(degreeOfSpacePolynomial,
-										   cg.numberOfDimensions(),
-										   numberOfComponents,	 
-										   degreeOfTimePolynomial) :
+          // create a twilight-zone function
+          OGFunction *exactP = (twType==TWPoly) ? (OGFunction *)new OGPolyFunction(degreeOfSpacePolynomial,
+                                                                                   cg.numberOfDimensions(),
+                                                                                   numberOfComponents,   
+                                                                                   degreeOfTimePolynomial) :
                                                   (OGFunction *)new OGTrigFunction(fx,fy,fz);
-	  OGFunction &exact = *exactP;
+          OGFunction &exact = *exactP;
 
-	  Range all;
-	  // make a grid function to hold the coefficients
-	  int stencilSize=int( pow(3,cg.numberOfDimensions())+1 );  // add 1 for interpolation equations
-	  int stencilDimension=stencilSize*SQR(numberOfComponents);
-	  realCompositeGridFunction coeff(cg,stencilDimension,all,all,all); 
-	  // make this grid function a coefficient matrix:
-	  int numberOfGhostLines=1;
-	  coeff.setIsACoefficientMatrix(TRUE,stencilSize,numberOfGhostLines,numberOfComponents);
-	  coeff=0.;
+          Range all;
+          // make a grid function to hold the coefficients
+          int stencilSize=int( pow(3,cg.numberOfDimensions())+1 );  // add 1 for interpolation equations
+          int stencilDimension=stencilSize*SQR(numberOfComponents);
+          realCompositeGridFunction coeff(cg,stencilDimension,all,all,all); 
+          // make this grid function a coefficient matrix:
+          int numberOfGhostLines=1;
+          coeff.setIsACoefficientMatrix(TRUE,stencilSize,numberOfGhostLines,numberOfComponents);
+          coeff=0.;
     
-	  // create grid functions: 
-	  realCompositeGridFunction u(cg,all,all,all,numberOfComponents),
-	    f(cg,all,all,all,numberOfComponents);
-	  //	  PlotIt::contour(*Overture::getGraphicsInterface(),u);
+          // create grid functions: 
+          realCompositeGridFunction u(cg,all,all,all,numberOfComponents),
+            f(cg,all,all,all,numberOfComponents);
+          //      PlotIt::contour(*Overture::getGraphicsInterface(),u);
 
-	  CompositeGridOperators op(cg);                            // create some differential operators 
-	  op.setNumberOfComponentsForCoefficients(numberOfComponents);
-	  u.setOperators(op);                              // associate differential operators with u
-	  coeff.setOperators(op);
-	  aString msg;
-	  real time0 = getCPU();
-	  if ( problemsToSolve & dirichletFlag )
-	    {
-	      buildMatrix(dirichletFlag, coeff);
-	      buildForcing(dirichletFlag, f, exact);
-	      solveSystem(solverType[ls],0,exact,coeff,f,u,tol);
-	      real time = getCPU()-time0;
-	      
-	      for ( int n=0; n<numberOfComponents; n++ )
-		{
-		  real error = computeMaxError(n,u,exact);
-		  sPrintF(msg,"dirichlet: error (n=%i)",n);
-		  checker.printMessage(msg,error,time);
-		  worstError=max(worstError,error);
-		}
-	    }
+          CompositeGridOperators op(cg);                            // create some differential operators 
+          op.setNumberOfComponentsForCoefficients(numberOfComponents);
+          u.setOperators(op);                              // associate differential operators with u
+          coeff.setOperators(op);
+          aString msg;
+          real time0 = getCPU();
+          if ( problemsToSolve & dirichletFlag )
+            {
+              buildMatrix(dirichletFlag, coeff);
+              buildForcing(dirichletFlag, f, exact);
+              solveSystem(solverType[ls],0,exact,coeff,f,u,tol);
+              real time = getCPU()-time0;
+              
+              for ( int n=0; n<numberOfComponents; n++ )
+                {
+                  real error = computeMaxError(n,u,exact);
+                  sPrintF(msg,"dirichlet: error (n=%i)",n);
+                  checker.printMessage(msg,error,time);
+                  worstError=max(worstError,error);
+                }
+            }
 
-	  if ( problemsToSolve & neumannDirichletFlag )
-	    { // we put this problem here so that we don't confuse the sparse rep classify with two extra equations from the all neumann case
-	      buildMatrix(neumannDirichletFlag, coeff);
-	      buildForcing(neumannDirichletFlag, f, exact);
-	      solveSystem(solverType[ls],1,exact,coeff,f,u,tol);
-	      real time = getCPU()-time0;
-	      
-	      for ( int n=0; n<numberOfComponents; n++ )
-		{
-		  real error = computeMaxError(n,u,exact);
-		  sPrintF(msg,"neumann-dirichlet: error (n=%i)",n);
-		  checker.printMessage(msg,error,time);
-		  worstError=max(worstError,error);
-		}
-	    }
-	  
-	  if ( problemsToSolve & neumannFlag )
-	    {
-	      buildMatrix(neumannFlag, coeff);
-	      buildForcing(neumannFlag, f, exact);
-	      solveSystem(solverType[ls],2,exact,coeff,f,u,tol);
-	      real time = getCPU()-time0;
-	      
-	      for ( int n=0; n<numberOfComponents; n++ )
-		{
-		  real error = computeMaxError(n,u,exact);
-		  sPrintF(msg,"neumann: error (n=%i)",n);
-		  checker.printMessage(msg,error,time);
-		  worstError=max(worstError,error);
-		}
-	    }
+          if ( problemsToSolve & neumannDirichletFlag )
+            { // we put this problem here so that we don't confuse the sparse rep classify with two extra equations from the all neumann case
+              buildMatrix(neumannDirichletFlag, coeff);
+              buildForcing(neumannDirichletFlag, f, exact);
+              solveSystem(solverType[ls],1,exact,coeff,f,u,tol);
+              real time = getCPU()-time0;
+              
+              for ( int n=0; n<numberOfComponents; n++ )
+                {
+                  real error = computeMaxError(n,u,exact);
+                  sPrintF(msg,"neumann-dirichlet: error (n=%i)",n);
+                  checker.printMessage(msg,error,time);
+                  worstError=max(worstError,error);
+                }
+            }
+          
+          if ( problemsToSolve & neumannFlag )
+            {
+              buildMatrix(neumannFlag, coeff);
+              buildForcing(neumannFlag, f, exact);
+              solveSystem(solverType[ls],2,exact,coeff,f,u,tol);
+              real time = getCPU()-time0;
+              
+              for ( int n=0; n<numberOfComponents; n++ )
+                {
+                  real error = computeMaxError(n,u,exact);
+                  sPrintF(msg,"neumann: error (n=%i)",n);
+                  checker.printMessage(msg,error,time);
+                  worstError=max(worstError,error);
+                }
+            }
 
 
-	  // u.display("Here is the solution to u.xx+u.yy=f");
-	  delete exactP; exactP=0;
+          // u.display("Here is the solution to u.xx+u.yy=f");
+          delete exactP; exactP=0;
 
-	} // end loop over grids
+        } // end loop over grids
     } // end loop over solvers to test
 
   printf("\n\n ************************************************************************************************\n");
   if( worstError > .025 )
     printf(" ************** Warning, there is a large error somewhere, worst error =%e ******************\n",
-	   worstError);
+           worstError);
   else
     printf(" ************** Test apparently successful, worst error =%e ******************\n",worstError);
   printf(" **************************************************************************************************\n\n");

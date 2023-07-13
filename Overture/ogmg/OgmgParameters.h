@@ -151,6 +151,9 @@ class OgmgParameters
   // Set the absolute tolerance for the residual based convergence criteria.
   int setAbsoluteTolerance(const real absoluteTolerance );
 
+  // set active grids (when the operator is the identity on some grids, e.g. explicit/implicit time-stepping)
+  int setActiveGrids( const IntegerArray & active );
+
   // Set the tolerance for the error, iterate until the norm of the estimated error is 
   // less than "errorTolerance"
   int setErrorTolerance(const real errorTolerance );

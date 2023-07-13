@@ -522,6 +522,10 @@ initializeGridDependentParameters(CompositeGrid & cg, int maxLevels /* =useLevel
   numberOfCycles.redim(numberOfMultigridLevels);
   numberOfCycles=1;  // V cycle by default
 
+  // Some problems have inactive grids (e.g. for explicit/implicit time-stepping)
+  activeGrids.redim(cg.numberOfComponentGrids());
+  activeGrids=1;
+
   return 0;
 }
 
@@ -1063,6 +1067,29 @@ set( OptionEnum option, int value, real rvalue )
   }
   return 0;
 }
+
+//===============================================================================
+/// \brief Set active grids (when the operator is the identity on some grids,
+///     e.g. explicit/implicit time-stepping)
+/// 
+///  active(grid) = 1 : this grid is active
+///                = 0 : the operator on this grid is the identity, no need to smooth etc.
+///
+/// The solution values on in-active grids are assumed to be the correct.
+// ===============================================================================
+int OgmgParameters::
+setActiveGrids( const IntegerArray & active )
+{
+  assert( cgPointer!=NULL );
+  CompositeGrid & cg = *cgPointer;
+
+  if( activeGrids.getLength(0)!=cg.numberOfComponentGrids() )
+    activeGrids.resize(cg.numberOfComponentGrids());
+  
+  activeGrids=active;
+  return 0;
+}
+
 
 //\begin{>>OgmgParametersInclude.tex}{\subsection{setErrorTolerance}}
 int OgmgParameters:: 
@@ -1858,7 +1885,13 @@ update( GenericGraphicsInterface & gi, CompositeGrid & cg )
     }
     else if( answer=="oges smoother" )
     {
-      int num=gi.getValues("Enter grids to use oges smoother on (`done' to finish)",activeGrids,0,cg.numberOfComponentGrids()-1);
+      // *wdh* rename activeGrids to ogesActiveGrids May 19, 2023
+      if( !dbase.has_key("ogesActiveGrids") )
+        dbase.put<IntegerArray>("ogesActiveGrids");
+      IntegerArray & ogesActiveGrids = dbase.get<IntegerArray>("ogesActiveGrids");
+
+      int num=gi.getValues("Enter grids to use oges smoother on (`done' to finish)",ogesActiveGrids,0,cg.numberOfComponentGrids()-1);
+      
       if( ogesSmoothParameters==NULL )
       {
         ogesSmoothParameters=new OgesParameters(); // who will delete this ?
@@ -1875,9 +1908,9 @@ update( GenericGraphicsInterface & gi, CompositeGrid & cg )
         if( iluLevels>=0 )
           par.set(OgesParameters::THEnumberOfIncompleteLULevels,iluLevels);
       }
-      for( int g=0; g<=activeGrids.getBound(0); g++ )
+      for( int g=0; g<=ogesActiveGrids.getBound(0); g++ )
       {
-        int grid=activeGrids(g);
+        int grid=ogesActiveGrids(g);
         setSmootherType(ogesSmoother,grid);
       }
       

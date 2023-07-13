@@ -18,6 +18,7 @@ defect(const int & level)
   if( Ogmg::debug & 16 )
     printf("%*.1s Ogmg:defect, level = %i, ",level*2,"  ",level);
   CompositeGrid & mgcg = multigridCompositeGrid();
+
   for( int grid=0; grid<mgcg.multigridLevel[level].numberOfComponentGrids(); grid++ )
     defect(level,grid);
 
@@ -62,11 +63,11 @@ defect(const int & level, const int & grid)
     for( int axis=0; axis<mg.numberOfDimensions(); axis++ )
     {
       if( boundaryCondition(0,axis,grid)==OgmgParameters::extrapolate && boundaryCondition(1,axis,grid)==OgmgParameters::extrapolate )
-	Iv[axis]=Range(Iv[axis].getBase()+1,Iv[axis].getBound()-1);
+        Iv[axis]=Range(Iv[axis].getBase()+1,Iv[axis].getBound()-1);
       else if( boundaryCondition(0,axis,grid)==OgmgParameters::extrapolate  )
-	Iv[axis]=Range(Iv[axis].getBase()+1,Iv[axis].getBound());
+        Iv[axis]=Range(Iv[axis].getBase()+1,Iv[axis].getBound());
       else if( boundaryCondition(1,axis,grid)==OgmgParameters::extrapolate  )
-	Iv[axis]=Range(Iv[axis].getBase(),Iv[axis].getBound()-1);
+        Iv[axis]=Range(Iv[axis].getBase(),Iv[axis].getBound()-1);
     }
   }
   
@@ -74,7 +75,10 @@ defect(const int & level, const int & grid)
   // defect=0.;                   // *** this IS currently necessary **** fix this ******
   assign(defect,0.);  // *wdh* 100411
   
-  getDefect(level,grid,f,u,I1,I2,I3,defect);
+  if( active(grid) )   // *wdh* May 20, 2023
+  {
+    getDefect(level,grid,f,u,I1,I2,I3,defect);
+  }
 
   if( Ogmg::debug & 16 )
   {
@@ -236,7 +240,7 @@ extern "C"
 
   void defectOpt( const int &nd,  const int & nd1a, const int &nd1b, const int &nd2a, const int &nd2b,
                        const int &nd3a, const int &nd3b,
-		       const int &n1a, const int &n1b, const int &n1c,
+                       const int &n1a, const int &n1b, const int &n1c,
                        const int &n2a, const int &n2b, const int &n2c,
                        const int &n3a, const int &n3b, const int &n3c, 
                        const int &ndc, const real & defect, const real & f, const real & c,
@@ -248,13 +252,13 @@ extern "C"
 //\begin{>>OgmgInclude.tex}{\subsection{getDefect}}
 real Ogmg::
 getDefect(const int & level, 
-	  const int & grid, 
-	  realArray & f,     
-	  realArray & u, 
+          const int & grid, 
+          realArray & f,     
+          realArray & u, 
           const Index & I1,
           const Index & I2,
           const Index & I3,
-	  realArray & defect,
+          realArray & defect,
           const int lineSmoothOption /* = -1 */,
           const int defectOption /* = 0 */,
           real & defectL2Norm, real & defectMaxNorm )
@@ -330,13 +334,13 @@ getDefect(const int & level,
         if( equationToSolve==OgesParameters::divScalarGradOperator ||
             equationToSolve==OgesParameters::variableHeatEquationOperator ||
             equationToSolve==OgesParameters::divScalarGradHeatEquationOperator )
-	{
-	  sparseStencil=level==0 ? sparseVariableCoefficients : variableCoefficients;
-	}
-	else
-	{
-	  sparseStencil=level==0 ? sparseConstantCoefficients : constantCoeff;
-	}
+        {
+          sparseStencil=level==0 ? sparseVariableCoefficients : variableCoefficients;
+        }
+        else
+        {
+          sparseStencil=level==0 ? sparseConstantCoefficients : constantCoeff;
+        }
       }
       else if( rectangular && assumeSparseStencilForRectangularGrids )
         sparseStencil=sparse;
@@ -360,8 +364,8 @@ getDefect(const int & level,
       IntegerArray dd(2,3);
       for( int axis=0; axis<3; axis++ )
       {
-	dd(0,axis)=maskLocal.getBase(axis);  // use the one with getLocalArrayWithGhostBoundaries
-	dd(1,axis)=maskLocal.getBound(axis);
+        dd(0,axis)=maskLocal.getBase(axis);  // use the one with getLocalArrayWithGhostBoundaries
+        dd(1,axis)=maskLocal.getBound(axis);
       }
       
       
@@ -384,23 +388,23 @@ getDefect(const int & level,
       // For the line smooth, evaluate the defect on as many parallel ghost as possible
       for( int axis=0; axis<3; axis++ )
       {
-	int hw = axis<numberOfDimensions ? (orderOfThisLevel)/2 : 0;  // stencil half-width
-	int ia = nab[0][axis], ib=nab[1][axis], stride=nab[2][axis];
-	ia = max(ia,maskLocal.getBase(axis) +hw);
-	// adjust ia so it offset by a factor of stride from ia0
-	// ia += (stride - (ia-nab[0][axis])%stride)%stride;  // the offset should be positive *wdh* 100617
-	ia += (stride - (ia-nab[0][axis])%stride + stride*hw )%stride;  // the offset should be positive *wdh* 100617
-	assert( (ia-nab[0][axis])%stride == 0 && ia>=maskLocal.getBase(axis) +hw );
-	ib = min(ib,maskLocal.getBound(axis)-hw);
-	// adjust ib so it offset by a factor of stride from ib0
-	// ib -= (stride - (nab[1][axis]-ib)%stride)%stride;  
-	ib -= (stride - (nab[1][axis]-ib)%stride + stride*hw)%stride;   // the offset should be positive *wdh* 100617
-	assert( (nab[1][axis]-ib)%stride == 0 && ib <= maskLocal.getBound(axis)-hw );
+        int hw = axis<numberOfDimensions ? (orderOfThisLevel)/2 : 0;  // stencil half-width
+        int ia = nab[0][axis], ib=nab[1][axis], stride=nab[2][axis];
+        ia = max(ia,maskLocal.getBase(axis) +hw);
+        // adjust ia so it offset by a factor of stride from ia0
+        // ia += (stride - (ia-nab[0][axis])%stride)%stride;  // the offset should be positive *wdh* 100617
+        ia += (stride - (ia-nab[0][axis])%stride + stride*hw )%stride;  // the offset should be positive *wdh* 100617
+        assert( (ia-nab[0][axis])%stride == 0 && ia>=maskLocal.getBase(axis) +hw );
+        ib = min(ib,maskLocal.getBound(axis)-hw);
+        // adjust ib so it offset by a factor of stride from ib0
+        // ib -= (stride - (nab[1][axis]-ib)%stride)%stride;  
+        ib -= (stride - (nab[1][axis]-ib)%stride + stride*hw)%stride;   // the offset should be positive *wdh* 100617
+        assert( (nab[1][axis]-ib)%stride == 0 && ib <= maskLocal.getBound(axis)-hw );
 
-	nab[0][axis]=ia;
-	nab[1][axis]=ib;
-	// printF(" lineSmoothOption=%i axis=%i hw=%i ia=%i ib=%i maskLocal=[%i,%i]\n",
-	//       lineSmoothOption,axis, hw, ia,ib,maskLocal.getBase(axis),maskLocal.getBound(axis));
+        nab[0][axis]=ia;
+        nab[1][axis]=ib;
+        // printF(" lineSmoothOption=%i axis=%i hw=%i ia=%i ib=%i maskLocal=[%i,%i]\n",
+        //       lineSmoothOption,axis, hw, ia,ib,maskLocal.getBase(axis),maskLocal.getBound(axis));
       }
     }
     else
@@ -418,20 +422,20 @@ getDefect(const int & level,
 
       for( int axis=0; axis<3; axis++ )
       {
-	int ia = nab[0][axis], ib=nab[1][axis], stride=nab[2][axis];
+        int ia = nab[0][axis], ib=nab[1][axis], stride=nab[2][axis];
 
         ia = max(ia,maskLocal.getBase(axis) +mask.getGhostBoundaryWidth(axis));
-	// adjust ia so it offset by a factor of stride from the original ia 
+        // adjust ia so it offset by a factor of stride from the original ia 
         ia += (stride - (ia-nab[0][axis])%stride + stride )%stride;
-	assert( (ia-nab[0][axis])%stride == 0 && ia>=maskLocal.getBase(axis) +mask.getGhostBoundaryWidth(axis));
+        assert( (ia-nab[0][axis])%stride == 0 && ia>=maskLocal.getBase(axis) +mask.getGhostBoundaryWidth(axis));
 
-	ib = min(ib,maskLocal.getBound(axis)-mask.getGhostBoundaryWidth(axis));
-	// adjust ib so it offset by a factor of stride from ib0
-	ib -= (stride - (nab[1][axis]-ib)%stride + stride)%stride;  
-	assert( (nab[1][axis]-ib)%stride == 0 && ib <= maskLocal.getBound(axis)-mask.getGhostBoundaryWidth(axis) );
+        ib = min(ib,maskLocal.getBound(axis)-mask.getGhostBoundaryWidth(axis));
+        // adjust ib so it offset by a factor of stride from ib0
+        ib -= (stride - (nab[1][axis]-ib)%stride + stride)%stride;  
+        assert( (nab[1][axis]-ib)%stride == 0 && ib <= maskLocal.getBound(axis)-mask.getGhostBoundaryWidth(axis) );
 
-	nab[0][axis]=ia;
-	nab[1][axis]=ib;
+        nab[0][axis]=ia;
+        nab[1][axis]=ib;
       }
      #endif
       
@@ -443,11 +447,11 @@ getDefect(const int & level,
     const real *pcc = constantCoefficients.getBound(2)>=level ? &constantCoefficients(0,grid,level) : rpar;
 
     defectOpt( mg.numberOfDimensions(), dd(0,0),dd(1,0),dd(0,1),dd(1,1),dd(0,2),dd(1,2),
-	       n1a,n1b,n1c,n2a,n2b,n2c,n3a,n3b,n3c, ndc, 
-	       *getDataPointer(defectLocal),
-	       *getDataPointer(fLocal),
-	       *getDataPointer(cLocal),
-	       *up,
+               n1a,n1b,n1c,n2a,n2b,n2c,n3a,n3b,n3c, ndc, 
+               *getDataPointer(defectLocal),
+               *getDataPointer(fLocal),
+               *getDataPointer(cLocal),
+               *up,
                *getDataPointer(maskLocal),
                *pcc,*vcp,ipar[0],rpar[0] );
 
@@ -505,18 +509,18 @@ getDefect(const int & level,
 
 void Ogmg::
 evaluateTheDefectFormula(const int & level, 
-			 const int & grid, 
-			 const realArray & c,
-			 const realArray & u,  
-			 const realArray & f, 
-			 realArray & defect, 
-			 MappedGrid & mg,
-			 const Index & I1,
-			 const Index & I2,
-			 const Index & I3,
-			 const Index & I1u,
-			 const Index & I2u,
-			 const Index & I3u,
+                         const int & grid, 
+                         const realArray & c,
+                         const realArray & u,  
+                         const realArray & f, 
+                         realArray & defect, 
+                         MappedGrid & mg,
+                         const Index & I1,
+                         const Index & I2,
+                         const Index & I3,
+                         const Index & I1u,
+                         const Index & I2u,
+                         const Index & I3u,
                          const int lineSmoothOption)
 // ==================================================================================================
 //   /Description:
@@ -570,152 +574,152 @@ evaluateTheDefectFormula(const int & level,
 
       if( isConstantCoefficients(grid) )
       {
-	if( lineSmoothOption==-1 )
-	{ // general defect
-	  defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(
-	    constantCoefficients(M123( 0, 0,0),grid)*u(0,I1u  ,I2u  ,I3u)+   // **** could be wrong, assumes 5 pt
-	    constantCoefficients(M123( 1, 0,0),grid)*u(0,I1u+1,I2u  ,I3u)+
-	    constantCoefficients(M123( 0, 1,0),grid)*u(0,I1u  ,I2u+1,I3u)+
-	    constantCoefficients(M123(-1, 0,0),grid)*u(0,I1u-1,I2u  ,I3u)+
-	    constantCoefficients(M123( 0,-1,0),grid)*u(0,I1u  ,I2u-1,I3u)
-	    );
-	}
-	else if( lineSmoothOption==0 )
-	{ // defect for line smooth in direction 0
-	  defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(
-	    c(M123( 0, 1,0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u)+
-	    c(M123( 0,-1,0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u)
-	    );
-	}
-	else if( lineSmoothOption==1 )
-	{ // defect for line smooth in direction 1
-	  defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(
-	    c(M123( 1, 0,0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u)+
-	    c(M123(-1, 0,0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u)
-	    );
-	}
-	else
-	{
-	  throw "error";
-	}
+        if( lineSmoothOption==-1 )
+        { // general defect
+          defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(
+            constantCoefficients(M123( 0, 0,0),grid)*u(0,I1u  ,I2u  ,I3u)+   // **** could be wrong, assumes 5 pt
+            constantCoefficients(M123( 1, 0,0),grid)*u(0,I1u+1,I2u  ,I3u)+
+            constantCoefficients(M123( 0, 1,0),grid)*u(0,I1u  ,I2u+1,I3u)+
+            constantCoefficients(M123(-1, 0,0),grid)*u(0,I1u-1,I2u  ,I3u)+
+            constantCoefficients(M123( 0,-1,0),grid)*u(0,I1u  ,I2u-1,I3u)
+            );
+        }
+        else if( lineSmoothOption==0 )
+        { // defect for line smooth in direction 0
+          defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(
+            c(M123( 0, 1,0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u)+
+            c(M123( 0,-1,0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u)
+            );
+        }
+        else if( lineSmoothOption==1 )
+        { // defect for line smooth in direction 1
+          defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(
+            c(M123( 1, 0,0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u)+
+            c(M123(-1, 0,0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u)
+            );
+        }
+        else
+        {
+          throw "error";
+        }
         // **** do any boundaries ****
         Index Ib1,Ib2,Ib3;
         int side,axis;
-	for( axis=0; axis<mg.numberOfDimensions(); axis++ )
-	{
-	  for( side=0; side<=1; side++ )
-	  {
-	    if( boundaryCondition(side,axis)>0 && boundaryCondition(side,axis)==OgmgParameters::extrapolate )
-	    {
-	      getBoundaryIndex(mg.gridIndexRange(),side,axis,Ib1,Ib2,Ib3);
-	      defect(0,Ib1,Ib2,Ib3)=f(0,Ib1,Ib2,Ib3)-(
-		c(M123( 0, 0,0),Ib1,Ib2,Ib3)*u(0,Ib1  ,Ib2  ,Ib3)+
-		c(M123( 1, 0,0),Ib1,Ib2,Ib3)*u(0,Ib1+1,Ib2  ,Ib3)+
-		c(M123( 0, 1,0),Ib1,Ib2,Ib3)*u(0,Ib1  ,Ib2+1,Ib3)+
-		c(M123(-1, 0,0),Ib1,Ib2,Ib3)*u(0,Ib1-1,Ib2  ,Ib3)+
-		c(M123( 0,-1,0),Ib1,Ib2,Ib3)*u(0,Ib1  ,Ib2-1,Ib3)
-		);
-	    }
-	  }
-	}
+        for( axis=0; axis<mg.numberOfDimensions(); axis++ )
+        {
+          for( side=0; side<=1; side++ )
+          {
+            if( boundaryCondition(side,axis)>0 && boundaryCondition(side,axis)==OgmgParameters::extrapolate )
+            {
+              getBoundaryIndex(mg.gridIndexRange(),side,axis,Ib1,Ib2,Ib3);
+              defect(0,Ib1,Ib2,Ib3)=f(0,Ib1,Ib2,Ib3)-(
+                c(M123( 0, 0,0),Ib1,Ib2,Ib3)*u(0,Ib1  ,Ib2  ,Ib3)+
+                c(M123( 1, 0,0),Ib1,Ib2,Ib3)*u(0,Ib1+1,Ib2  ,Ib3)+
+                c(M123( 0, 1,0),Ib1,Ib2,Ib3)*u(0,Ib1  ,Ib2+1,Ib3)+
+                c(M123(-1, 0,0),Ib1,Ib2,Ib3)*u(0,Ib1-1,Ib2  ,Ib3)+
+                c(M123( 0,-1,0),Ib1,Ib2,Ib3)*u(0,Ib1  ,Ib2-1,Ib3)
+                );
+            }
+          }
+        }
       }
       else
       {
         // ============== non constant coefficient rectangular case ===============
 
         if( level>=2 && debug & 16 )
-	{
-	  display(u,sPrintF(buff," evaluate defect level=%i : u",level),debugFile,"%9.1e");
-	  display(f,sPrintF(buff," evaluate defect level=%i : f",level),debugFile,"%9.1e");
-	  display(c,sPrintF(buff," evaluate defect level=%i : c",level),debugFile,"%9.1e");
-	}
-	
+        {
+          display(u,sPrintF(buff," evaluate defect level=%i : u",level),debugFile,"%9.1e");
+          display(f,sPrintF(buff," evaluate defect level=%i : f",level),debugFile,"%9.1e");
+          display(c,sPrintF(buff," evaluate defect level=%i : c",level),debugFile,"%9.1e");
+        }
+        
 
-	if( lineSmoothOption==-1 )
-	{ // general defect
-	  defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(                     // @PA
-	    c(M123( 0, 0,0),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u)+
-	    c(M123( 1, 0,0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u)+
-	    c(M123( 0, 1,0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u)+
-	    c(M123(-1, 0,0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u)+
-	    c(M123( 0,-1,0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u)
-	    );
+        if( lineSmoothOption==-1 )
+        { // general defect
+          defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(                     // @PA
+            c(M123( 0, 0,0),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u)+
+            c(M123( 1, 0,0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u)+
+            c(M123( 0, 1,0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u)+
+            c(M123(-1, 0,0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u)+
+            c(M123( 0,-1,0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u)
+            );
 /* ----
             const int i1Bound=I1.getBound();
             const int i2Bound=I2.getBound();
             const int i3Bound=I3.getBound();
             const int 
-	    for( int i3=I3.getBase(); i3<i3Bound; i3+=stride3 )
-	    for( int i2=I2.getBase(); i2<i2Bound; i2+=stride2 )
-	    for( int i1=I1.getBase(); i1<i1Bound; i1+=stride1 )
-	    {
-	      defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(
-		c(M123( 0, 0,0),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u)+
-		c(M123( 1, 0,0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u)+
-		c(M123( 0, 1,0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u)+
-		c(M123(-1, 0,0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u)+
-		c(M123( 0,-1,0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u)
-		);
-	    }
+            for( int i3=I3.getBase(); i3<i3Bound; i3+=stride3 )
+            for( int i2=I2.getBase(); i2<i2Bound; i2+=stride2 )
+            for( int i1=I1.getBase(); i1<i1Bound; i1+=stride1 )
+            {
+              defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(
+                c(M123( 0, 0,0),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u)+
+                c(M123( 1, 0,0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u)+
+                c(M123( 0, 1,0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u)+
+                c(M123(-1, 0,0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u)+
+                c(M123( 0,-1,0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u)
+                );
+            }
 ----- */    
-	}
-	else if( lineSmoothOption==0 )
-	{ // defect for line smooth in direction 0
-	  defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(               // @PA
-	     c(M123( 0, 1,0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u)
-	    +c(M123( 0,-1,0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u)
-	    );
-	}
-	else if( lineSmoothOption==1 )
-	{ // defect for line smooth in direction 1
-	  defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(               // @PA
-	     c(M123( 1, 0,0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u)
-	    +c(M123(-1, 0,0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u)
-	    );
-	}
-	else
-	{
-	  throw "error";
-	}
+        }
+        else if( lineSmoothOption==0 )
+        { // defect for line smooth in direction 0
+          defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(               // @PA
+             c(M123( 0, 1,0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u)
+            +c(M123( 0,-1,0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u)
+            );
+        }
+        else if( lineSmoothOption==1 )
+        { // defect for line smooth in direction 1
+          defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(               // @PA
+             c(M123( 1, 0,0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u)
+            +c(M123(-1, 0,0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u)
+            );
+        }
+        else
+        {
+          throw "error";
+        }
       }
     }
     else  // ----- not rectangular -----
     {
       if( lineSmoothOption==-1 )
       { // general 3x3 defect
-	defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(                  // @PA
-	   c(M123( 0, 0,0),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u)
-	  +c(M123( 1, 0,0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u)
-	  +c(M123( 0, 1,0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u)
-	  +c(M123(-1, 0,0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u)
-	  +c(M123( 0,-1,0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u)
-	  +c(M123( 1, 1,0),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u)
-	  +c(M123( 1,-1,0),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u)
-	  +c(M123(-1, 1,0),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u)
-	  +c(M123(-1,-1,0),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u)
-	  );
+        defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(                  // @PA
+           c(M123( 0, 0,0),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u)
+          +c(M123( 1, 0,0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u)
+          +c(M123( 0, 1,0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u)
+          +c(M123(-1, 0,0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u)
+          +c(M123( 0,-1,0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u)
+          +c(M123( 1, 1,0),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u)
+          +c(M123( 1,-1,0),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u)
+          +c(M123(-1, 1,0),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u)
+          +c(M123(-1,-1,0),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u)
+          );
       }
       else if( lineSmoothOption==0 )
       { // defect for line smooth in direction 0
- 	defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(                  // @PA
-	   c(M123( 0, 1,0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u)
-	  +c(M123( 0,-1,0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u)
-	  +c(M123( 1, 1,0),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u)
-	  +c(M123( 1,-1,0),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u)
-	  +c(M123(-1, 1,0),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u)
-	  +c(M123(-1,-1,0),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u)
-	  );
+        defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(                  // @PA
+           c(M123( 0, 1,0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u)
+          +c(M123( 0,-1,0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u)
+          +c(M123( 1, 1,0),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u)
+          +c(M123( 1,-1,0),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u)
+          +c(M123(-1, 1,0),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u)
+          +c(M123(-1,-1,0),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u)
+          );
       }
       else if( lineSmoothOption==1 )
       { // defect for line smooth in direction 1
-	defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(                  // @PA
-	   c(M123( 1, 0,0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u)
-	  +c(M123(-1, 0,0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u)
-	  +c(M123( 1, 1,0),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u)
-	  +c(M123( 1,-1,0),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u)
-	  +c(M123(-1, 1,0),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u)
-	  +c(M123(-1,-1,0),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u)
-	  );
+        defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(                  // @PA
+           c(M123( 1, 0,0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u)
+          +c(M123(-1, 0,0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u)
+          +c(M123( 1, 1,0),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u)
+          +c(M123( 1,-1,0),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u)
+          +c(M123(-1, 1,0),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u)
+          +c(M123(-1,-1,0),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u)
+          );
       }
       else
       {
@@ -734,51 +738,51 @@ evaluateTheDefectFormula(const int & level,
 
       if( lineSmoothOption==-1 )
       { // general defect
-	defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(                    // @PA
-	   c(M123( 0, 0, 0),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u  )
-	  +c(M123( 1, 0, 0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u  )
-	  +c(M123( 0, 1, 0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u  )
-	  +c(M123(-1, 0, 0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u  )
-	  +c(M123( 0,-1, 0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u  )
-	  +c(M123( 0, 0, 1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u+1)
-	  +c(M123( 0, 0,-1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u-1)
-	  );
+        defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(                    // @PA
+           c(M123( 0, 0, 0),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u  )
+          +c(M123( 1, 0, 0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u  )
+          +c(M123( 0, 1, 0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u  )
+          +c(M123(-1, 0, 0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u  )
+          +c(M123( 0,-1, 0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u  )
+          +c(M123( 0, 0, 1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u+1)
+          +c(M123( 0, 0,-1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u-1)
+          );
       }
       else if( lineSmoothOption==0 )
       { // defect for line smooth in direction 0
-	defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(                         // @PA
-	  // c(M123( 0, 0, 0),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u  )
-	  // +c(M123( 1, 0, 0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u  )
-	   c(M123( 0, 1, 0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u  )
-	  // +c(M123(-1, 0, 0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u  )
-	  +c(M123( 0,-1, 0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u  )
-	  +c(M123( 0, 0, 1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u+1)
-	  +c(M123( 0, 0,-1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u-1)
-	  );
+        defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(                         // @PA
+          // c(M123( 0, 0, 0),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u  )
+          // +c(M123( 1, 0, 0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u  )
+           c(M123( 0, 1, 0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u  )
+          // +c(M123(-1, 0, 0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u  )
+          +c(M123( 0,-1, 0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u  )
+          +c(M123( 0, 0, 1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u+1)
+          +c(M123( 0, 0,-1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u-1)
+          );
       }
       else if( lineSmoothOption==1 )
       { // defect for line smooth in direction 1
-	defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(                         // @PA
-	  // c(M123( 0, 0, 0),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u  )
-	   c(M123( 1, 0, 0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u  )
-	  // +c(M123( 0, 1, 0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u  )
-	  +c(M123(-1, 0, 0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u  )
-	  // +c(M123( 0,-1, 0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u  )
-	  +c(M123( 0, 0, 1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u+1)
-	  +c(M123( 0, 0,-1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u-1)
-	  );
+        defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(                         // @PA
+          // c(M123( 0, 0, 0),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u  )
+           c(M123( 1, 0, 0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u  )
+          // +c(M123( 0, 1, 0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u  )
+          +c(M123(-1, 0, 0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u  )
+          // +c(M123( 0,-1, 0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u  )
+          +c(M123( 0, 0, 1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u+1)
+          +c(M123( 0, 0,-1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u-1)
+          );
       }
       else if( lineSmoothOption==2 )
       { // defect for line smooth in direction 2
-	defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(                         // @PA
-	  // c(M123( 0, 0, 0),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u  )
-	   c(M123( 1, 0, 0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u  )
-	  +c(M123( 0, 1, 0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u  )
-	  +c(M123(-1, 0, 0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u  )
-	  +c(M123( 0,-1, 0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u  )
-	  // +c(M123( 0, 0, 1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u+1)
-	  // +c(M123( 0, 0,-1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u-1)
-	  );
+        defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(                         // @PA
+          // c(M123( 0, 0, 0),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u  )
+           c(M123( 1, 0, 0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u  )
+          +c(M123( 0, 1, 0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u  )
+          +c(M123(-1, 0, 0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u  )
+          +c(M123( 0,-1, 0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u  )
+          // +c(M123( 0, 0, 1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u+1)
+          // +c(M123( 0, 0,-1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u-1)
+          );
       }
       else
       {
@@ -791,139 +795,139 @@ evaluateTheDefectFormula(const int & level,
       // ==================== non rectangular ================
       if( lineSmoothOption==-1 )
       { // general defect
-	defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(                    // @PA
-	   c(M123(-1,-1,-1),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u-1)
-	  +c(M123( 0,-1,-1),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u-1)
-	  +c(M123( 1,-1,-1),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u-1)
-	  +c(M123(-1, 0,-1),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u-1)
-	  +c(M123( 0, 0,-1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u-1)
-	  +c(M123( 1, 0,-1),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u-1)
-	  +c(M123(-1, 1,-1),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u-1)
-	  +c(M123( 0, 1,-1),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u-1)
-	  +c(M123( 1, 1,-1),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u-1)
+        defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(                    // @PA
+           c(M123(-1,-1,-1),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u-1)
+          +c(M123( 0,-1,-1),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u-1)
+          +c(M123( 1,-1,-1),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u-1)
+          +c(M123(-1, 0,-1),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u-1)
+          +c(M123( 0, 0,-1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u-1)
+          +c(M123( 1, 0,-1),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u-1)
+          +c(M123(-1, 1,-1),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u-1)
+          +c(M123( 0, 1,-1),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u-1)
+          +c(M123( 1, 1,-1),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u-1)
 
-	  +c(M123(-1,-1, 0),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u  )
-	  +c(M123( 0,-1, 0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u  )
-	  +c(M123( 1,-1, 0),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u  )
-	  +c(M123(-1, 0, 0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u  )
-	  +c(M123( 0, 0, 0),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u  )
-	  +c(M123( 1, 0, 0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u  )
-	  +c(M123(-1, 1, 0),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u  )
-	  +c(M123( 0, 1, 0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u  )
-	  +c(M123( 1, 1, 0),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u  )
+          +c(M123(-1,-1, 0),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u  )
+          +c(M123( 0,-1, 0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u  )
+          +c(M123( 1,-1, 0),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u  )
+          +c(M123(-1, 0, 0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u  )
+          +c(M123( 0, 0, 0),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u  )
+          +c(M123( 1, 0, 0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u  )
+          +c(M123(-1, 1, 0),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u  )
+          +c(M123( 0, 1, 0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u  )
+          +c(M123( 1, 1, 0),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u  )
 
-	  +c(M123(-1,-1, 1),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u+1)
-	  +c(M123( 0,-1, 1),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u+1)
-	  +c(M123( 1,-1, 1),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u+1)
-	  +c(M123(-1, 0, 1),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u+1)
-	  +c(M123( 0, 0, 1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u+1)
-	  +c(M123( 1, 0, 1),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u+1)
-	  +c(M123(-1, 1, 1),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u+1)
-	  +c(M123( 0, 1, 1),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u+1)
-	  +c(M123( 1, 1, 1),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u+1)
-	  );
+          +c(M123(-1,-1, 1),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u+1)
+          +c(M123( 0,-1, 1),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u+1)
+          +c(M123( 1,-1, 1),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u+1)
+          +c(M123(-1, 0, 1),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u+1)
+          +c(M123( 0, 0, 1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u+1)
+          +c(M123( 1, 0, 1),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u+1)
+          +c(M123(-1, 1, 1),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u+1)
+          +c(M123( 0, 1, 1),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u+1)
+          +c(M123( 1, 1, 1),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u+1)
+          );
       }
       else if( lineSmoothOption==0 )
       { // defect for line smooth in direction 0
-	defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(                   // @PA
-	   c(M123(-1,-1,-1),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u-1)
-	  +c(M123( 0,-1,-1),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u-1)
-	  +c(M123( 1,-1,-1),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u-1)
-	  +c(M123(-1, 0,-1),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u-1)
-	  +c(M123( 0, 0,-1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u-1)
-	  +c(M123( 1, 0,-1),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u-1)
-	  +c(M123(-1, 1,-1),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u-1)
-	  +c(M123( 0, 1,-1),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u-1)
-	  +c(M123( 1, 1,-1),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u-1)
+        defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(                   // @PA
+           c(M123(-1,-1,-1),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u-1)
+          +c(M123( 0,-1,-1),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u-1)
+          +c(M123( 1,-1,-1),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u-1)
+          +c(M123(-1, 0,-1),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u-1)
+          +c(M123( 0, 0,-1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u-1)
+          +c(M123( 1, 0,-1),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u-1)
+          +c(M123(-1, 1,-1),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u-1)
+          +c(M123( 0, 1,-1),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u-1)
+          +c(M123( 1, 1,-1),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u-1)
 
-	  +c(M123(-1,-1, 0),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u  )
-	  +c(M123( 0,-1, 0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u  )
-	  +c(M123( 1,-1, 0),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u  )
-	   // +c(M123(-1, 0, 0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u  )
-	   // +c(M123( 0, 0, 0),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u  )
-	   // +c(M123( 1, 0, 0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u  )
-	  +c(M123(-1, 1, 0),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u  )
-	  +c(M123( 0, 1, 0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u  )
-	  +c(M123( 1, 1, 0),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u  )
+          +c(M123(-1,-1, 0),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u  )
+          +c(M123( 0,-1, 0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u  )
+          +c(M123( 1,-1, 0),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u  )
+           // +c(M123(-1, 0, 0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u  )
+           // +c(M123( 0, 0, 0),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u  )
+           // +c(M123( 1, 0, 0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u  )
+          +c(M123(-1, 1, 0),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u  )
+          +c(M123( 0, 1, 0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u  )
+          +c(M123( 1, 1, 0),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u  )
 
-	  +c(M123(-1,-1, 1),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u+1)
-	  +c(M123( 0,-1, 1),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u+1)
-	  +c(M123( 1,-1, 1),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u+1)
-	  +c(M123(-1, 0, 1),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u+1)
-	  +c(M123( 0, 0, 1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u+1)
-	  +c(M123( 1, 0, 1),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u+1)
-	  +c(M123(-1, 1, 1),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u+1)
-	  +c(M123( 0, 1, 1),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u+1)
-	  +c(M123( 1, 1, 1),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u+1)
-	  );
+          +c(M123(-1,-1, 1),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u+1)
+          +c(M123( 0,-1, 1),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u+1)
+          +c(M123( 1,-1, 1),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u+1)
+          +c(M123(-1, 0, 1),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u+1)
+          +c(M123( 0, 0, 1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u+1)
+          +c(M123( 1, 0, 1),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u+1)
+          +c(M123(-1, 1, 1),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u+1)
+          +c(M123( 0, 1, 1),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u+1)
+          +c(M123( 1, 1, 1),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u+1)
+          );
       }
       else if( lineSmoothOption==1 )
       { // defect for line smooth in direction 1
-	defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(                   // @PA
-	   c(M123(-1,-1,-1),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u-1)
-	  +c(M123( 0,-1,-1),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u-1)
-	  +c(M123( 1,-1,-1),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u-1)
-	  +c(M123(-1, 0,-1),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u-1)
-	  +c(M123( 0, 0,-1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u-1)
-	  +c(M123( 1, 0,-1),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u-1)
-	  +c(M123(-1, 1,-1),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u-1)
-	  +c(M123( 0, 1,-1),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u-1)
-	  +c(M123( 1, 1,-1),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u-1)
+        defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(                   // @PA
+           c(M123(-1,-1,-1),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u-1)
+          +c(M123( 0,-1,-1),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u-1)
+          +c(M123( 1,-1,-1),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u-1)
+          +c(M123(-1, 0,-1),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u-1)
+          +c(M123( 0, 0,-1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u-1)
+          +c(M123( 1, 0,-1),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u-1)
+          +c(M123(-1, 1,-1),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u-1)
+          +c(M123( 0, 1,-1),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u-1)
+          +c(M123( 1, 1,-1),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u-1)
 
-	  +c(M123(-1,-1, 0),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u  )
-	   // +c(M123( 0,-1, 0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u  )
-	  +c(M123( 1,-1, 0),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u  )
-	  +c(M123(-1, 0, 0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u  )
-	   // +c(M123( 0, 0, 0),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u  )
-	  +c(M123( 1, 0, 0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u  )
-	  +c(M123(-1, 1, 0),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u  )
-	   // +c(M123( 0, 1, 0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u  )
-	  +c(M123( 1, 1, 0),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u  )
+          +c(M123(-1,-1, 0),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u  )
+           // +c(M123( 0,-1, 0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u  )
+          +c(M123( 1,-1, 0),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u  )
+          +c(M123(-1, 0, 0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u  )
+           // +c(M123( 0, 0, 0),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u  )
+          +c(M123( 1, 0, 0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u  )
+          +c(M123(-1, 1, 0),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u  )
+           // +c(M123( 0, 1, 0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u  )
+          +c(M123( 1, 1, 0),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u  )
 
-	  +c(M123(-1,-1, 1),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u+1)
-	  +c(M123( 0,-1, 1),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u+1)
-	  +c(M123( 1,-1, 1),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u+1)
-	  +c(M123(-1, 0, 1),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u+1)
-	  +c(M123( 0, 0, 1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u+1)
-	  +c(M123( 1, 0, 1),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u+1)
-	  +c(M123(-1, 1, 1),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u+1)
-	  +c(M123( 0, 1, 1),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u+1)
-	  +c(M123( 1, 1, 1),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u+1)
-	  );
+          +c(M123(-1,-1, 1),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u+1)
+          +c(M123( 0,-1, 1),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u+1)
+          +c(M123( 1,-1, 1),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u+1)
+          +c(M123(-1, 0, 1),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u+1)
+          +c(M123( 0, 0, 1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u+1)
+          +c(M123( 1, 0, 1),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u+1)
+          +c(M123(-1, 1, 1),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u+1)
+          +c(M123( 0, 1, 1),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u+1)
+          +c(M123( 1, 1, 1),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u+1)
+          );
       }
       else if( lineSmoothOption==2 )
       { // defect for line smooth in direction 1
-	defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(                   // @PA
-	   c(M123(-1,-1,-1),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u-1)
-	  +c(M123( 0,-1,-1),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u-1)
-	  +c(M123( 1,-1,-1),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u-1)
-	  +c(M123(-1, 0,-1),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u-1)
-	   // +c(M123( 0, 0,-1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u-1)
-	  +c(M123( 1, 0,-1),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u-1)
-	  +c(M123(-1, 1,-1),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u-1)
-	  +c(M123( 0, 1,-1),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u-1)
-	  +c(M123( 1, 1,-1),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u-1)
+        defect(0,I1,I2,I3)=f(0,I1,I2,I3)-(                   // @PA
+           c(M123(-1,-1,-1),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u-1)
+          +c(M123( 0,-1,-1),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u-1)
+          +c(M123( 1,-1,-1),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u-1)
+          +c(M123(-1, 0,-1),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u-1)
+           // +c(M123( 0, 0,-1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u-1)
+          +c(M123( 1, 0,-1),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u-1)
+          +c(M123(-1, 1,-1),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u-1)
+          +c(M123( 0, 1,-1),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u-1)
+          +c(M123( 1, 1,-1),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u-1)
 
-	  +c(M123(-1,-1, 0),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u  )
-	  +c(M123( 0,-1, 0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u  )
-	  +c(M123( 1,-1, 0),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u  )
-	  +c(M123(-1, 0, 0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u  )
-	   // +c(M123( 0, 0, 0),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u  )
-	  +c(M123( 1, 0, 0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u  )
-	  +c(M123(-1, 1, 0),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u  )
-	  +c(M123( 0, 1, 0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u  )
-	  +c(M123( 1, 1, 0),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u  )
+          +c(M123(-1,-1, 0),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u  )
+          +c(M123( 0,-1, 0),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u  )
+          +c(M123( 1,-1, 0),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u  )
+          +c(M123(-1, 0, 0),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u  )
+           // +c(M123( 0, 0, 0),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u  )
+          +c(M123( 1, 0, 0),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u  )
+          +c(M123(-1, 1, 0),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u  )
+          +c(M123( 0, 1, 0),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u  )
+          +c(M123( 1, 1, 0),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u  )
 
-	  +c(M123(-1,-1, 1),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u+1)
-	  +c(M123( 0,-1, 1),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u+1)
-	  +c(M123( 1,-1, 1),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u+1)
-	  +c(M123(-1, 0, 1),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u+1)
-	   // +c(M123( 0, 0, 1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u+1)
-	  +c(M123( 1, 0, 1),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u+1)
-	  +c(M123(-1, 1, 1),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u+1)
-	  +c(M123( 0, 1, 1),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u+1)
-	  +c(M123( 1, 1, 1),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u+1)
-	  );
+          +c(M123(-1,-1, 1),I1,I2,I3)*u(0,I1u-1,I2u-1,I3u+1)
+          +c(M123( 0,-1, 1),I1,I2,I3)*u(0,I1u  ,I2u-1,I3u+1)
+          +c(M123( 1,-1, 1),I1,I2,I3)*u(0,I1u+1,I2u-1,I3u+1)
+          +c(M123(-1, 0, 1),I1,I2,I3)*u(0,I1u-1,I2u  ,I3u+1)
+           // +c(M123( 0, 0, 1),I1,I2,I3)*u(0,I1u  ,I2u  ,I3u+1)
+          +c(M123( 1, 0, 1),I1,I2,I3)*u(0,I1u+1,I2u  ,I3u+1)
+          +c(M123(-1, 1, 1),I1,I2,I3)*u(0,I1u-1,I2u+1,I3u+1)
+          +c(M123( 0, 1, 1),I1,I2,I3)*u(0,I1u  ,I2u+1,I3u+1)
+          +c(M123( 1, 1, 1),I1,I2,I3)*u(0,I1u+1,I2u+1,I3u+1)
+          );
       }
       else
       {

@@ -62,6 +62,7 @@ $predefined=1;  $cgSolver="best"; $ogesDebug=0;
 $eqn=lap; $tz="trig"; $bcOrder4=""; $fx=1.; $fy=1.; $fz=1.; 
 $bc1=""; $bc2=""; $bc3=""; $bc4="";  $bc5=""; $bc6=""; $bc7=""; $bc8=""; 
 $solveCoarseGridBySmoother=0; $cgsi=10; $projectSingular=1; $adjustSingularEquations=0; 
+@inactive= (); # holds list of inactive grids
 # 
 # ----------------------------- get command line arguments ---------------------------------------
 GetOptions( "g=s"=>\$grid,"maxit=i"=>\$maxit,"debug=i"=>\$debug,"sm=s"=>\$sm,"bsm=s"=>\$bsm,"ic=i"=>\$ic,\
@@ -76,7 +77,7 @@ GetOptions( "g=s"=>\$grid,"maxit=i"=>\$maxit,"debug=i"=>\$debug,"sm=s"=>\$sm,"bs
             "bc7=s"=>\$bc7,"bc8=s"=>\$bc8,"rb=s"=>\$rb,"cgsi=i"=>\$cgsi,"projectSingular=i"=>\$projectSingular,\
             "adjustSingularEquations=i"=>\$adjustSingularEquations,"ilucg=i"=>\$ilucg,"iluFill=f"=>\$iluFill,\
             "save=s"=>\$save, "read=s"=>\$read,"opavCoarseGrid=i"=>\$opavCoarseGrid,"nuDt=f"=>\$nuDt,\
-            "orderCoarse=i"=>\$orderCoarse );
+            "orderCoarse=i"=>\$orderCoarse,"inactive=i{1,}"=>\@inactive );
 # -------------------------------------------------------------------------------------------------
 $grid
 if( $eqn eq "lap" && $predefined eq 1 ){ $eqn = "laplace (predefined)"; }
@@ -200,6 +201,11 @@ if( $bc6 ne "" ){ $cmd.="\n bcNumber6=$bc6"; }
 if( $bc7 ne "" ){ $cmd.="\n bcNumber7=$bc7"; }
 if( $bc8 ne "" ){ $cmd.="\n bcNumber8=$bc8"; }
 $cmd
+#
+if( $inactive[0] ne "" ){ $cmd = "inactive grids $inactive[0] $inactive[1] $inactive[2] $inactive[3] $inactive[4]"; }else{ $cmd="#" }
+# printf("cmd=[$cmd]\n");
+$cmd
+# pause
 #
 # bc(0,0,0)=2
 # bc(1,0,0)=3

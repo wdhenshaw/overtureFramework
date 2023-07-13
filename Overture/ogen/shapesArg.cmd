@@ -76,7 +76,7 @@ create mappings
        .866025 -.5
        .866025 0.
     boundary conditions
-      -1 -1 1 0
+      -1 -1 5 0
     n-dist
     fixed normal distance
       # $nDist= 5.*$ds;
@@ -113,7 +113,7 @@ create mappings
        -.25 -.25
        -1.  -.25
     boundary conditions
-      -1 -1 1 0
+      -1 -1 6 0
     n-dist
     fixed normal distance
      # -.15
@@ -150,7 +150,7 @@ create mappings
      $nr = intmg( $nDist/$ds+3.5 );
      $ns $nr
     boundary conditions
-      -1 -1 1 0
+      -1 -1 7 0
     mappingName
       annulus
   exit

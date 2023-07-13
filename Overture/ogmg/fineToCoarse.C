@@ -91,82 +91,82 @@ fineToCoarse(const int & level, bool transferForcing /* = false */ )
           // getIndex(mg.dimension(),I1,I2,I3);
           //      where( mask(I1,I2,I3)==0 )
           //      {
-          //	df(I1,I2,I3)=123456789.;  // fill in bogus values for debugging
+          //        df(I1,I2,I3)=123456789.;  // fill in bogus values for debugging
           //      }
           // ***** this is not correct -- interp points on boundaries should only be averaged
           //         from other boundary defects.
                     getIndex(extendedGridIndexRange(mg),I1,I2,I3);
                     for( int i3=I3.getBase(); i3<=I3.getBound(); i3++ )  // ****************** fix this *****
                     {
-              	for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
-              	{
-                	  for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
-                	  {
-                  	    if( mask(i1,i2,i3)<0 )
-                  	    {
+                        for( int i2=I2.getBase(); i2<=I2.getBound(); i2++ )
+                        {
+                            for( int i1=I1.getBase(); i1<=I1.getBound(); i1++ )
+                            {
+                                if( mask(i1,i2,i3)<0 )
+                                {
                                     int num=0;
-                    	      df(i1,i2,i3)=0.;
-                    	      int j1,j2,j3;
+                                    df(i1,i2,i3)=0.;
+                                    int j1,j2,j3;
                                     if( TRUE )
-                    	      {
+                                    {
                     // Set the defect at an interpolation point to be the average
                     // of the nearby interior point defects.
                                         int j3Start = mg.numberOfDimensions()==2 ? i3 : i3-1;
                                         int j3End   = mg.numberOfDimensions()==2 ? i3 : i3+1;
-                    		for( j3=j3Start; j3<=j3End; j3++ )
-                    		{
-                      		  for( j2=i2-1; j2<=i2+1; j2++ )
-                      		  {
-                        		    for( j1=i1-1; j1<=i1+1; j1++ )
-                        		    {
-                          		      if( mask(j1,j2,j3)>0 && mask(2*j1-i1,2*j2-i2,2*j3-i3)>0 )
-                          		      {
-                          			df(i1,i2,i3)+=2.*df(j1,j2,j3)-df(2*j1-i1,2*j2-i2,2*j3-i3);
-                          			num++;
-                          		      }
-                        		    }
-                      		  }
-                    		}
+                                        for( j3=j3Start; j3<=j3End; j3++ )
+                                        {
+                                            for( j2=i2-1; j2<=i2+1; j2++ )
+                                            {
+                                                for( j1=i1-1; j1<=i1+1; j1++ )
+                                                {
+                                                    if( mask(j1,j2,j3)>0 && mask(2*j1-i1,2*j2-i2,2*j3-i3)>0 )
+                                                    {
+                                                        df(i1,i2,i3)+=2.*df(j1,j2,j3)-df(2*j1-i1,2*j2-i2,2*j3-i3);
+                                                        num++;
+                                                    }
+                                                }
+                                            }
+                                        }
                                         if( num>1 ) 
-                          	    	  df(i1,i2,i3)/=num;
-                    	      }
-                    	      else
-                    	      {
-                    		j3=i3;
-                    		j2=i2;
-                    		for( j1=i1-1; j1<=i1+1; j1+=2 )
-                    		{
-                      		  if( mask(j1,j2,j3)>0 && mask(2*j1-i1,i2,i3)>0 )
-                      		  {
-                        		    df(i1,i2,i3)=2.*df(j1,j2,j3)-df(2*j1-i1,i2,i3);
-                        		    break;
-                      		  }
-                    		}
-                    		j1=i1;
-                    		for( j2=i2-1; j2<=i2+1; j2+=2 )
-                    		{
-                      		  if( mask(j1,j2,j3)>0 && mask(i1,2*j2-i2,i3)>0 )
-                      		  {
-                        		    df(i1,i2,i3)=2.*df(j1,j2,j3)-df(i1,2*j2-i2,i3);
-                        		    break;
-                      		  }
-                    		}
-                    		if( mg.numberOfDimensions()==3 )
-                    		{
-                      		  j2=i2;
-                      		  for( j3=i3-1; j3<=i3+1; j3+=2 )
-                      		  {
-                        		    if( mask(j1,j2,j3)>0 && mask(i1,i2,2*j3-i3)>0 )
-                        		    {
-                          		      df(i1,i2,i3)=2.*df(j1,j2,j3)-df(i1,i2,2*j3-i3);
-                          		      break;
-                        		    }
-                      		  }
-                    		}
-                    	      }
-                  	    }
-                	  }
-              	}
+                                            df(i1,i2,i3)/=num;
+                                    }
+                                    else
+                                    {
+                                        j3=i3;
+                                        j2=i2;
+                                        for( j1=i1-1; j1<=i1+1; j1+=2 )
+                                        {
+                                            if( mask(j1,j2,j3)>0 && mask(2*j1-i1,i2,i3)>0 )
+                                            {
+                                                df(i1,i2,i3)=2.*df(j1,j2,j3)-df(2*j1-i1,i2,i3);
+                                                break;
+                                            }
+                                        }
+                                        j1=i1;
+                                        for( j2=i2-1; j2<=i2+1; j2+=2 )
+                                        {
+                                            if( mask(j1,j2,j3)>0 && mask(i1,2*j2-i2,i3)>0 )
+                                            {
+                                                df(i1,i2,i3)=2.*df(j1,j2,j3)-df(i1,2*j2-i2,i3);
+                                                break;
+                                            }
+                                        }
+                                        if( mg.numberOfDimensions()==3 )
+                                        {
+                                            j2=i2;
+                                            for( j3=i3-1; j3<=i3+1; j3+=2 )
+                                            {
+                                                if( mask(j1,j2,j3)>0 && mask(i1,i2,2*j3-i3)>0 )
+                                                {
+                                                    df(i1,i2,i3)=2.*df(j1,j2,j3)-df(i1,i2,2*j3-i3);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
     }
@@ -289,6 +289,11 @@ fineToCoarse(const int & level, const int & grid, bool transferForcing /* = fals
   // fCoarse=0.;   // **** could do better ***
     assign(fCoarse,0.);
 
+    if( !active(grid) ) // *wdh* May 20, 2023
+    {
+        return;
+    }
+
     bool newWay = false; // orderOfAccuracy==4;
 
   // int numberOfFictitiousPoints = orderOfAccuracy/2;
@@ -322,55 +327,55 @@ fineToCoarse(const int & level, const int & grid, bool transferForcing /* = fals
             int extra=1;
             if( !newWay )
             {
-      	getGhostIndex(mgFine.gridIndexRange(),side,axis,I1,I2,I3,1,extra);  // ghost line, include corners ??
+                getGhostIndex(mgFine.gridIndexRange(),side,axis,I1,I2,I3,1,extra);  // ghost line, include corners ??
                 const int includeGhost=1;
                 bool ok = ParallelUtility::getLocalArrayBounds(defectFine,defectFineLocal,I1,I2,I3,includeGhost);
-      	if( !ok ) continue;
-      	
+                if( !ok ) continue;
+                
         // old  assign(defectFine,I1,I2,I3,all, defectFine,I1+2*is1,I2+2*is2,I3+2*is3,all ); // *wdh* 100412
 
-        	if( bc(side,axis,grid)==OgesParameters::neumann || bc(side,axis,grid)==OgesParameters::mixed )
-      	{
+                if( bc(side,axis,grid)==OgesParameters::neumann || bc(side,axis,grid)==OgesParameters::mixed )
+                {
                       defectFineLocal(I1,I2,I3)=defectFineLocal(I1+2*is1,I2+2*is2,I3+2*is3); 
-      	}
+                }
                 else if( bc(side,axis,grid)==OgesParameters::extrapolate )
-      	{
+                {
                     const int orderOfExtrapolation=int( boundaryConditionData(0,side,axis,grid) +.5 );
 
-	  // printF("fineToCoarseBC: extrapolation BC: extrap defectFine...\n");
-        	  if( orderOfExtrapolation==2 )
-        	  {
-              	    defectFineLocal(I1,I2,I3)=2.*defectFineLocal(I1+  is1,I2+  is2,I3+  is3)
-                                				        -defectFineLocal(I1+2*is1,I2+2*is2,I3+2*is3);
-        	  }
+          // printF("fineToCoarseBC: extrapolation BC: extrap defectFine...\n");
+                    if( orderOfExtrapolation==2 )
+                    {
+                        defectFineLocal(I1,I2,I3)=2.*defectFineLocal(I1+  is1,I2+  is2,I3+  is3)
+                                                                                -defectFineLocal(I1+2*is1,I2+2*is2,I3+2*is3);
+                    }
                     else if( orderOfExtrapolation==3 )
-        	  {  // does this work?? 
-              	    defectFineLocal(I1,I2,I3)=3.*defectFineLocal(I1+  is1,I2+  is2,I3+  is3)
+                    {  // does this work?? 
+                        defectFineLocal(I1,I2,I3)=3.*defectFineLocal(I1+  is1,I2+  is2,I3+  is3)
                                                                           -3.*defectFineLocal(I1+2*is1,I2+2*is2,I3+2*is3)
                                                                                 +defectFineLocal(I1+3*is1,I2+3*is2,I3+3*is3);
-        	  }
+                    }
                     else
-        	  {
-          	    printF("fineToCoarseBC: ERROR: orderOfExtrapolation=%i not implemented\n",orderOfExtrapolation);
-          	    OV_ABORT("ERROR");
-        	  }
-        	  
-      	}
-      	else
-      	{
-        	  OV_ABORT("fineToCoarseBC: ERROR unknown bc");
-      	}
+                    {
+                        printF("fineToCoarseBC: ERROR: orderOfExtrapolation=%i not implemented\n",orderOfExtrapolation);
+                        OV_ABORT("ERROR");
+                    }
+                    
+                }
+                else
+                {
+                    OV_ABORT("fineToCoarseBC: ERROR unknown bc");
+                }
                 
             }
             else 
             {
         // extra=0;
-      	getGhostIndex(mgFine.gridIndexRange(),side,axis,I1,I2,I3,1,extra);  // ghost line, include corners ??
+                getGhostIndex(mgFine.gridIndexRange(),side,axis,I1,I2,I3,1,extra);  // ghost line, include corners ??
         // defectFine(I1,I2,I3)=defectFine(I1+2*is1,I2+2*is2,I3+2*is3);
 
-	// defectFine(I1,I2,I3)=0.;
+        // defectFine(I1,I2,I3)=0.;
                 assign(defectFine,0., I1,I2,I3,all);
-      	getGhostIndex(mgFine.gridIndexRange(),side,axis,I1,I2,I3,2,extra);  // ghost line, include corners ??
+                getGhostIndex(mgFine.gridIndexRange(),side,axis,I1,I2,I3,2,extra);  // ghost line, include corners ??
         // defectFine(I1,I2,I3)=0.;
             }
         }
@@ -403,7 +408,7 @@ fineToCoarse(const int & level, const int & grid, bool transferForcing /* = fals
             interpOption=Interpolate::injection;
         else
             interpOption  =  numberOfDimensions==1 ? Interpolate::fullWeighting100 :
-      	numberOfDimensions==2 ? Interpolate::fullWeighting110 : Interpolate::fullWeighting111;
+                numberOfDimensions==2 ? Interpolate::fullWeighting110 : Interpolate::fullWeighting111;
 
         int update=0; 
 
@@ -453,18 +458,18 @@ fineToCoarse(const int & level, const int & grid, bool transferForcing /* = fals
             IntegerArray gidFine(2,3), gidCoarse(2,3), bcLocal(2,3);
             for( int axis=0; axis<3; axis++ )
             {
-      	gidFine(0,axis)=max(mgFine.gridIndexRange(0,axis),defectFineLocal.getBase(axis)  +defectFine.getGhostBoundaryWidth(axis));
-      	gidFine(1,axis)=min(mgFine.gridIndexRange(1,axis),defectFineLocal.getBound(axis) -defectFine.getGhostBoundaryWidth(axis));
-      	gidCoarse(0,axis)=max(mgCoarse.gridIndexRange(0,axis),fCoarseLocal.getBase(axis)  +fCoarse.getGhostBoundaryWidth(axis));
-      	gidCoarse(1,axis)=min(mgCoarse.gridIndexRange(1,axis),fCoarseLocal.getBound(axis) -fCoarse.getGhostBoundaryWidth(axis));
+                gidFine(0,axis)=max(mgFine.gridIndexRange(0,axis),defectFineLocal.getBase(axis)  +defectFine.getGhostBoundaryWidth(axis));
+                gidFine(1,axis)=min(mgFine.gridIndexRange(1,axis),defectFineLocal.getBound(axis) -defectFine.getGhostBoundaryWidth(axis));
+                gidCoarse(0,axis)=max(mgCoarse.gridIndexRange(0,axis),fCoarseLocal.getBase(axis)  +fCoarse.getGhostBoundaryWidth(axis));
+                gidCoarse(1,axis)=min(mgCoarse.gridIndexRange(1,axis),fCoarseLocal.getBound(axis) -fCoarse.getGhostBoundaryWidth(axis));
         // *wdh* 091231 -- base bcLocal on coarse grid
                 for( int side=0; side<=1; side++ )
-      	{
-        	  if( gidCoarse(side,axis)==mgCoarse.gridIndexRange(side,axis) )
+                {
+                    if( gidCoarse(side,axis)==mgCoarse.gridIndexRange(side,axis) )
                         bcLocal(side,axis)=boundaryCondition(side,axis,grid);
                     else
                         bcLocal(side,axis)=0;  // this side is not on this processor
-      	}
+                }
             }
             const int *bcLocalp = &bcLocal(0,0);
         #else
@@ -532,116 +537,116 @@ fineToCoarse(const int & level, const int & grid, bool transferForcing /* = fals
       // if( mgFine.boundaryCondition(side,axis)>0 && mgFine.boundaryCondition(side,axis)!=neumann )
             if( boundaryCondition(side,axis,grid)>0 && boundaryCondition(side,axis,grid)==OgmgParameters::equation )
             {
-      	if( false && newWay )
-      	{
-        	  getBoundaryIndex(mgCoarse.gridIndexRange(),side,axis,Ib[0],Ib[1],Ib[2]);  
-        	  fCoarse(Ib[0],Ib[1],Ib[2])=0.;
-      	}
+                if( false && newWay )
+                {
+                    getBoundaryIndex(mgCoarse.gridIndexRange(),side,axis,Ib[0],Ib[1],Ib[2]);  
+                    fCoarse(Ib[0],Ib[1],Ib[2])=0.;
+                }
             }
             else if( boundaryCondition(side,axis,grid)>0 && boundaryCondition(side,axis,grid)==OgmgParameters::extrapolate )
             {  
-	// ****************************************************************
-	// ******************Dirichlet boundaries**************************
-	// ****************************************************************
+        // ****************************************************************
+        // ******************Dirichlet boundaries**************************
+        // ****************************************************************
 
         // No need to change Neumann boundaries since these are already correct from above
 
-      	is[0]=is[1]=is[2]=0; 	is[axis]=1;   // shift(dir)=delta(dir-axis)
+                is[0]=is[1]=is[2]=0;    is[axis]=1;   // shift(dir)=delta(dir-axis)
 
-      	getBoundaryIndex(mgFine.gridIndexRange(),side,axis,Ib[0],Ib[1],Ib[2],-2);  // bndry pts, no corners
-      	for( dir=0; dir<3; dir++ )
-        	  Ib[dir]=IndexBB(Ib[dir],2);                                        // set stride to 2
-      	Ig[0]=Ib[0]; Ig[1]=Ib[1]; Ig[2]=Ib[2];      // ghost points
-      	Ig[axis]+= (side==Start) ? -1 : +1;         // note that this should be 1 and not 2
+                getBoundaryIndex(mgFine.gridIndexRange(),side,axis,Ib[0],Ib[1],Ib[2],-2);  // bndry pts, no corners
+                for( dir=0; dir<3; dir++ )
+                    Ib[dir]=IndexBB(Ib[dir],2);                                        // set stride to 2
+                Ig[0]=Ib[0]; Ig[1]=Ib[1]; Ig[2]=Ib[2];      // ghost points
+                Ig[axis]+= (side==Start) ? -1 : +1;         // note that this should be 1 and not 2
 
-      	getBoundaryIndex(mgCoarse.gridIndexRange(),side,axis,Jb[0],Jb[1],Jb[2],-1); // no corners
-      	Jg[0]=Jb[0]; Jg[1]=Jb[1]; Jg[2]=Jb[2];      // ghost points
-      	Jg[axis]+= (side==Start) ? -1 : +1;    
+                getBoundaryIndex(mgCoarse.gridIndexRange(),side,axis,Jb[0],Jb[1],Jb[2],-1); // no corners
+                Jg[0]=Jb[0]; Jg[1]=Jb[1]; Jg[2]=Jb[2];      // ghost points
+                Jg[axis]+= (side==Start) ? -1 : +1;    
 
-      	if( numberOfDimensions==1 )
-      	{
-        	  fCoarse(Jb[0])=defectFine(Ib[0]);    // inject boundary defects in 1D
-      	}
-      	else if( numberOfDimensions==2 )
-      	{
-        	  fCoarse(Jb[0],Jb[1],Jb[2])=BOUNDARY_DEFECT_2D(is[0],is[1],Ib[0],Ib[1],Ib[2]);  // average
-        	  fCoarse(Jg[0],Jg[1],Jg[2])=BOUNDARY_DEFECT_2D(is[0],is[1],Ig[0],Ig[1],Ig[2]); 
+                if( numberOfDimensions==1 )
+                {
+                    fCoarse(Jb[0])=defectFine(Ib[0]);    // inject boundary defects in 1D
+                }
+                else if( numberOfDimensions==2 )
+                {
+                    fCoarse(Jb[0],Jb[1],Jb[2])=BOUNDARY_DEFECT_2D(is[0],is[1],Ib[0],Ib[1],Ib[2]);  // average
+                    fCoarse(Jg[0],Jg[1],Jg[2])=BOUNDARY_DEFECT_2D(is[0],is[1],Ig[0],Ig[1],Ig[2]); 
 
-	  // ----fix up interpolation points and their neighbours, inject the defect----
-        	  where( mgcg.multigridLevel[level][grid].mask()(Ib[0],Ib[1],Ib[2])<0 )
-        	  {
-          	    fCoarse(Jb[0],Jb[1])=defectFine(Ib[0],Ib[1]);
-          	    fCoarse(Jb[0]+is[1],Jb[1]+is[0])=defectFine(Ib[0]+2*is[1],Ib[1]+2*is[0]);
-          	    fCoarse(Jb[0]-is[1],Jb[1]-is[0])=defectFine(Ib[0]-2*is[1],Ib[1]-2*is[0]);
+          // ----fix up interpolation points and their neighbours, inject the defect----
+                    where( mgcg.multigridLevel[level][grid].mask()(Ib[0],Ib[1],Ib[2])<0 )
+                    {
+                        fCoarse(Jb[0],Jb[1])=defectFine(Ib[0],Ib[1]);
+                        fCoarse(Jb[0]+is[1],Jb[1]+is[0])=defectFine(Ib[0]+2*is[1],Ib[1]+2*is[0]);
+                        fCoarse(Jb[0]-is[1],Jb[1]-is[0])=defectFine(Ib[0]-2*is[1],Ib[1]-2*is[0]);
 
-          	    fCoarse(Jg[0],Jg[1])=defectFine(Ig[0],Ig[1]);
-          	    fCoarse(Jg[0]+is[1],Jg[1]+is[0])=defectFine(Ig[0]+2*is[1],Ig[1]+2*is[0]);
-          	    fCoarse(Jg[0]-is[1],Jg[1]-is[0])=defectFine(Ig[0]-2*is[1],Ig[1]-2*is[0]);
-        	  }
+                        fCoarse(Jg[0],Jg[1])=defectFine(Ig[0],Ig[1]);
+                        fCoarse(Jg[0]+is[1],Jg[1]+is[0])=defectFine(Ig[0]+2*is[1],Ig[1]+2*is[0]);
+                        fCoarse(Jg[0]-is[1],Jg[1]-is[0])=defectFine(Ig[0]-2*is[1],Ig[1]-2*is[0]);
+                    }
 
                     real diffb=max(fabs(fCoarse(Jb[0],Jb[1],Jb[2])));
                     real diffg=max(fabs(fCoarse(Jg[0],Jg[1],Jg[2])));
-        	  if( diffb >0. || diffg>0. )
-        	  {
-          	    printf("@@@@ fineToCoarseBC: WARNING diffb=%9.2e diffg=%9.2e, level=%i grid=%i \n",diffb,diffg,level,grid);
-        	  }
-        	  
-      	}
-      	else
-      	{
-        	  fCoarse(Jb[0],Jb[1],Jb[2])=
-          	    BOUNDARY_DEFECT_3D(is[0],is[1],is[2],Ib[0],Ib[1],Ib[2]); // average along boundary
-	  // ----fix up interpolation points and their neighbours, inject the defect----
-        	  where( mgcg.multigridLevel[level][grid].mask()(Ib[0],Ib[1],Ib[2])<0 )
-        	  {
-          	    for( int is2=-(is[0]+is[1]); is2<=(is[0]+is[1]); is2++ )
-            	      for( int is1=-(is[2]+is[0]); is1<=(is[2]+is[0]); is1++ )
-            		for( int is0=-(is[1]+is[2]); is0<=(is[1]+is[2]); is0++ )
-            		{
-              		  fCoarse(Jb[0]+is0,Jb[1]+is1,Jb[2]+is2)=defectFine(Ib[0]+2*is0,Ib[1]+2*is1,Ib[2]+2*is2);
-              		  fCoarse(Jg[0]+is0,Jg[1]+is1,Jg[2]+is2)=defectFine(Ig[0]+2*is0,Ig[1]+2*is1,Ig[2]+2*is2);
-            		}
-        	  }
-      	}
+                    if( diffb >0. || diffg>0. )
+                    {
+                        printf("@@@@ fineToCoarseBC: WARNING diffb=%9.2e diffg=%9.2e, level=%i grid=%i \n",diffb,diffg,level,grid);
+                    }
+                    
+                }
+                else
+                {
+                    fCoarse(Jb[0],Jb[1],Jb[2])=
+                        BOUNDARY_DEFECT_3D(is[0],is[1],is[2],Ib[0],Ib[1],Ib[2]); // average along boundary
+          // ----fix up interpolation points and their neighbours, inject the defect----
+                    where( mgcg.multigridLevel[level][grid].mask()(Ib[0],Ib[1],Ib[2])<0 )
+                    {
+                        for( int is2=-(is[0]+is[1]); is2<=(is[0]+is[1]); is2++ )
+                            for( int is1=-(is[2]+is[0]); is1<=(is[2]+is[0]); is1++ )
+                                for( int is0=-(is[1]+is[2]); is0<=(is[1]+is[2]); is0++ )
+                                {
+                                    fCoarse(Jb[0]+is0,Jb[1]+is1,Jb[2]+is2)=defectFine(Ib[0]+2*is0,Ib[1]+2*is1,Ib[2]+2*is2);
+                                    fCoarse(Jg[0]+is0,Jg[1]+is1,Jg[2]+is2)=defectFine(Ig[0]+2*is0,Ig[1]+2*is1,Ig[2]+2*is2);
+                                }
+                    }
+                }
             
-	// Inject values at corners in 2D or edges in 3D (some points are done twice but who cares...)
+        // Inject values at corners in 2D or edges in 3D (some points are done twice but who cares...)
             
-      	Index Ic[3], Jc[3];
-      	int dirt;
-      	for( dirt=0; dirt<numberOfDimensions-1; dirt++ )  // loop over tangential directions
-      	{
-        	  tangent= (axis+dirt+1) % numberOfDimensions;
-        	  Ib[tangent]=IndexBB(Ib[tangent].getBase()-2,Ib[tangent].getBound()+2,2);  // increase side to include
-        	  Jb[tangent]=IndexBB(Jb[tangent].getBase()-1,Jb[tangent].getBound()+1);    // corners and edges
+                Index Ic[3], Jc[3];
+                int dirt;
+                for( dirt=0; dirt<numberOfDimensions-1; dirt++ )  // loop over tangential directions
+                {
+                    tangent= (axis+dirt+1) % numberOfDimensions;
+                    Ib[tangent]=IndexBB(Ib[tangent].getBase()-2,Ib[tangent].getBound()+2,2);  // increase side to include
+                    Jb[tangent]=IndexBB(Jb[tangent].getBase()-1,Jb[tangent].getBound()+1);    // corners and edges
 
-        	  Ig[tangent]=IndexBB(Ig[tangent].getBase()-2,Ig[tangent].getBound()+2,2);  // increase side to include
-        	  Jg[tangent]=IndexBB(Jg[tangent].getBase()-1,Jg[tangent].getBound()+1);    // corners and edges
-      	}
-      	for( dir=Start; dir<=End; dir++ )                // loop over left and right side
-      	{
-        	  for( dirt=0; dirt<numberOfDimensions-1; dirt++ )   // (top and bottom in 3D)
-        	  {
-          	    Ic[0]=Ib[0]; Ic[1]=Ib[1]; Ic[2]=Ib[2];
-          	    tangent= (axis+dirt+1) % numberOfDimensions;
-          	    Ic[tangent]= dir==Start ? Ib[tangent].getBase()    // restrict one tangential direction to be the end
-            	      : Ib[tangent].getBound();
-          	    Jc[0]=Jb[0]; Jc[1]=Jb[1]; Jc[2]=Jb[2];
-          	    Jc[tangent] = dir==Start ? Jb[tangent].getBase()
-            	      : Jb[tangent].getBound();
+                    Ig[tangent]=IndexBB(Ig[tangent].getBase()-2,Ig[tangent].getBound()+2,2);  // increase side to include
+                    Jg[tangent]=IndexBB(Jg[tangent].getBase()-1,Jg[tangent].getBound()+1);    // corners and edges
+                }
+                for( dir=Start; dir<=End; dir++ )                // loop over left and right side
+                {
+                    for( dirt=0; dirt<numberOfDimensions-1; dirt++ )   // (top and bottom in 3D)
+                    {
+                        Ic[0]=Ib[0]; Ic[1]=Ib[1]; Ic[2]=Ib[2];
+                        tangent= (axis+dirt+1) % numberOfDimensions;
+                        Ic[tangent]= dir==Start ? Ib[tangent].getBase()    // restrict one tangential direction to be the end
+                            : Ib[tangent].getBound();
+                        Jc[0]=Jb[0]; Jc[1]=Jb[1]; Jc[2]=Jb[2];
+                        Jc[tangent] = dir==Start ? Jb[tangent].getBase()
+                            : Jb[tangent].getBound();
 
-          	    fCoarse(Jc[0],Jc[1],Jc[2])=defectFine(Ic[0],Ic[1],Ic[2]);     
+                        fCoarse(Jc[0],Jc[1],Jc[2])=defectFine(Ic[0],Ic[1],Ic[2]);     
 
-          	    Ic[0]=Ig[0]; Ic[1]=Ig[1]; Ic[2]=Ig[2];
-          	    tangent= (axis+dirt+1) % numberOfDimensions;
-          	    Ic[tangent]= dir==Start ? Ig[tangent].getBase()    // restrict one tangential direction to be the end
-            	      : Ig[tangent].getBound();
-          	    Jc[0]=Jg[0]; Jc[1]=Jg[1]; Jc[2]=Jg[2];
-          	    Jc[tangent] = dir==Start ? Jg[tangent].getBase()
-            	      : Jg[tangent].getBound();
+                        Ic[0]=Ig[0]; Ic[1]=Ig[1]; Ic[2]=Ig[2];
+                        tangent= (axis+dirt+1) % numberOfDimensions;
+                        Ic[tangent]= dir==Start ? Ig[tangent].getBase()    // restrict one tangential direction to be the end
+                            : Ig[tangent].getBound();
+                        Jc[0]=Jg[0]; Jc[1]=Jg[1]; Jc[2]=Jg[2];
+                        Jc[tangent] = dir==Start ? Jg[tangent].getBase()
+                            : Jg[tangent].getBound();
 
-          	    fCoarse(Jc[0],Jc[1],Jc[2])=defectFine(Ic[0],Ic[1],Ic[2]);     
-        	  }
-      	}
+                        fCoarse(Jc[0],Jc[1],Jc[2])=defectFine(Ic[0],Ic[1],Ic[2]);     
+                    }
+                }
             }
         }
     }

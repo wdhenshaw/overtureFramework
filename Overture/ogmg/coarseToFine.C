@@ -42,7 +42,10 @@ coarseToFine(const int & level)
   }
 
   for( int grid=0; grid<mgcg.multigridLevel[level].numberOfComponentGrids(); grid++ )
-    coarseToFine(level,grid);
+  {
+    if( active(grid) ) // *wdh* May 20, 2023
+      coarseToFine(level,grid);
+  }
 
   if( Ogmg::debug & 8 )
   {

@@ -15,8 +15,8 @@ bool Maxwell::
 adjustBoundsForAbsorbingLayer( MappedGrid & mg, Index Iv[3], int extra /* =0 */ )
 {
   bool useAbsorbing = (mg.boundaryCondition(0,0)==absorbing || mg.boundaryCondition(1,0)==absorbing ||
-		       mg.boundaryCondition(0,1)==absorbing || mg.boundaryCondition(1,1)==absorbing ||
-		       mg.boundaryCondition(0,2)==absorbing || mg.boundaryCondition(1,2)==absorbing);
+                       mg.boundaryCondition(0,1)==absorbing || mg.boundaryCondition(1,1)==absorbing ||
+                       mg.boundaryCondition(0,2)==absorbing || mg.boundaryCondition(1,2)==absorbing);
   
   if( !useAbsorbing ) return false;
 
@@ -134,7 +134,7 @@ buildSuperGrid( )
           {
             buildLayersThisGrid=true;
             // buildLayersThisAxis[axis]=true;
-	    useAbsorbingLayer(axis,grid)=true;
+            useAbsorbingLayer(axis,grid)=true;
           }
         }
       }
@@ -142,10 +142,10 @@ buildSuperGrid( )
 
       // // *** TEMP: For now build layers in all directions if any direction is needed -- need to optimize implementation
       // //  to allow only some directions 
-      // 	for( int axis=0; axis<numberOfDimensions; axis++)
-      // 	{
-      // 	  buildLayersThisAxis[axis]=buildLayersThisGrid;
-      // 	}
+      //        for( int axis=0; axis<numberOfDimensions; axis++)
+      //        {
+      //          buildLayersThisAxis[axis]=buildLayersThisGrid;
+      //        }
       
 
       assert( isRectangular );  // assume this for now 
@@ -162,18 +162,18 @@ buildSuperGrid( )
 
       if( useAbsorbingLayer(0,grid) )
       {
-	Range D1=maskLocal.dimension(0);
+        Range D1=maskLocal.dimension(0);
         etax.redim(D1); etax=1.;         // local dimensions of etax should match dimensions of uLocal (for call to advBA)
       }
       if( useAbsorbingLayer(1,grid) )
       {
-	Range D2=maskLocal.dimension(1);
+        Range D2=maskLocal.dimension(1);
         etay.redim(D2);
         etay=1.;
       }
       if( useAbsorbingLayer(2,grid) )
       {
-	Range D3=maskLocal.dimension(2);
+        Range D3=maskLocal.dimension(2);
         etaz.redim(D3);
         etaz=1.;
       }
