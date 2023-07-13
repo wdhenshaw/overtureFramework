@@ -128,7 +128,7 @@ FC_FLAGSS_REQ = $(OV_FORTRAN_FLAGS)
 ifneq ($(GCC_VERSION_GT_10),)
    # stuff that requires gcc version > 10
    # we need this for old style fortran: 
-   FC_FLAGS_REQ += -fallow-argument-mismatch
+   FC_FLAGSS_REQ += -fallow-argument-mismatch
 endif
 ifneq ($(FC),fort77)
   FC_FLAGSS_DBG = -g 
