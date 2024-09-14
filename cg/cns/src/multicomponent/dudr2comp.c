@@ -15,11 +15,15 @@
 #include "fixes.h"
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
 #include "macros.h"
 
 #include "OvertureDefine.h"
 #define second EXTERN_C_NAME(second)
 // #define second second_
+
+// *wdh* Sept 13, 2024 -- add declaration for Mac
+void second(double *);
 
 void twilightSource(void *exactP, double *rp, 
 		    void *mgP, double x, double y,

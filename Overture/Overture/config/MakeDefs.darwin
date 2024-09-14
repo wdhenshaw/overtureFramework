@@ -17,7 +17,7 @@ OPENGL_LIB = $(OpenGL)/$(LIB64)
 XLIBS_LIB = $(XLIBS)/$(LIB64)
 # OV_X_LIBRARIES = -L$(XLIBS_LIB) -lXpm -lXp -lXt -lXmu -lXi -lXext -lX11
 # OV_X_LIBRARIES = -L$(XLIBS_LIB) -lXpm -lXp -lXt -lXmu -lXi -lXext -lX11 
-# New Max does not need libXpm - Dec 7, 2019 
+# New Mac does not need libXpm - Dec 7, 2019 
 # OV_X_LIBRARIES = -L$(XLIBS_LIB) -lXp -lXt -lXmu -lXi -lXext -lX11 
 # Newest Mac does not need -lXi 
 OV_X_LIBRARIES = -L$(XLIBS_LIB) -lXp -lXt -lXmu -lXext -lX11 
@@ -38,7 +38,7 @@ AppLibraries = -L$(APlusPlus)/lib -lApp -lApp_static
 
 Include=  -I$(Overture)/include -I. 
 Lib=      $(Overture)/lib
-LibOverture= -lOverture -lOverture_static -lOgmg
+LibOverture= -lOverture -lOverture_static 
 LibRapsodi= -lRapsodi -lRapsodi_static $(RLIBLIBS)
 BOXLIB_DEFS = -DBL_USE_FLOAT -DBL_Solaris
 
@@ -122,8 +122,9 @@ HDF_LIBS = -L$(HDF)/lib -lmfhdf -ldf -ljpeg -lz
 
 FORTRAN_LIBS = 
 #gcc FORTRAN_LIBS =-lnsl -lg2c
+
 # On Mavericks with the clang compiler, gfortran is installed separately: 
-#   -- gfortran FORTRAN_LIBS =-L/usr/local/gfortran/lib -lgfortran
+#  --old-- gfortran FORTRAN_LIBS =-L/usr/local/gfortran/lib -lgfortran
 
 # Sonoma: add rpath for gfortran
 #gfortran FORTRAN_LIBS = -Wl,-rpath,/usr/local/gfortran/lib  -L/usr/local/gfortran/lib -lgfortran

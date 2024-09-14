@@ -1,6 +1,8 @@
 #include "riemann.h"
 #include "eigen.h"
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "macros.h"
 
 void minmod(double alpha[5], double alpha1[5], double alpha2[5])

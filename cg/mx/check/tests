@@ -28,7 +28,9 @@ dielectricSphereFD22.check ../runs/dielectricCyl/dielectricCyl.cmd -cyl=0 -g=sol
 # no-sosup dielectricSphereSosup22.check ../runs/dielectricCyl/dielectricCyl.cmd -cyl=0 -g=solidSphereInABoxe2.order2 -kx=1 -eps1=.25 -eps2=1.0 -method=sosup -tp=.01 -tf=.01 -go=go
 #
 # Increase TCR bound for now: (fix me)
-dielectricSphereFD44.check ../runs/dielectricCyl/dielectricCyl.cmd -cyl=0 -g=solidSphereInABoxe2.order4.ng3 -kx=1 -eps1=.25 -eps2=1.0 -method=fd -tp=.01 -tf=.01 -tallCellRatioBound=1.35 -go=go
+# mac sonoma dielectricSphereFD44.check ../runs/dielectricCyl/dielectricCyl.cmd -cyl=0 -g=solidSphereInABoxe2.order4.ng3 -kx=1 -eps1=.25 -eps2=1.0 -method=fd -tp=.01 -tf=.01 -tallCellRatioBound=1.35 -go=go
+# mac sonoma: 
+dielectricSphereFD44.check ../runs/dielectricCyl/dielectricCyl.cmd -cyl=0 -g=solidSphereInABoxe3.order4.ng3 -kx=1 -eps1=.25 -eps2=1.0 -method=fd -tp=.01 -tf=.01 -tallCellRatioBound=1.35 -go=go
 #
 # no-sosup dielectricSphereSosup44.check ../runs/dielectricCyl/dielectricCyl.cmd -cyl=0 -g=solidSphereInABoxe2.order4.ng3 -kx=1 -eps1=.25 -eps2=1.0 -method=sosup -tp=.01 -tf=.01 -go=go
 #

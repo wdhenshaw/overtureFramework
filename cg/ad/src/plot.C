@@ -97,7 +97,7 @@ setPlotTitle(const real &t, const real &dt)
       advectionLabel="varAdv, ";
     }
 
-    psp.set(GI_TOP_LABEL_SUB_1,sPrintF(buff,"kappa=%.2g, %sdt=%4.1g",(const char*)advectionLabel,kappa[0],dt));
+    psp.set(GI_TOP_LABEL_SUB_1,sPrintF(buff,"%s, kappa=%.2g, dt=%4.1g",(const char*)advectionLabel,kappa[0],dt));
 
   }
   
