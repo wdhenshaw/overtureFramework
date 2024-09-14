@@ -29,10 +29,10 @@ extern "C"
               const real & fact, const real & rho, real & u);
 
   void CONSPRIM(const int &nd1a,const int &nd1b,const int &nd2a,const int &nd2b,const int &nd3a,const int &nd3b, 
-		const int &n1a,const int &n1b,const int &n2a,const int &n2b,const int &n3a,const int &n3b, 
-		const int &nd,const int &ns, 
-		const int &rc,const int &uc,const int &vc,const int &wc,const int &tc, const int &sc,
-		real & q, const int & mask, const real & val, const int & ipar, const real & rpar, 
+                const int &n1a,const int &n1b,const int &n2a,const int &n2b,const int &n3a,const int &n3b, 
+                const int &nd,const int &ns, 
+                const int &rc,const int &uc,const int &vc,const int &wc,const int &tc, const int &sc,
+                real & q, const int & mask, const real & val, const int & ipar, const real & rpar, 
                 const int & option, const int & fixup, const real & epsRho );
 
 }
@@ -264,7 +264,7 @@ setParameters(const int & numberOfDimensions0 /* =2 */ ,
       if( reactionType!=noReactions )
       {
         // With any reaction rate with ideal EOS => 8 components (rho, rho*v1, rho*v2, rho*E, lambda, mu1, mu2, mu3), 
-	numberOfSpecies+=3;
+        numberOfSpecies+=3;
       }
     }
     else if( equationOfState==stiffenedGasEOS )
@@ -274,7 +274,7 @@ setParameters(const int & numberOfDimensions0 /* =2 */ ,
       if( reactionType!=noReactions )
       {
         // With any reaction rate with stiffened EOS => 10 components (rho, rho*v1, rho*v2, rho*E, lambda, mu1, mu2, mu3, mu4, mu5)
-	numberOfSpecies+=4;
+        numberOfSpecies+=4;
       }
     }
     else
@@ -360,74 +360,74 @@ setParameters(const int & numberOfDimensions0 /* =2 */ ,
       if( conservativeGodunovMethod==multiComponentVersion )
       {
         addShowVariable( "mu",scp,true ); 
-	if( reactionName=="ignition and growth" )
-	{
-	  addShowVariable( "lambda",scp+1,true );
-	  addShowVariable( "vi",   scp+2,true );
-	  addShowVariable( "vs",   scp+3,true );
-	  addShowVariable( "vg",   scp+4,true );
-	}
-	else if( reactionName=="one step" ||  reactionName=="one step pressure law" )
-	{
-	  addShowVariable( "lambda",scp+1,true );
-	}
-	else if( reactionName=="ignition and growth desensitization" )
-	{
-	  addShowVariable( "lambda",scp+1,true );
-	  addShowVariable( "phi",   scp+2,true );
-	  addShowVariable( "vi",    scp+3,true );
-	  addShowVariable( "vs",    scp+4,true );
-	  addShowVariable( "vg",    scp+5,true );
-	}
+        if( reactionName=="ignition and growth" )
+        {
+          addShowVariable( "lambda",scp+1,true );
+          addShowVariable( "vi",   scp+2,true );
+          addShowVariable( "vs",   scp+3,true );
+          addShowVariable( "vg",   scp+4,true );
+        }
+        else if( reactionName=="one step" ||  reactionName=="one step pressure law" )
+        {
+          addShowVariable( "lambda",scp+1,true );
+        }
+        else if( reactionName=="ignition and growth desensitization" )
+        {
+          addShowVariable( "lambda",scp+1,true );
+          addShowVariable( "phi",   scp+2,true );
+          addShowVariable( "vi",    scp+3,true );
+          addShowVariable( "vs",    scp+4,true );
+          addShowVariable( "vg",    scp+5,true );
+        }
       }
       else if( conservativeGodunovMethod==multiFluidVersion )
       {
         // --- Don's multi-fluid version ---
-	if( equationOfState==idealGasEOS )
-	{
-	  // multi-fluid option with ideal EOS => 5 components (rho, rho*v1, rho*v2, rho*E, mu1)
-	  if( reactionType==noReactions )
-	  {
+        if( equationOfState==idealGasEOS )
+        {
+          // multi-fluid option with ideal EOS => 5 components (rho, rho*v1, rho*v2, rho*E, mu1)
+          if( reactionType==noReactions )
+          {
             addShowVariable( "mu1",scp,true ); 
-	  }
-	  else
-	  {
-	    // With any reaction rate with ideal EOS => 8 components (rho, rho*v1, rho*v2, rho*E, lambda, mu1, mu2, mu3), 
-	    addShowVariable( "lambda",scp  ,true ); 
-	    addShowVariable( "mu1"   ,scp+1,true ); 
-	    addShowVariable( "mu2"   ,scp+2,true ); 
-	    addShowVariable( "mu3"   ,scp+3,true ); 
-	  }
-	}
-	else if( equationOfState==stiffenedGasEOS )
-	{
-	  // multi-fluid option with stiffened EOS => 6 components (rho, rho*v1, rho*v2, rho*E, mu1, mu2)
-	  if( reactionType==noReactions )
-	  {
+          }
+          else
+          {
+            // With any reaction rate with ideal EOS => 8 components (rho, rho*v1, rho*v2, rho*E, lambda, mu1, mu2, mu3), 
+            addShowVariable( "lambda",scp  ,true ); 
+            addShowVariable( "mu1"   ,scp+1,true ); 
+            addShowVariable( "mu2"   ,scp+2,true ); 
+            addShowVariable( "mu3"   ,scp+3,true ); 
+          }
+        }
+        else if( equationOfState==stiffenedGasEOS )
+        {
+          // multi-fluid option with stiffened EOS => 6 components (rho, rho*v1, rho*v2, rho*E, mu1, mu2)
+          if( reactionType==noReactions )
+          {
             addShowVariable( "mu1",scp  ,true ); 
-	    addShowVariable( "mu2",scp+1,true ); 
-	  }
-	  if( reactionType!=noReactions )
-	  {
-	    // With any reaction rate with stiffened EOS => 10 components (rho, rho*v1, rho*v2, rho*E, lambda, mu1, mu2, mu3, mu4, mu5)
-	    addShowVariable( "lambda",scp  ,true ); 
-	    addShowVariable( "mu1"   ,scp+1,true ); 
-	    addShowVariable( "mu2"   ,scp+2,true ); 
-	    addShowVariable( "mu3"   ,scp+3,true ); 
-	    addShowVariable( "mu4"   ,scp+4,true ); 
-	    addShowVariable( "mu5"   ,scp+5,true ); 
-	  }
-	}
-	else
-	{
-	  printF("multiFluidVersion:ERROR: unexpected equationOfState=%i\n",(int)equationOfState);
-	  OV_ABORT("error");
-	}
-	
+            addShowVariable( "mu2",scp+1,true ); 
+          }
+          if( reactionType!=noReactions )
+          {
+            // With any reaction rate with stiffened EOS => 10 components (rho, rho*v1, rho*v2, rho*E, lambda, mu1, mu2, mu3, mu4, mu5)
+            addShowVariable( "lambda",scp  ,true ); 
+            addShowVariable( "mu1"   ,scp+1,true ); 
+            addShowVariable( "mu2"   ,scp+2,true ); 
+            addShowVariable( "mu3"   ,scp+3,true ); 
+            addShowVariable( "mu4"   ,scp+4,true ); 
+            addShowVariable( "mu5"   ,scp+5,true ); 
+          }
+        }
+        else
+        {
+          printF("multiFluidVersion:ERROR: unexpected equationOfState=%i\n",(int)equationOfState);
+          OV_ABORT("error");
+        }
+        
       }
       else if( reactionName=="one step" )
       {
-	addShowVariable( "lambda",scp,true ); 
+        addShowVariable( "lambda",scp,true ); 
       }
       else if( reactionName=="branching" )
       {
@@ -458,8 +458,8 @@ setParameters(const int & numberOfDimensions0 /* =2 */ ,
       }
       else if( conservativeGodunovMethod!=multiComponentVersion )
       {
-	printF("CnsParameters:ERROR: unknown reaction=[%s]\n",(const char *) reactionName);
-	Overture::abort("error");
+        printF("CnsParameters:ERROR: unknown reaction=[%s]\n",(const char *) reactionName);
+        Overture::abort("error");
       }
    
     }
@@ -474,7 +474,7 @@ setParameters(const int & numberOfDimensions0 /* =2 */ ,
       setGridIsImplicit(-1,1);
 
     if( (dbase.get<PDEVariation >("pdeVariation")!=nonConservative) ||
-	dbase.get<Parameters::TimeSteppingMethod >("timeSteppingMethod")==Parameters::implicit)
+        dbase.get<Parameters::TimeSteppingMethod >("timeSteppingMethod")==Parameters::implicit)
     {
       // *wdh* 070506 -- make 2 default from 1 for better accuracy (quarterSphere case) -- we may need a limited
       // extrapolation for hard cases
@@ -554,15 +554,15 @@ setParameters(const int & numberOfDimensions0 /* =2 */ ,
       addShowVariable( "mu1",scp,true );  scp++;
       if( numberOfSpecies>2 )
       {
-	addShowVariable( "mu2",scp,true );  scp++;
+        addShowVariable( "mu2",scp,true );  scp++;
       }
       else
       {
-	printF("compressible multipahsemultiFluidVersion:ERROR: unexpected number of species=%i\n",numberOfSpecies);
-	OV_ABORT("error");
+        printF("compressible multipahsemultiFluidVersion:ERROR: unexpected number of species=%i\n",numberOfSpecies);
+        OV_ABORT("error");
       }
       addShowVariable( "lambda",scp,true ); scp++;
-	
+        
     }
 
     dbase.get<RealArray >("artificialDiffusion").redim( numberOfComponents);
@@ -603,9 +603,9 @@ setParameters(const int & numberOfDimensions0 /* =2 */ ,
     if(  kc>=0 )
     {
       if(  turbulenceModel==SpalartAllmaras )
-	 componentName[ kc]="n";  // for nuT
+         componentName[ kc]="n";  // for nuT
       else
-	 componentName[ kc]="k";
+         componentName[ kc]="k";
     }
 
     if(  epsc>=0 )  componentName[ epsc]="epsilon";
@@ -619,46 +619,46 @@ setParameters(const int & numberOfDimensions0 /* =2 */ ,
     { 
 
         // --- Don's multi-fluid version ---
-	if( equationOfState==idealGasEOS )
-	{
-	  // multi-fluid option with ideal EOS => 5 components (rho, rho*v1, rho*v2, rho*E, mu1)
-	  if( reactionType==noReactions )
-	  {
+        if( equationOfState==idealGasEOS )
+        {
+          // multi-fluid option with ideal EOS => 5 components (rho, rho*v1, rho*v2, rho*E, mu1)
+          if( reactionType==noReactions )
+          {
             componentName[scp]="mu1"; scp++;
-	  }
-	  else
-	  {
-	    // With any reaction rate with ideal EOS => 8 components (rho, rho*v1, rho*v2, rho*E, lambda, mu1, mu2, mu3), 
-	    componentName[scp]="lambda"; scp++;
-	    componentName[scp]="mu1"   ; scp++;
-	    componentName[scp]="mu2"   ; scp++;
-	    componentName[scp]="mu3"   ; scp++;
-	  }
-	}
-	else if( equationOfState==stiffenedGasEOS )
-	{
-	  // multi-fluid option with stiffened EOS => 6 components (rho, rho*v1, rho*v2, rho*E, mu1, mu2)
-	  if( reactionType==noReactions )
-	  {
+          }
+          else
+          {
+            // With any reaction rate with ideal EOS => 8 components (rho, rho*v1, rho*v2, rho*E, lambda, mu1, mu2, mu3), 
+            componentName[scp]="lambda"; scp++;
+            componentName[scp]="mu1"   ; scp++;
+            componentName[scp]="mu2"   ; scp++;
+            componentName[scp]="mu3"   ; scp++;
+          }
+        }
+        else if( equationOfState==stiffenedGasEOS )
+        {
+          // multi-fluid option with stiffened EOS => 6 components (rho, rho*v1, rho*v2, rho*E, mu1, mu2)
+          if( reactionType==noReactions )
+          {
             componentName[scp]="mu1"; scp++;
-	    componentName[scp]="mu2"; scp++;
-	  }
-	  if( reactionType!=noReactions )
-	  {
-	    // With any reaction rate with stiffened EOS => 10 components (rho, rho*v1, rho*v2, rho*E, lambda, mu1, mu2, mu3, mu4, mu5)
-	    componentName[scp]="lambda"; scp++;
-	    componentName[scp]="mu1"   ; scp++;
-	    componentName[scp]="mu2"   ; scp++;
-	    componentName[scp]="mu3"   ; scp++;
-	    componentName[scp]="mu4"   ; scp++;
-	    componentName[scp]="mu5"   ; scp++;
-	  }
-	}
-	else
-	{
-	  printF("multiFluidVersion:ERROR: unexpected equationOfState=%i\n",(int)equationOfState);
-	  OV_ABORT("error");
-	}
+            componentName[scp]="mu2"; scp++;
+          }
+          if( reactionType!=noReactions )
+          {
+            // With any reaction rate with stiffened EOS => 10 components (rho, rho*v1, rho*v2, rho*E, lambda, mu1, mu2, mu3, mu4, mu5)
+            componentName[scp]="lambda"; scp++;
+            componentName[scp]="mu1"   ; scp++;
+            componentName[scp]="mu2"   ; scp++;
+            componentName[scp]="mu3"   ; scp++;
+            componentName[scp]="mu4"   ; scp++;
+            componentName[scp]="mu5"   ; scp++;
+          }
+        }
+        else
+        {
+          printF("multiFluidVersion:ERROR: unexpected equationOfState=%i\n",(int)equationOfState);
+          OV_ABORT("error");
+        }
     }
     if(  dbase.get<bool >("advectPassiveScalar") )
     {
@@ -687,29 +687,29 @@ setParameters(const int & numberOfDimensions0 /* =2 */ ,
       int numberOfActiveSpecies=  numberOfSpecies;
       if(  conservativeGodunovMethod==multiComponentVersion )
       {
-	if( equationOfState!=jwlEOS )
-	{
-	  //  dbase.get<real >("mu") is  dbase.get<real >("a") non-reacting species
-	  numberOfActiveSpecies-=1;
-	}
-	else
-	{
-	  //  dbase.get<real >("mu"), vi, vs, vg are non-reacting species
-	  numberOfActiveSpecies-=4;
-	}
+        if( equationOfState!=jwlEOS )
+        {
+          //  dbase.get<real >("mu") is  dbase.get<real >("a") non-reacting species
+          numberOfActiveSpecies-=1;
+        }
+        else
+        {
+          //  dbase.get<real >("mu"), vi, vs, vg are non-reacting species
+          numberOfActiveSpecies-=4;
+        }
       }
       else if( conservativeGodunovMethod==multiFluidVersion )
       {
-	numberOfActiveSpecies=0;
+        numberOfActiveSpecies=0;
       }
       else if(  equationOfState==jwlEOS )
-	numberOfActiveSpecies-=2;
+        numberOfActiveSpecies-=2;
  
       if( numberOfActiveSpecies>0 )
       {
-	assert(  dbase.get<Reactions* >("reactions")!=NULL );
-	for( s=0; s<numberOfActiveSpecies; s++ )
-	   componentName[scp+s]= dbase.get<Reactions* >("reactions")->getName(s);
+        assert(  dbase.get<Reactions* >("reactions")!=NULL );
+        for( s=0; s<numberOfActiveSpecies; s++ )
+           componentName[scp+s]= dbase.get<Reactions* >("reactions")->getName(s);
       }
  
     }
@@ -755,15 +755,15 @@ setParameters(const int & numberOfDimensions0 /* =2 */ ,
        componentName[n]="m1"; n++;
        if( numberOfSpecies>2 )
        {
- 	componentName[n]="m2"; n++;
+        componentName[n]="m2"; n++;
        }
        else
        {
- 	printF("compressible multipahsemultiFluidVersion:ERROR: unexpected number of species=%i\n",numberOfSpecies);
- 	OV_ABORT("error");
+        printF("compressible multipahsemultiFluidVersion:ERROR: unexpected number of species=%i\n",numberOfSpecies);
+        OV_ABORT("error");
        }
        componentName[n]="lm"; n++;
-	
+        
      }
      assert( n<=numberOfComponents );
 
@@ -863,48 +863,48 @@ setParameters(const int & numberOfDimensions0 /* =2 */ ,
       // 041130: specify default values for IG and jwlEOS
       if(  reactionType != CnsParameters::igDesensitization )
       {
-	assert(  numberOfSpecies>2 );          
-	assert(  componentName[ sc+1]=="a" );
-	assert(  componentName[ sc+2]=="b" );
-	// unusedValue[ tc]=.05;  // ** is this better ? ***
+        assert(  numberOfSpecies>2 );          
+        assert(  componentName[ sc+1]=="a" );
+        assert(  componentName[ sc+2]=="b" );
+        // unusedValue[ tc]=.05;  // ** is this better ? ***
 
-	unusedValue[ sc+1]=0.;   // specific volume (solid)
-	unusedValue[ sc+1]=1./unusedValue[ rc];   // specific volume (gas)
+        unusedValue[ sc+1]=0.;   // specific volume (solid)
+        unusedValue[ sc+1]=1./unusedValue[ rc];   // specific volume (gas)
       }
       else
       {
-	assert(  numberOfSpecies>3 );          
-	assert(  componentName[ sc+2]=="a" );
-	assert(  componentName[ sc+3]=="b" );
-	// unusedValue[ tc]=.05;  // ** is this better ? ***
+        assert(  numberOfSpecies>3 );          
+        assert(  componentName[ sc+2]=="a" );
+        assert(  componentName[ sc+3]=="b" );
+        // unusedValue[ tc]=.05;  // ** is this better ? ***
 
-	unusedValue[ sc+2]=0.;   // specific volume (solid)
-	unusedValue[ sc+2]=1./unusedValue[ rc];   // specific volume (gas)
+        unusedValue[ sc+2]=0.;   // specific volume (solid)
+        unusedValue[ sc+2]=1./unusedValue[ rc];   // specific volume (gas)
       }
     }
     else
     {
       if(  reactionType != CnsParameters::igDesensitization )
       {
-	assert(  numberOfSpecies>4 );
-	assert(  componentName[ sc+2]=="vi" );
-	assert(  componentName[ sc+3]=="vs" );
-	assert(  componentName[ sc+4]=="vg" );
-	unusedValue[ sc]=0.0;
-	unusedValue[  sc+2] = 1.0;
-	unusedValue[  sc+3] = 1.0;
-	unusedValue[  sc+4] = 1.0;
+        assert(  numberOfSpecies>4 );
+        assert(  componentName[ sc+2]=="vi" );
+        assert(  componentName[ sc+3]=="vs" );
+        assert(  componentName[ sc+4]=="vg" );
+        unusedValue[ sc]=0.0;
+        unusedValue[  sc+2] = 1.0;
+        unusedValue[  sc+3] = 1.0;
+        unusedValue[  sc+4] = 1.0;
       }
       else
       {
-	assert(  numberOfSpecies>5 );
-	assert(  componentName[ sc+3]=="vi" );
-	assert(  componentName[ sc+4]=="vs" );
-	assert(  componentName[ sc+5]=="vg" );
-	unusedValue[ sc+1]=0.0;
-	unusedValue[  sc+3] = 1.0;
-	unusedValue[  sc+4] = 1.0;
-	unusedValue[  sc+5] = 1.0;
+        assert(  numberOfSpecies>5 );
+        assert(  componentName[ sc+3]=="vi" );
+        assert(  componentName[ sc+4]=="vs" );
+        assert(  componentName[ sc+5]=="vg" );
+        unusedValue[ sc+1]=0.0;
+        unusedValue[  sc+3] = 1.0;
+        unusedValue[  sc+4] = 1.0;
+        unusedValue[  sc+5] = 1.0;
       }
     }
   }    
@@ -944,8 +944,8 @@ setParameters(const int & numberOfDimensions0 /* =2 */ ,
 #if 0
    // kkc 070131 WHY IS THIS HERE?? DID I PUT IT HERE??  ARGGG!
    if ( ( pde==CnsParameters::compressibleNavierStokes  || 
-	  pde==CnsParameters::compressibleMultiphase)
-	&&        ( cgf.u.getInterpolant()->interpolationIsImplicit()))
+          pde==CnsParameters::compressibleMultiphase)
+        &&        ( cgf.u.getInterpolant()->interpolationIsImplicit()))
      dbase.get<DataBase >("modelParameters").get<int>("fixupUnusedPointsFrequency") = 1;
 #endif
 
@@ -1018,22 +1018,22 @@ setTwilightZoneFunction(const TwilightZoneChoice & choice_,
         // spatialCoefficientsForTZ(0,1,0, kc)=.2;
         // spatialCoefficientsForTZ(0,1,0, epsc)=.1;
         if( degreeSpace==2 )
-	{
-	  spatialCoefficientsForTZ(2,0,0, kc)=.2;
-	  spatialCoefficientsForTZ(0,2,0, kc)=.3;
-	  spatialCoefficientsForTZ(2,0,0, epsc)=.8;
-	  spatialCoefficientsForTZ(0,2,0, epsc)=.6;
-	}
+        {
+          spatialCoefficientsForTZ(2,0,0, kc)=.2;
+          spatialCoefficientsForTZ(0,2,0, kc)=.3;
+          spatialCoefficientsForTZ(2,0,0, epsc)=.8;
+          spatialCoefficientsForTZ(0,2,0, epsc)=.6;
+        }
       }
       if(  numberOfDimensions>2 )
       {
         // spatialCoefficientsForTZ(0,0,1, kc)=.15;
         // spatialCoefficientsForTZ(0,0,1, epsc)=.25;
         if( degreeSpace==2 )
-	{
-	  spatialCoefficientsForTZ(0,0,2, kc)=.5;
-	  spatialCoefficientsForTZ(0,0,2, epsc)=.5;
-	}
+        {
+          spatialCoefficientsForTZ(0,0,2, kc)=.5;
+          spatialCoefficientsForTZ(0,0,2, epsc)=.5;
+        }
       }
     }
     else if(  turbulenceModel==SpalartAllmaras )
@@ -1048,27 +1048,27 @@ setTwilightZoneFunction(const TwilightZoneChoice & choice_,
       if(  numberOfDimensions>1 )
       {
         if( degreeSpace==2 )
-	{
-	  spatialCoefficientsForTZ(2,0,0,nc)=.25; // .4;
-	  spatialCoefficientsForTZ(0,2,0,nc)=.15; // .6;
-	}
+        {
+          spatialCoefficientsForTZ(2,0,0,nc)=.25; // .4;
+          spatialCoefficientsForTZ(0,2,0,nc)=.15; // .6;
+        }
         // Do no add  dbase.get<real >("a") linear term since this could cause the viscosity coeff to be negative
 //      else if( degreeSpace==1 )
-//   	{
-//   	  spatialCoefficientsForTZ(1,0,0,nc)=.1;
-//   	  spatialCoefficientsForTZ(0,1,0,nc)=.1;
-//   	}
+//      {
+//        spatialCoefficientsForTZ(1,0,0,nc)=.1;
+//        spatialCoefficientsForTZ(0,1,0,nc)=.1;
+//      }
       }
       if(  numberOfDimensions>2 )
       {
         if( degreeSpace==2 )
-	{
-	  spatialCoefficientsForTZ(0,0,2,nc)=.5;
-	}
+        {
+          spatialCoefficientsForTZ(0,0,2,nc)=.5;
+        }
 //          else if( degreeSpace==1 )
-//  	{
-//  	  spatialCoefficientsForTZ(0,0,2,nc)=.5;
-//  	}
+//      {
+//        spatialCoefficientsForTZ(0,0,2,nc)=.5;
+//      }
       }
     }
 
@@ -1077,150 +1077,150 @@ setTwilightZoneFunction(const TwilightZoneChoice & choice_,
       // default case:
       for( int n=0; n< numberOfComponents; n++ )
       {
-	real ni =1./(n+1);
+        real ni =1./(n+1);
  
-	spatialCoefficientsForTZ(0,0,0,n)=2.+n;      
-	if( degreeSpace>0 )
-	{
-	  spatialCoefficientsForTZ(1,0,0,n)=1.*ni;
-	  spatialCoefficientsForTZ(0,1,0,n)=.5*ni;
-	  spatialCoefficientsForTZ(0,0,1,n)=  numberOfDimensions==3 ? .25*ni : 0.;
-	}
-	if( degreeSpace>1 )
-	{
-	  spatialCoefficientsForTZ(2,0,0,n)=.5*ni;
-	  spatialCoefficientsForTZ(0,2,0,n)=.25*ni;
-	  spatialCoefficientsForTZ(0,0,2,n)=  numberOfDimensions==3 ? .125*ni : 0.;
+        spatialCoefficientsForTZ(0,0,0,n)=2.+n;      
+        if( degreeSpace>0 )
+        {
+          spatialCoefficientsForTZ(1,0,0,n)=1.*ni;
+          spatialCoefficientsForTZ(0,1,0,n)=.5*ni;
+          spatialCoefficientsForTZ(0,0,1,n)=  numberOfDimensions==3 ? .25*ni : 0.;
+        }
+        if( degreeSpace>1 )
+        {
+          spatialCoefficientsForTZ(2,0,0,n)=.5*ni;
+          spatialCoefficientsForTZ(0,2,0,n)=.25*ni;
+          spatialCoefficientsForTZ(0,0,2,n)=  numberOfDimensions==3 ? .125*ni : 0.;
 
           if( false ) // *wdh* 050610
-	  {
-	    // add cross terms
+          {
+            // add cross terms
             printF("\n\n ************* add cross terms to TZ ************** \n\n");
-	    
+            
 
             spatialCoefficientsForTZ(1,1,0,n)=.125*ni;
             if(  numberOfDimensions>2 )
-	    {
-	      spatialCoefficientsForTZ(1,0,1,n)=.1*ni;
-	      spatialCoefficientsForTZ(0,1,1,n)=-.15*ni;
-	    }
-	    
+            {
+              spatialCoefficientsForTZ(1,0,1,n)=.1*ni;
+              spatialCoefficientsForTZ(0,1,1,n)=-.15*ni;
+            }
+            
           }
-	  
-	}
+          
+        }
       }
 
       if( conservativeGodunovMethod == CnsParameters::multiComponentVersion ||
           conservativeGodunovMethod == CnsParameters::multiFluidVersion )
       {
-	// Do stuff to multi component version
-	spatialCoefficientsForTZ(R5,R5,R5, rc)=0.;
-	spatialCoefficientsForTZ(0, 0, 0, rc)=1.;
-	if( degreeSpace>1 )
-	{
-	  spatialCoefficientsForTZ(2,0,0, rc)=.2;
-	  spatialCoefficientsForTZ(0,2,0, rc)=.3;
-	  spatialCoefficientsForTZ(0,0,2, rc)=  numberOfDimensions==3 ? .25 : 0.;
-	}
-	if(  numberOfSpecies>0 )
-	{
-	  assert(  sc>=0 );
-	  spatialCoefficientsForTZ(R5,R5,R5, sc)=0.;
-	  spatialCoefficientsForTZ( 0, 0, 0, sc)=0.5; 
-	}
+        // Do stuff to multi component version
+        spatialCoefficientsForTZ(R5,R5,R5, rc)=0.;
+        spatialCoefficientsForTZ(0, 0, 0, rc)=1.;
+        if( degreeSpace>1 )
+        {
+          spatialCoefficientsForTZ(2,0,0, rc)=.2;
+          spatialCoefficientsForTZ(0,2,0, rc)=.3;
+          spatialCoefficientsForTZ(0,0,2, rc)=  numberOfDimensions==3 ? .25 : 0.;
+        }
+        if(  numberOfSpecies>0 )
+        {
+          assert(  sc>=0 );
+          spatialCoefficientsForTZ(R5,R5,R5, sc)=0.;
+          spatialCoefficientsForTZ( 0, 0, 0, sc)=0.5; 
+        }
       }
       else
       {
-	// Do stuff for 1 component version (I think this is for Don's code?)
-	// make rho constant in space if degreeSpace<=1
-	spatialCoefficientsForTZ(R5,R5,R5, rc)=0.;
-	spatialCoefficientsForTZ( 0, 0, 0, rc)=1.;   
+        // Do stuff for 1 component version (I think this is for Don's code?)
+        // make rho constant in space if degreeSpace<=1
+        spatialCoefficientsForTZ(R5,R5,R5, rc)=0.;
+        spatialCoefficientsForTZ( 0, 0, 0, rc)=1.;   
 
 
-	if( false )
-	{
-	  Range all;
-	  spatialCoefficientsForTZ(all,all,all, uc)*=-1.;
-	}
-	  
-	if( false )  // for testing new slip wall BC's on an annulus
-	{
-	  // Set (u,v) = ( -y,x) so that n.uv=0 on  dbase.get<real >("a") circle  (normal=(cos,sin) = (x,y)/r)
-	  spatialCoefficientsForTZ(0,0,0, uc)=0.;   
-	  spatialCoefficientsForTZ(1,0,0, uc)=0.;  
-	  spatialCoefficientsForTZ(0,1,0, uc)=-1.; 
+        if( false )
+        {
+          Range all;
+          spatialCoefficientsForTZ(all,all,all, uc)*=-1.;
+        }
+          
+        if( false )  // for testing new slip wall BC's on an annulus
+        {
+          // Set (u,v) = ( -y,x) so that n.uv=0 on  dbase.get<real >("a") circle  (normal=(cos,sin) = (x,y)/r)
+          spatialCoefficientsForTZ(0,0,0, uc)=0.;   
+          spatialCoefficientsForTZ(1,0,0, uc)=0.;  
+          spatialCoefficientsForTZ(0,1,0, uc)=-1.; 
 
-	  spatialCoefficientsForTZ(0,0,0, vc)=0.;   
-	  spatialCoefficientsForTZ(1,0,0, vc)=1.;  
-	  spatialCoefficientsForTZ(0,1,0, vc)=0.; 
+          spatialCoefficientsForTZ(0,0,0, vc)=0.;   
+          spatialCoefficientsForTZ(1,0,0, vc)=1.;  
+          spatialCoefficientsForTZ(0,1,0, vc)=0.; 
 
-	}
-	else if( false ) //for testing new slip wall BC's
-	{
-	  // make sure u=0 on x=0 : 
-	  spatialCoefficientsForTZ(0,0,0, uc)=0.;   
-	  spatialCoefficientsForTZ(1,0,0, uc)=1.;  
-	  spatialCoefficientsForTZ(0,1,0, uc)=0.; 
+        }
+        else if( false ) //for testing new slip wall BC's
+        {
+          // make sure u=0 on x=0 : 
+          spatialCoefficientsForTZ(0,0,0, uc)=0.;   
+          spatialCoefficientsForTZ(1,0,0, uc)=1.;  
+          spatialCoefficientsForTZ(0,1,0, uc)=0.; 
 
-// 	    spatialCoefficientsForTZ(0,0,0,vc)=0.;
-// 	    spatialCoefficientsForTZ(1,0,0,vc)=0.;
-// 	    spatialCoefficientsForTZ(0,1,0,vc)=0.; 
+//          spatialCoefficientsForTZ(0,0,0,vc)=0.;
+//          spatialCoefficientsForTZ(1,0,0,vc)=0.;
+//          spatialCoefficientsForTZ(0,1,0,vc)=0.; 
 
-// 	    spatialCoefficientsForTZ(0,0,0,pc)=1.;
-// 	    spatialCoefficientsForTZ(1,0,0,pc)=1.;
-// 	    spatialCoefficientsForTZ(0,1,0,pc)=0.; 
-	}
-	  
+//          spatialCoefficientsForTZ(0,0,0,pc)=1.;
+//          spatialCoefficientsForTZ(1,0,0,pc)=1.;
+//          spatialCoefficientsForTZ(0,1,0,pc)=0.; 
+        }
+          
 
-	if( degreeSpace>1 )
-	{
-	  spatialCoefficientsForTZ(2,0,0, rc)=.2;
-	  spatialCoefficientsForTZ(0,2,0, rc)=.3;
-	  spatialCoefficientsForTZ(0,0,2, rc)=  numberOfDimensions==3 ? .25 : 0.;
+        if( degreeSpace>1 )
+        {
+          spatialCoefficientsForTZ(2,0,0, rc)=.2;
+          spatialCoefficientsForTZ(0,2,0, rc)=.3;
+          spatialCoefficientsForTZ(0,0,2, rc)=  numberOfDimensions==3 ? .25 : 0.;
 
-	  if( false )
-	  { // set u=x(1-x) v=y(1-y) for slip wall test on  dbase.get<real >("a") square 
+          if( false )
+          { // set u=x(1-x) v=y(1-y) for slip wall test on  dbase.get<real >("a") square 
 
-	    spatialCoefficientsForTZ(0,0,0, uc)=0.;   
-	    spatialCoefficientsForTZ(1,0,0, uc)=1.;  
-	    spatialCoefficientsForTZ(0,1,0, uc)=0.;  
-	    spatialCoefficientsForTZ(2,0,0, uc)=-1.; 
-	    spatialCoefficientsForTZ(1,1,0, uc)=0.; 
-	    spatialCoefficientsForTZ(0,2,0, uc)=0.; 
+            spatialCoefficientsForTZ(0,0,0, uc)=0.;   
+            spatialCoefficientsForTZ(1,0,0, uc)=1.;  
+            spatialCoefficientsForTZ(0,1,0, uc)=0.;  
+            spatialCoefficientsForTZ(2,0,0, uc)=-1.; 
+            spatialCoefficientsForTZ(1,1,0, uc)=0.; 
+            spatialCoefficientsForTZ(0,2,0, uc)=0.; 
 
-	    spatialCoefficientsForTZ(0,0,0, vc)=0.;   
-	    spatialCoefficientsForTZ(1,0,0, vc)=0.;  
-	    spatialCoefficientsForTZ(0,1,0, vc)=1.;  
-	    spatialCoefficientsForTZ(2,0,0, vc)=0.; 
-	    spatialCoefficientsForTZ(1,1,0, vc)=0.; 
-	    spatialCoefficientsForTZ(0,2,0, vc)=-1.; 
+            spatialCoefficientsForTZ(0,0,0, vc)=0.;   
+            spatialCoefficientsForTZ(1,0,0, vc)=0.;  
+            spatialCoefficientsForTZ(0,1,0, vc)=1.;  
+            spatialCoefficientsForTZ(2,0,0, vc)=0.; 
+            spatialCoefficientsForTZ(1,1,0, vc)=0.; 
+            spatialCoefficientsForTZ(0,2,0, vc)=-1.; 
 
 
-	  }
-	  else if( false )
-	  {  // Set (u,v) = ( -y,x)*f(x,y) so that n.uv=0 on  dbase.get<real >("a") circle  (normal=(cos,sin) = (x,y)/r)
+          }
+          else if( false )
+          {  // Set (u,v) = ( -y,x)*f(x,y) so that n.uv=0 on  dbase.get<real >("a") circle  (normal=(cos,sin) = (x,y)/r)
             
-	    // f(x,y)=1+.5*(x-y)
-	    spatialCoefficientsForTZ(0,0,0, uc)= 0.;   
-	    spatialCoefficientsForTZ(1,0,0, uc)= 0.;  
-	    spatialCoefficientsForTZ(0,1,0, uc)=-1.;  
-	    spatialCoefficientsForTZ(2,0,0, uc)= 0.; 
-	    spatialCoefficientsForTZ(1,1,0, uc)=-.5; 
-	    spatialCoefficientsForTZ(0,2,0, uc)=+.5; 
+            // f(x,y)=1+.5*(x-y)
+            spatialCoefficientsForTZ(0,0,0, uc)= 0.;   
+            spatialCoefficientsForTZ(1,0,0, uc)= 0.;  
+            spatialCoefficientsForTZ(0,1,0, uc)=-1.;  
+            spatialCoefficientsForTZ(2,0,0, uc)= 0.; 
+            spatialCoefficientsForTZ(1,1,0, uc)=-.5; 
+            spatialCoefficientsForTZ(0,2,0, uc)=+.5; 
 
-	    spatialCoefficientsForTZ(0,0,0, vc)= 0.;   
-	    spatialCoefficientsForTZ(1,0,0, vc)= 1.;  
-	    spatialCoefficientsForTZ(0,1,0, vc)= 0.;  
-	    spatialCoefficientsForTZ(2,0,0, vc)= .5; 
-	    spatialCoefficientsForTZ(1,1,0, vc)=-.5; 
-	    spatialCoefficientsForTZ(0,2,0, vc)= 0.; 
+            spatialCoefficientsForTZ(0,0,0, vc)= 0.;   
+            spatialCoefficientsForTZ(1,0,0, vc)= 1.;  
+            spatialCoefficientsForTZ(0,1,0, vc)= 0.;  
+            spatialCoefficientsForTZ(2,0,0, vc)= .5; 
+            spatialCoefficientsForTZ(1,1,0, vc)=-.5; 
+            spatialCoefficientsForTZ(0,2,0, vc)= 0.; 
 
 
 
-	  }
-	    
+          }
+            
 
-	}
+        }
       }
     }
     if(  dbase.get<bool >("computeReactions") )
@@ -1228,21 +1228,21 @@ setTwilightZoneFunction(const TwilightZoneChoice & choice_,
       // assign species
       for( int n= sc; n< numberOfComponents; n++ )
       {
-	real ni =1./(n+1);
+        real ni =1./(n+1);
  
-	spatialCoefficientsForTZ(0,0,0,n)=1.;      
-	if( degreeSpace>0 )
-	{
-	  spatialCoefficientsForTZ(1,0,0,n)=1.*ni;
-	  spatialCoefficientsForTZ(0,1,0,n)=.5*ni;
-	  spatialCoefficientsForTZ(0,0,1,n)=  numberOfDimensions==3 ? .25*ni : 0.;
-	}
-	if( degreeSpace>1 )
-	{
-	  spatialCoefficientsForTZ(2,0,0,n)=.5*ni;
-	  spatialCoefficientsForTZ(0,2,0,n)=.25*ni;
-	  spatialCoefficientsForTZ(0,0,2,n)=  numberOfDimensions==3 ? .125*ni : 0.;
-	}
+        spatialCoefficientsForTZ(0,0,0,n)=1.;      
+        if( degreeSpace>0 )
+        {
+          spatialCoefficientsForTZ(1,0,0,n)=1.*ni;
+          spatialCoefficientsForTZ(0,1,0,n)=.5*ni;
+          spatialCoefficientsForTZ(0,0,1,n)=  numberOfDimensions==3 ? .25*ni : 0.;
+        }
+        if( degreeSpace>1 )
+        {
+          spatialCoefficientsForTZ(2,0,0,n)=.5*ni;
+          spatialCoefficientsForTZ(0,2,0,n)=.25*ni;
+          spatialCoefficientsForTZ(0,0,2,n)=  numberOfDimensions==3 ? .125*ni : 0.;
+        }
       }
     }
 
@@ -1251,9 +1251,9 @@ setTwilightZoneFunction(const TwilightZoneChoice & choice_,
     {
       for( int i=0; i<=4; i++ )
       {
-	timeCoefficientsForTZ(i,n)= i<=degreeTime ? 1./(i+1) : 0. ;
+        timeCoefficientsForTZ(i,n)= i<=degreeTime ? 1./(i+1) : 0. ;
       }
-	  
+          
     }
 
     // ::display(spatialCoefficientsForTZ,"spatialCoefficientsForTZ","%6.2f ");
@@ -1287,8 +1287,8 @@ setTwilightZoneFunction(const TwilightZoneChoice & choice_,
     {
       if( numberOfSpecies>0 )
       {
-	cc( sc)=0.5;
-	amplitude( sc)=.125;
+        cc( sc)=0.5;
+        amplitude( sc)=.125;
       }
     }
     gx( vc)=.5/ omega[0];
@@ -1336,7 +1336,7 @@ setTwilightZoneFunction(const TwilightZoneChoice & choice_,
 
 static int 
 fillCompressibleDialogValues(DialogData & dialog, 
-			     Parameters & parameters )
+                             Parameters & parameters )
 // ======================================================================================================
 // /Description:
 //     Fill values into the Dialog for the CNS parameters.
@@ -1540,7 +1540,7 @@ buildCompressibleDialog(DialogData & dialog,
 
 
   aString tbCommands[] = {"check for wall heating", 
-			  ""};
+                          ""};
   int tbState[4];
   tbState[0] = parameters.dbase.get<int>("checkForWallHeating");
   int numColumns=1;
@@ -1716,7 +1716,7 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
     const int maxCommands=40;
     aString cmd[maxCommands];
     if(  pde==CnsParameters::compressibleNavierStokes ||
-	 pde==CnsParameters::compressibleMultiphase ||
+         pde==CnsParameters::compressibleMultiphase ||
              TRUE )
     {
       updatePDEparameters();  // update parameters such as ReynoldsNumber, MachNumber, ... to be consistent.
@@ -1784,7 +1784,7 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
     {
       gi.inputString(answer,sPrintF(buff,"Enter nu (default value=%e)", dbase.get<real >("nu")));
       if( answer!="" )
-	sScanF(answer,"%e",& dbase.get<real >("nu"));
+        sScanF(answer,"%e",& dbase.get<real >("nu"));
     }
     else if( answer=="mu"  )
     {
@@ -1792,7 +1792,7 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
 
       gi.inputString(answer,sPrintF(buff,"Enter mu (default value=%e)", dbase.get<real >("mu")));
       if( answer!="" )
-	sScanF(answer,"%e",& dbase.get<real >("mu"));
+        sScanF(answer,"%e",& dbase.get<real >("mu"));
       printF(" mu=%9.3e\n", dbase.get<real >("mu"));
     }
     else if( answer=="kThermal"  )
@@ -1801,7 +1801,7 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
 
       gi.inputString(answer,sPrintF(buff,"Enter kThermal (default value=%e)", dbase.get<real >("kThermal")));
       if( answer!="" )
-	sScanF(answer,"%e",& dbase.get<real >("kThermal"));
+        sScanF(answer,"%e",& dbase.get<real >("kThermal"));
       printF(" kThermal=%9.3e\n", dbase.get<real >("kThermal"));
     }
     else if( answer=="Rg (gas constant)"  )
@@ -1810,7 +1810,7 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
 
       gi.inputString(answer,sPrintF(buff,"Enter Rg (default value=%e)", dbase.get<real >("Rg")));
       if( answer!="" )
-	sScanF(answer,"%e",& dbase.get<real >("Rg"));
+        sScanF(answer,"%e",& dbase.get<real >("Rg"));
       printF(" Rg=%9.3e\n",  dbase.get<real >("Rg"));
     }
     else if( answer=="prandtlNumber"  )
@@ -1819,14 +1819,14 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
 
       gi.inputString(answer,sPrintF(buff,"Enter prandtlNumber (default value=%e)", dbase.get<real >("prandtlNumber")));
       if( answer!="" )
-	sScanF(answer,"%e",& dbase.get<real >("prandtlNumber"));
+        sScanF(answer,"%e",& dbase.get<real >("prandtlNumber"));
       printF(" prandtlNumber=%9.3e\n", dbase.get<real >("prandtlNumber"));
     }
     else if( answer=="gamma"  )
     {
       gi.inputString(answer,sPrintF(buff,"Enter gamma (default value=%e)", dbase.get<real >("gamma")));
       if( answer!="" )
-	sScanF(answer,"%e",& dbase.get<real >("gamma"));
+        sScanF(answer,"%e",& dbase.get<real >("gamma"));
       printF(" gamma=%9.3e\n", dbase.get<real >("gamma"));
     }
     else if( answer=="gravity"  )
@@ -1834,19 +1834,19 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
       printF("gravity is specified as a vector, it is the accelation per unit mass.\n");
       if(  numberOfDimensions==2 )
       {
-	gi.inputString(answer,sPrintF(buff,"Enter gravity, 2 values, default=(%8.2e,%8.2e))",
-				        gravity[0], gravity[1]));
-	if( answer!="" )
-	  sScanF(answer,"%e %e",&gravity[0],&gravity[1]);
-	printF(" gravity=(%8.2e,%8.2e)\n", gravity[0], gravity[1]);
+        gi.inputString(answer,sPrintF(buff,"Enter gravity, 2 values, default=(%8.2e,%8.2e))",
+                                        gravity[0], gravity[1]));
+        if( answer!="" )
+          sScanF(answer,"%e %e",&gravity[0],&gravity[1]);
+        printF(" gravity=(%8.2e,%8.2e)\n", gravity[0], gravity[1]);
       }
       else
       {
-	gi.inputString(answer,sPrintF(buff,"Enter gravity, 3 values, default=(%8.2e,%8.2e,%8.2e))",
-				        gravity[0], gravity[1], gravity[2]));
-	if( answer!="" )
-	  sScanF(answer,"%e %e %e",&gravity[0],&gravity[1],&gravity[2]);
-	printF(" gravity=(%8.2e,%8.2e,%8.2e)\n", gravity[0], gravity[1], gravity[2]);
+        gi.inputString(answer,sPrintF(buff,"Enter gravity, 3 values, default=(%8.2e,%8.2e,%8.2e))",
+                                        gravity[0], gravity[1], gravity[2]));
+        if( answer!="" )
+          sScanF(answer,"%e %e %e",&gravity[0],&gravity[1],&gravity[2]);
+        printF(" gravity=(%8.2e,%8.2e,%8.2e)\n", gravity[0], gravity[1], gravity[2]);
       }
     }
     else if( answer=="fluid density"  )
@@ -1855,7 +1855,7 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
              " This density will be used to compute the buoyancy of moving bodies\n", dbase.get<real >("fluidDensity"));
       gi.inputString(answer,sPrintF(buff,"Enter the fluid density, default=(%8.2e))", dbase.get<real >("fluidDensity")));
       if( answer!="" )
-	sScanF(answer,"%e",& dbase.get<real >("fluidDensity"));
+        sScanF(answer,"%e",& dbase.get<real >("fluidDensity"));
       printF(" New fluid density = %10.3e.\n", dbase.get<real >("fluidDensity"));
     }
     else if( answer=="Mach number" )
@@ -1864,14 +1864,14 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
            dbase.get<CnsParameters::PDEVariation >("pdeVariation")==CnsParameters::conservativeGodunov )
       {
         gi.inputString(answer,sPrintF(buff,"Enter the Mach number (default value=%e)", dbase.get<real >("machNumber")));
-	printF("Sorry: you should not change the Mach number for this option. Default is M=1/sqrt(gamma*Rg) \n");
+        printF("Sorry: you should not change the Mach number for this option. Default is M=1/sqrt(gamma*Rg) \n");
       }
       else
       {
-	 dbase.get<bool >("useDimensionalParameters")=false;  // make sure we are using non-dimensional parameters
-	gi.inputString(answer,sPrintF(buff,"Enter the Mach number (default value=%e)", dbase.get<real >("machNumber")));
-	if( answer!="" )
-	  sScanF(answer,"%e",& dbase.get<real >("machNumber"));
+         dbase.get<bool >("useDimensionalParameters")=false;  // make sure we are using non-dimensional parameters
+        gi.inputString(answer,sPrintF(buff,"Enter the Mach number (default value=%e)", dbase.get<real >("machNumber")));
+        if( answer!="" )
+          sScanF(answer,"%e",& dbase.get<real >("machNumber"));
 
       }
       printF(" Mach number=%9.3e\n", dbase.get<real >("machNumber"));
@@ -1882,52 +1882,52 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
        dbase.get<bool >("useDimensionalParameters")=false;  // make sure we are using non-dimensional parameters
       gi.inputString(answer,sPrintF(buff,"Enter the Reynolds number (default value=%e)", dbase.get<real >("reynoldsNumber")));
       if( answer!="" )
-	sScanF(answer,"%e",& dbase.get<real >("reynoldsNumber"));
+        sScanF(answer,"%e",& dbase.get<real >("reynoldsNumber"));
 
       printF(" reynoldsNumber=%9.3e\n", dbase.get<real >("reynoldsNumber"));
     }
     else if( answer=="heat release" )
     {
       printF(" Reation: D(lambda)/Dt = sigma(1-lambda) exp( (1-1/T)/eps )\n"
-	     "    sigma=rate constant, eps=recriprocal activation energy \n");
+             "    sigma=rate constant, eps=recriprocal activation energy \n");
       gi.inputString(answer,sPrintF(buff,"Enter the heat release (default value=%e)", dbase.get<real >("heatRelease")));
       if( answer!="" )
-	sScanF(answer,"%e",& dbase.get<real >("heatRelease"));
+        sScanF(answer,"%e",& dbase.get<real >("heatRelease"));
       printF(" heatRelease=%9.3e\n", dbase.get<real >("heatRelease"));
     }
     else if( answer=="reciprocal activation energy" )
     {
       printF(" Reation: D(lambda)/Dt = sigma(1-lambda) exp( (1-1/T)/eps )\n"
-	     "    sigma=rate constant, eps=recriprocal activation energy \n");
+             "    sigma=rate constant, eps=recriprocal activation energy \n");
       gi.inputString(answer,sPrintF(buff,"Enter the recriprocal activation energy (default value=%e)",
-				      dbase.get<real >("reciprocalActivationEnergy")));
+                                      dbase.get<real >("reciprocalActivationEnergy")));
       if( answer!="" )
-	sScanF(answer,"%e",& dbase.get<real >("reciprocalActivationEnergy"));
+        sScanF(answer,"%e",& dbase.get<real >("reciprocalActivationEnergy"));
       printF(" reciprocalActivationEnergy=%9.3e\n", dbase.get<real >("reciprocalActivationEnergy"));
     }
     else if( answer=="rate constant" )
     {
       printF(" Reation: D(lambda)/Dt = sigma(1-lambda) exp( (1-1/T)/eps )\n"
-	     "    sigma=rate constant, eps=recriprocal activation energy \n");
+             "    sigma=rate constant, eps=recriprocal activation energy \n");
       gi.inputString(answer,sPrintF(buff,"Enter the rate constant (default value=%e)", dbase.get<real >("rateConstant")));
       if( answer!="" )
-	sScanF(answer,"%e",& dbase.get<real >("rateConstant"));
+        sScanF(answer,"%e",& dbase.get<real >("rateConstant"));
       printF(" rateConstant=%9.3e\n", dbase.get<real >("rateConstant"));
     }
     else if( answer=="divergence damping" )
     {
       gi.inputString(answer,sPrintF(buff,"Enter cdv (default value=%e)", dbase.get<real >("cdv")));
       if( answer!="" )
-	sScanF(answer,"%e",& dbase.get<real >("cdv"));
+        sScanF(answer,"%e",& dbase.get<real >("cdv"));
       printF(" cdv=%9.3e\n", dbase.get<real >("cdv"));
     }
     else if( answer=="use old pressure boundary condition" )
     {
        dbase.get<int >("pressureBoundaryCondition")=! dbase.get<int >("pressureBoundaryCondition");
       if(  dbase.get<int >("pressureBoundaryCondition")==0 )
-	printF("Using new form of pressure BC.  p.n=-nu n.curl(curl u)\n");
+        printF("Using new form of pressure BC.  p.n=-nu n.curl(curl u)\n");
       else
-	printF("Using old form of pressure BC.\n");
+        printF("Using old form of pressure BC.\n");
 
     }
     else if( answer=="use p.n=0 boundary condition" )
@@ -1936,11 +1936,11 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
       printF("Using p.n=0 BC.\n");
     }
     else if( answer=="use default outflow" ||
-	     answer=="check for inflow at outflow" ||        
-	     answer=="expect inflow at outflow" )
+             answer=="check for inflow at outflow" ||        
+             answer=="expect inflow at outflow" )
     {
        dbase.get<int >("checkForInflowAtOutFlow")=(answer=="check for inflow at outflow" ? 1 : 
-			       answer=="expect inflow at outflow" ? 2 : 0);
+                               answer=="expect inflow at outflow" ? 2 : 0);
 
       printF("Setting checkForInflowAtOutFlow=%i\n", dbase.get<int >("checkForInflowAtOutFlow"));
    
@@ -1955,36 +1955,36 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
       dialog.setToggleState("use new fourth order boundary conditions",value);      
        dbase.get<int >("useNewFourthOrderBoundaryConditions")=value;
       if(  dbase.get<int >("useNewFourthOrderBoundaryConditions") )
-	printF("use new fourth order boundary conditions\n");
+        printF("use new fourth order boundary conditions\n");
       else
-	printF("do not use new fourth order boundary conditions\n");
+        printF("do not use new fourth order boundary conditions\n");
     }
     else if( len=answer.matches("slip wall boundary condition option") ) 
     {
       sScanF(answer(len,answer.length()-1),"%i",& dbase.get<int >("slipWallBoundaryConditionOption")); 
       if(  dbase.get<int >("slipWallBoundaryConditionOption")==0 )
       {
-	printF("** Using symmetry slip wall BC **\n");
+        printF("** Using symmetry slip wall BC **\n");
       }
       else if(  dbase.get<int >("slipWallBoundaryConditionOption")==1 )
       {
-	printF("*** Using slipWallPressureEntropySymmetry condition ***\n");
+        printF("*** Using slipWallPressureEntropySymmetry condition ***\n");
       }
       else if(  dbase.get<int >("slipWallBoundaryConditionOption")==2 )
       {
-	printF("*** Using slipWallTaylor condition ***\n");
+        printF("*** Using slipWallTaylor condition ***\n");
       }
       else if(  dbase.get<int >("slipWallBoundaryConditionOption")==3 )
       {
-	printF("*** Using slipWallCharacteristic condition ***\n");
+        printF("*** Using slipWallCharacteristic condition ***\n");
       }
       else if(  dbase.get<int >("slipWallBoundaryConditionOption")==4 )
       {
-	printF("*** Using slipWallDerivative condition ***\n");
+        printF("*** Using slipWallDerivative condition ***\n");
       }
       else
       {
-	Overture::abort("Unknown slip wall boundary condition option");
+        Overture::abort("Unknown slip wall boundary condition option");
       }
    
     }
@@ -1995,9 +1995,9 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
       dialog.setToggleState("use self-adjoint diffusion operator",value);      
        dbase.get<bool >("useSelfAdjointDiffusion")=value;
       if(  dbase.get<bool >("useSelfAdjointDiffusion") )
-	printF("use self-adjoint diffusion operator\n");
+        printF("use self-adjoint diffusion operator\n");
       else
-	printF("do not use self-adjoint diffusion operator\n");
+        printF("do not use self-adjoint diffusion operator\n");
     }
     else if( len=answer.matches("include artificial diffusion in pressure equation") ) 
     {
@@ -2006,9 +2006,9 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
       dialog.setToggleState("include artificial diffusion in pressure equation",value);      
        dbase.get<bool >("includeArtificialDiffusionInPressureEquation")=value;
       if(  dbase.get<bool >("includeArtificialDiffusionInPressureEquation") )
-	printF("include artificial diffusion in pressure equation.\n");
+        printF("include artificial diffusion in pressure equation.\n");
       else
-	printF("do not include artificial diffusion in pressure equation.\n");
+        printF("do not include artificial diffusion in pressure equation.\n");
     }
     else if( answer=="turn on second order artificial diffusion" )
     {
@@ -2034,7 +2034,7 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
        dbase.get<real >("ad21")=1.; // .25;
       gi.inputString(answer,sPrintF(buff,"Enter ad21 (default value=%e)", dbase.get<real >("ad21")));
       if( answer!="" )
-	sScanF(answer,"%e",& dbase.get<real >("ad21"));
+        sScanF(answer,"%e",& dbase.get<real >("ad21"));
       printF(" ad21=%9.3e\n", dbase.get<real >("ad21"));
       dialog.setTextLabel("ad21,ad22",sPrintF(answer, "%g,%g", dbase.get<real >("ad21"), dbase.get<real >("ad22"))); 
     }
@@ -2043,7 +2043,7 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
        dbase.get<real >("ad22")=1.; // .25;
       gi.inputString(answer,sPrintF(buff,"Enter ad22 (default value=%e)", dbase.get<real >("ad22")));
       if( answer!="" )
-	sScanF(answer,"%e",& dbase.get<real >("ad22"));
+        sScanF(answer,"%e",& dbase.get<real >("ad22"));
       printF(" ad22=%9.3e\n", dbase.get<real >("ad22"));
       dialog.setTextLabel("ad21,ad22",sPrintF(answer, "%g,%g", dbase.get<real >("ad21"), dbase.get<real >("ad22"))); 
     }
@@ -2078,7 +2078,7 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
        dbase.get<real >("ad41")=1.; // .25;
       gi.inputString(answer,sPrintF(buff,"Enter ad41 (default value=%e)", dbase.get<real >("ad41")));
       if( answer!="" )
-	sScanF(answer,"%e",& dbase.get<real >("ad41"));
+        sScanF(answer,"%e",& dbase.get<real >("ad41"));
       printF(" ad41=%9.3e\n", dbase.get<real >("ad41"));
       dialog.setTextLabel("ad41,ad42",sPrintF(answer, "%g,%g", dbase.get<real >("ad41"), dbase.get<real >("ad42"))); 
     }
@@ -2087,7 +2087,7 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
        dbase.get<real >("ad42")=1.; // .25;
       gi.inputString(answer,sPrintF(buff,"Enter ad42 (default value=%e)", dbase.get<real >("ad42")));
       if( answer!="" )
-	sScanF(answer,"%e",& dbase.get<real >("ad42"));
+        sScanF(answer,"%e",& dbase.get<real >("ad42"));
       printF(" ad42=%9.3e\n", dbase.get<real >("ad42"));
       dialog.setTextLabel("ad41,ad42",sPrintF(answer, "%g,%g", dbase.get<real >("ad41"), dbase.get<real >("ad42"))); 
     }
@@ -2095,14 +2095,14 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
     {
       gi.inputString(answer,sPrintF(buff,"Enter nuRho (default value=%e)", dbase.get<real >("nuRho")));
       if( answer!="" )
-	sScanF(answer,"%e",& dbase.get<real >("nuRho"));
+        sScanF(answer,"%e",& dbase.get<real >("nuRho"));
       printF(" nuRho=%9.3e\n", dbase.get<real >("nuRho"));
     }
     else if( answer=="anu" )
     {
       gi.inputString(answer,sPrintF(buff,"Enter anu (default value=%e)", dbase.get<real >("anu")));
       if( answer!="" )
-	sScanF(answer,"%e",& dbase.get<real >("anu"));
+        sScanF(answer,"%e",& dbase.get<real >("anu"));
       printF(" anu=%9.3e\n", dbase.get<real >("anu"));
     }
     else if( answer=="pressure level" )
@@ -2110,7 +2110,7 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
        dbase.get<real >("pressureLevel")=0.;
       gi.inputString(answer,sPrintF(buff,"Enter pressureLevel (default value=%e)", dbase.get<real >("pressureLevel")));
       if( answer!="" )
-	sScanF(answer,"%e",& dbase.get<real >("pressureLevel"));
+        sScanF(answer,"%e",& dbase.get<real >("pressureLevel"));
       printF(" pressureLevel=%9.3e\n", dbase.get<real >("pressureLevel"));
     }
     else if( answer=="remove fast pressure waves (toggle)" )
@@ -2139,7 +2139,7 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
        dbase.get<Parameters::TimeSteppingMethod >("timeSteppingMethod")=Parameters::forwardEuler;
        conservativeGodunovMethod=cppVersionI;
       printF("Use new conservative C++ Godunov\n");
-	  
+          
     }
     else if( answer=="newer conservative Godunov" )
     {
@@ -2147,28 +2147,28 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
        dbase.get<Parameters::TimeSteppingMethod >("timeSteppingMethod")=Parameters::forwardEuler;
        conservativeGodunovMethod=cppVersionII;
       printF("Use David's newer conservative Godunov\n");
-	  
+          
     }
     else if( answer=="characteristic interpolation" )
     {
        dbase.get<bool >("useCharacteristicInterpolation")=! dbase.get<bool >("useCharacteristicInterpolation");
       if(  dbase.get<bool >("useCharacteristicInterpolation") )
-	printF("Use characteristic interpolation\n");
+        printF("Use characteristic interpolation\n");
       else
-	printF("Do NOT use characteristic interpolation\n");
+        printF("Do NOT use characteristic interpolation\n");
     }
     else if( answer=="av2" )
     {
       gi.inputString(answer,sPrintF(buff,"Enter av2 (default value=%e)", dbase.get<real >("av2")));
       if( answer!="" )
-	sScanF(answer,"%e",& dbase.get<real >("av2"));
+        sScanF(answer,"%e",& dbase.get<real >("av2"));
       printF(" av2=%9.3e\n", dbase.get<real >("av2"));
     }
     else if( answer=="av4" )
     {
       gi.inputString(answer,sPrintF(buff,"Enter av4 (default value=%e)", dbase.get<real >("av4")));
       if( answer!="" )
-	sScanF(answer,"%e",& dbase.get<real >("av4"));
+        sScanF(answer,"%e",& dbase.get<real >("av4"));
       printF(" av4=%9.3e\n", dbase.get<real >("av4"));
     }
 //     else if( answer=="update parameters" )
@@ -2188,8 +2188,8 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
     {
       if( ! dbase.get<bool >("useDimensionalParameters") )
       {
-	sScanF(answer(15,answer.length()),"%e",& dbase.get<real >("reynoldsNumber"));
-	printF(" reynoldsNumber=%9.3e\n", dbase.get<real >("reynoldsNumber"));
+        sScanF(answer(15,answer.length()),"%e",& dbase.get<real >("reynoldsNumber"));
+        printF(" reynoldsNumber=%9.3e\n", dbase.get<real >("reynoldsNumber"));
       }
       else
         printF("You must switch to non-dimensional parameters before assigning the Reynolds number\n");
@@ -2198,8 +2198,8 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
     {
       if( ! dbase.get<bool >("useDimensionalParameters") )
       {
-	sScanF(answer(11,answer.length()),"%e",& dbase.get<real >("machNumber"));
-	printF(" machNumber=%9.3e\n", dbase.get<real >("machNumber"));
+        sScanF(answer(11,answer.length()),"%e",& dbase.get<real >("machNumber"));
+        printF(" machNumber=%9.3e\n", dbase.get<real >("machNumber"));
       }
       else
         printF("You must switch to non-dimensional parameters before assigning the Mach number\n");
@@ -2208,13 +2208,13 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
     {
       if(  dbase.get<bool >("useDimensionalParameters") )
       {
-	sScanF(answer(2,answer.length()),"%e",& dbase.get<real >("mu"));
-	printF(" mu=%9.3e\n", dbase.get<real >("mu"));
+        sScanF(answer(2,answer.length()),"%e",& dbase.get<real >("mu"));
+        printF(" mu=%9.3e\n", dbase.get<real >("mu"));
         if(  dbase.get<real >("prandtlNumber")>0. )
-	{
-	   dbase.get<real >("kThermal")= dbase.get<real >("mu")/ dbase.get<real >("prandtlNumber");
+        {
+           dbase.get<real >("kThermal")= dbase.get<real >("mu")/ dbase.get<real >("prandtlNumber");
           printF("Assigning kThermal=mu/Prandtl. Reset kThermal or Prandtl if you want a different value.\n");
-	}
+        }
       }
       else
         printF("You must switch to dimensional parameters before assigning mu\n");
@@ -2223,8 +2223,8 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
     {
       if(  dbase.get<bool >("useDimensionalParameters") )
       {
-	sScanF(answer(8,answer.length()),"%e",& dbase.get<real >("kThermal"));
-	printF(" kThermal=%9.3e\n", dbase.get<real >("kThermal"));
+        sScanF(answer(8,answer.length()),"%e",& dbase.get<real >("kThermal"));
+        printF(" kThermal=%9.3e\n", dbase.get<real >("kThermal"));
       }
       else
         printF("You must switch to dimensional parameters before assigning kThermal\n");
@@ -2257,8 +2257,8 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
     }
     else if ( answer.matches("scoeff"))
       {
-	sScanF(answer(6,answer.length()),"%e",& dbase.get<real >("strickwerdaCoeff"));
-	printF(" strick. coeff. = %e\n",dbase.get<real >("strickwerdaCoeff"));
+        sScanF(answer(6,answer.length()),"%e",& dbase.get<real >("strickwerdaCoeff"));
+        printF(" strick. coeff. = %e\n",dbase.get<real >("strickwerdaCoeff"));
       }
     else if( answer(0,6)=="aw2,aw4" )
     {
@@ -2279,46 +2279,46 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
       ad=0.;
       int m;
       for( m=0; m< min(maxNum,dbase.get<int >("numberOfComponents")); m++ )
-	ad(m)= artificialDiffusion(m);
+        ad(m)= artificialDiffusion(m);
       sScanF(answer(len,answer.length()-1),"%e %e %e %e %e %e %e %e %e %e  %e %e %e %e %e %e %e %e %e %e  %e %e %e %e %e %e %e %e %e %e",
              &ad(0),&ad(1),&ad(2),&ad(3),&ad(4),&ad(5),&ad(6),&ad(7),&ad(8),&ad(9),
-	     &ad(10),&ad(11),&ad(12),&ad(13),&ad(14),&ad(15),&ad(16),&ad(17),&ad(18),&ad(19),
-	     &ad(20),&ad(21),&ad(22),&ad(23),&ad(24),&ad(25),&ad(26),&ad(27),&ad(28),&ad(29));
+             &ad(10),&ad(11),&ad(12),&ad(13),&ad(14),&ad(15),&ad(16),&ad(17),&ad(18),&ad(19),
+             &ad(20),&ad(21),&ad(22),&ad(23),&ad(24),&ad(25),&ad(26),&ad(27),&ad(28),&ad(29));
 
       if(  dbase.get<int >("numberOfComponents")>maxNum )
       {
-	printF("setPdeParameters:WARNING:Only reading the first %i artificial diffusion parameters. Other values will be set to 1.\n"
+        printF("setPdeParameters:WARNING:Only reading the first %i artificial diffusion parameters. Other values will be set to 1.\n"
                "                :Get Bill to fix this\n",maxNum);
       }
    
       aString text;
       for( m=0; m<dbase.get<int >("numberOfComponents"); m++ )
       {
-	if( m<maxNum )
+        if( m<maxNum )
           artificialDiffusion(m)=ad(m);
         else
           artificialDiffusion(m)=1.;  // default value
-	
+        
         printF("Setting Godunov constant-coefficient artficial diffusion for component %s to %8.2e\n",
-	       (const char*) dbase.get<aString* >("componentName")[m],artificialDiffusion(m));
-	
-	text+=sPrintF(buff, "%g ", artificialDiffusion(m));
+               (const char*) dbase.get<aString* >("componentName")[m],artificialDiffusion(m));
+        
+        text+=sPrintF(buff, "%g ", artificialDiffusion(m));
       }
       dialog.setTextLabel("artificial diffusion",text);
     }
     else if( answer(0,6)=="gravity" )
     {
       sScanF(answer(7,answer.length()),"%e %e %e",& gravity[0],& gravity[1],
-	     & gravity[2]);
+             & gravity[2]);
       printF(" gravity=(%8.2e,%8.2e)\n", gravity[0], gravity[1]);
     }
     else if( dialog.getTextValue(answer,"Godunov order of accuracy","%i", dbase.get<int >("orderOfAccuracyForGodunovMethod")) )
     {
       if(  dbase.get<int >("orderOfAccuracyForGodunovMethod")<1 ||   dbase.get<int >("orderOfAccuracyForGodunovMethod")>2 )
       {
-	printF("***ERROR: invalid orderOfAccuracyForGodunovMethod=%i\n"
-	       "        : setting equal to 2\n", dbase.get<int >("orderOfAccuracyForGodunovMethod"));
-	 dbase.get<int >("orderOfAccuracyForGodunovMethod")=2;
+        printF("***ERROR: invalid orderOfAccuracyForGodunovMethod=%i\n"
+               "        : setting equal to 2\n", dbase.get<int >("orderOfAccuracyForGodunovMethod"));
+         dbase.get<int >("orderOfAccuracyForGodunovMethod")=2;
         dialog.setTextLabel("Godunov order of accuracy",sPrintF("%i", dbase.get<int >("orderOfAccuracyForGodunovMethod")));
       }
     }
@@ -2345,9 +2345,9 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
              answer=="interpolate primitive and pressure" )
     {
        dbase.get<Parameters::InterpolationTypeEnum >("interpolationType") = (answer=="default interpolation type" ? defaultInterpolationType :
-			   answer=="interpolate conservative variables" ? interpolateConservativeVariables :
+                           answer=="interpolate conservative variables" ? interpolateConservativeVariables :
                            answer=="interpolate primitive variables" ? interpolatePrimitiveVariables :
-			   interpolatePrimitiveAndPressure );
+                           interpolatePrimitiveAndPressure );
       dialog.getOptionMenu("Interpolation Type:").setCurrentChoice( dbase.get<Parameters::InterpolationTypeEnum >("interpolationType"));
     }
     else if( dialog.getToggleValue(answer,"check for wall heating",dbase.get<int>("checkForWallHeating")) ){}//
@@ -2406,16 +2406,16 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
     else if( dialog.getToggleValue(answer,"fourth-order artificial diffusion", dbase.get<bool >("useFourthOrderArtificialDiffusion")) )
     {
       if(  dbase.get<int >("orderOfAccuracy")==2 &&  dbase.get<bool >("useFourthOrderArtificialDiffusion") )
-	 dbase.get<int >("extrapolateInterpolationNeighbours")=true;
+         dbase.get<int >("extrapolateInterpolationNeighbours")=true;
       else
-	 dbase.get<int >("extrapolateInterpolationNeighbours")=false;
+         dbase.get<int >("extrapolateInterpolationNeighbours")=false;
     }
     else if( dialog.getToggleValue(answer,"sixth-order artificial diffusion", dbase.get<bool >("useSixthOrderArtificialDiffusion")) )
     { 
       if(  dbase.get<int >("orderOfAccuracy")==4 &&  dbase.get<bool >("useSixthOrderArtificialDiffusion") )
-	 dbase.get<int >("extrapolateInterpolationNeighbours")=true;
+         dbase.get<int >("extrapolateInterpolationNeighbours")=true;
       else
-	 dbase.get<int >("extrapolateInterpolationNeighbours")=false;
+         dbase.get<int >("extrapolateInterpolationNeighbours")=false;
     }
     else if( dialog.getToggleValue(answer,"use implicit fourth-order artificial diffusion",
                                             dbase.get<bool >("useImplicitFourthArtificialDiffusion")) ){}//
@@ -2429,9 +2429,9 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
       dialog.setToggleState("use split-step implicit artificial diffusion",value);      
        dbase.get<int >("useSplitStepImplicitArtificialDiffusion")=value;
       if(  dbase.get<int >("useSplitStepImplicitArtificialDiffusion") )
-	printF("use the split step implicit artificial diffusion\n");
+        printF("use the split step implicit artificial diffusion\n");
       else
-	printF("Do not use the split step implicit artificial diffusion\n");
+        printF("Do not use the split step implicit artificial diffusion\n");
     }
     else if( len=answer.matches("SA scale factor") )
     {
@@ -2456,20 +2456,20 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
       int numRead=gi.getValues("Enter positions of trips grid,i1,i2,i3",values);
       if( numRead>3 )
       {
-	 dbase.get<IntegerArray >("turbulenceTripPoint").redim(4,numRead/4);
-	for( int i=0; i<numRead/4; i++ )
-	{
-	   dbase.get<IntegerArray >("turbulenceTripPoint")(0,i)=values(i*4);
-	   dbase.get<IntegerArray >("turbulenceTripPoint")(1,i)=values(i*4+1);
-	   dbase.get<IntegerArray >("turbulenceTripPoint")(2,i)=values(i*4+2);
-	   dbase.get<IntegerArray >("turbulenceTripPoint")(3,i)=values(i*4+3);
-	  printF("Setting trip point %i : (grid=%i,i1=%i,i2=%i,i3=%i)\n", dbase.get<IntegerArray >("turbulenceTripPoint")(0,i),
+         dbase.get<IntegerArray >("turbulenceTripPoint").redim(4,numRead/4);
+        for( int i=0; i<numRead/4; i++ )
+        {
+           dbase.get<IntegerArray >("turbulenceTripPoint")(0,i)=values(i*4);
+           dbase.get<IntegerArray >("turbulenceTripPoint")(1,i)=values(i*4+1);
+           dbase.get<IntegerArray >("turbulenceTripPoint")(2,i)=values(i*4+2);
+           dbase.get<IntegerArray >("turbulenceTripPoint")(3,i)=values(i*4+3);
+          printF("Setting trip point %i : (grid=%i,i1=%i,i2=%i,i3=%i)\n", dbase.get<IntegerArray >("turbulenceTripPoint")(0,i),
                       dbase.get<IntegerArray >("turbulenceTripPoint")(1,i), dbase.get<IntegerArray >("turbulenceTripPoint")(2,i), dbase.get<IntegerArray >("turbulenceTripPoint")(3,i));
-	}
+        }
       }
       else
       {
-	 dbase.get<IntegerArray >("turbulenceTripPoint").redim(0);
+         dbase.get<IntegerArray >("turbulenceTripPoint").redim(0);
       }
    
     }
@@ -2482,13 +2482,13 @@ setPdeParameters(CompositeGrid & cg, const aString & command /* = nullString */,
     {
       if( executeCommand )
       {
-	returnValue= 1;  // when executing  dbase.get<real >("a") single command, return 1 if the command was not recognised.
+        returnValue= 1;  // when executing  dbase.get<real >("a") single command, return 1 if the command was not recognised.
         break;
       }
       else
       {
-	printF("Unknown response=[%s]\n",(const char*)answer);
-	gi.stopReadingCommandFile();
+        printF("Unknown response=[%s]\n",(const char*)answer);
+        gi.stopReadingCommandFile();
       }
     
     }
@@ -2520,11 +2520,11 @@ displayPdeParameters(FILE *file /* = stdout */ )
   if(   dbase.get<CnsParameters::PDE >("pde")==CnsParameters::compressibleNavierStokes )
   {
     fprintf(file,
-	    "PDE parameters: equation is `compressible Navier Stokes'.\n");
+            "PDE parameters: equation is `compressible Navier Stokes'.\n");
     if(  dbase.get<CnsParameters::PDEVariation >("pdeVariation")==CnsParameters::conservativeWithArtificialDissipation )
     {
       fprintf(file," Using conservative with artificial diffusion: av2=%7.3e, aw2=%7.3e, av4=%7.3e, aw4=%7.3e\n",
-	       dbase.get<real >("av2"), dbase.get<real >("aw2"), dbase.get<real >("av4"), dbase.get<real >("aw4"));
+               dbase.get<real >("av2"), dbase.get<real >("aw2"), dbase.get<real >("av4"), dbase.get<real >("aw4"));
     }
     else if(  dbase.get<CnsParameters::PDEVariation >("pdeVariation")==CnsParameters::conservativeGodunov )
     {
@@ -2536,14 +2536,14 @@ displayPdeParameters(FILE *file /* = stdout */ )
     }
    
     fprintf(file,
-	    "  number of components is %i\n"
+            "  number of components is %i\n"
             "  Reynolds number=%e, Mach number=%e, \n"
             "  mu=%e \n"
             "  kThermal=%e \n"
             "  thermalConductivity=%e \n"
             "  Rg=%e (gas constant) \n"
             "  gamma=%e \n",
-	     dbase.get<int >("numberOfComponents"),
+             dbase.get<int >("numberOfComponents"),
              dbase.get<real >("reynoldsNumber"),
              dbase.get<real >("machNumber"),
              dbase.get<real >("mu"), dbase.get<real >("kThermal"), dbase.get<real >("thermalConductivity"), 
@@ -2552,7 +2552,7 @@ displayPdeParameters(FILE *file /* = stdout */ )
     const ArraySimpleFixed<real,3,1,1,1> & gravity =dbase.get<ArraySimpleFixed<real,3,1,1,1> >("gravity");
     if(  gravity[0]!=0. ||  gravity[1]!=0. ||  gravity[2]!=0. )
       fprintf(file," gravity is on, acceleration due to gravity = (%8.2e,%8.2e,%8.2e) \n",
-	       gravity[0], gravity[1], gravity[2]);
+               gravity[0], gravity[1], gravity[2]);
    
 
 //     for( DataBase::iterator e=modelParameters.begin(); e!=modelParameters.end(); e++ )
@@ -2562,21 +2562,21 @@ displayPdeParameters(FILE *file /* = stdout */ )
 //       DBase::Entry &entry = *((*e).second);
 //       if( DBase::can_cast_entry<real>(entry) )
 //       {
-// 	real value=cast_entry<real>(entry);  
-// 	printf("%9.3e\n",value);
+//      real value=cast_entry<real>(entry);  
+//      printf("%9.3e\n",value);
 //       }
 //       else if( DBase::can_cast_entry<int>(entry) )
 //       {
-// 	printf("%i\n",cast_entry<int>(entry));
+//      printf("%i\n",cast_entry<int>(entry));
 //       }
 //       else if( DBase::can_cast_entry<string>(entry) )
 //       {
 //         const string & s = cast_entry<string>(entry);
-// 	printf("%s\n",s.c_str());
+//      printf("%s\n",s.c_str());
 //       }
 //       else
 //       {
-// 	printf("? (unknown type)\n");
+//      printf("? (unknown type)\n");
 //       }
 //     }
     
@@ -2600,7 +2600,7 @@ displayPdeParameters(FILE *file /* = stdout */ )
 //       pdeParametersMenu[n++]="pressure level";
 //       pdeParametersMenu[n++]="remove fast pressure waves (toggle)";
 //     }
-	
+        
 //     if( pde==Parameters::compressibleNavierStokes )
 //     {
 //       pdeParametersMenu[n++]=">algorithms";
@@ -2643,7 +2643,7 @@ displayPdeParameters(FILE *file /* = stdout */ )
   else if(   dbase.get<CnsParameters::PDE >("pde")==CnsParameters::compressibleMultiphase )
   {
     fprintf(file,
-	    "PDE parameters: equation is `compressible multiphase'.\n");
+            "PDE parameters: equation is `compressible multiphase'.\n");
 
     fprintf(file," ... finish this Bill! ....\n");
   }
@@ -2678,11 +2678,11 @@ updatePDEparameters()
       {
         if(  dbase.get<real >("reynoldsNumber") > .1*infinity )
            dbase.get<real >("mu")=0.;
-	else
-	{
-  	  printF("---assigning mu to match reynoldsNumber and machNumber----\n");
-  	   dbase.get<real >("mu")=1./ dbase.get<real >("reynoldsNumber");
-	}
+        else
+        {
+          printF("---assigning mu to match reynoldsNumber and machNumber----\n");
+           dbase.get<real >("mu")=1./ dbase.get<real >("reynoldsNumber");
+        }
       }
     }
     else
@@ -2694,8 +2694,8 @@ updatePDEparameters()
     {
       if(  dbase.get<real >("Rg") != 1./( dbase.get<real >("gamma")*SQR( dbase.get<real >("machNumber"))) )
       {
-	printF("---assigning Rg to match machNumber----\n");
-	 dbase.get<real >("Rg")=1./( dbase.get<real >("gamma")*SQR( dbase.get<real >("machNumber")));
+        printF("---assigning Rg to match machNumber----\n");
+         dbase.get<real >("Rg")=1./( dbase.get<real >("gamma")*SQR( dbase.get<real >("machNumber")));
       }
     }
     else
@@ -2708,15 +2708,15 @@ updatePDEparameters()
     {
       printF("---assigning kThermal to match Reynolds, gamma, prandtlNumber----\n");
       if(  dbase.get<real >("mu")>0 )
-	 dbase.get<real >("kThermal")= dbase.get<real >("gamma")/( ( dbase.get<real >("gamma")-1)* dbase.get<real >("prandtlNumber")* dbase.get<real >("reynoldsNumber") );
+         dbase.get<real >("kThermal")= dbase.get<real >("gamma")/( ( dbase.get<real >("gamma")-1)* dbase.get<real >("prandtlNumber")* dbase.get<real >("reynoldsNumber") );
       else
-	 dbase.get<real >("kThermal")=0.;
+         dbase.get<real >("kThermal")=0.;
     }
     else
     {
       if(  dbase.get<real >("kThermal")==(real)Parameters::defaultValue &&  dbase.get<bool >("useDimensionalParameters") )
       {
-	printF("---assigning kThermal=mu/Prandtl\n");
+        printF("---assigning kThermal=mu/Prandtl\n");
          dbase.get<real >("kThermal")= dbase.get<real >("mu")/ dbase.get<real >("prandtlNumber");
       }
    
@@ -2787,12 +2787,12 @@ saveParametersToShowFile()
     
     aString eosName;
     eosName=( equationOfState==CnsParameters::idealGasEOS ? "ideal gas" :
-	      equationOfState==CnsParameters::jwlEOS ? "JWL" : 
+              equationOfState==CnsParameters::jwlEOS ? "JWL" : 
               equationOfState==CnsParameters::mieGruneisenEOS ? "Mie-Gruneisen" : 
               equationOfState==CnsParameters::userDefinedEOS ? "user defined" : 
               equationOfState==CnsParameters::stiffenedGasEOS ? "stiffened gas" : 
               equationOfState==CnsParameters::taitEOS ? "Tait" : 
-	     "unknown");
+             "unknown");
  
     showFileParams.push_back(ShowFileParameter("equationOfState",eosName));
 
@@ -2810,8 +2810,8 @@ saveParametersToShowFile()
                                reactionType==oneEquationMixtureFraction ? "oneEquationMixtureFraction" :
                                reactionType==twoEquationMixtureFractionAndExtentOfReaction ? 
                                             "twoEquationMixtureFractionAndExtentOfReaction" :
-			       reactionType==oneStepPress ? "oneStepPressureLaw" :
-			       reactionType==igDesensitization ? "igDesensitization" :
+                               reactionType==oneStepPress ? "oneStepPressureLaw" :
+                               reactionType==igDesensitization ? "igDesensitization" :
                                reactionType==chemkinReaction ? "chemkinReaction" : "unknown reactionType");
 
       showFileParams.push_back(ShowFileParameter("reactionType", reactionName));
@@ -2945,59 +2945,59 @@ getDerivedFunction( const aString & name, const realMappedGridFunction & uIn,
       if( conservativeGodunovMethod==multiComponentVersion ||
           conservativeGodunovMethod==multiFluidVersion )
       {
-	// Here we compute the pressure for the multi-component Godunov method
+        // Here we compute the pressure for the multi-component Godunov method
         // Note we assume p=rho*R*T ... so temperature means nothing so we can make sense of pressure
-	v(all,all,all,component)=Rg*u(all,all,all,rc)*u(all,all,all,tc);
+        v(all,all,all,component)=Rg*u(all,all,all,rc)*u(all,all,all,tc);
       }
       else
       {
         if( equationOfState==idealGasEOS ||
             equationOfState==jwlEOS  ||
             equationOfState==userDefinedEOS )
-	{
-	  // assume ideal gas law for now
-	  v(all,all,all,component)=Rg*u(all,all,all, rc)*u(all,all,all,tc);
-	}
-	else if( equationOfState==CnsParameters::mieGruneisenEOS )
-	{
+        {
+          // assume ideal gas law for now
+          v(all,all,all,component)=Rg*u(all,all,all, rc)*u(all,all,all,tc);
+        }
+        else if( equationOfState==CnsParameters::mieGruneisenEOS )
+        {
           real alphaMG,betaMG,v0MG,kappaMG;
           ListOfShowFileParameters pdeParameters = parameters.dbase.get<ListOfShowFileParameters >("pdeParameters");
-	  
-	  dbase.get<ListOfShowFileParameters >("pdeParameters").getParameter("alphaMG",alphaMG);
-	  dbase.get<ListOfShowFileParameters >("pdeParameters").getParameter("betaMG",betaMG);
-	  dbase.get<ListOfShowFileParameters >("pdeParameters").getParameter("V0MG",v0MG);
-	  dbase.get<ListOfShowFileParameters >("pdeParameters").getParameter("kappaMG",kappaMG);
-	  
+          
+          dbase.get<ListOfShowFileParameters >("pdeParameters").getParameter("alphaMG",alphaMG);
+          dbase.get<ListOfShowFileParameters >("pdeParameters").getParameter("betaMG",betaMG);
+          dbase.get<ListOfShowFileParameters >("pdeParameters").getParameter("V0MG",v0MG);
+          dbase.get<ListOfShowFileParameters >("pdeParameters").getParameter("kappaMG",kappaMG);
+          
           // p = rho*kappa* dbase.get<real >("Rg")*T + F(rho)
 
           realSerialArray vv; // volume fraction
           vv = 1./(v0MG*u(all,all,all, rc)); 
-	  
+          
           v(all,all,all,component)=(Rg*kappaMG)*u(all,all,all,rc)*u(all,all,all,tc)
-	    + (vv-1.)*( alphaMG + betaMG*(vv-1.) );
-	}
+            + (vv-1.)*( alphaMG + betaMG*(vv-1.) );
+        }
         else if( equationOfState==CnsParameters::stiffenedGasEOS )
-	{
+        {
           //  p = (gammaStiff-1)* rho * e -  gammaStiff*pStiff
           // ! *ve* rho*e = (rho*T-gammaStiff*pStiff)/(gammaStiff-1)
           // real gammaStiff=1.4,  pStiff=0.;
           // dbase.get<ListOfShowFileParameters >("pdeParameters").getParameter("alphaMG",gammaStiff);
-	  // dbase.get<ListOfShowFileParameters >("pdeParameters").getParameter("betaMG",pStiff);
+          // dbase.get<ListOfShowFileParameters >("pdeParameters").getParameter("betaMG",pStiff);
 
           // p = rho*T (T is defined as p/rho)
           v(all,all,all,component)=Rg*u(all,all,all, rc)*u(all,all,all,tc);
-	}
-	else if( equationOfState==CnsParameters::taitEOS )
-	{
+        }
+        else if( equationOfState==CnsParameters::taitEOS )
+        {
           Overture::abort("finish me");
-	}
+        }
         else
-	{
-	  printf("getDerivedFunction:ERROR: unknown equation of state =%i\n",
+        {
+          printf("getDerivedFunction:ERROR: unknown equation of state =%i\n",
             (int)equationOfState);
-	  Overture::abort("error");
-	}
-	
+          Overture::abort("error");
+        }
+        
       }
     }
     else if( pde==compressibleMultiphase )
@@ -3010,12 +3010,12 @@ getDerivedFunction( const aString & name, const realMappedGridFunction & uIn,
       int pressureComponent=component;
       if( name=="pressure" || name=="ps" )
       {
-	v(all,all,all,pressureComponent)=u(all,all,all,rs)*u(all,all,all,ts);
+        v(all,all,all,pressureComponent)=u(all,all,all,rs)*u(all,all,all,ts);
         pressureComponent++;
       }
       if( name=="pressure" || name=="pg" )
       {
-	v(all,all,all,pressureComponent)=u(all,all,all,rg)*u(all,all,all,tg);
+        v(all,all,all,pressureComponent)=u(all,all,all,rg)*u(all,all,all,tg);
       }
       
     }
@@ -3037,10 +3037,10 @@ getDerivedFunction( const aString & name, const realMappedGridFunction & uIn,
       if( conservativeGodunovMethod==multiComponentVersion ||
           conservativeGodunovMethod==multiFluidVersion )
       {
-	// Here we compute the pressure for the multi-component Godunov method
+        // Here we compute the pressure for the multi-component Godunov method
         // Note we assume p=rho*R*T ... so temperature means nothing so we can make sense of pressure
         const int pc= dbase.get<int >("tc");
-	v(all,all,all,component)=u(all,all,all,pc)/(Rg*u(all,all,all,rc));
+        v(all,all,all,component)=u(all,all,all,pc)/(Rg*u(all,all,all,rc));
       }
       else
       {
@@ -3048,39 +3048,39 @@ getDerivedFunction( const aString & name, const realMappedGridFunction & uIn,
             equationOfState==jwlEOS ||
             equationOfState==userDefinedEOS ||
             equationOfState==CnsParameters::stiffenedGasEOS )
-	{
-	  // assume ideal gas law for now  : T = p/(rho* dbase.get<real >("Rg"))
+        {
+          // assume ideal gas law for now  : T = p/(rho* dbase.get<real >("Rg"))
           v(all,all,all,component)=u(all,all,all,tc)/(Rg*u(all,all,all,rc));
-	}
-	else if( equationOfState==CnsParameters::mieGruneisenEOS )
-	{
+        }
+        else if( equationOfState==CnsParameters::mieGruneisenEOS )
+        {
           real alphaMG,betaMG,v0MG,kappaMG;
           ListOfShowFileParameters pdeParameters = parameters.dbase.get<ListOfShowFileParameters >("pdeParameters");
-	  
-	   pdeParameters.getParameter("alphaMG",alphaMG);
-	   pdeParameters.getParameter("betaMG",betaMG);
-	   pdeParameters.getParameter("V0MG",v0MG);
-	   pdeParameters.getParameter("kappaMG",kappaMG);
-	  
+          
+           pdeParameters.getParameter("alphaMG",alphaMG);
+           pdeParameters.getParameter("betaMG",betaMG);
+           pdeParameters.getParameter("V0MG",v0MG);
+           pdeParameters.getParameter("kappaMG",kappaMG);
+          
           // p = rho*kappa* dbase.get<real >("Rg")*T + F(rho)
 
           realSerialArray vv;
           vv = 1./(v0MG*u(all,all,all, rc)); 
-	  
+          
           const int pc= tc;
           v(all,all,all,component)=( u(all,all,all,pc) - (vv-1.)*( alphaMG + betaMG*(vv-1.) ) )/
                     ((Rg*kappaMG)*u(all,all,all, rc));
-	}
+        }
         else if( equationOfState==CnsParameters::taitEOS )
-	{
+        {
           Overture::abort("ERROR: finish me!");
-	}
+        }
         else
-	{
-	  printf("getDerivedFunction:ERROR: unknown equation of state =%i\n",
+        {
+          printf("getDerivedFunction:ERROR: unknown equation of state =%i\n",
             (int)equationOfState);
-	  Overture::abort("error");
-	}
+          Overture::abort("error");
+        }
 
 
       }
@@ -3132,13 +3132,13 @@ updateToMatchGrid(CompositeGrid & cg, IntegerArray & sharedBoundaryCondition )
 
   Range all;
   if( (  dbase.get<PDE>("pde")==compressibleNavierStokes &&  
-	 dbase.get<CnsParameters::PDEVariation >("pdeVariation")==conservativeGodunov &&  
-	 dbase.get<int >("numberOfSpecies")>0 ) ||
+         dbase.get<CnsParameters::PDEVariation >("pdeVariation")==conservativeGodunov &&  
+         dbase.get<int >("numberOfSpecies")>0 ) ||
       dbase.get<PDE>("pde")==compressibleMultiphase )
   {
     if(  dbase.get<realCompositeGridFunction* >("truncationError")==NULL )
       {
-	dbase.get<realCompositeGridFunction* >("truncationError") = new realCompositeGridFunction(cg,all,all,all);
+        dbase.get<realCompositeGridFunction* >("truncationError") = new realCompositeGridFunction(cg,all,all,all);
       }
     else
       dbase.get<realCompositeGridFunction* >("truncationError")->updateToMatchGrid(cg,all,all,all);
@@ -3168,8 +3168,8 @@ useConservativeVariables(int grid /* =-1 */ ) const
   
   CnsParameters *gridCNSParams = dynamic_cast<CnsParameters*>(gridPDE);
   return ( (gridCNSParams && gridCNSParams->dbase.get<PDE>("pde")==compressibleNavierStokes && 
-	    dbase.get<CnsParameters::PDEVariation >("pdeVariation")!=nonConservative)
-	   || (gridCNSParams && gridCNSParams->dbase.get<PDE>("pde")==compressibleMultiphase));
+            dbase.get<CnsParameters::PDEVariation >("pdeVariation")!=nonConservative)
+           || (gridCNSParams && gridCNSParams->dbase.get<PDE>("pde")==compressibleMultiphase));
 }
 
 
@@ -3180,12 +3180,12 @@ numberOfGhostPointsNeeded() const  // number of ghost points needed by this meth
   int numGhost = Parameters::numberOfGhostPointsNeeded();
 
   if (  (  dbase.get<PDE >("pde")==compressibleNavierStokes && 
-	   (
-	    ( dbase.get<PDEVariation >("pdeVariation")==conservativeWithArtificialDissipation &&  dbase.get<real >("av4")!=0.) || 
-	    dbase.get<PDEVariation >("pdeVariation")==conservativeGodunov ||
-	    dbase.get<PDEVariation >("pdeVariation")==nonConservative)  // for 4th-order dissipation
-	   )
-	||   dbase.get<PDE >("pde")==compressibleMultiphase )
+           (
+            ( dbase.get<PDEVariation >("pdeVariation")==conservativeWithArtificialDissipation &&  dbase.get<real >("av4")!=0.) || 
+            dbase.get<PDEVariation >("pdeVariation")==conservativeGodunov ||
+            dbase.get<PDEVariation >("pdeVariation")==nonConservative)  // for 4th-order dissipation
+           )
+        ||   dbase.get<PDE >("pde")==compressibleMultiphase )
     {
       numGhost=max(numGhost,2);
     }
@@ -3247,10 +3247,10 @@ assignParameterValues(const aString & label, RealArray & values,
 // ==============================================================================================
 {
   Parameters::assignParameterValues(label,values,
-				    numRead,c,val,
-				    extraName1, extraValue1Location,
-				    extraName2, extraValue2Location,
-				    extraName3, extraValue3Location);
+                                    numRead,c,val,
+                                    extraName1, extraValue1Location,
+                                    extraName2, extraValue2Location,
+                                    extraName3, extraValue3Location);
 
   const int numberOfExtraNames=3;
   char *extraName[numberOfExtraNames] = {extraName1,extraName2,extraName3};
@@ -3266,37 +3266,37 @@ assignParameterValues(const aString & label, RealArray & values,
   for( i=0; i<numRead; i++ )
   {
     bool found=false;
-    name = c[i];	
+    name = c[i];        
     for( n=0; n< dbase.get<int >("numberOfComponents"); n++ )
     {
       if( name== dbase.get<aString* >("componentName")[n] )
       {
-	values(n)=val[i];
-	printF("assigning %s: %s=%e \n",(const char *)label,(const char *)c[i],val[i]);
-	found=true;
-	break;
+        values(n)=val[i];
+        printF("assigning %s: %s=%e \n",(const char *)label,(const char *)c[i],val[i]);
+        found=true;
+        break;
       } 
     }
     if( !found )
     {
       for( int n=0; n<numberOfExtraNames; n++ )
       {
-	if( extraName[n]!=0 && name==*extraName[n] )
-	{
-	  values(extraValueLocation[n])=val[i];
-	  found=true;
+        if( extraName[n]!=0 && name==*extraName[n] )
+        {
+          values(extraValueLocation[n])=val[i];
+          found=true;
           break;
-	}
+        }
       }
       if( !found )
       {
-	if( name=="e" )
-	{
-	  energy = val[i];
-	  ie=i;
-	  printF("assigning %s: %s=%e \n",(const char *)label,(const char *)c[i],val[i]);
-	  found=true;
-	}
+        if( name=="e" )
+        {
+          energy = val[i];
+          ie=i;
+          printF("assigning %s: %s=%e \n",(const char *)label,(const char *)c[i],val[i]);
+          found=true;
+        }
       }
     }
     if( !found )
@@ -3331,14 +3331,14 @@ assignParameterValues(const aString & label, RealArray & values,
 
       if(  dbase.get<real >("Rg")<=0. ||  dbase.get<real >("Rg")>1.e10 )
       {
-	printF("assignParameterValues:ERROR: Rg=%e seems to be invalid. I am unable to set the temperature\n"
-	       "from the other variables\n", dbase.get<real >("Rg"));
+        printF("assignParameterValues:ERROR: Rg=%e seems to be invalid. I am unable to set the temperature\n"
+               "from the other variables\n", dbase.get<real >("Rg"));
       }
       else
       {
-	values( dbase.get<int >("tc"))=(( dbase.get<real >("gamma")-1.)/ dbase.get<real >("Rg"))*(energy/rho-.5*uSq);
-	printF("assignParameterValues:assigning the temperature=%7.3e from e=%7.3e, rho=%7.3e, Rg=%7.3e, |u|^2=%7.3e"
-	       " gamma=%7.3e\n",values( dbase.get<int >("tc")),energy,rho, dbase.get<real >("Rg"),uSq, dbase.get<real >("gamma"));
+        values( dbase.get<int >("tc"))=(( dbase.get<real >("gamma")-1.)/ dbase.get<real >("Rg"))*(energy/rho-.5*uSq);
+        printF("assignParameterValues:assigning the temperature=%7.3e from e=%7.3e, rho=%7.3e, Rg=%7.3e, |u|^2=%7.3e"
+               " gamma=%7.3e\n",values( dbase.get<int >("tc")),energy,rho, dbase.get<real >("Rg"),uSq, dbase.get<real >("gamma"));
       }
     }
     else
@@ -3355,7 +3355,7 @@ assignParameterValues(const aString & label, RealArray & values,
 // *wdh* 100808 -- this function was merged back into the base class version
 //* int CnsParameters::
 //* setTwilightZoneParameters(const aString & command /* = nullString */,
-//* 			  DialogData *interface /* =NULL */ )
+//*                       DialogData *interface /* =NULL */ )
 //* // =====================================================================================
 //* // /Description:
 //* //     Assign parameters for twilight zone.
@@ -3409,15 +3409,15 @@ assignParameterValues(const aString & label, RealArray & values,
 //*     dialog.addOptionMenu("type", cmd,label, (int) dbase.get<Parameters::TwilightZoneChoice >("twilightZoneChoice"));
 //* 
 //*     aString label2[] = {"no known solution",
-//* 			// "supersonic flow in an expanding channel", -- this is now in userDefinedKnownSolution
-//* 			"axisymmetric rigid body rotation",
-//* 			"user defined known solution",""}; //
+//*                     // "supersonic flow in an expanding channel", -- this is now in userDefinedKnownSolution
+//*                     "axisymmetric rigid body rotation",
+//*                     "user defined known solution",""}; //
 //*     addPrefix(label2,prefix,cmd,maxCommands);
 //*     dialog.addOptionMenu("known solution", cmd,label2, (int) knownSolution);
 //* 
 //*     aString label3[] = {"maximum norm",
-//* 			"l1 norm",
-//* 			"l2 norm",""}; //
+//*                     "l1 norm",
+//*                     "l2 norm",""}; //
 //*     addPrefix(label3,prefix,cmd,maxCommands);
 //*     dialog.addOptionMenu("Error Norm", cmd,label3, ( dbase.get<int >("errorNorm")>2 ? 0 :  dbase.get<int >("errorNorm")));
 //* 
@@ -3448,7 +3448,7 @@ assignParameterValues(const aString & label, RealArray & values,
 //* 
 //*     textLabels[nt] = "frequencies (x,y,z,t)"; 
 //*     sPrintF(textStrings[nt], "%g, %g, %g, %g", dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[0], dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[1], dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[2],
-//* 	     dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[3]); 
+//*          dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[3]); 
 //*     nt++; 
 //*     // null strings terminal list
 //*     textLabels[nt]="";   textStrings[nt]="";  assert( nt<numberOfTextStrings );
@@ -3527,23 +3527,23 @@ assignParameterValues(const aString & label, RealArray & values,
 //*     else if( answer=="frequencies" )
 //*     {
 //*       gi.inputString(answer2,sPrintF(buff,"Enter the x,y,z,t frequencies (default =%f,%f,%f,%f)",
-//* 				      dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[0], dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[1], dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[2], dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[3]));
+//*                                   dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[0], dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[1], dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[2], dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[3]));
 //*       if( answer2!="" )
-//* 	sScanF(answer2,"%e %e %e %e",& dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[0],& dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[1],& dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[2],& dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[3]);
+//*     sScanF(answer2,"%e %e %e %e",& dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[0],& dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[1],& dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[2],& dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[3]);
 //*       printF("(omegaX,omegaY,omegaZ,omegaT)=(%e,%e,%e,%e)\n", dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[0], dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[1], dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[2], dbase.get<ArraySimpleFixed<real,4,1,1,1> >("omega")[3]);
 //*     }
 //*     else if( answer=="degree in space" )
 //*     {
 //*       gi.inputString(answer2,sPrintF(buff,"Enter degree in space (default =%i)", dbase.get<int >("tzDegreeSpace")));
 //*       if( answer2!="" )
-//* 	sScanF(answer2,"%i",& dbase.get<int >("tzDegreeSpace"));
+//*     sScanF(answer2,"%i",& dbase.get<int >("tzDegreeSpace"));
 //*       printF(" tzDegreeSpace= %i\n", dbase.get<int >("tzDegreeSpace"));
 //*     }
 //*     else if( answer=="degree in time" )
 //*     {
 //*       gi.inputString(answer2,sPrintF(buff,"Enter degree in time (default =%i)", dbase.get<int >("tzDegreeTime")));
 //*       if( answer2!="" )
-//* 	sScanF(answer2,"%i",& dbase.get<int >("tzDegreeTime"));
+//*     sScanF(answer2,"%i",& dbase.get<int >("tzDegreeTime"));
 //*       printF(" tzDegreeTime=%i \n", dbase.get<int >("tzDegreeTime"));
 //*     }
 //*     else if( answer=="use 2D function in 3D" )
@@ -3589,63 +3589,63 @@ assignParameterValues(const aString & label, RealArray & values,
 //*       if(  dbase.get<Parameters::TwilightZoneChoice >("twilightZoneChoice")==polynomial )
 //*       {
 //*         if(  dbase.get<OGFunction* >("exactSolution")==NULL )
-//* 	{
-//* 	  setTwilightZoneFunction( dbase.get<Parameters::TwilightZoneChoice >("twilightZoneChoice"), dbase.get<int >("tzDegreeSpace"), dbase.get<int >("tzDegreeTime"));
-//* 	}
-//* 	
+//*     {
+//*       setTwilightZoneFunction( dbase.get<Parameters::TwilightZoneChoice >("twilightZoneChoice"), dbase.get<int >("tzDegreeSpace"), dbase.get<int >("tzDegreeTime"));
+//*     }
+//*     
 //*         // get the current values of the coefficients
-//* 	((OGPolyFunction*) dbase.get<OGFunction* >("exactSolution"))->getCoefficients( cx,ct );  // for u
+//*     ((OGPolyFunction*) dbase.get<OGFunction* >("exactSolution"))->getCoefficients( cx,ct );  // for u
 //* 
-//* 	displayPolynomialCoefficients(cx,ct, dbase.get<aString* >("componentName"), dbase.get<int >("numberOfComponents"),stdout);
+//*     displayPolynomialCoefficients(cx,ct, dbase.get<aString* >("componentName"), dbase.get<int >("numberOfComponents"),stdout);
 //* 
 //*       }
 //*       else
 //*       { // we allow changes to the coefficients even if we don't have  dbase.get<real >("a") polynomial TZ function -- this means we
 //*         // can keep these changes in the command file even if they are not used.
-//* 	cx=0.;
-//* 	ct=0.;
+//*     cx=0.;
+//*     ct=0.;
 //*       }
 //*       
 //*       printF("Make changes to the current coefficients of the polynomial twilight-zone function.\n"
 //*              "Enter cx(mx,my,mz,mc)=value to set the coefficient of x^{mx} y^{my} z^mz for component mc \n"
-//* 	     "Enter ct(mt,mc)=value to set the coefficient of t^{mt} for component mc \n"
-//* 	     "Enter `done' to finish\n");
+//*          "Enter ct(mt,mc)=value to set the coefficient of t^{mt} for component mc \n"
+//*          "Enter `done' to finish\n");
 //*     
 //*       int i0,i1,i2,i3;
 //*       aString name;
 //*       // ==========Loop for changing coefficients========================
 //*       for( ;; ) 
 //*       {
-//* 	gi.inputString(answer,"Enter changes to cx or ct or `done' to finish\n"); 
-//* 	if( answer=="done" || answer=="continue" || answer=="exit" ) break;
-//* 	nl.getVariableName( answer, name );   // parse the answer
+//*     gi.inputString(answer,"Enter changes to cx or ct or `done' to finish\n"); 
+//*     if( answer=="done" || answer=="continue" || answer=="exit" ) break;
+//*     nl.getVariableName( answer, name );   // parse the answer
 //* 
-//* 	if( name== "cx" )   
-//* 	{
-//* 	  nl.getRealArray( answer,cx,i0,i1,i2,i3 );
+//*     if( name== "cx" )   
+//*     {
+//*       nl.getRealArray( answer,cx,i0,i1,i2,i3 );
 //*           printF(" Setting cx(%i,%i,%i,%i)=%9.3e\n",i0,i1,i2,i3,cx(i0,i1,i2,i3));
 //* 
-//* 	   dbase.get<bool >("userDefinedTwilightZoneCoefficients")=true;
-//* 	}
-//* 	else if( name== "ct" )   
-//* 	{
-//* 	  nl.getRealArray( answer,ct,i0,i1 );
+//*        dbase.get<bool >("userDefinedTwilightZoneCoefficients")=true;
+//*     }
+//*     else if( name== "ct" )   
+//*     {
+//*       nl.getRealArray( answer,ct,i0,i1 );
 //*           printF(" Setting ct(%i,%i)=%9.3e\n",i0,i1,ct(i0,i1));
 //* 
-//* 	   dbase.get<bool >("userDefinedTwilightZoneCoefficients")=true;
-//* 	}
-//* 	else
-//* 	  printF("unknown response: answer=[%s]\n",(const char*)answer);
+//*        dbase.get<bool >("userDefinedTwilightZoneCoefficients")=true;
+//*     }
+//*     else
+//*       printF("unknown response: answer=[%s]\n",(const char*)answer);
 //*       }
 //* 
 //*       if(  dbase.get<Parameters::TwilightZoneChoice >("twilightZoneChoice")==polynomial )
 //*       {
-//* 	((OGPolyFunction*) dbase.get<OGFunction* >("exactSolution"))->setCoefficients( cx,ct );  // for u
-//* 	displayPolynomialCoefficients(cx,ct, dbase.get<aString* >("componentName"), dbase.get<int >("numberOfComponents"),stdout);
+//*     ((OGPolyFunction*) dbase.get<OGFunction* >("exactSolution"))->setCoefficients( cx,ct );  // for u
+//*     displayPolynomialCoefficients(cx,ct, dbase.get<aString* >("componentName"), dbase.get<int >("numberOfComponents"),stdout);
 //*       }
 //*       else
 //*       {
-//* 	printF("WARNING: To set the polynomial coefficients th twilightzone function must be a polynomial\n"
+//*     printF("WARNING: To set the polynomial coefficients th twilightzone function must be a polynomial\n"
 //*                " The coefficients have not been changed");
 //*       }
 //*       
@@ -3656,18 +3656,18 @@ assignParameterValues(const aString & label, RealArray & values,
 //*       int state=0;
 //*       sScanF(answer(len,answer.length()-1),"%i",&state);
 //*       if( state==1 )
-//* 	 dbase.get<int >("dimensionOfTZFunction")=2;
+//*      dbase.get<int >("dimensionOfTZFunction")=2;
 //*       else
-//* 	 dbase.get<int >("dimensionOfTZFunction")= numberOfDimensions; // is this set?
+//*      dbase.get<int >("dimensionOfTZFunction")= numberOfDimensions; // is this set?
 //*       dialog.setToggleState("use 2D function in 3D",state);
 //*     }
 //*     else if( len=answer.matches("compare 3D run to 2D") )
 //*     {
 //*       sScanF(answer(len,answer.length()-1),"%i",& dbase.get<int >("compare3Dto2D"));
 //*       if(  dbase.get<int >("compare3Dto2D") )
-//* 	 dbase.get<int >("dimensionOfTZFunction")=2;
+//*      dbase.get<int >("dimensionOfTZFunction")=2;
 //*       else
-//* 	 dbase.get<int >("dimensionOfTZFunction")= numberOfDimensions;
+//*      dbase.get<int >("dimensionOfTZFunction")= numberOfDimensions;
 //*       dialog.setToggleState("compare 3D run to 2D", dbase.get<int >("compare3Dto2D"));
 //*     }
 //*     else if( len=answer.matches("assign TZ initial conditions") )
@@ -3679,7 +3679,7 @@ assignParameterValues(const aString & label, RealArray & values,
 //*     }
 //*     else if( answer=="no known solution" || 
 //*              // answer=="supersonic flow in an expanding channel" ||  // no in userDefinedKnownSolution
-//* 	     answer=="axisymmetric rigid body rotation" || 
+//*          answer=="axisymmetric rigid body rotation" || 
 //*              answer=="user defined known solution" )
 //*     {
 //*       knownSolution=(answer=="no known solution" ? noKnownSolution :userDefinedKnownSolution );
@@ -3687,14 +3687,14 @@ assignParameterValues(const aString & label, RealArray & values,
 //*       if(  knownSolution==userDefinedKnownSolution )
 //*       { // choose  dbase.get<real >("a") user defined known solution:
 //*         if( updateUserDefinedKnownSolution(gi)==0 )
-//* 	{
+//*     {
 //*            knownSolution=noKnownSolution; // reset -- no known solution chosen.
-//* 	}
+//*     }
 //*       }
 //*       printF(" Setting the known solution to %i (%s) \n",(int) knownSolution,(const char*)answer);
 //*       if(  knownSolution!=noKnownSolution )
 //*       {
-//* 	 dbase.get<Parameters::InitialConditionOption >("initialConditionOption")=knownSolutionInitialCondition;
+//*      dbase.get<Parameters::InitialConditionOption >("initialConditionOption")=knownSolutionInitialCondition;
 //*       }
 //*       
 //*     }
@@ -3710,13 +3710,13 @@ assignParameterValues(const aString & label, RealArray & values,
 //*     {
 //*       if( executeCommand )
 //*       {
-//* 	returnValue= 1;  // when executing  dbase.get<real >("a") single command, return 1 if the command was not recognised.
+//*     returnValue= 1;  // when executing  dbase.get<real >("a") single command, return 1 if the command was not recognised.
 //*         break;
 //*       }
 //*       else
 //*       {
-//* 	printF("Unknown response: [%s]\n",(const char*)answer);
-//* 	gi.stopReadingCommandFile();
+//*     printF("Unknown response: [%s]\n",(const char*)answer);
+//*     gi.stopReadingCommandFile();
 //*       }
 //*     }
 //*   }
@@ -3802,9 +3802,9 @@ getComponents( IntegerArray &component )
 //\begin{>>CnsParametersInclude.tex}{\subsection{setDefaultDataForBoundaryConditions}} 
 int CnsParameters::
 setDefaultDataForABoundaryCondition(const int & side,
-				    const int & axis,
-				    const int & grid,
-				    CompositeGrid & cg)
+                                    const int & axis,
+                                    const int & grid,
+                                    CompositeGrid & cg)
 // ============================================================================================
 // /Description:
 //    Assign the default values for the data required by the boundary conditions.
@@ -3859,7 +3859,7 @@ CnsParameters::isMixedBC(int bc)
 // ===================================================================================================================
 int CnsParameters::
 getNormalForce( realCompositeGridFunction & u, realSerialArray & normalForce, int *ipar, real *rpar,
-		bool includeViscosity /* = true */ )
+                bool includeViscosity /* = true */ )
 {
   int grid=ipar[0], side=ipar[1], axis=ipar[2];
   int form = ipar[3];
@@ -3947,17 +3947,17 @@ getNormalForce( realCompositeGridFunction & u, realSerialArray & normalForce, in
 
       if( mg.numberOfDimensions()==1 )
       {
-	p= (gamma-1.)*( ug(Ib1,Ib2,Ib3,tc)-.5*( SQR(ug(Ib1,Ib2,Ib3,uc)))/ug(Ib1,Ib2,Ib3,rc) );
+        p= (gamma-1.)*( ug(Ib1,Ib2,Ib3,tc)-.5*( SQR(ug(Ib1,Ib2,Ib3,uc)))/ug(Ib1,Ib2,Ib3,rc) );
       }
       else if( mg.numberOfDimensions()==2 )
       {
-	p= (gamma-1.)*( ug(Ib1,Ib2,Ib3,tc)-
-			.5*( SQR(ug(Ib1,Ib2,Ib3,uc))+ SQR(ug(Ib1,Ib2,Ib3,vc)) )/ug(Ib1,Ib2,Ib3,rc) );
+        p= (gamma-1.)*( ug(Ib1,Ib2,Ib3,tc)-
+                        .5*( SQR(ug(Ib1,Ib2,Ib3,uc))+ SQR(ug(Ib1,Ib2,Ib3,vc)) )/ug(Ib1,Ib2,Ib3,rc) );
       }
       else
       {
-	p= (gamma-1.)*( ug(Ib1,Ib2,Ib3,tc)-
-			.5*( SQR(ug(Ib1,Ib2,Ib3,uc))+ SQR(ug(Ib1,Ib2,Ib3,vc))+ SQR(ug(Ib1,Ib2,Ib3,wc)) )/ug(Ib1,Ib2,Ib3,rc) );
+        p= (gamma-1.)*( ug(Ib1,Ib2,Ib3,tc)-
+                        .5*( SQR(ug(Ib1,Ib2,Ib3,uc))+ SQR(ug(Ib1,Ib2,Ib3,vc))+ SQR(ug(Ib1,Ib2,Ib3,wc)) )/ug(Ib1,Ib2,Ib3,rc) );
       }
     }
     else if( equationOfState==stiffenedGasEOS )
@@ -3976,19 +3976,19 @@ getNormalForce( realCompositeGridFunction & u, realSerialArray & normalForce, in
       // note that here, ug(Ib1,Ib2,Ib3,tc) actually holds E, the total energy
       if( mg.numberOfDimensions()==1 )
       { 
-	p= (gammaStiff-1.)*( ug(Ib1,Ib2,Ib3,tc)-.5*( SQR(ug(Ib1,Ib2,Ib3,uc)))/ug(Ib1,Ib2,Ib3,rc) ) 
+        p= (gammaStiff-1.)*( ug(Ib1,Ib2,Ib3,tc)-.5*( SQR(ug(Ib1,Ib2,Ib3,uc)))/ug(Ib1,Ib2,Ib3,rc) ) 
             -  gammaStiff*pStiff;
       }
       else if( mg.numberOfDimensions()==2 )
       {
-	p= (gammaStiff-1.)*( ug(Ib1,Ib2,Ib3,tc)-
-			.5*( SQR(ug(Ib1,Ib2,Ib3,uc))+ SQR(ug(Ib1,Ib2,Ib3,vc)) )/ug(Ib1,Ib2,Ib3,rc) )
+        p= (gammaStiff-1.)*( ug(Ib1,Ib2,Ib3,tc)-
+                        .5*( SQR(ug(Ib1,Ib2,Ib3,uc))+ SQR(ug(Ib1,Ib2,Ib3,vc)) )/ug(Ib1,Ib2,Ib3,rc) )
              -  gammaStiff*pStiff;
       }
       else
       {
-	p= (gammaStiff-1.)*( ug(Ib1,Ib2,Ib3,tc)-
-			.5*( SQR(ug(Ib1,Ib2,Ib3,uc))+ SQR(ug(Ib1,Ib2,Ib3,vc))+ SQR(ug(Ib1,Ib2,Ib3,wc)) )/ug(Ib1,Ib2,Ib3,rc) )
+        p= (gammaStiff-1.)*( ug(Ib1,Ib2,Ib3,tc)-
+                        .5*( SQR(ug(Ib1,Ib2,Ib3,uc))+ SQR(ug(Ib1,Ib2,Ib3,vc))+ SQR(ug(Ib1,Ib2,Ib3,wc)) )/ug(Ib1,Ib2,Ib3,rc) )
             -  gammaStiff*pStiff;
       }
 
@@ -4032,7 +4032,7 @@ getNormalForce( realCompositeGridFunction & u, realSerialArray & normalForce, in
 
     CompositeGridOperators & cgop = *u.getOperators();
     MappedGridOperators & op = cgop[grid];
-	  
+          
     // **NOTE** we assume here that we have the velocity components 
     assert( form==GridFunction::primitiveVariables );
 
@@ -4044,7 +4044,7 @@ getNormalForce( realCompositeGridFunction & u, realSerialArray & normalForce, in
       uz.redim(Ib1,Ib2,Ib3,V);
       op.derivative(MappedGridOperators::zDerivative,ug,uz,Ib1,Ib2,Ib3,V);
     }
-	  
+          
     const real lambda = -(2./3.)*mu; // Stokes hypothesis
   
 
@@ -4055,31 +4055,31 @@ getNormalForce( realCompositeGridFunction & u, realSerialArray & normalForce, in
       //          [ mu(w_x+u_z)                 mu(v_z+w_y)           2 mu w_z + lambda div(u) ]
       div=ux(Ib1,Ib2,Ib3,uc)+uy(Ib1,Ib2,Ib3,vc);
       fn(Ib1,Ib2,Ib3,0)=( p(Ib1,Ib2,Ib3)*normal(Ib1,Ib2,Ib3,0)
-			  -( ( (2.*mu)*ux(Ib1,Ib2,Ib3,uc) +lambda*div     )*normal(Ib1,Ib2,Ib3,0)+
-			     ( mu*(uy(Ib1,Ib2,Ib3,uc)+ux(Ib1,Ib2,Ib3,vc)) )*normal(Ib1,Ib2,Ib3,1)) );
+                          -( ( (2.*mu)*ux(Ib1,Ib2,Ib3,uc) +lambda*div     )*normal(Ib1,Ib2,Ib3,0)+
+                             ( mu*(uy(Ib1,Ib2,Ib3,uc)+ux(Ib1,Ib2,Ib3,vc)) )*normal(Ib1,Ib2,Ib3,1)) );
 
       fn(Ib1,Ib2,Ib3,1)=( p(Ib1,Ib2,Ib3)*normal(Ib1,Ib2,Ib3,1)
-			  -( ( mu*(ux(Ib1,Ib2,Ib3,vc)+uy(Ib1,Ib2,Ib3,uc)) )*normal(Ib1,Ib2,Ib3,0)+
-			     ( lambda*div +(2.*mu)*uy(Ib1,Ib2,Ib3,vc)     )*normal(Ib1,Ib2,Ib3,1) ) );
+                          -( ( mu*(ux(Ib1,Ib2,Ib3,vc)+uy(Ib1,Ib2,Ib3,uc)) )*normal(Ib1,Ib2,Ib3,0)+
+                             ( lambda*div +(2.*mu)*uy(Ib1,Ib2,Ib3,vc)     )*normal(Ib1,Ib2,Ib3,1) ) );
     }
     else
     {
       div=ux(Ib1,Ib2,Ib3,uc)+uy(Ib1,Ib2,Ib3,vc)+uz(Ib1,Ib2,Ib3,wc);
       fn(Ib1,Ib2,Ib3,0)=( p(Ib1,Ib2,Ib3)*normal(Ib1,Ib2,Ib3,0)
-			  -( ( (2.*mu)*ux(Ib1,Ib2,Ib3,uc) +lambda*div     )*normal(Ib1,Ib2,Ib3,0)+
-			     ( mu*(uy(Ib1,Ib2,Ib3,uc)+ux(Ib1,Ib2,Ib3,vc)) )*normal(Ib1,Ib2,Ib3,1)+
-			     ( mu*(uz(Ib1,Ib2,Ib3,uc)+ux(Ib1,Ib2,Ib3,wc)) )*normal(Ib1,Ib2,Ib3,2) ) );
+                          -( ( (2.*mu)*ux(Ib1,Ib2,Ib3,uc) +lambda*div     )*normal(Ib1,Ib2,Ib3,0)+
+                             ( mu*(uy(Ib1,Ib2,Ib3,uc)+ux(Ib1,Ib2,Ib3,vc)) )*normal(Ib1,Ib2,Ib3,1)+
+                             ( mu*(uz(Ib1,Ib2,Ib3,uc)+ux(Ib1,Ib2,Ib3,wc)) )*normal(Ib1,Ib2,Ib3,2) ) );
 
 
       fn(Ib1,Ib2,Ib3,1)=( p(Ib1,Ib2,Ib3)*normal(Ib1,Ib2,Ib3,1)
-			  -( ( mu*(ux(Ib1,Ib2,Ib3,vc)+uy(Ib1,Ib2,Ib3,uc)) )*normal(Ib1,Ib2,Ib3,0)+
-			     ( lambda*div +(2.*mu)*uy(Ib1,Ib2,Ib3,vc)     )*normal(Ib1,Ib2,Ib3,1)+
-			     ( mu*(uz(Ib1,Ib2,Ib3,vc)+uy(Ib1,Ib2,Ib3,wc)) )*normal(Ib1,Ib2,Ib3,2) ) );
+                          -( ( mu*(ux(Ib1,Ib2,Ib3,vc)+uy(Ib1,Ib2,Ib3,uc)) )*normal(Ib1,Ib2,Ib3,0)+
+                             ( lambda*div +(2.*mu)*uy(Ib1,Ib2,Ib3,vc)     )*normal(Ib1,Ib2,Ib3,1)+
+                             ( mu*(uz(Ib1,Ib2,Ib3,vc)+uy(Ib1,Ib2,Ib3,wc)) )*normal(Ib1,Ib2,Ib3,2) ) );
 
       fn(Ib1,Ib2,Ib3,2)=( p(Ib1,Ib2,Ib3)*normal(Ib1,Ib2,Ib3,2)
-			  -( ( mu*(uz(Ib1,Ib2,Ib3,uc)+ux(Ib1,Ib2,Ib3,wc)) )*normal(Ib1,Ib2,Ib3,0)+
-			     ( mu*(uz(Ib1,Ib2,Ib3,vc)+uy(Ib1,Ib2,Ib3,wc)) )*normal(Ib1,Ib2,Ib3,1)+
-			     ( lambda*div +(2.*mu)*uz(Ib1,Ib2,Ib3,wc)     )*normal(Ib1,Ib2,Ib3,2) ) );
+                          -( ( mu*(uz(Ib1,Ib2,Ib3,uc)+ux(Ib1,Ib2,Ib3,wc)) )*normal(Ib1,Ib2,Ib3,0)+
+                             ( mu*(uz(Ib1,Ib2,Ib3,vc)+uy(Ib1,Ib2,Ib3,wc)) )*normal(Ib1,Ib2,Ib3,1)+
+                             ( lambda*div +(2.*mu)*uz(Ib1,Ib2,Ib3,wc)     )*normal(Ib1,Ib2,Ib3,2) ) );
     }
   }
   
@@ -4106,16 +4106,16 @@ getNormalForce( realCompositeGridFunction & u, realSerialArray & normalForce, in
       is1=is2=is3=0;
       for( int s1=0; s1<=1; s1++ ) // two sides in direction axisp
       {
-	getBoundaryIndex(gid,side,axis,Ib1,Ib2,Ib3,numGhost); // include ghost so that corners get done in 3D after two steps
+        getBoundaryIndex(gid,side,axis,Ib1,Ib2,Ib3,numGhost); // include ghost so that corners get done in 3D after two steps
 
-	Ibv[axisp] = gid(s1,axisp);  // defines the adjacent face 
-	isv[axisp]= 1-2*s1;
+        Ibv[axisp] = gid(s1,axisp);  // defines the adjacent face 
+        isv[axisp]= 1-2*s1;
 
-	for( int ghost=0; ghost<numGhost; ghost++ )
-	{
-	  Index Jb1=Ib1-ghost*is1, Jb2=Ib2-ghost*is2, Jb3=Ib3-ghost*is3;
-	  fn(Jb1-is1,Jb2-is2,Jb3-is3,Rx)=3.*fn(Jb1,Jb2,Jb3,Rx)-3.*fn(Jb1+is1,Jb2+is2,Jb3+is3,Rx)+fn(Jb1+2*is1,Jb2+2*is2,Jb3+2*is3,Rx);
-	}
+        for( int ghost=0; ghost<numGhost; ghost++ )
+        {
+          Index Jb1=Ib1-ghost*is1, Jb2=Ib2-ghost*is2, Jb3=Ib3-ghost*is3;
+          fn(Jb1-is1,Jb2-is2,Jb3-is3,Rx)=3.*fn(Jb1,Jb2,Jb3,Rx)-3.*fn(Jb1+is1,Jb2+is2,Jb3+is3,Rx)+fn(Jb1+2*is1,Jb2+2*is2,Jb3+2*is3,Rx);
+        }
       }
     }
   }

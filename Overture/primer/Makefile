@@ -255,6 +255,12 @@ checkDeform = checkDeform.o
 checkDeform: $(checkDeform) 
 	$(CC) $(CCFLAGS) -o checkDeform $(checkDeform) $(CLIBS) $(FLIBS) $(GLIBS)
 
+# a deforming curve
+deformedCurve = deformedCurve.o 
+deformedCurve: $(deformedCurve) 
+	$(CC) $(CCFLAGS) -o deformedCurve $(deformedCurve) $(CLIBS) $(FLIBS) $(GLIBS)
+
+
 # Build an airfoil with the hyperolic grid generator (exmaple for Dominic)
 # also changed HyperbolicMapping.{h,C}
 airfoil = airfoil.o ../hype/update.o ../hype/HyperbolicMapping.o ../mapping/AirfoilMapping.o
@@ -361,6 +367,6 @@ clean:
 	   mappedGridExample6 \
            example1 example2 example3 example4 example5 example6 example7 example8 example9 example10 tcm tcm2 tcm3 tcm4 \
            move1 primer.show move1.show amrExample1 mappedGridExample1cc mgExample1 mgExample2 lins example6a wave \
-           amrHype callingFortran gridGenExample pwave pTest1 pTest2 pTest3 deform
+           amrHype callingFortran gridGenExample pwave pTest1 pTest2 pTest3 deform deformedCurve
 
 .PRECIOUS: 

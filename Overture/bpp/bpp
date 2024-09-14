@@ -1239,6 +1239,12 @@ foreach $fileName ( @fileNames )  # process all files
     $outfile =~ s/.bC$//;
     $outfile = "$outfile.C";
   }
+  elsif( $outfile =~ /\.bcu$/ )
+  { # Aug 6, 2023 -- added cuda files wdh
+    $fortran=0;
+    $outfile =~ s/.bcu$//;
+    $outfile = "$outfile.cu";
+  }  
   elsif( $outfile =~ /\.f$/ )
   {
     # $outfile =">-";   # open OUTFILE as stdout
@@ -1260,7 +1266,7 @@ foreach $fileName ( @fileNames )  # process all files
   }
   else
   {
-    print "ERROR: unknown file extension to fileName=[$fileName]. Expecting .bf or .bC\n";
+    print "ERROR: unknown file extension to fileName=[$fileName]. Expecting .bf, .bf90, .bcu, or .bC\n";
     exit (1);
   }
 

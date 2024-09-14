@@ -1,5 +1,193 @@
 \section{Installing Overture on Mac OS/X}  \label{sec:installMac}
 
+
+\subsection{maxOS Sonoma 14.6.1  (Chip: Apple M3 Max)} 
+
+
+\begin{verbatim}
+-------- STAGE I ---------
+
+(1) Goto Apple app store and install Xcode (developer tools)
+
+(2) Install Xcode commandline tools (see previous help)
+       xcode-select --install    
+
+(3) Install homebrew  (package installer) from https://brew.sh
+
+   From bash shell: 
+   bash
+   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+   Add /opt/homebrew/bin to the path in .cshrc
+
+   NOTE: see https://brew.sh to searching for packages
+
+(4) Install gfortran
+   from:
+      https://github.com/fxcoudert/gfortran-for-macOS/releases
+
+(5) Install Xquartz from web.  This should install X11 libraries in {\tt /opt/X11/lib}.
+
+(6) Install openmotif
+    brew install openmotif
+    brew install mesa
+    brew install mesa-glu
+
+(7) Perl development 
+    brew install perl
+    
+-------  STAGE II --------
+
+Get Overture from sourceforge: (NOTE: replace wdhenshaw by your sourceforge account name)
+  git clone ssh://wdhenshaw@git.code.sf.net/p/overtureframework/code overtureFramework
+  <sourceforge password>
+
+
+Create a software folder:
+   mkdir software
+   cd software
+
+
+---- Stage II: Install HDF in the software folder
+
+   Use overtureFramework/packages/hdf5-1.8.15-macPatch.tar.gz
+
+
+tar xzf hdf5-1.8.15-macPatch.tar.gz
+mv hdf5-1.8.15-macPatch hdf5-1.8.15
+
+cd hdf5-1.8.15
+ ./configure --prefix=`pwd` 
+make
+make install
+
+
+---- Stage II: Install A++P++:
+
+copy overtureFramework/packages/AP-0.8.3.tar.gz to the software folder
+
+tar -xzf AP-0.8.3.tar.gz
+
+mv -r A++P++-0.8.3 AppPpp-0.8.3
+cd AppPpp-0.8.3
+
+./configure --disable-SHARED\_LIBS --prefix=`pwd`  
+make MAKE=make install
+
+
+---- Stage II: Install lapack
+
+cd software
+tar xzf lapack-3.8.0.tar.gz
+cd lapack-3.8.0
+cp make.inc.example make.inc
+make blaslib
+make lapacklib
+
+
+---- STAGE II: install PETSc (optional)
+
+Build PETSc 3.21.5 from the git repo: 
+
+git clone -b release https://gitlab.com/petsc/petsc.git petsc
+cd petsc
+git checkout v3.21.5
+
+setenv PETSC_DIR /Users/henshaw/software/petsc
+setenv PETSC_ARCH darwin-opt
+configure --with-cc=clang --with-fc=gfortran --PETSC_ARCH=darwin-opt --with-debugging=0 --with-fortran=0 --with-matlab=0 --with-mpi=0 --with-shared-libraries=1
+
+
+make PETSC_DIR=/Users/henshaw/software/petsc PETSC_ARCH=darwin-opt check
+
+>> Running PETSc check examples to verify correct installation
+>> Using PETSC_DIR=/Users/henshaw/software/petsc and PETSC_ARCH=darwin-opt
+>> C/C++ example src/snes/tutorials/ex19 run successfully with 1 MPI process
+>> Fortran example src/snes/tutorials/ex5f run successfully with 1 MPI process
+>> Completed PETSc check examples
+
+
+----- STAGE II: Install Overture
+
+Set env variables:
+setenv Overture /Users/henshaw/Overture.g
+setenv APlusPlus /Users/henshaw/software/AppPpp-0.8.3/A++/install
+setenev PPlusPlus /Users/henshaw/software/AppPpp-0.8.3/A++/install
+setenv PETSC_DIR /Users/henshaw/software/petsc-3.18.2
+setenv PETSC_ARCH darwin-opt
+
+setenv XLIBS /opt/homebrew
+setenv MOTIF /opt/homebrew
+setenv OpenGL /opt/homebrew
+setenv LAPACK /Users/henshaw/software/lapack-3.8.0
+
+goto overtureFramework/Overture, and run buildOverture to copy files to /Users/henshaw/Overture.g
+  
+buildOverture
+(enter y if you are over-writing an existing folder)
+
+cd Users/henshaw/Overture.g
+configure 
+make -j2
+make check  (one grid generation check fails)
+
+
+----- STAGE II : Compile CG (PDE solvers)
+
+To compile CG solver with PETSc you should set: 
+  setenv usePETSc  
+
+cd overtureFramework/cg
+make
+
+make check-quiet
+
+
+
+
+\end{verbatim}
+
+
+
+
+% -----
+
+% src/multicomponent/dudr2comp.c:157:7: error: call to undeclared function 'second_'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+
+% ld: warning: ignoring duplicate libraries: '-lOgmg'
+
+
+% checking sib.hyb.cmd...
+% sh: line 1: 36480 Segmentation fault: 11  ../bin/ogen noplot nopause abortOnEnd ./sib.hyb.cmd > ogen.out
+%  *** There was an error generating sib.hyb.cmd ****
+% ********************************************************************
+% ********************* There were 1  ERRORS *************************
+% **** NOTE: some errors may occur due to differences in         *****
+% **** machine precision. If the numbers are similiar then there *****
+% **** is probably no reason for concern. (try plotting the grid)*****
+% ********************************************************************
+%  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+% ERROR return rt=256
+
+
+
+% boxlib/FPC.C --> added __arm64__ to FPC.C in various places
+
+% OvertureParser.C:7:10: fatal error: 'EXTERN.h' file not found
+% #include <EXTERN.h>
+
+
+
+% g++ -fPIC -DHAS_MODFL_PROTO -I"`pwd`/.."/include -I.   -DUSE_MESA -I/Users/henshaw/software/AppPpp-0.8.3/A++/install/include -I/opt/homebrew/include -I/opt/homebrew/include  -DBL_USE_DOUBLE -DBL_Solaris -Wno-deprecated -I/opt/homebrew/opt/perl/lib/perl5/5.38/darwin-thread-multi-2level/CORE  -DHAS_MODFL_PROTO -g  -o ogen ogenDriver.o ogenFunction.o  -L"`pwd`/.."/lib -lOverture -lOverture_static -lOgmg -L"`pwd`/.."/lib -lOgmg -L/Users/henshaw/software/hdf5-1.8.15/lib -lhdf5 -ljpeg -lz  -L/usr/local/gfortran/lib -lgfortran -L/Users/henshaw/software/AppPpp-0.8.3/A++/install/lib -lApp -lApp_static   -L/opt/homebrew/opt/perl/lib/perl5/5.38/darwin-thread-multi-2level/CORE -lperl  -L/opt/homebrew/lib -lGL -lGLU  -L/opt/homebrew/lib -lXm  -L/opt/homebrew/lib -lXp -lXt -lXmu -lXext -lX11  -L/Users/henshaw/software/lapack-3.8.0 -llapack -lblas -lm
+
+% g++ -fPIC -DHAS_MODFL_PROTO -I"`pwd`/.."/include -I.   -DUSE_MESA -I/Users/henshaw/software/AppPpp-0.8.3/A++/install/include -I/opt/homebrew/include -I/opt/homebrew/include  -DBL_USE_DOUBLE -DBL_Solaris -Wno-deprecated -I/opt/homebrew/opt/perl/lib/perl5/5.38/darwin-thread-multi-2level/CORE  -DHAS_MODFL_PROTO -g  -o ogen ogenDriver.o ogenFunction.o  -L"`pwd`/.."/lib -lOverture -lOverture_static -lOgmg -L"`pwd`/.."/lib -lOgmg -L/Users/henshaw/software/hdf5-1.8.15/lib -lhdf5 -ljpeg -lz  -Wl,-rpath,/usr/local/gfortran/lib -L/usr/local/gfortran/lib -lgfortran -L/Users/henshaw/software/AppPpp-0.8.3/A++/install/lib -lApp -lApp_static   -L/opt/homebrew/opt/perl/lib/perl5/5.38/darwin-thread-multi-2level/CORE -lperl  -L/opt/homebrew/lib -lGL -lGLU  -L/opt/homebrew/lib -lXm  -L/opt/homebrew/lib -lXp -lXt -lXmu -lXext -lX11  -L/Users/henshaw/software/lapack-3.8.0 -llapack -lblas -lm
+
+% % \end{verbatim}
+
+
+
+
+% --------------------------------------------------------------------
 \subsection{OS X 10.9 - Mavericks} 
 
 \vskip\baselineskip
@@ -50,6 +238,8 @@ The default compiler for Mavericks is {\em clang} which replaces gcc and g++. DO
     \item You should add the Overture/lib directory to your dynamic library path:
        {\tt setenv DYLD\_LIBRARY\_PATH \${DYLD\_LIBRARY\_PATH}:\${Overture}/lib}
 \end{enumerate}
+
+
 
 \clearpage
 \subsection{Installing Overture on Mac OS/X -- *OLDER VERSIONS*}  

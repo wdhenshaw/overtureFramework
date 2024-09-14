@@ -2818,7 +2818,7 @@ printStatistics(FILE *file_ /* =stdout */) const
              equationToSolve==OgesParameters::secondOrderConstantCoefficients ? "second-order constant coeff" : 
              "unknown"));
 
-    fPrintF(file," Boundary conditions explicitly specified = %i.\n",(int)bcSupplied);
+    fPrintF(file," Boundary conditions (Dirichlet/Neumann/mixed, etc.) set by user = %i.\n",(int)bcSupplied);
     fPrintF(file," Equations are %s.\n",(parameters.problemIsSingular ? "singular" : "are not singular"));
     if( parameters.problemIsSingular )
     {
@@ -3015,10 +3015,14 @@ printStatistics(FILE *file_ /* =stdout */) const
                 (const char *)parameters.smootherName[smooth],
                  parameters.numberOfSmooths(0,level),parameters.numberOfSmooths(1,level));
       }
-      aString activeStatus =  parameters.activeGrids(grid) ? "active" : "inactive";
-      fPrintF(file,
-              " : %s (%s)\n"
-              "         bc=",(const char*)mgcg[grid].getName(),(const char*)activeStatus);
+
+      if( parameters.activeGrids.getLength(0)>0 )
+      {
+        aString activeStatus =  parameters.activeGrids(grid) ? "active" : "inactive";
+        fPrintF(file,
+                " : %s (%s)\n"
+                "         bc=",(const char*)mgcg[grid].getName(),(const char*)activeStatus);
+      }
 
       for( int axis=0; axis<mgcg.numberOfDimensions(); axis++ )
       {

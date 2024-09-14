@@ -69,6 +69,7 @@ elsif( $order eq 8 ){ $orderOfAccuracy="eighth order"; $ng=6; }
 if( $interp eq "e" ){ $interpType = "explicit for all grids"; }
 # 
 $suffix = ".order$order"; 
+if( $per eq 1 ){ $suffix .= "p"; }
 if( $numGhost ne -1 ){ $ng = $numGhost; } # overide number of ghost
 if( $numGhost ne -1 ){ $suffix .= ".ng$numGhost"; } 
 if( $axial ne "x" ){ $prefix .= $axial; }

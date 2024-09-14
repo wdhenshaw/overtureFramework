@@ -57,7 +57,7 @@ $numGhost=-1;  # if this value is set, then use this number of ghost points
 $nx0=-1;       # set this value to make this the number of CELLS in each direction
 # 
 # get command line arguments
-GetOptions( "order=i"=>\$order,"factor=i"=> \$factor,"name=s"=>\$name,"ml=i"=>\$ml,"numGhost=i"=>\$numGhost,\
+GetOptions( "order=i"=>\$order,"factor=f"=> \$factor,"name=s"=>\$name,"ml=i"=>\$ml,"numGhost=i"=>\$numGhost,\
             "xa=f"=>\$xa,"xb=f"=>\$xb,"ya=f"=>\$ya,"yb=f"=>\$yb,"za=f"=>\$za,"zb=f"=>\$zb,"periodic=s"=>\$periodic,\
             "prefix=s"=>\$prefix,"nx0=i"=>\$nx0 );
 # 

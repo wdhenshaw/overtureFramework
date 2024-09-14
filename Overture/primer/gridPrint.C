@@ -83,15 +83,15 @@ main(int argc, char *argv[])
     const IntegerArray & bc  = c.boundaryCondition();
 
     fprintf(file,"%i %s (grid and name)\n"
-	    "%i %i %i %i %i %i (dimension(0:1,0:2), array dimensions)\n"
-	    "%i %i %i %i %i %i (gridIndexRange(0:1,0:2), grid bounds)\n"
-	    "%i %i %i %i %i %i (boundaryCondition(0:1,0:2))\n"
-	    "%i %i %i          (isPeriodic(0:2), 0=not, 1=deriv, 2=function)\n",
-	    grid,(const char*)c.getName(),
-	    d(0,0),d(1,0),d(0,1),d(1,1),d(0,2),d(1,2),
-	    gir(0,0),gir(1,0),gir(0,1),gir(1,1),gir(0,2),gir(1,2),
-	    bc(0,0),bc(1,0),bc(0,1),bc(1,1),bc(0,2),bc(1,2),
-	    c.isPeriodic(0),c.isPeriodic(1),c.isPeriodic(2));
+            "%i %i %i %i %i %i (dimension(0:1,0:2), array dimensions)\n"
+            "%i %i %i %i %i %i (gridIndexRange(0:1,0:2), grid bounds)\n"
+            "%i %i %i %i %i %i (boundaryCondition(0:1,0:2))\n"
+            "%i %i %i          (isPeriodic(0:2), 0=not, 1=deriv, 2=function)\n",
+            grid,(const char*)c.getName(),
+            d(0,0),d(1,0),d(0,1),d(1,1),d(0,2),d(1,2),
+            gir(0,0),gir(1,0),gir(0,1),gir(1,1),gir(0,2),gir(1,2),
+            bc(0,0),bc(1,0),bc(0,1),bc(1,1),bc(0,2),bc(1,2),
+            c.isPeriodic(0),c.isPeriodic(1),c.isPeriodic(2));
     
     fprintf(file,"%i (total number of interpolation points)\n",ni(grid));
     if( ni(grid)>0 )
@@ -101,41 +101,41 @@ main(int argc, char *argv[])
       if( cg->localInterpolationDataState==CompositeGridData::noLocalInterpolationData )
       {
         printF("Found interpolationPoint\n");
-	
+        
         // If the grid was written in serial, the interpolation arrays are saved here:
-	ip.reference( cg.interpolationPoint[grid].getLocalArray());
-	il.reference( cg.interpoleeLocation[grid].getLocalArray());
-	ig.reference( cg.interpoleeGrid[grid].getLocalArray());
-	viw.reference( cg.variableInterpolationWidth[grid].getLocalArray());
-	ci.reference(cg.interpolationCoordinates[grid].getLocalArray());
+        ip.reference( cg.interpolationPoint[grid].getLocalArray());
+        il.reference( cg.interpoleeLocation[grid].getLocalArray());
+        ig.reference( cg.interpoleeGrid[grid].getLocalArray());
+        viw.reference( cg.variableInterpolationWidth[grid].getLocalArray());
+        ci.reference(cg.interpolationCoordinates[grid].getLocalArray());
       }
       else
       {
         // If the grid was written in parallel, the interpolation arrays are saved as separate serial arrays:
         printF("Found interpolationPointLocal\n");
 
-	ip.reference( cg->interpolationPointLocal[grid]);
-	il.reference( cg->interpoleeLocationLocal[grid]);
-	ig.reference( cg->interpoleeGridLocal[grid]);
-	viw.reference( cg->variableInterpolationWidthLocal[grid]);
-	ci.reference(cg->interpolationCoordinatesLocal[grid]);
+        ip.reference( cg->interpolationPointLocal[grid]);
+        il.reference( cg->interpoleeLocationLocal[grid]);
+        ig.reference( cg->interpoleeGridLocal[grid]);
+        viw.reference( cg->variableInterpolationWidthLocal[grid]);
+        ci.reference(cg->interpolationCoordinatesLocal[grid]);
       }
       
       if( false )
       { // show how to copy the interpolation point data to one processor
         Index Iv[2];
-	Iv[0]=ip.dimension(0);
-	Iv[1]=ip.dimension(1);
-	
+        Iv[0]=ip.dimension(0);
+        Iv[1]=ip.dimension(1);
+        
         int p0=0;   // create an aggregate array on proc. 0 holding all ip values
         IntegerArray ip0;
-	CopyArray::getAggregateArray( ip, Iv, ip0,p0);
-	fprintf(file,"%i (number of interpolation points in the aggregate array)\n",ip0.getLength(0));
-	for( int i=ip0.getBase(0); i<=ip0.getBound(0); i++ )
-	{
-	  fprintf(file,"%i %i %i  (ip)\n",
-		  ip0(i,0),ip0(i,1),(numberOfDimensions==2 ? 0 : ip0(i,2)));
-	}
+        CopyArray::getAggregateArray( ip, Iv, ip0,p0);
+        fprintf(file,"%i (number of interpolation points in the aggregate array)\n",ip0.getLength(0));
+        for( int i=ip0.getBase(0); i<=ip0.getBound(0); i++ )
+        {
+          fprintf(file,"%i %i %i  (ip)\n",
+                  ip0(i,0),ip0(i,1),(numberOfDimensions==2 ? 0 : ip0(i,2)));
+        }
       }
 
       // ig : donor grid 
@@ -148,11 +148,11 @@ main(int argc, char *argv[])
       fprintf(file,"%i (number of interpolation points on this processor)\n",niLocal);
       for( int i=ip.getBase(0); i<=ip.getBound(0); i++ )
       {
-	fprintf(file,"%i %i  %i %i %i  %i %i %i  %e %e %e (donor, width, ip, il, ci)\n",
-		ig(i),viw(i),
-		ip(i,0),ip(i,1),(numberOfDimensions==2 ? 0 : ip(i,2)),
-		il(i,0),il(i,1),(numberOfDimensions==2 ? 0 : il(i,2)),
-		ci(i,0),ci(i,1),(numberOfDimensions==2 ? 0 : ci(i,2)));
+        fprintf(file,"%i %i  %i %i %i  %i %i %i  %e %e %e (donor, width, ip, il, ci)\n",
+                ig(i),viw(i),
+                ip(i,0),ip(i,1),(numberOfDimensions==2 ? 0 : ip(i,2)),
+                il(i,0),il(i,1),(numberOfDimensions==2 ? 0 : il(i,2)),
+                ci(i,0),ci(i,1),(numberOfDimensions==2 ? 0 : ci(i,2)));
       }
     }
 
@@ -169,13 +169,13 @@ main(int argc, char *argv[])
     {
       // print bounds on the mask array and local mask array: 
       printf(" grid=%i, myid=%i : mask=[%i,%i][%i,%i][%i,%i]  maskLocal=[%i,%i][%i,%i][%i,%i]\n",
-	     grid,myid,
-	     mask.getBase(0),mask.getBound(0),
-	     mask.getBase(1),mask.getBound(1),
-	     mask.getBase(2),mask.getBound(2),
-	     maskLocal.getBase(0),maskLocal.getBound(0),
-	     maskLocal.getBase(1),maskLocal.getBound(1),
-	     maskLocal.getBase(2),maskLocal.getBound(2));
+             grid,myid,
+             mask.getBase(0),mask.getBound(0),
+             mask.getBase(1),mask.getBound(1),
+             mask.getBase(2),mask.getBound(2),
+             maskLocal.getBase(0),maskLocal.getBound(0),
+             maskLocal.getBase(1),maskLocal.getBound(1),
+             maskLocal.getBase(2),maskLocal.getBound(2));
     }
     
 
@@ -184,12 +184,12 @@ main(int argc, char *argv[])
       fprintf(file,"mask (based on the dimension array, -1=interp, 0=not used, 1=used)\n");
       FOR_3D(i1,i2,i3,I1,I2,I3)
       {
-	int m=maskLocal(i1,i2,i3);
-	if( m<0 ) 
-	  m=-1;   // interpolation point 
-	else if( m>0 ) 
-	  m=1;    // discretization point 
-	fprintf(file,"%i ",m);
+        int m=maskLocal(i1,i2,i3);
+        if( m<0 ) 
+          m=-1;   // interpolation point 
+        else if( m>0 ) 
+          m=1;    // discretization point 
+        fprintf(file,"%i ",m);
       }
       fprintf(file,"\n");
     
@@ -199,10 +199,10 @@ main(int argc, char *argv[])
       fprintf(file,"vertex (based on the dimension array)\n");
       FOR_3(i1,i2,i3,I1,I2,I3)
       {
-	if( numberOfDimensions==2 )
-	  fprintf(file,"%e %e",vertexLocal(i1,i2,i3,0),vertexLocal(i1,i2,i3,1));
-	else
-	  fprintf(file,"%e %e %e",vertexLocal(i1,i2,i3,0),vertexLocal(i1,i2,i3,1),vertexLocal(i1,i2,i3,2));
+        if( numberOfDimensions==2 )
+          fprintf(file,"%e %e",vertexLocal(i1,i2,i3,0),vertexLocal(i1,i2,i3,1));
+        else
+          fprintf(file,"%e %e %e",vertexLocal(i1,i2,i3,0),vertexLocal(i1,i2,i3,1),vertexLocal(i1,i2,i3,2));
       }
       fprintf(file,"\n");
     }

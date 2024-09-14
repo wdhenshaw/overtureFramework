@@ -28,10 +28,11 @@ $xa=-1.; $xb=1.; $ya=-1.; $yb=1.; $za=-1.; $zb=1.; $loadBalance=0; $ml=0;
 $xai=-.5; $xbi=.5; $yai=-.5; $ybi=.5; $zai=-.5; $zbi=.5; # bounds on the inner box
 $order=2; $factor=1; $interp="i"; # default values
 $orderOfAccuracy = "second order"; $ng=2; $interpType = "implicit for all grids"; $dse=0.; 
+$numGhost=-1;  # if this value is set, then use this number of ghost points
 # 
 # get command line arguments
 GetOptions( "order=i"=>\$order,"factor=i"=> \$factor,"interp=s"=> \$interp,\
-            "loadBalance=i"=>\$loadBalance,"ml=i"=>\$ml);
+            "loadBalance=i"=>\$loadBalance,"ml=i"=>\$ml,"numGhost=i"=>\$numGhost);
 # 
 if( $order eq 4 ){ $orderOfAccuracy="fourth order"; $ng=2; }\
 elsif( $order eq 6 ){ $orderOfAccuracy="sixth order"; $ng=4; }\
@@ -39,6 +40,8 @@ elsif( $order eq 8 ){ $orderOfAccuracy="eighth order"; $ng=6; }
 if( $interp eq "e" ){ $interpType = "explicit for all grids"; $dse=1.; }
 # 
 $suffix = ".order$order"; 
+if( $numGhost ne -1 ){ $ng = $numGhost; } # overide number of ghost
+if( $numGhost ne -1 ){ $suffix .= ".ng$numGhost"; } 
 if( $ml ne 0 ){ $suffix .= ".ml$ml"; }
 $name = "bib" . "$interp$factor" . $suffix . ".hdf";
 # -- convert a number so that it is a power of 2 plus 1 --

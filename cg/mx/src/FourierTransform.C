@@ -115,9 +115,9 @@ int FourierTransform::getLocalIndexBox( IndexBox & box ) const
     IndexBox & fftBox = dbase.get<IndexBox>("fftBox");
 
     box.setBounds( fftBox.base(0),fftBox.bound(0),
-		   fftBox.base(1),fftBox.bound(1),
-		   fftBox.base(2),fftBox.bound(2),
-		   fftBox.base(3),fftBox.bound(3) );
+                   fftBox.base(1),fftBox.bound(1),
+                   fftBox.base(2),fftBox.bound(2),
+                   fftBox.base(3),fftBox.bound(3) );
   }
   return 0;
 }
@@ -159,8 +159,8 @@ int FourierTransform::usePhysicalTransforms( bool usePhysicalTransforms )
 /// \brief Initialize the Fourier Transform
 // =====================================================================================================
 int FourierTransform::initialize( realMappedGridFunction & u,
-				  const int ndfft /* =1 */ ,
-				  const int sidefft /* = -1 */ , const int axisfft /* = -1 */  )
+                                  const int ndfft /* =1 */ ,
+                                  const int sidefft /* = -1 */ , const int axisfft /* = -1 */  )
 {
   MappedGrid & mg = *u.getMappedGrid();
   
@@ -206,8 +206,8 @@ int FourierTransform::initialize( realMappedGridFunction & u,
 int FourierTransform::initialize( realArray & x,
                                   const IntegerArray & indexRange,
                                   const IntegerArray & gridIndexRange,
-				  const int ndfft /* =1 */ ,
-				  const int sidefft /* = -1 */ , const int axisfft /* = -1 */  )
+                                  const int ndfft /* =1 */ ,
+                                  const int sidefft /* = -1 */ , const int axisfft /* = -1 */  )
 {
   const real time=getCPU();
 
@@ -230,15 +230,15 @@ int FourierTransform::initialize( realArray & x,
   
   if( debug & 1 )
     printF(">>>> FourierTransform::initialize... np=%d, numberOfDimensions=%d, sidefft=%d, axisfft=%d\n",
-	   np,numberOfDimensions,sidefft,axisfft);
+           np,numberOfDimensions,sidefft,axisfft);
 
   OV_GET_SERIAL_ARRAY(real,x,xLocal);
 
   if( debug & 2 )
     printf("FT: myid=%d: xLocal=[%d,%d][%d,%d][%d,%d]\n",myid,
-	   xLocal.getBase(0),xLocal.getBound(0),
-	   xLocal.getBase(1),xLocal.getBound(1),
-	   xLocal.getBase(2),xLocal.getBound(2));
+           xLocal.getBase(0),xLocal.getBound(0),
+           xLocal.getBase(1),xLocal.getBound(1),
+           xLocal.getBase(2),xLocal.getBound(2));
    
   
   // ---- Here is the Index Box for the local array of x -----
@@ -247,11 +247,11 @@ int FourierTransform::initialize( realArray & x,
 
   if( debug & 2 )
     fprintf(stdout,"FT: myid=%i xLocal box: xbox=[%i,%i][%i,%i][%i,%i][%i,%i] (no ghost)\n",
-	    myid,
-	    xBox.base(0),xBox.bound(0),
-	    xBox.base(1),xBox.bound(1),
-	    xBox.base(2),xBox.bound(2),
-	    xBox.base(3),xBox.bound(3));
+            myid,
+            xBox.base(0),xBox.bound(0),
+            xBox.base(1),xBox.bound(1),
+            xBox.base(2),xBox.bound(2),
+            xBox.base(3),xBox.bound(3));
 
   // Here is the Index box for the full array x, or the requested face of x 
   IndexBox fBox;
@@ -275,11 +275,11 @@ int FourierTransform::initialize( realArray & x,
 
   if( debug & 2 )
     fprintf(stdout,"FT: myid=%i face-box: fBox=[%i,%i][%i,%i][%i,%i][%i,%i]\n",
-	    myid,
-	    fBox.base(0),fBox.bound(0),
-	    fBox.base(1),fBox.bound(1),
-	    fBox.base(2),fBox.bound(2),
-	    fBox.base(3),fBox.bound(3));
+            myid,
+            fBox.base(0),fBox.bound(0),
+            fBox.base(1),fBox.bound(1),
+            fBox.base(2),fBox.bound(2),
+            fBox.base(3),fBox.bound(3));
 
   if( !dbase.has_key("fftBox") )
     dbase.put<IndexBox>("fftBox");
@@ -289,11 +289,11 @@ int FourierTransform::initialize( realArray & x,
 
   if( debug & 2 )
     fprintf(stdout,"FT: myid=%i (local) fftBox=[%i,%i][%i,%i][%i,%i][%i,%i]\n",
-	    myid,
-	    fftBox.base(0),fftBox.bound(0),
-	    fftBox.base(1),fftBox.bound(1),
-	    fftBox.base(2),fftBox.bound(2),
-	    fftBox.base(3),fftBox.bound(3));
+            myid,
+            fftBox.base(0),fftBox.bound(0),
+            fftBox.base(1),fftBox.bound(1),
+            fftBox.base(2),fftBox.bound(2),
+            fftBox.base(3),fftBox.bound(3));
 
 
 
@@ -349,7 +349,7 @@ int FourierTransform::initialize( realArray & x,
   // workspace for complex transforms: 
   dbase.put<RealArray>("fftsave1c");
   RealArray & fftsave1c = dbase.get<RealArray>("fftsave1c");
-	
+        
   dbase.put<RealArray>("fftsave2c");
   RealArray & fftsave2c = dbase.get<RealArray>("fftsave2c");
 
@@ -469,7 +469,7 @@ int FourierTransform::initialize( realArray & x,
   //   if( debug & 1 )
   //   {
   //     printF("FourierTransform: Changing 2D transform to numberOfDimensions=3 since nz>1 and fftmpi needs at"
-  // 	     " least 2 points in each direction\n");
+  //         " least 2 points in each direction\n");
   //   }
   //   numberOfDimensions=3;
   //   // dbase.put<int>("nx")=nx;
@@ -484,11 +484,11 @@ int FourierTransform::initialize( realArray & x,
   if( (debug & 2) &&   (ndfft==1 || (ndfft==2 && nz>1) ) )
   {
     fprintf(stdout,"FT: myid=%i (local) ADJUSTED fftBoxa=[%i,%i][%i,%i][%i,%i][%i,%i] (for 1D FFTs)\n",
-	    myid,
-	    fftBoxa.base(0),fftBoxa.bound(0),
-	    fftBoxa.base(1),fftBoxa.bound(1),
-	    fftBoxa.base(2),fftBoxa.bound(2),
-	    fftBoxa.base(3),fftBoxa.bound(3));
+            myid,
+            fftBoxa.base(0),fftBoxa.bound(0),
+            fftBoxa.base(1),fftBoxa.bound(1),
+            fftBoxa.base(2),fftBoxa.bound(2),
+            fftBoxa.base(3),fftBoxa.bound(3));
   }
   
 
@@ -504,8 +504,8 @@ int FourierTransform::initialize( realArray & x,
   
   // dataSize = 2*nxLocal*nyLocal*nzLocal;
   int numPointsLocal = (  (fftBoxa.bound(0)-fftBoxa.base(0)+1)
-			 *(fftBoxa.bound(1)-fftBoxa.base(1)+1)
-			 *(fftBoxa.bound(2)-fftBoxa.base(2)+1) );
+                         *(fftBoxa.bound(1)-fftBoxa.base(1)+1)
+                         *(fftBoxa.bound(2)-fftBoxa.base(2)+1) );
   dataSize = 2*numPointsLocal;
 
 
@@ -524,17 +524,17 @@ int FourierTransform::initialize( realArray & x,
     FFT2d & fft = *pfft2d;
 
     fft.setup(nx,ny,
-	      fftBoxa.base(0), fftBoxa.bound(0), fftBoxa.base(1),fftBoxa.bound(1),  // local dims for input
-	      fftBoxa.base(0), fftBoxa.bound(0), fftBoxa.base(1),fftBoxa.bound(1),  // local dims for output
-	      permute,fftsize,sendsize,recvsize);  
+              fftBoxa.base(0), fftBoxa.bound(0), fftBoxa.base(1),fftBoxa.bound(1),  // local dims for input
+              fftBoxa.base(0), fftBoxa.bound(0), fftBoxa.base(1),fftBoxa.bound(1),  // local dims for output
+              permute,fftsize,sendsize,recvsize);  
 
     if( debug & 1 )
       printf(" After fftMPI setup: Using 1D FFT library = %s\n",fft.fft1d);
 
     // fft.setup(nx,ny,
-    // 	      inxlo,inxhi,inylo,inyhi,
-    // 	      outxlo,outxhi,outylo,outyhi,
-    // 	      permute,fftsize,sendsize,recvsize);  
+    //        inxlo,inxhi,inylo,inyhi,
+    //        outxlo,outxhi,outylo,outyhi,
+    //        permute,fftsize,sendsize,recvsize);  
   }
   else if( numberOfDimensions==3 )
   {
@@ -545,17 +545,17 @@ int FourierTransform::initialize( realArray & x,
     FFT3d & fft = *pfft3d;
 
     fft.setup(nx,ny,nz,
-	      fftBoxa.base(0), fftBoxa.bound(0), fftBoxa.base(1),fftBoxa.bound(1), fftBoxa.base(2),fftBoxa.bound(2),
-	      fftBoxa.base(0), fftBoxa.bound(0), fftBoxa.base(1),fftBoxa.bound(1), fftBoxa.base(2),fftBoxa.bound(2),
-	      permute,fftsize,sendsize,recvsize);  
+              fftBoxa.base(0), fftBoxa.bound(0), fftBoxa.base(1),fftBoxa.bound(1), fftBoxa.base(2),fftBoxa.bound(2),
+              fftBoxa.base(0), fftBoxa.bound(0), fftBoxa.base(1),fftBoxa.bound(1), fftBoxa.base(2),fftBoxa.bound(2),
+              permute,fftsize,sendsize,recvsize);  
 
     if( debug & 1 )
       printf(" After fftMPI setup: Using 1D FFT library = %s\n",fft.fft1d);
 
     // fft.setup(nx,ny,nz,
-    // 	      inxlo,inxhi,inylo,inyhi,inzlo,inzhi,
-    // 	      outxlo,outxhi,outylo,outyhi,outzlo,outzhi,
-    // 	      permute,fftsize,sendsize,recvsize);  
+    //        inxlo,inxhi,inylo,inyhi,inzlo,inzhi,
+    //        outxlo,outxhi,outylo,outyhi,outzlo,outzhi,
+    //        permute,fftsize,sendsize,recvsize);  
     
   }
   else
@@ -665,7 +665,7 @@ int FourierTransform::forwardTransform( const RealArray & u, const int mc, void 
 
   if( debug & 1 )
     printF("FourierTransform::forwardTransform: numberOfDimensions=%d, mc=%d, useComplexTransforms=%d\n",
-	   numberOfDimensions,mc,int(useComplexTransforms));
+           numberOfDimensions,mc,int(useComplexTransforms));
 
   assert( useComplexTransforms );
   
@@ -713,12 +713,12 @@ int FourierTransform::forwardTransform( const RealArray & u, const int mc, void 
     {
       for( int i2=i2a; i2<=i2b; i2++ )
       {
-	for( int i1=i1a; i1<=i1b; i1++ )
-	{
-	  zlocr(i) = u(i1,i2,i3,mc)*scaleFactor;   // real part 
-	  zloci(i) = 0.;                           // imag part
+        for( int i1=i1a; i1<=i1b; i1++ )
+        {
+          zlocr(i) = u(i1,i2,i3,mc)*scaleFactor;   // real part 
+          zloci(i) = 0.;                           // imag part
           i++;
-	}
+        }
       }
     }
 
@@ -727,7 +727,7 @@ int FourierTransform::forwardTransform( const RealArray & u, const int mc, void 
     else
       ZFFTF( n1dim,pzloc[0],fftsave1c(0) );     // NOTE use "forward" 
 
-	
+        
     if( false )
     {
       printf("FT:fftpack: After Forward: n1dim=%d (zloc holds results for uHat(k) and uHat(-k)=conj(uHat(k))\n",n1dim);
@@ -735,7 +735,7 @@ int FourierTransform::forwardTransform( const RealArray & u, const int mc, void 
       printf(" zloc=");
       for( int i=0; i<n1dim; i++ ){ printF("[%10.3e,%10.3e],",zlocr(i),zloci(i)); }   // 
       printF("]\n");
-	  
+          
     }
     
   }
@@ -777,24 +777,24 @@ int FourierTransform::forwardTransform( const RealArray & u, const int mc, void 
       int i3=i3a;
       for( int i2=i2a; i2<=i2b; i2++ )
       {
-	int i=0;
-	for( int i1=i1a; i1<=i1b; i1++ )
-	{
-	  zl1r(i)=u(i1,i2,i3,mc)*scaleFactor;  // real part 
-	  zl1i(i)=0.;                          // imag part
-	  i++;
-	}
+        int i=0;
+        for( int i1=i1a; i1<=i1b; i1++ )
+        {
+          zl1r(i)=u(i1,i2,i3,mc)*scaleFactor;  // real part 
+          zl1i(i)=0.;                          // imag part
+          i++;
+        }
 
-	if( usePhysicalTransforms )
-	  ZFFTB( n1dim,pzl1[0],fftsave1c(0) );     // NOTE use "backward" 
-	else
-	  ZFFTF( n1dim,pzl1[0],fftsave1c(0) );     // NOTE use "forward" 
+        if( usePhysicalTransforms )
+          ZFFTB( n1dim,pzl1[0],fftsave1c(0) );     // NOTE use "backward" 
+        else
+          ZFFTF( n1dim,pzl1[0],fftsave1c(0) );     // NOTE use "forward" 
 
-	int j2=i2-i2a, j3=i3-i3a;
-	for( int j1=0; j1<n1; j1++ )
-	{
-	  zl3(j1,j2,j3) = zl1r(j1) + zl1i(j1)*I;
-	}
+        int j2=i2-i2a, j3=i3-i3a;
+        for( int j1=0; j1<n1; j1++ )
+        {
+          zl3(j1,j2,j3) = zl1r(j1) + zl1i(j1)*I;
+        }
       }
 
     }
@@ -804,24 +804,24 @@ int FourierTransform::forwardTransform( const RealArray & u, const int mc, void 
       int i2=i2a;
       for( int i3=i3a; i3<=i3b; i3++ )
       {
-	int i=0;
-	for( int i1=i1a; i1<=i1b; i1++ )
-	{
-	  zl1r(i)=u(i1,i2,i3,mc)*scaleFactor;  // real part 
-	  zl1i(i)=0.;                          // imag part
-	  i++;
-	}
+        int i=0;
+        for( int i1=i1a; i1<=i1b; i1++ )
+        {
+          zl1r(i)=u(i1,i2,i3,mc)*scaleFactor;  // real part 
+          zl1i(i)=0.;                          // imag part
+          i++;
+        }
 
-	if( usePhysicalTransforms )
-	  ZFFTB( n1dim,pzl1[0],fftsave1c(0) );     // NOTE use "backward" 
-	else
-	  ZFFTF( n1dim,pzl1[0],fftsave1c(0) );   
+        if( usePhysicalTransforms )
+          ZFFTB( n1dim,pzl1[0],fftsave1c(0) );     // NOTE use "backward" 
+        else
+          ZFFTF( n1dim,pzl1[0],fftsave1c(0) );   
 
-	int j2=i2-i2a, j3=i3-i3a;
-	for( int j1=0; j1<n1; j1++ )
-	{
-	  zl3(j1,j2,j3) = zl1r(j1) + zl1i(j1)*I;
-	}
+        int j2=i2-i2a, j3=i3-i3a;
+        for( int j1=0; j1<n1; j1++ )
+        {
+          zl3(j1,j2,j3) = zl1r(j1) + zl1i(j1)*I;
+        }
       }
     }
     else
@@ -830,24 +830,24 @@ int FourierTransform::forwardTransform( const RealArray & u, const int mc, void 
       int i1=i1a;
       for( int i3=i3a; i3<=i3b; i3++ )
       {
-	int i=0;
-	for( int i2=i2a; i2<=i2b; i2++ )
-	{
-	  zl2r(i)=u(i1,i2,i3,mc)*scaleFactor;  // real part 
-	  zl2i(i)=0.;                          // imag part
-	  i++;
-	}
+        int i=0;
+        for( int i2=i2a; i2<=i2b; i2++ )
+        {
+          zl2r(i)=u(i1,i2,i3,mc)*scaleFactor;  // real part 
+          zl2i(i)=0.;                          // imag part
+          i++;
+        }
 
-	if( usePhysicalTransforms )
-	  ZFFTB( n2dim,pzl2[0],fftsave2c(0) );    // NOTE use "backward" 
-	else
-	  ZFFTF( n2dim,pzl2[0],fftsave2c(0) );  
+        if( usePhysicalTransforms )
+          ZFFTB( n2dim,pzl2[0],fftsave2c(0) );    // NOTE use "backward" 
+        else
+          ZFFTF( n2dim,pzl2[0],fftsave2c(0) );  
 
-	int j1=i1-i1a, j3=i3-i3a;
-	for( int j2=0; j2<n2; j2++ )
-	{
-	  zl3(j1,j2,j3) = zl2r(j2) + zl2i(j2)*I;
-	}
+        int j1=i1-i1a, j3=i3-i3a;
+        for( int j2=0; j2<n2; j2++ )
+        {
+          zl3(j1,j2,j3) = zl2r(j2) + zl2i(j2)*I;
+        }
       }
     }
 
@@ -857,14 +857,14 @@ int FourierTransform::forwardTransform( const RealArray & u, const int mc, void 
       printF("Stage 1: after initial FFTs, zl:\n");
       for( int i2=0; i2<n2; i2++ )
       {
-	for( int i1=0; i1<n1; i1++ )
-	{
-	  printF("[%9.3e,%9.3e] ",std::real(zl(i1,i2)),std::imag(zl(i1,i2)));
-	}
-	printF("\n");
+        for( int i1=0; i1<n1; i1++ )
+        {
+          printF("[%9.3e,%9.3e] ",std::real(zl(i1,i2)),std::imag(zl(i1,i2)));
+        }
+        printF("\n");
       }
     }
-	
+        
 
     // ---- FFT's in direction 2------
     // ----- Fill in data -----
@@ -874,24 +874,24 @@ int FourierTransform::forwardTransform( const RealArray & u, const int mc, void 
       int i3=0;
       for( int i1=0; i1<n1; i1++ )
       {
-	for( int i2=0; i2<n2; i2++ )
-	{
-	  // zl2(i2)=zl(i1,i2);
-	  zl2r(i2) = std::real(zl3(i1,i2,i3));
-	  zl2i(i2) = std::imag(zl3(i1,i2,i3));
-	    
-	}
+        for( int i2=0; i2<n2; i2++ )
+        {
+          // zl2(i2)=zl(i1,i2);
+          zl2r(i2) = std::real(zl3(i1,i2,i3));
+          zl2i(i2) = std::imag(zl3(i1,i2,i3));
+            
+        }
 
-	if( usePhysicalTransforms )
-	  ZFFTB( n2dim,pzl2[0],fftsave2c(0) );     // NOTE use "backward" 
-	else
-	  ZFFTF( n2dim,pzl2[0],fftsave2c(0) );    
+        if( usePhysicalTransforms )
+          ZFFTB( n2dim,pzl2[0],fftsave2c(0) );     // NOTE use "backward" 
+        else
+          ZFFTF( n2dim,pzl2[0],fftsave2c(0) );    
 
-	for( int i2=0; i2<n2; i2++ )
-	{
-	  zl3(i1,i2,i3)=zl2r(i2) + zl2i(i2)*I;
-	}
-	  
+        for( int i2=0; i2<n2; i2++ )
+        {
+          zl3(i1,i2,i3)=zl2r(i2) + zl2i(i2)*I;
+        }
+          
       }
 
     }
@@ -901,21 +901,21 @@ int FourierTransform::forwardTransform( const RealArray & u, const int mc, void 
       int i2=0;
       for( int i1=0; i1<n1; i1++ )
       {
-	for( int i3=0; i3<n3; i3++ )
-	{
-	  zl3r(i3) = std::real(zl3(i1,i2,i3));
-	  zl3i(i3) = std::imag(zl3(i1,i2,i3));
-	}
+        for( int i3=0; i3<n3; i3++ )
+        {
+          zl3r(i3) = std::real(zl3(i1,i2,i3));
+          zl3i(i3) = std::imag(zl3(i1,i2,i3));
+        }
 
-	if( usePhysicalTransforms )
-	  ZFFTB( n3dim,pzl3[0],fftsave3c(0) );      // NOTE use "backward" 
-	else
-	  ZFFTF( n3dim,pzl3[0],fftsave3c(0) );    
+        if( usePhysicalTransforms )
+          ZFFTB( n3dim,pzl3[0],fftsave3c(0) );      // NOTE use "backward" 
+        else
+          ZFFTF( n3dim,pzl3[0],fftsave3c(0) );    
 
-	for( int i3=0; i3<n3; i3++ )
-	{
-	  zl3(i1,i2,i3)=zl3r(i3) + zl3i(i3)*I;
-	}
+        for( int i3=0; i3<n3; i3++ )
+        {
+          zl3(i1,i2,i3)=zl3r(i3) + zl3i(i3)*I;
+        }
       }
     }
     else
@@ -924,22 +924,22 @@ int FourierTransform::forwardTransform( const RealArray & u, const int mc, void 
       int i1=0;
       for( int i2=0; i2<n2; i2++ )
       {
-	for( int i3=0; i3<n3; i3++ )
-	{
-	  zl3r(i3) = std::real(zl3(i1,i2,i3));
-	  zl3i(i3) = std::imag(zl3(i1,i2,i3));
-	}
+        for( int i3=0; i3<n3; i3++ )
+        {
+          zl3r(i3) = std::real(zl3(i1,i2,i3));
+          zl3i(i3) = std::imag(zl3(i1,i2,i3));
+        }
 
-	if( usePhysicalTransforms )
-	  ZFFTB( n3dim,pzl3[0],fftsave3c(0) );     // NOTE use "backward" 
-	else
-	  ZFFTF( n3dim,pzl3[0],fftsave3c(0) );     
+        if( usePhysicalTransforms )
+          ZFFTB( n3dim,pzl3[0],fftsave3c(0) );     // NOTE use "backward" 
+        else
+          ZFFTF( n3dim,pzl3[0],fftsave3c(0) );     
 
-	for( int i3=0; i3<n3; i3++ )
-	{
-	  zl3(i1,i2,i3)=zl3r(i3) + zl3i(i3)*I;
-	}
-	  
+        for( int i3=0; i3<n3; i3++ )
+        {
+          zl3(i1,i2,i3)=zl3r(i3) + zl3i(i3)*I;
+        }
+          
       }
     }
     
@@ -948,11 +948,11 @@ int FourierTransform::forwardTransform( const RealArray & u, const int mc, void 
       printF("FourierTransform::forwardTransform: zl:\n");
       for( int i2=0; i2<n2; i2++ )
       {
-	for( int i1=0; i1<n1; i1++ )
-	{
-	  printF("[%9.2e,%9.2e] ",std::real(zl(i1,i2)),std::imag(zl(i1,i2)));
-	}
-	printF("\n");
+        for( int i1=0; i1<n1; i1++ )
+        {
+          printF("[%9.2e,%9.2e] ",std::real(zl(i1,i2)),std::imag(zl(i1,i2)));
+        }
+        printF("\n");
       }
     }
 
@@ -995,40 +995,40 @@ int FourierTransform::forwardTransform( const RealArray & u, const int mc, void 
     {
       for( int i2=0; i2<n2; i2++ )
       {
-	// 1D complex transform 
-	for( int i1=0; i1<n1; i1++ )
-	{
-	  // set real and imaginary parts 
-	  zl1r(i1)=u(i1,i2,i3,mc)*scaleFactor;    // solution for this component ***** ASSUMES BASE 0 ****
-	  zl1i(i1)=0.;
-	}
+        // 1D complex transform 
+        for( int i1=0; i1<n1; i1++ )
+        {
+          // set real and imaginary parts 
+          zl1r(i1)=u(i1,i2,i3,mc)*scaleFactor;    // solution for this component ***** ASSUMES BASE 0 ****
+          zl1i(i1)=0.;
+        }
 
-	if( usePhysicalTransforms )
-	  ZFFTB( n1,pzl1[0],fftsave1c(0) );       // NOTE use "backward" 
-	else
-	  ZFFTF( n1,pzl1[0],fftsave1c(0) );    
+        if( usePhysicalTransforms )
+          ZFFTB( n1,pzl1[0],fftsave1c(0) );       // NOTE use "backward" 
+        else
+          ZFFTF( n1,pzl1[0],fftsave1c(0) );    
 
-	for( int i1=0; i1<n1; i1++ )
-	{
-	  zl(i1,i2,i3) = zl1r(i1) + zl1i(i1)*I;
-	}
+        for( int i1=0; i1<n1; i1++ )
+        {
+          zl(i1,i2,i3) = zl1r(i1) + zl1i(i1)*I;
+        }
       } // end for i2 
-	
+        
       if( false )
       {
-	printF("Stage 1: after initial FFTs, zl:\n");
-	for( int i3=0; i3<n3; i3++ )
-	{
+        printF("Stage 1: after initial FFTs, zl:\n");
+        for( int i3=0; i3<n3; i3++ )
+        {
           printF("----- i3=%d -----\n",i3);
-	  for( int i2=0; i2<n2; i2++ )
-	  {
-	    for( int i1=0; i1<n1; i1++ )
-	    {
-	      printF("[%9.3e,%9.3e] ",std::real(zl(i1,i2,i3)),std::imag(zl(i1,i2,i3)));
-	    }
-	    printF("\n");
-	  }
-	}
+          for( int i2=0; i2<n2; i2++ )
+          {
+            for( int i1=0; i1<n1; i1++ )
+            {
+              printF("[%9.3e,%9.3e] ",std::real(zl(i1,i2,i3)),std::imag(zl(i1,i2,i3)));
+            }
+            printF("\n");
+          }
+        }
       }
     }
     
@@ -1038,21 +1038,21 @@ int FourierTransform::forwardTransform( const RealArray & u, const int mc, void 
     {
       for( int i1=0; i1<n1; i1++ )
       {
-	for( int i2=0; i2<n2; i2++ )
-	{
-	  zl2r(i2) = std::real(zl(i1,i2,i3));
-	  zl2i(i2) = std::imag(zl(i1,i2,i3));
-	}
+        for( int i2=0; i2<n2; i2++ )
+        {
+          zl2r(i2) = std::real(zl(i1,i2,i3));
+          zl2i(i2) = std::imag(zl(i1,i2,i3));
+        }
 
-	if( usePhysicalTransforms )
-	  ZFFTB( n2,pzl2[0],fftsave2c(0) );      // NOTE use "backward" 
-	else
-	  ZFFTF( n2,pzl2[0],fftsave2c(0) );      // NOTE use "backward" 
+        if( usePhysicalTransforms )
+          ZFFTB( n2,pzl2[0],fftsave2c(0) );      // NOTE use "backward" 
+        else
+          ZFFTF( n2,pzl2[0],fftsave2c(0) );      // NOTE use "backward" 
 
-	for( int i2=0; i2<n2; i2++ )
-	{
-	  zl(i1,i2,i3)=zl2r(i2) + zl2i(i2)*I;
-	}
+        for( int i2=0; i2<n2; i2++ )
+        {
+          zl(i1,i2,i3)=zl2r(i2) + zl2i(i2)*I;
+        }
       }
     }
 
@@ -1061,21 +1061,21 @@ int FourierTransform::forwardTransform( const RealArray & u, const int mc, void 
     {
       for( int i2=0; i2<n2; i2++ )
       {
-	for( int i3=0; i3<n3; i3++ )
-	{
-	  zl3r(i3) = std::real(zl(i1,i2,i3));
-	  zl3i(i3) = std::imag(zl(i1,i2,i3));
-	}
+        for( int i3=0; i3<n3; i3++ )
+        {
+          zl3r(i3) = std::real(zl(i1,i2,i3));
+          zl3i(i3) = std::imag(zl(i1,i2,i3));
+        }
 
-	if( usePhysicalTransforms )
-	  ZFFTB( n3,pzl3[0],fftsave3c(0) );     // NOTE use "backward" 
-	else
-	  ZFFTF( n3,pzl3[0],fftsave3c(0) );     // NOTE use "backward" 
+        if( usePhysicalTransforms )
+          ZFFTB( n3,pzl3[0],fftsave3c(0) );     // NOTE use "backward" 
+        else
+          ZFFTF( n3,pzl3[0],fftsave3c(0) );     // NOTE use "backward" 
 
-	for( int i3=0; i3<n3; i3++ )
-	{
-	  zl(i1,i2,i3)=zl3r(i3) + zl3i(i3)*I;
-	}
+        for( int i3=0; i3<n3; i3++ )
+        {
+          zl(i1,i2,i3)=zl3r(i3) + zl3i(i3)*I;
+        }
       }
     }
     
@@ -1084,15 +1084,15 @@ int FourierTransform::forwardTransform( const RealArray & u, const int mc, void 
       printF("FourierTransform::forwardTransform: zl:\n");
       for( int i3=0; i3<n3; i3++ )
       {
-	printF("----- i3=%d -----\n",i3);
-	for( int i2=0; i2<n2; i2++ )
-	{
-	  for( int i1=0; i1<n1; i1++ )
-	  {
-	    printF("[%9.2e,%9.2e] ",std::real(zl(i1,i2,i3)),std::imag(zl(i1,i2,i3)));
-	  }
-	  printF("\n");
-	}
+        printF("----- i3=%d -----\n",i3);
+        for( int i2=0; i2<n2; i2++ )
+        {
+          for( int i1=0; i1<n1; i1++ )
+          {
+            printF("[%9.2e,%9.2e] ",std::real(zl(i1,i2,i3)),std::imag(zl(i1,i2,i3)));
+          }
+          printF("\n");
+        }
       }
     }
     
@@ -1130,7 +1130,7 @@ int FourierTransform::forwardTransform( const RealArray & u, const int mc, void 
 
   if( debug & 1 )
     printF("FourierTransform::forwardTransform: FFTMPI: numberOfDimensions=%d, mc=%d\n",
-	   numberOfDimensions,mc);
+           numberOfDimensions,mc);
 
 
   
@@ -1172,15 +1172,15 @@ int FourierTransform::forwardTransform( const RealArray & u, const int mc, void 
     {
       for( int i1=i1a; i1<=i1b; i1++ )
       {
-	work[i]=u(i1,i2,i3,mc); i++;  // real part 
-	work[i]=0.;             i++;  // imag part
-	if( adjustForOneDimension==1 )
-	{
+        work[i]=u(i1,i2,i3,mc); i++;  // real part 
+        work[i]=0.;             i++;  // imag part
+        if( adjustForOneDimension==1 )
+        {
           // duplicate data for a 1D transform on a 2D array -- x-direction
-	  work[i]=u(i1,i2,i3,mc); i++;  // real part 
-	  work[i]=0.;             i++;  // imag part
-	}
-	
+          work[i]=u(i1,i2,i3,mc); i++;  // real part 
+          work[i]=0.;             i++;  // imag part
+        }
+        
       }
     }
   }
@@ -1253,9 +1253,9 @@ int FourierTransform::forwardTransform( const RealArray & u, const int mc, void 
     {
       for( int i1=0; i1<n1; i1++ )
       {
-	zl(i1,i2,i3) = work[i] + work[i+1]*I; i+=2;
-	if( adjustForOneDimension==1 )
-	  i+=2;
+        zl(i1,i2,i3) = work[i] + work[i+1]*I; i+=2;
+        if( adjustForOneDimension==1 )
+          i+=2;
       }
     }
   }
@@ -1268,16 +1268,16 @@ int FourierTransform::forwardTransform( const RealArray & u, const int mc, void 
       printF("FourierTransform:AFTER forward complex: zl:\n");
       for( int i3=0; i3<n3; i3++ )
       {
-	if( numberOfDimensions==3 )
-	  printF("---------------- i3=%d ---------------\n",i3);
-	for( int i2=0; i2<n2; i2++ )
-	{
-	  for( int i1=0; i1<n1; i1++ )
-	  {
-	    printF("[%9.2e,%9.2e] ",std::real(zl(i1,i2,i3)),std::imag(zl(i1,i2,i3)));
-	  }
-	  printF("\n");
-	}
+        if( numberOfDimensions==3 )
+          printF("---------------- i3=%d ---------------\n",i3);
+        for( int i2=0; i2<n2; i2++ )
+        {
+          for( int i1=0; i1<n1; i1++ )
+          {
+            printF("[%9.2e,%9.2e] ",std::real(zl(i1,i2,i3)),std::imag(zl(i1,i2,i3)));
+          }
+          printF("\n");
+        }
       }
     }
   }
@@ -1338,7 +1338,7 @@ int FourierTransform::backwardTransform( void *zl, RealArray & u, const int mc  
   const bool & useComplexTransforms = dbase.get<bool>("useComplexTransforms");
   if( debug & 1 )
     printF("FourierTransform::backwardTransform: numberOfDimensions=%d, mc=%d, useComplexTransforms=%d\n",
-	   numberOfDimensions,mc,int(useComplexTransforms));
+           numberOfDimensions,mc,int(useComplexTransforms));
 
   IndexBox & fftBox = dbase.get<IndexBox>("fftBox");
 
@@ -1393,7 +1393,7 @@ int FourierTransform::backwardTransform( void *zl, RealArray & u, const int mc  
       printf("zlocr=[");
       for( int i=0; i<n1dim; i++ ){ printF("%16.9e,",zlocr(i)); }   // 
       printF("]\n");
-	  
+          
     }
 
     int i=0;
@@ -1401,10 +1401,10 @@ int FourierTransform::backwardTransform( void *zl, RealArray & u, const int mc  
     {
       for( int i2=i2a; i2<=i2b; i2++ )
       {
-	for( int i1=i1a; i1<=i1b; i1++ )
-	{
-	  u(i1,i2,i3,mc) = zlocr(i)*scaleFactor; i++;  // real part 
-	}
+        for( int i1=i1a; i1<=i1b; i1++ )
+        {
+          u(i1,i2,i3,mc) = zlocr(i)*scaleFactor; i++;  // real part 
+        }
       }
     }
 
@@ -1443,22 +1443,22 @@ int FourierTransform::backwardTransform( void *zl, RealArray & u, const int mc  
       int i3=0;
       for( int i1=0; i1<n1; i1++ )
       {
-	for( int i2=0; i2<n2; i2++ )
-	{
-	  zl2r(i2) = std::real(zl3(i1,i2,i3));
-	  zl2i(i2) = std::imag(zl3(i1,i2,i3));
-	}
+        for( int i2=0; i2<n2; i2++ )
+        {
+          zl2r(i2) = std::real(zl3(i1,i2,i3));
+          zl2i(i2) = std::imag(zl3(i1,i2,i3));
+        }
 
-	if( usePhysicalTransforms )
-	  ZFFTF(n2dim,pzl2[0],fftsave2c(0));          // NOTE: use forward
-	else
-	  ZFFTB(n2dim,pzl2[0],fftsave2c(0));      
+        if( usePhysicalTransforms )
+          ZFFTF(n2dim,pzl2[0],fftsave2c(0));          // NOTE: use forward
+        else
+          ZFFTB(n2dim,pzl2[0],fftsave2c(0));      
 
-	for( int i2=0; i2<n2; i2++ )
-	{
-	  zl3(i1,i2,i3)=zl2r(i2) + zl2i(i2)*I;
-	}
-      }	
+        for( int i2=0; i2<n2; i2++ )
+        {
+          zl3(i1,i2,i3)=zl2r(i2) + zl2i(i2)*I;
+        }
+      } 
 
     }
     else if( i2a==i2b )
@@ -1467,22 +1467,22 @@ int FourierTransform::backwardTransform( void *zl, RealArray & u, const int mc  
       int i2=0;
       for( int i1=0; i1<n1; i1++ )
       {
-	for( int i3=0; i3<n3; i3++ )
-	{
-	  zl3r(i3) = std::real(zl3(i1,i2,i3));
-	  zl3i(i3) = std::imag(zl3(i1,i2,i3));
-	}
+        for( int i3=0; i3<n3; i3++ )
+        {
+          zl3r(i3) = std::real(zl3(i1,i2,i3));
+          zl3i(i3) = std::imag(zl3(i1,i2,i3));
+        }
 
-	if( usePhysicalTransforms )
-	  ZFFTF(n3dim,pzl3[0],fftsave3c(0));          // NOTE: use forward
-	else
-	  ZFFTB(n3dim,pzl3[0],fftsave3c(0));      
+        if( usePhysicalTransforms )
+          ZFFTF(n3dim,pzl3[0],fftsave3c(0));          // NOTE: use forward
+        else
+          ZFFTB(n3dim,pzl3[0],fftsave3c(0));      
 
-	for( int i3=0; i3<n3; i3++ )
-	{
-	  zl3(i1,i2,i3)=zl3r(i3) + zl3i(i3)*I;
-	}
-      }	
+        for( int i3=0; i3<n3; i3++ )
+        {
+          zl3(i1,i2,i3)=zl3r(i3) + zl3i(i3)*I;
+        }
+      } 
     }
     else
     {
@@ -1490,22 +1490,22 @@ int FourierTransform::backwardTransform( void *zl, RealArray & u, const int mc  
       int i1=0;
       for( int i2=0; i2<n2; i2++ )
       {
-	for( int i3=0; i3<n3; i3++ )
-	{
-	  zl3r(i3) = std::real(zl3(i1,i2,i3));
-	  zl3i(i3) = std::imag(zl3(i1,i2,i3));
-	}
+        for( int i3=0; i3<n3; i3++ )
+        {
+          zl3r(i3) = std::real(zl3(i1,i2,i3));
+          zl3i(i3) = std::imag(zl3(i1,i2,i3));
+        }
 
-	if( usePhysicalTransforms )
-	  ZFFTF(n3dim,pzl3[0],fftsave3c(0));          // NOTE: use forward
-	else
-	  ZFFTB(n3dim,pzl3[0],fftsave3c(0));          // NOTE: use forward
+        if( usePhysicalTransforms )
+          ZFFTF(n3dim,pzl3[0],fftsave3c(0));          // NOTE: use forward
+        else
+          ZFFTB(n3dim,pzl3[0],fftsave3c(0));          // NOTE: use forward
 
-	for( int i3=0; i3<n3; i3++ )
-	{
-	  zl3(i1,i2,i3)=zl3r(i3) + zl3i(i3)*I;
-	}
-      }	
+        for( int i3=0; i3<n3; i3++ )
+        {
+          zl3(i1,i2,i3)=zl3r(i3) + zl3i(i3)*I;
+        }
+      } 
     }
     
     // ------------- INVERSE FFTs in DIRECTION 1  -----------------
@@ -1516,28 +1516,28 @@ int FourierTransform::backwardTransform( void *zl, RealArray & u, const int mc  
       // LocalReal scaleFactor = 1./(n1*n2);
       for( int i2=i2a; i2<=i2b; i2++ )
       {
-	int i3=0;
-	for( int i1=0; i1<n1; i1++ )
-	{
-	  zl1r(i1)=std::real(zl3(i1,i2,i3)); 
-	  zl1i(i1)=std::imag(zl3(i1,i2,i3));
-	}
+        int i3=0;
+        for( int i1=0; i1<n1; i1++ )
+        {
+          zl1r(i1)=std::real(zl3(i1,i2,i3)); 
+          zl1i(i1)=std::imag(zl3(i1,i2,i3));
+        }
 
-	// inverse transform: 
-	if( usePhysicalTransforms )
-	  ZFFTF( n1dim,pzl1[0],fftsave1c(0) );
-	else
-	  ZFFTB( n1dim,pzl1[0],fftsave1c(0) );
+        // inverse transform: 
+        if( usePhysicalTransforms )
+          ZFFTF( n1dim,pzl1[0],fftsave1c(0) );
+        else
+          ZFFTB( n1dim,pzl1[0],fftsave1c(0) );
 
-	i3=i3a;
-	int i=0;
-	for( int i1=i1a; i1<=i1b; i1++ )
-	{
-	  u(i1,i2,i3,mc)=zl1r(i)*scaleFactor;  // save real part 
-	  i++;
-	}
+        i3=i3a;
+        int i=0;
+        for( int i1=i1a; i1<=i1b; i1++ )
+        {
+          u(i1,i2,i3,mc)=zl1r(i)*scaleFactor;  // save real part 
+          i++;
+        }
       } // end for i2
-	
+        
     }
     else if( i2a==i2b )
     {
@@ -1545,26 +1545,26 @@ int FourierTransform::backwardTransform( void *zl, RealArray & u, const int mc  
       // LocalReal scaleFactor = 1./(n1*n3);
       for( int i3=i3a; i3<=i3b; i3++ )
       {
-	int i2=0;
-	for( int i1=0; i1<n1; i1++ )
-	{
-	  zl1r(i1)=std::real(zl3(i1,i2,i3)); 
-	  zl1i(i1)=std::imag(zl3(i1,i2,i3));
-	}
+        int i2=0;
+        for( int i1=0; i1<n1; i1++ )
+        {
+          zl1r(i1)=std::real(zl3(i1,i2,i3)); 
+          zl1i(i1)=std::imag(zl3(i1,i2,i3));
+        }
 
-	// inverse transform: 
-	if( usePhysicalTransforms )
-	  ZFFTF( n1dim,pzl1[0],fftsave1c(0) );
-	else
-	  ZFFTB( n1dim,pzl1[0],fftsave1c(0) );
+        // inverse transform: 
+        if( usePhysicalTransforms )
+          ZFFTF( n1dim,pzl1[0],fftsave1c(0) );
+        else
+          ZFFTB( n1dim,pzl1[0],fftsave1c(0) );
 
-	i2=i2a;
-	int i=0;
-	for( int i1=i1a; i1<=i1b; i1++ )
-	{
-	  u(i1,i2,i3,mc)=zl1r(i)*scaleFactor;  // save real part 
-	  i++;
-	}
+        i2=i2a;
+        int i=0;
+        for( int i1=i1a; i1<=i1b; i1++ )
+        {
+          u(i1,i2,i3,mc)=zl1r(i)*scaleFactor;  // save real part 
+          i++;
+        }
       } // end for i3
     }
     else
@@ -1573,26 +1573,26 @@ int FourierTransform::backwardTransform( void *zl, RealArray & u, const int mc  
       // LocalReal scaleFactor = 1./(n2*n3);
       for( int i3=i3a; i3<=i3b; i3++ )
       {
-	int i1=0;
-	for( int i2=0; i2<n2; i2++ )
-	{
-	  zl2r(i2)=std::real(zl3(i1,i2,i3)); 
-	  zl2i(i2)=std::imag(zl3(i1,i2,i3));
-	}
+        int i1=0;
+        for( int i2=0; i2<n2; i2++ )
+        {
+          zl2r(i2)=std::real(zl3(i1,i2,i3)); 
+          zl2i(i2)=std::imag(zl3(i1,i2,i3));
+        }
 
-	// inverse transform: 
-	if( usePhysicalTransforms )
-	  ZFFTF( n2dim,pzl2[0],fftsave2c(0) );
-	else
-	  ZFFTB( n2dim,pzl2[0],fftsave2c(0) );
+        // inverse transform: 
+        if( usePhysicalTransforms )
+          ZFFTF( n2dim,pzl2[0],fftsave2c(0) );
+        else
+          ZFFTB( n2dim,pzl2[0],fftsave2c(0) );
 
-	i1=i1a;
-	int i=0;
-	for( int i2=i2a; i2<=i2b; i2++ )
-	{
-	  u(i1,i2,i3,mc)=zl2r(i)*scaleFactor;  // save real part 
-	  i++;
-	}
+        i1=i1a;
+        int i=0;
+        for( int i2=i2a; i2<=i2b; i2++ )
+        {
+          u(i1,i2,i3,mc)=zl2r(i)*scaleFactor;  // save real part 
+          i++;
+        }
       } // end for i3
     }
 
@@ -1632,21 +1632,21 @@ int FourierTransform::backwardTransform( void *zl, RealArray & u, const int mc  
     {
       for( int i1=0; i1<n1; i1++ )
       {
-	for( int i3=0; i3<n3; i3++ )
-	{
-	  zl3r(i3) = std::real(zl(i1,i2,i3));
-	  zl3i(i3) = std::imag(zl(i1,i2,i3));
-	}
+        for( int i3=0; i3<n3; i3++ )
+        {
+          zl3r(i3) = std::real(zl(i1,i2,i3));
+          zl3i(i3) = std::imag(zl(i1,i2,i3));
+        }
 
         if( usePhysicalTransforms )
-	  ZFFTF(n3,pzl3[0],fftsave3c(0));
-	else
-	  ZFFTB(n3,pzl3[0],fftsave3c(0));
+          ZFFTF(n3,pzl3[0],fftsave3c(0));
+        else
+          ZFFTB(n3,pzl3[0],fftsave3c(0));
 
-	for( int i3=0; i3<n3; i3++ )
-	{
-	  zl(i1,i2,i3)=zl3r(i3) + zl3i(i3)*I;
-	}
+        for( int i3=0; i3<n3; i3++ )
+        {
+          zl(i1,i2,i3)=zl3r(i3) + zl3i(i3)*I;
+        }
       }
     }
     
@@ -1655,21 +1655,21 @@ int FourierTransform::backwardTransform( void *zl, RealArray & u, const int mc  
     {
       for( int i1=0; i1<n1; i1++ )
       {
-	for( int i2=0; i2<n2; i2++ )
-	{
-	  zl2r(i2) = std::real(zl(i1,i2,i3));
-	  zl2i(i2) = std::imag(zl(i1,i2,i3));
-	}
+        for( int i2=0; i2<n2; i2++ )
+        {
+          zl2r(i2) = std::real(zl(i1,i2,i3));
+          zl2i(i2) = std::imag(zl(i1,i2,i3));
+        }
 
         if( usePhysicalTransforms )
-  	  ZFFTF(n2,pzl2[0],fftsave2c(0));
+          ZFFTF(n2,pzl2[0],fftsave2c(0));
         else
-  	  ZFFTB(n2,pzl2[0],fftsave2c(0));
+          ZFFTB(n2,pzl2[0],fftsave2c(0));
 
-	for( int i2=0; i2<n2; i2++ )
-	{
-	  zl(i1,i2,i3)=zl2r(i2) + zl2i(i2)*I;
-	}
+        for( int i2=0; i2<n2; i2++ )
+        {
+          zl(i1,i2,i3)=zl2r(i2) + zl2i(i2)*I;
+        }
       }
     }
     
@@ -1679,22 +1679,22 @@ int FourierTransform::backwardTransform( void *zl, RealArray & u, const int mc  
     {
       for( int i2=0; i2<n2; i2++ )
       {
-	for( int i1=0; i1<n1; i1++ )
-	{
-	  zl1r(i1) = std::real(zl(i1,i2,i3));
-	  zl1i(i1) = std::imag(zl(i1,i2,i3));
-	}
+        for( int i1=0; i1<n1; i1++ )
+        {
+          zl1r(i1) = std::real(zl(i1,i2,i3));
+          zl1i(i1) = std::imag(zl(i1,i2,i3));
+        }
 
         if( usePhysicalTransforms )
-  	  ZFFTF(n1,pzl1[0],fftsave1c(0));
+          ZFFTF(n1,pzl1[0],fftsave1c(0));
         else
-  	  ZFFTB(n1,pzl1[0],fftsave1c(0));
+          ZFFTB(n1,pzl1[0],fftsave1c(0));
 
-	for( int i1=0; i1<n1; i1++ )
-	{
-	  // zl(i1,i2,i3)=zl1r(i1) + zl1i(i1)*I;
+        for( int i1=0; i1<n1; i1++ )
+        {
+          // zl(i1,i2,i3)=zl1r(i1) + zl1i(i1)*I;
           u(i1,i2,i3,mc) = zl1r(i1)*scaleFactor;  // return real part 
-	}
+        }
       }
     }
  
@@ -1727,7 +1727,7 @@ int FourierTransform::backwardTransform( void *zl, RealArray & u, const int mc  
   const int & adjustForOneDimension = dbase.get<int>("adjustForOneDimension");
   if( debug & 1 )
     printF("FourierTransform::backwardTransform: FFTMPI: numberOfDimensions=%d, mc=%d adjustForOneDimension=%d\n",
-	   numberOfDimensions,mc,adjustForOneDimension);
+           numberOfDimensions,mc,adjustForOneDimension);
 
   int *dir = dbase.get<int[3]>("dir");
   const int dir1=dir[0], dir2=dir[1], dir3=dir[2];
@@ -1774,16 +1774,16 @@ int FourierTransform::backwardTransform( void *zl, RealArray & u, const int mc  
     {
       for( int i1=0; i1<n1; i1++ )
       {
-	// zl(i1,i2,i3) = work[i] + work[i+1]*I; i+=2;
+        // zl(i1,i2,i3) = work[i] + work[i+1]*I; i+=2;
         work[i] = std::real(zl(i1,i2,i3));  i++;
         work[i] = std::imag(zl(i1,i2,i3));  i++;
-	if( adjustForOneDimension==1 )
-	{
+        if( adjustForOneDimension==1 )
+        {
           // --- add data for a 1D FFT on a 2D array - x-direction
-	  work[i] = 0.;  i++;
-	  work[i] = 0.;  i++;
-	}
-	
+          work[i] = 0.;  i++;
+          work[i] = 0.;  i++;
+        }
+        
       }
     }
   }
@@ -1851,9 +1851,9 @@ int FourierTransform::backwardTransform( void *zl, RealArray & u, const int mc  
     {
       for( int i1=i1a; i1<=i1b; i1++ )
       {
-	u(i1,i2,i3,mc) = work[i]; i+=2;  // real part 
-	if( adjustForOneDimension==1 )
-	  i+=2;
+        u(i1,i2,i3,mc) = work[i]; i+=2;  // real part 
+        if( adjustForOneDimension==1 )
+          i+=2;
       }
     }
   }
@@ -1865,14 +1865,14 @@ int FourierTransform::backwardTransform( void *zl, RealArray & u, const int mc  
   //   for( int i3=0; i3<n3; i3++ )
   //   {
   //     if( numberOfDimensions==3 )
-  // 	printF("---------------- i3=%d ---------------\n",i3);
+  //    printF("---------------- i3=%d ---------------\n",i3);
   //     for( int i2=0; i2<n2; i2++ )
   //     {
-  // 	for( int i1=0; i1<n1; i1++ )
-  // 	{
-  // 	  printF("[%9.2e,%9.2e] ",std::real(zl(i1,i2,i3)),std::imag(zl(i1,i2,i3)));
-  // 	}
-  // 	printF("\n");
+  //    for( int i1=0; i1<n1; i1++ )
+  //    {
+  //      printF("[%9.2e,%9.2e] ",std::real(zl(i1,i2,i3)),std::imag(zl(i1,i2,i3)));
+  //    }
+  //    printF("\n");
   //     }
   //   }
   // }
@@ -1950,7 +1950,7 @@ int FourierTransform::periodicUpdate( RealArray & u, const Range & C /* = nullRa
   if( !dbase.has_key("ghostBoundaryUpdate") )
   {
     printF("FourierTransform::periodicUpdate:ERROR: GhostBoundaryUpdate has not been initialized\n"
-	   "  You should call the intialize routine that takes a realMappedGridFunction\n");
+           "  You should call the intialize routine that takes a realMappedGridFunction\n");
     OV_ABORT("ERROR");
   }
 
@@ -1973,8 +1973,8 @@ int FourierTransform::periodicUpdate( RealArray & u, const Range & C /* = nullRa
 /// \param uLocal (input/output) : update periodic boundaries 
 // ============================================================================================
 int FourierTransform::periodicUpdate( const IntegerArray & gridIndexRange, const IntegerArray & dimension,
-				      const IntegerArray & indexRange, const IntegerArray & isPeriodic, 
-				      realArray & x, RealArray & u, const int mc  )
+                                      const IntegerArray & indexRange, const IntegerArray & isPeriodic, 
+                                      realArray & x, RealArray & u, const int mc  )
 {
 
   if( true )
@@ -2025,7 +2025,7 @@ int FourierTransform::periodicUpdate( const IntegerArray & gridIndexRange, const
 
     if( debug & 1 )
       printF("FourierTransform::periodicUpdate: numberOfDimensions=%d, mc=%d\n",
-	     numberOfDimensions,mc);
+             numberOfDimensions,mc);
 
     IndexBox & fftBox = dbase.get<IndexBox>("fftBox");
 
@@ -2056,27 +2056,27 @@ int FourierTransform::periodicUpdate( const IntegerArray & gridIndexRange, const
       int side=0, axis=0;
       if( n1>1 )
       {
-	getBoundaryIndex( gid,side,axis,I1,I2,I3 );
-	// right = left 
-	u(I1+n1,I2,I3,mc) = u(I1,I2,I3,mc);
+        getBoundaryIndex( gid,side,axis,I1,I2,I3 );
+        // right = left 
+        u(I1+n1,I2,I3,mc) = u(I1,I2,I3,mc);
       }
   
       if( n2>1 )
       {
-	side=0, axis=1;
-	getBoundaryIndex( gid,side,axis,I1,I2,I3 );
-	// top = bottom
-	// Index J1 = Range(I1.getBase(),I1.getBound()+1); // add a point 
-	u(I1,I2+n2,I3,mc) = u(I1,I2,I3,mc);
+        side=0, axis=1;
+        getBoundaryIndex( gid,side,axis,I1,I2,I3 );
+        // top = bottom
+        // Index J1 = Range(I1.getBase(),I1.getBound()+1); // add a point 
+        u(I1,I2+n2,I3,mc) = u(I1,I2,I3,mc);
       }
   
       if( numberOfDimensions==3 && n3>1 )
       {
-	side=0, axis=2;
-	getBoundaryIndex( gid,side,axis,I1,I2,I3 );
-	// back = front
-	// Index J2 = Range(I2.getBase(),I2.getBound()+1); // add a point 
-	u(I1,I2,I3+n3,mc) = u(I1,I2,I3,mc);
+        side=0, axis=2;
+        getBoundaryIndex( gid,side,axis,I1,I2,I3 );
+        // back = front
+        // Index J2 = Range(I2.getBase(),I2.getBound()+1); // add a point 
+        u(I1,I2,I3+n3,mc) = u(I1,I2,I3,mc);
       }
   
     }
@@ -2093,29 +2093,29 @@ int FourierTransform::periodicUpdate( const IntegerArray & gridIndexRange, const
       int side=0, axis=0;
       if( n1>1 )
       {
-	getBoundaryIndex( gid,side,axis,I1,I2,I3 );
-	// right = left 
-	// u(I1+n1,I2,I3,mc) = u(I1,I2,I3,mc);
+        getBoundaryIndex( gid,side,axis,I1,I2,I3 );
+        // right = left 
+        // u(I1+n1,I2,I3,mc) = u(I1,I2,I3,mc);
 
-	// J1=I1; J2=I2; J3=I3;
-	// int includeGhost=1;
-	// bool ok1 = ParallelUtility::getLocalArrayBounds(u,uLocal,J1,J2,J3,includeGhost);    
+        // J1=I1; J2=I2; J3=I3;
+        // int includeGhost=1;
+        // bool ok1 = ParallelUtility::getLocalArrayBounds(u,uLocal,J1,J2,J3,includeGhost);    
 
-	// K1=I1; K2=I2; K3=I3;
-	// int includeGhost=1;
-	// bool ok2 = ParallelUtility::getLocalArrayBounds(u,uLocal,K1,K2,K3,includeGhost);    
+        // K1=I1; K2=I2; K3=I3;
+        // int includeGhost=1;
+        // bool ok2 = ParallelUtility::getLocalArrayBounds(u,uLocal,K1,K2,K3,includeGhost);    
       
-	// realSerialArray src, dest;
-	// if( ok1 )
-	// 	src.redim(J1,J2,J3);
-	// if( ok2 )
-	// 	dest.redim(K1,K2,K3);
+        // realSerialArray src, dest;
+        // if( ok1 )
+        //      src.redim(J1,J2,J3);
+        // if( ok2 )
+        //      dest.redim(K1,K2,K3);
 
-	// realSerialArray dest(J1,J2,J3);
-	// int destProcessor=0, srcProcessor=0;
-	// src = u(I1,I2,I3,mc);
-	// copyArray( dest, destProcessor, src, srcProcessor );
-	// u(I1+n1,I2,I3,mc)=dest;
+        // realSerialArray dest(J1,J2,J3);
+        // int destProcessor=0, srcProcessor=0;
+        // src = u(I1,I2,I3,mc);
+        // copyArray( dest, destProcessor, src, srcProcessor );
+        // u(I1+n1,I2,I3,mc)=dest;
       
       }
 

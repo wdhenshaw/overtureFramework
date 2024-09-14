@@ -3549,6 +3549,16 @@ solve( realCompositeGridFunction & uu, realCompositeGridFunction & f )
     //  
     //               KSP_CONVERGED_ITERATING          =  0} KSPConvergedReason;
 
+     // KSP_CONVERGED_RTOL_NORMAL     = 1,
+     // KSP_CONVERGED_ATOL_NORMAL     = 9,
+     // KSP_CONVERGED_RTOL            = 2,
+     // KSP_CONVERGED_ATOL            = 3,
+     // KSP_CONVERGED_ITS             = 4,
+     // KSP_CONVERGED_CG_NEG_CURVE    = 5,
+     // KSP_CONVERGED_CG_CONSTRAINED  = 6,
+     // KSP_CONVERGED_STEP_LENGTH     = 7,
+     // KSP_CONVERGED_HAPPY_BREAKDOWN = 8,    
+
         printF("PETScEquationSolver:ERROR: Solution diverged! reason=%i : \n",(int)reason);
         printF("     KSP_DIVERGED_NULL                = -2,\n"
                       "     KSP_DIVERGED_ITS                 = -3,\n"

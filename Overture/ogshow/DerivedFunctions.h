@@ -51,6 +51,7 @@ class DerivedFunctions
     // Solid mechanics
     displacementNorm,
     stressNorm,
+    absoluteValue,
     numberOfDerivedItems
   };
 

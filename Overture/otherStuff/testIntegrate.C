@@ -78,45 +78,45 @@ main(int argc, char **argv)
       aString line;
       line=argv[i];
       if( line(0,6)=="tz=trig" )
-	tz=1;
+        tz=1;
       else if( line.matches("-hybrid") )
       {
-	useHybrid=true;
+        useHybrid=true;
       }
       else if( line.matches("-surfOnly") )
       {
-	checkVolumes=false;
+        checkVolumes=false;
       }
       else if( line.matches("-interactive") )
       {
-	interactiveStitching=true;
+        interactiveStitching=true;
       }
       else if( line.matches("-checkDataBase") )
       {
-	checkDataBase=true;
+        checkDataBase=true;
       }
       else if( line.matches("-amr") )
       {
-	amr=true;
+        amr=true;
       }
       else if( len=line.matches("-debug=") )
       {
-	sScanF(line(len,line.length()-1),"%i",&Integrate::debug);
-	printF("Setting Integrate::debug=%i\n",Integrate::debug);
+        sScanF(line(len,line.length()-1),"%i",&Integrate::debug);
+        printF("Setting Integrate::debug=%i\n",Integrate::debug);
       }
       else if( len=line.matches("-surfaceArea=") )
       {
-	sScanF(line(len,line.length()-1),"%e",&exactSurfaceArea);
-	printF("Setting exactSurfaceArea=%16.8e\n",exactSurfaceArea);
+        sScanF(line(len,line.length()-1),"%e",&exactSurfaceArea);
+        printF("Setting exactSurfaceArea=%16.8e\n",exactSurfaceArea);
       }
       else if( len=line.matches("-volume=") )
       {
-	sScanF(line(len,line.length()-1),"%e",&exactVolume);
-	printF("Setting exactVolume=%16.8e\n",exactVolume);
+        sScanF(line(len,line.length()-1),"%e",&exactVolume);
+        printF("Setting exactVolume=%16.8e\n",exactVolume);
       }
       else if( len=line.matches("-grid=") )
       {
-	numberOfGridsToTest=1;
+        numberOfGridsToTest=1;
         gridName[0]=line(len,line.length()-1);
       }
     }
@@ -216,53 +216,53 @@ main(int argc, char **argv)
 
       if( amr )
       {
-	// in this case we add refinement grids 
-	cg.update(GridCollection::THErefinementLevel);  // indicate that we are want a refinement level
+        // in this case we add refinement grids 
+        cg.update(GridCollection::THErefinementLevel);  // indicate that we are want a refinement level
 
-	IntegerArray range(2,3), factor(3);
-	int ratio=2;  // refinement ratio
-	factor = ratio;                            // refinement factor 
-	int grid=0,level=1;
-	
-	grid = 1;                              // refine this base grid
-	range(0,0) = 2; range(1,0) = 6;
-	range(0,1) = 2; range(1,1) = 4;
-	range(0,2) = 0; range(1,2) = 2;
-	cg.addRefinement(range, factor, level, grid);
+        IntegerArray range(2,3), factor(3);
+        int ratio=2;  // refinement ratio
+        factor = ratio;                            // refinement factor 
+        int grid=0,level=1;
+        
+        grid = 1;                              // refine this base grid
+        range(0,0) = 2; range(1,0) = 6;
+        range(0,1) = 2; range(1,1) = 4;
+        range(0,2) = 0; range(1,2) = 2;
+        cg.addRefinement(range, factor, level, grid);
 
-	grid = 2;                              // refine this base grid
-	range(0,0) = 0; range(1,0) = 6;
-	range(0,1) = 0; range(1,1) = 4;
-	range(0,2) = 0; range(1,2) = 2;
-	cg.addRefinement(range, factor, level, grid);
+        grid = 2;                              // refine this base grid
+        range(0,0) = 0; range(1,0) = 6;
+        range(0,1) = 0; range(1,1) = 4;
+        range(0,2) = 0; range(1,2) = 2;
+        cg.addRefinement(range, factor, level, grid);
 
 
-	// here is a second refinement at level=1
-// 	range(0,0) = 6; range(1,0) = 8;
-// 	range(0,1) = 1; range(1,1) = 4;
-// 	cg.addRefinement(range, factor, level, grid);
+        // here is a second refinement at level=1
+//      range(0,0) = 6; range(1,0) = 8;
+//      range(0,1) = 1; range(1,1) = 4;
+//      cg.addRefinement(range, factor, level, grid);
 
-	// here is a first refinement at level=2
-	// level=2;
-	// range(0,0) = 5*ratio; range(1,0) = 7*ratio;
-	// range(0,1) = 3*ratio; range(1,1) = 4*ratio;
-	// cg.addRefinement(range, factor, level, grid);
+        // here is a first refinement at level=2
+        // level=2;
+        // range(0,0) = 5*ratio; range(1,0) = 7*ratio;
+        // range(0,1) = 3*ratio; range(1,1) = 4*ratio;
+        // cg.addRefinement(range, factor, level, grid);
 
       
-	cg.update(GridCollection::THErefinementLevel);  
-	//  cg.setMaskAtRefinements();
+        cg.update(GridCollection::THErefinementLevel);  
+        //  cg.setMaskAtRefinements();
 
-	Ogen ogen;
+        Ogen ogen;
         ogen.updateRefinement(cg);
 
-	if( true )
-	{
-	  psp.set(GI_TOP_LABEL,"Grid with refinements"); 
-	  PlotIt::plot(ps,cg,psp);
-	}
+        if( true )
+        {
+          psp.set(GI_TOP_LABEL,"Grid with refinements"); 
+          PlotIt::plot(ps,cg,psp);
+        }
       
-	u.updateToMatchGrid(cg);
-	u=1.;
+        u.updateToMatchGrid(cg);
+        u=1.;
       }
 
       const int nd=cg.numberOfDimensions();
@@ -271,12 +271,12 @@ main(int argc, char **argv)
       real xIntegral=0., xSquaredIntegral=(1./3.)*pow(radius,2.)*areaTrue;
       for( int axis=0; axis<cg.numberOfDimensions(); axis++ )
       {
-	printF(" Integral(x%i)   = %11.4e, true=%11.4e, err=%7.1e\n",
-	       axis,integral(axis),xIntegral,fabs(integral(axis)-xIntegral));
+        printF(" Integral(x%i)   = %11.4e, true=%11.4e, err=%7.1e\n",
+               axis,integral(axis),xIntegral,fabs(integral(axis)-xIntegral));
       }
       for( int axis=0; axis<cg.numberOfDimensions(); axis++ )
       {
-	printF(" Integral(x%i^2) = %11.4e, true=%11.4e, err=%7.1e\n",
+        printF(" Integral(x%i^2) = %11.4e, true=%11.4e, err=%7.1e\n",
                axis,integral(axis+nd),xSquaredIntegral,fabs(integral(axis+nd)-xSquaredIntegral));
       }
     }
@@ -302,9 +302,9 @@ main(int argc, char **argv)
       
       for( surface=0; surface<2; surface++ )
       {
-	surfaceArea = integrate.surfaceIntegral(u,surface);
-	printF("Grid twoDrop: surfaceArea for drop %i = %e, error=%e \n",surface,surfaceArea,
-	       fabs(surfaceArea-2.*Pi*.3));
+        surfaceArea = integrate.surfaceIntegral(u,surface);
+        printF("Grid twoDrop: surfaceArea for drop %i = %e, error=%e \n",surface,surfaceArea,
+               fabs(surfaceArea-2.*Pi*.3));
       }
       
     }
@@ -347,8 +347,8 @@ main(int argc, char **argv)
 
       if( false )
       {
-	psp.set(GI_TOP_LABEL,"Grid with refinements"); 
-	PlotIt::plot(ps,cg,psp);
+        psp.set(GI_TOP_LABEL,"Grid with refinements"); 
+        PlotIt::plot(ps,cg,psp);
       }
       
       u.updateToMatchGrid(cg);
@@ -384,43 +384,43 @@ main(int argc, char **argv)
 
       if( amr )
       {
-	// in this case we add refinement grids 
-	cg.update(GridCollection::THErefinementLevel);  // indicate that we are want a refinement level
+        // in this case we add refinement grids 
+        cg.update(GridCollection::THErefinementLevel);  // indicate that we are want a refinement level
 
-	IntegerArray range(2,3), factor(3);
-	int ratio=2;  // refinement ratio
+        IntegerArray range(2,3), factor(3);
+        int ratio=2;  // refinement ratio
 
-	range(0,0) = 2; range(1,0) = 6;
-	range(0,1) = 2; range(1,1) = 4;
-	range(0,2) = 0; range(1,2) =  0;
-	factor = ratio;                            // refinement factor 
-	Integer level = 1;
-	int grid = 1;                              // refine this base grid
-	cg.addRefinement(range, factor, level, grid);
+        range(0,0) = 2; range(1,0) = 6;
+        range(0,1) = 2; range(1,1) = 4;
+        range(0,2) = 0; range(1,2) =  0;
+        factor = ratio;                            // refinement factor 
+        Integer level = 1;
+        int grid = 1;                              // refine this base grid
+        cg.addRefinement(range, factor, level, grid);
 
-	// here is a second refinement at level=1
-	range(0,0) = 6; range(1,0) = 8;
-	range(0,1) = 1; range(1,1) = 4;
-	cg.addRefinement(range, factor, level, grid);
+        // here is a second refinement at level=1
+        range(0,0) = 6; range(1,0) = 8;
+        range(0,1) = 1; range(1,1) = 4;
+        cg.addRefinement(range, factor, level, grid);
 
-	// here is a first refinement at level=2
-	level=2;
-	range(0,0) = 5*ratio; range(1,0) = 7*ratio;
-	range(0,1) = 3*ratio; range(1,1) = 4*ratio;
-	cg.addRefinement(range, factor, level, grid);
+        // here is a first refinement at level=2
+        level=2;
+        range(0,0) = 5*ratio; range(1,0) = 7*ratio;
+        range(0,1) = 3*ratio; range(1,1) = 4*ratio;
+        cg.addRefinement(range, factor, level, grid);
 
       
-	cg.update(GridCollection::THErefinementLevel);  
-	cg.setMaskAtRefinements();
+        cg.update(GridCollection::THErefinementLevel);  
+        cg.setMaskAtRefinements();
 
-	if( true )
-	{
-	  psp.set(GI_TOP_LABEL,"Grid with refinements"); 
-	  PlotIt::plot(ps,cg,psp);
-	}
+        if( true )
+        {
+          psp.set(GI_TOP_LABEL,"Grid with refinements"); 
+          PlotIt::plot(ps,cg,psp);
+        }
       
-	u.updateToMatchGrid(cg);
-	u=1.;
+        u.updateToMatchGrid(cg);
+        u=1.;
       }
       
       int surface=0;
@@ -438,22 +438,22 @@ main(int argc, char **argv)
       integrate.useAdaptiveMeshRefinementGrids(false);
       real surfaceAreaNoAMR = integrate.surfaceIntegral(u,surface);
       printF("Grid cic2: surfaceArea for circle = %e, error=%e (no AMR)\n",surfaceAreaNoAMR,
-	     fabs(surfaceAreaNoAMR-trueArea));
+             fabs(surfaceAreaNoAMR-trueArea));
       if( amr )
       {
-	integrate.useAdaptiveMeshRefinementGrids(true);
-	surfaceArea = integrate.surfaceIntegral(u,surface);
-	printF("Grid cic2: surfaceArea for circle = %e, error=%e (with AMR)\n",surfaceArea,fabs(surfaceArea-trueArea));
+        integrate.useAdaptiveMeshRefinementGrids(true);
+        surfaceArea = integrate.surfaceIntegral(u,surface);
+        printF("Grid cic2: surfaceArea for circle = %e, error=%e (with AMR)\n",surfaceArea,fabs(surfaceArea-trueArea));
       
-	int numFaces =integrate.numberOfFacesOnASurface(surface); 
-	printF("INFO: There are a total of %i faces on surface=%i (including AMR grids)\n",numFaces,surface);
+        int numFaces =integrate.numberOfFacesOnASurface(surface); 
+        printF("INFO: There are a total of %i faces on surface=%i (including AMR grids)\n",numFaces,surface);
       
-	int fside, faxis, fgrid;
-	for( int face=0; face<numFaces; face++ )
-	{
-	  integrate.getFace(surface,face, fside,faxis,fgrid);
-	  printF("INFO: surface=%i: face=%i (grid,side,axis)=(%i,%i,%i)\n",surface,face,fgrid,fside,faxis);
-	}
+        int fside, faxis, fgrid;
+        for( int face=0; face<numFaces; face++ )
+        {
+          integrate.getFace(surface,face, fside,faxis,fgrid);
+          printF("INFO: surface=%i: face=%i (grid,side,axis)=(%i,%i,%i)\n",surface,face,fgrid,fside,faxis);
+        }
       }
       
     }
@@ -525,9 +525,9 @@ main(int argc, char **argv)
       volume = integrate.volumeIntegral(u);
 
       if( exactVolume>0. )
-	printF("volume = %e, error=%12.4e \n",volume,volume-exactVolume);
+        printF("volume = %e, error=%12.4e \n",volume,volume-exactVolume);
       else
-	printF("volume = %e \n",volume);
+        printF("volume = %e \n",volume);
 
       surfaceArea = integrate.surfaceIntegral(u);
 
@@ -535,13 +535,13 @@ main(int argc, char **argv)
     
       if( gridName[it](0,2)=="cic" )
       {
-	printF("Error in volume = %e \n", fabs(volume-( 4.*4.-Pi*SQR(.5) )) );
-	printF("Error in surface area = %e \n",fabs(surfaceArea-( 4.*4 + Pi)));
+        printF("Error in volume = %e \n", fabs(volume-( 4.*4.-Pi*SQR(.5) )) );
+        printF("Error in surface area = %e \n",fabs(surfaceArea-( 4.*4 + Pi)));
       }
       else if( gridName[it](0,2)=="sib" )
       {
-	printF("Error in volume = %e \n", fabs(volume-( 4.*4.*4.-4./3.*Pi*.5*.5*.5 )) );
-	printF("Error in surface area = %e \n",fabs(surfaceArea-( 4.*4.*6 + 4.*Pi*SQR(.5) )));
+        printF("Error in volume = %e \n", fabs(volume-( 4.*4.*4.-4./3.*Pi*.5*.5*.5 )) );
+        printF("Error in surface area = %e \n",fabs(surfaceArea-( 4.*4.*6 + 4.*Pi*SQR(.5) )));
       }
     }
     
@@ -553,18 +553,18 @@ main(int argc, char **argv)
       if( integrate.getSurfaceStitcher()!=NULL )
       {
 
-	psp.set(GI_PLOT_UNS_EDGES,true);
-	psp.set(GI_PLOT_UNS_FACES,true);
+        psp.set(GI_PLOT_UNS_EDGES,true);
+        psp.set(GI_PLOT_UNS_FACES,true);
 
-	SurfaceStitcher & stitcher = *integrate.getSurfaceStitcher();
-	if( stitcher.getSurfaceCompositeGrid()!=NULL )
-	{
-	  PlotIt::plot(ps,*stitcher.getSurfaceCompositeGrid(),psp);
-	}
+        SurfaceStitcher & stitcher = *integrate.getSurfaceStitcher();
+        if( stitcher.getSurfaceCompositeGrid()!=NULL )
+        {
+          PlotIt::plot(ps,*stitcher.getSurfaceCompositeGrid(),psp);
+        }
       }
       else
       {
-	PlotIt::plot(ps,cg,psp);
+        PlotIt::plot(ps,cg,psp);
       }
     } // end if useHybrid
 
@@ -572,17 +572,24 @@ main(int argc, char **argv)
     if( checkDataBase )
     {
       // Save the Integrate class to a data base file, then read back in and check the results
+      bool useStreamMode=true;
 
       aString fileName="IntegrateTestFile.hdf";
       if( true )
       {
-	HDF_DataBase db;
-	printF("Saving the Integrate class in file=[%s]\n",(const char*)fileName);
-	db.mount(fileName,"I");
+        HDF_DataBase db;
+        printF("Saving the Integrate class in file=[%s]\n",(const char*)fileName);
+        db.mount(fileName,"I");
 
-	integrate.put( db, "Integrate" );
+        if( useStreamMode )
+          db.setMode(HDF_DataBase::streamOutputMode);
+
+        integrate.put( db, "integrate" );
       
-	db.unmount();
+        if( useStreamMode )
+          db.setMode(HDF_DataBase::normalMode);
+              
+        db.unmount();
       }
       
       Integrate integrate(cg);  // here is a *new* version 
@@ -590,9 +597,13 @@ main(int argc, char **argv)
       HDF_DataBase db;
       printF("Read the Integrate class from file=[%s]\n",(const char*)fileName);
       db.mount(fileName,"R");
+      if( useStreamMode )
+          db.setMode(HDF_DataBase::streamInputMode);
 
-      integrate.get( db, "Integrate" );
+      integrate.get( db, "integrate" );
       
+      if( useStreamMode )
+        db.setMode(HDF_DataBase::normalMode);      
       db.unmount();
       
       // realCompositeGridFunction & weights = integrate.integrationWeights();
@@ -610,9 +621,9 @@ main(int argc, char **argv)
       if( gridName[it].matches("cic") &&  !gridName[it].matches("cic2") )
       {
         // check that the surface=0 is still known
-	int surface=0;
-	surfaceArea = integrate.surfaceIntegral(u,surface);
-	printF("Grid cic: surfaceArea for cylinder = %e, error=%e (computed using DataBase version)\n",surfaceArea,fabs(surfaceArea-Pi));
+        int surface=0;
+        surfaceArea = integrate.surfaceIntegral(u,surface);
+        printF("Grid cic: surfaceArea for cylinder = %e, error=%e (computed using DataBase version)\n",surfaceArea,fabs(surfaceArea-Pi));
 
       }
     } // end checkDataBase

@@ -10,14 +10,19 @@
 #     ogen -noplot objectsGrid -interp=e -order=4 -factor=4 
 #     ogen -noplot objectsGrid -interp=e -order=4 -factor=8
 #
+#     ogen -noplot objectsGrid -prefix=multiObjectsGrid -addBackGround=0 -interp=e -order=2 -factor=2 
+#     ogen -noplot objectsGrid -prefix=multiObjectsGrid -addBackGround=0 -interp=e -order=2 -factor=4 
+#     ogen -noplot objectsGrid -prefix=multiObjectsGrid -addBackGround=0 -interp=e -order=4 -factor=4 
+#
 $prefix="objectsGrid"; 
 $order=2; $factor=1; $interp="i"; # default values
 $orderOfAccuracy = "second order"; $ng=2; $interpType = "implicit for all grids";
 $name=""; $xa=-3.; $xb=5.5; $ya=-3.5; $yb=3.5; $ml=0; 
+$addBackGround=1; 
 # 
 # get command line arguments
 GetOptions( "order=i"=>\$order,"factor=f"=> \$factor,"xa=f"=> \$xa,"xb=f"=> \$xb,"ya=f"=> \$ya,"yb=f"=> \$yb,\
-            "interp=s"=> \$interp,"name=s"=> \$name);
+            "interp=s"=> \$interp,"name=s"=> \$name,"prefix=s"=> \$prefix, "addBackGround=i"=>\$addBackGround );
 # 
 if( $order eq 4 ){ $orderOfAccuracy="fourth order"; $ng=3; }\
 elsif( $order eq 6 ){ $orderOfAccuracy="sixth order"; $ng=4; }\
@@ -63,7 +68,9 @@ create mappings
     $ny = int( ($yb-$ya)/$ds +1.5 ); 
     $nx $ny
     boundary conditions
-      0 0 0 0
+      if( $addBackGround eq 1 ){ $bcCmd="0 0 0 0"; }else{ $bcCmd="1 1 1 1"; }
+      # 0 0 0 0
+      $bcCmd
   exit
 #
 $gridNames="#"; 
@@ -74,44 +81,45 @@ $count=0;
 # For IBeam: 
 $centerHeight=.75; $centerWidth=.25;
 $edgeHeight=.25;   $edgeWidth=1.;
-include iBeam.h
+include $ENV{CG}/mx/runs/scattering/iBeam.h
+# include iBeam.h
 $mapName="iBeamGridBase";
 # 
 $xr=.0; $yr=0; # center for rotation
 $xShift=-1; $yShift=0; $angle=0; 
 $count=$count+1; $gridName="iBeam$count"; $gridNames .= "\n" . $gridName;
-include transform.h
+include $ENV{CG}/mx/runs/scattering/transform.h
 #
 $xShift=-1; $yShift=1.5; $angle=90; 
 $count=$count+1; $gridName="iBeam$count"; $gridNames .= "\n" . $gridName;
-include transform.h
+include $ENV{CG}/mx/runs/scattering/transform.h
 #
 $xShift=-1; $yShift=-1.5; $angle=90; 
 $count=$count+1; $gridName="iBeam$count"; $gridNames .= "\n" . $gridName;
-include transform.h
+include $ENV{CG}/mx/runs/scattering/transform.h
 #
 # --- build base split-ring
 #
 $count=0;
-include splitRing.h
+include $ENV{CG}/mx/runs/scattering/splitRing.h
 $mapName="splitRingGridBase";
 # 
 $xr=.0; $yr=0; # center for rotation
 $xShift=3.5; $yShift=0; $angle=0; 
 $count=$count+1; $gridName="splitRing$count"; $gridNames .= "\n" . $gridName;
-include transform.h
+include $ENV{CG}/mx/runs/scattering/transform.h
 #
 $xShift=3.5; $yShift=1.5; $angle=90; 
 $count=$count+1; $gridName="splitRing$count"; $gridNames .= "\n" . $gridName;
-include transform.h
+include $ENV{CG}/mx/runs/scattering/transform.h
 #
 $xShift=3.5; $yShift=-1.5; $angle=-90; 
 $count=$count+1; $gridName="splitRing$count"; $gridNames .= "\n" . $gridName;
-include transform.h
+include $ENV{CG}/mx/runs/scattering/transform.h
 #
 #
 #  -- build the baseTriangle
-include triangle.h
+include $ENV{CG}/mx/runs/scattering/triangle.h
 #
 # build shifted/rotated/scaled versions
 $count=0;
@@ -120,33 +128,35 @@ $mapName="triangleBase";
 $xr=.5; $yr=0; # center for rotation
 $xShift=0; $yShift=0; $angle=45; 
 $count=$count+1; $gridName="triangle$count"; $gridNames .= "\n" . $gridName;
-include transform.h
+include $ENV{CG}/mx/runs/scattering/transform.h
 # 
 $xShift=0; $yShift=1.5; $angle=20; 
 $count=$count+1; $gridName="triangle$count"; $gridNames .= "\n" . $gridName;
-include transform.h
+include $ENV{CG}/mx/runs/scattering/transform.h
 # 
 $xShift=0; $yShift=-1.5; $angle=-30; 
 $count=$count+1; $gridName="triangle$count"; $gridNames .= "\n" . $gridName;
-include transform.h
+include $ENV{CG}/mx/runs/scattering/transform.h
 # 
 $xShift=1.5; $yShift=0; $angle=-45; 
 $count=$count+1; $gridName="triangle$count"; $gridNames .= "\n" . $gridName;
-include transform.h
+include $ENV{CG}/mx/runs/scattering/transform.h
 # 
 $xShift=1.5; $yShift=1.5; $angle=80; 
 $count=$count+1; $gridName="triangle$count"; $gridNames .= "\n" . $gridName;
-include transform.h
+include $ENV{CG}/mx/runs/scattering/transform.h
 # 
 $xShift=1.5; $yShift=-1.5; $angle=0; 
 $count=$count+1; $gridName="triangle$count"; $gridNames .= "\n" . $gridName;
-include transform.h
+include $ENV{CG}/mx/runs/scattering/transform.h
 #
 exit 
 #
 generate an overlapping grid
-  backGround
-  innerBackGround
+  if( $addBackGround eq 1 ){ $cmd="backGround\n innerBackGround"; }else{ $cmd="innerBackGround"; }
+  $cmd 
+  # backGround
+  # innerBackGround
   $gridNames
   done
   change parameters

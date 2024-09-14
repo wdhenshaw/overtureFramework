@@ -77,8 +77,8 @@ close()
       if( showFile[n]!=NULL )
       {
         if( !showFile[n]->isNull() )
-  	  showFile[n]->unmount();  // unmount the DataBase file *wdh* 050514 -- per Kyle for Jeff
-	delete showFile[n];
+          showFile[n]->unmount();  // unmount the DataBase file *wdh* 050514 -- per Kyle for Jeff
+        delete showFile[n];
       }
     }
     delete [] showFile;  showFile=NULL;
@@ -135,8 +135,8 @@ countNumberOfFramesAndSolutions( const int displayInfo /* =1 */ )
     if( displayInfo && myid==0 )
     {
       cout << "FrameSeries : "<<frameSeriesNames[fs]<<" : "<<frameSeriesInfo(fs,numFrames)<< " frames, "
-	   <<frameSeriesInfo(fs,numSequences)<<" sequences found , "
-	   <<(frameSeriesInfo(fs,isMovingGrid)? " is a moving grid problem" : "is not a moving grid problem")<<endl;
+           <<frameSeriesInfo(fs,numSequences)<<" sequences found , "
+           <<(frameSeriesInfo(fs,isMovingGrid)? " is a moving grid problem" : "is not a moving grid problem")<<endl;
     }
     frameSeriesInfo(fs,numSolutions)=frameSeriesInfo(fs,numFrames); 
   }
@@ -328,7 +328,7 @@ getNumberOfValidFiles( const int displayInfo /* =1 */ )
   if( last<numberOfShowFiles-1 )
   {
     printF("ShowFileReader:: The show files named `%s',...,'%s' are invalid. You may want to delete them. \n",
-	   (const char*)(nameOfShowFile + sPrintF(buff,"%i",last+1)),
+           (const char*)(nameOfShowFile + sPrintF(buff,"%i",last+1)),
            (const char*)(nameOfShowFile + sPrintF(buff,"%i",numberOfShowFiles-1)));
   }    
   numberOfShowFiles=last+1;
@@ -379,8 +379,8 @@ checkSolutionNumber(const aString & routineName, int & solutionNumber )
 //\begin{>>ShowFileReaderInclude.tex}{\subsubsection{getAGrid}} 
 ShowFileReader::ReturnType ShowFileReader::
 getAGrid(MappedGrid & mg, 
-	 int & solutionNumber, 
-	 int frameForGrid /* =useDefaultLocation */ )
+         int & solutionNumber, 
+         int frameForGrid /* =useDefaultLocation */ )
 //----------------------------------------------------------------------
 //\end{ShowFileReaderInclude.tex}
 //----------------------------------------------------------------------
@@ -396,8 +396,8 @@ getAGrid(MappedGrid & mg,
 //\begin{>>ShowFileReaderInclude.tex}{}
 ShowFileReader::ReturnType ShowFileReader::
 getAGrid(GridCollection & cg, 
-	 int & solutionNumber, 
-	 int frameForGrid /* =useDefaultLocation */ )
+         int & solutionNumber, 
+         int frameForGrid /* =useDefaultLocation */ )
 //----------------------------------------------------------------------
 // /Description:
 //   Get grid GridCollection or CompositeGrid from a show file. If this a moving grid problem then return the grid
@@ -442,7 +442,7 @@ getAGrid(GridCollection & cg,
       // printf(" names[0]=%s \n",(const char*)names[0]);
       if( names[0]=="decompressed" )
       {
-	printF("***** decompressed file found ******\n");
+        printF("***** decompressed file found ******\n");
         showFile[0]->setMode(GenericDataBase::noStreamMode);
       }
       
@@ -457,7 +457,7 @@ getAGrid(GridCollection & cg,
        return gridFound; 
       else
       {
-	printF("ShowFileReader:getAGrid: Error: there are no frames and no grids in this file! \n");
+        printF("ShowFileReader:getAGrid: Error: there are no frames and no grids in this file! \n");
         Overture::abort("error");
       }
     }
@@ -506,14 +506,14 @@ getAGrid(GridCollection & cg,
     cg.get(currentFrame,"CompositeGrid");
     if( debug & 2 )
       printF("ShowFileReader:getAGrid: solutionNumber=%i, get a new CompositeGrid, numberOfComponentGrids=%i\n",
-	     solutionNumber-1,cg.numberOfComponentGrids());
+             solutionNumber-1,cg.numberOfComponentGrids());
   }
   else if( currentFrame.locate(cgDir,"GridCollection","GridCollectionData")==0 )
   {
     cg.get(currentFrame,"GridCollection");
     if( debug & 2 )
       printF("ShowFileReader:getAGrid: solutionNumber=%i, get a new GridCollection, numberOfComponentGrids=%i\n",
-	     solutionNumber-1,cg.numberOfComponentGrids());
+             solutionNumber-1,cg.numberOfComponentGrids());
   }
   else 
   {
@@ -559,7 +559,7 @@ getHeaderComments(int & numberOfHeaderComments0)
 ShowFileReader::ReturnType ShowFileReader::
 getASolution(int & solutionNumber,
              MappedGrid & mg,
-	     realMappedGridFunction & u)
+             realMappedGridFunction & u)
 //----------------------------------------------------------------------
 //\end{ShowFileReaderInclude.tex}
 //----------------------------------------------------------------------
@@ -577,7 +577,7 @@ getASolution(int & solutionNumber,
 ShowFileReader::ReturnType ShowFileReader::
 getASolution(int & solutionNumber,
              GridCollection & cg,
-	     realGridCollectionFunction & u)
+             realGridCollectionFunction & u)
 //----------------------------------------------------------------------
 // /Description:
 //   Get grid (GridCollection or CompositeGrid) and a grid function (realGridCollectionFunction
@@ -612,7 +612,7 @@ getASolution(int & solutionNumber,
   // on a previous call
 
 //   printF("++ShowFileReader::getASolution: frameSeries=%i isAMovingGrid=%i frameNumberForGrid=%i solutionNumber=%i\n",
-// 	 currentFrameSeries,isAMovingGrid(),frameNumberForGrid,solutionNumber);
+//       currentFrameSeries,isAMovingGrid(),frameNumberForGrid,solutionNumber);
   
   if( cg.numberOfComponentGrids()==0 || ( isAMovingGrid() &&  frameNumberForGrid!=solutionNumber) ) 
   {
@@ -651,7 +651,7 @@ getASolution(int & solutionNumber,
     if( !isAMovingGrid() && frameForGrid!=frameNumberForGrid )
     {
       printF("--SFR-- read in a new grid for solutionNumber=%i (frameForGrid=%i) \n",
-	     solutionNumber,frameForGrid);
+             solutionNumber,frameForGrid);
 
       gridWasFound = getAGrid(cg,solutionNumber,frameForGrid);
       if( gridWasFound )
@@ -770,30 +770,30 @@ getFrame(int solutionNumber /* = -1 */)
       {
         // If the fileNumberForFrame list has been constructed then use it:
         //   fileNumberForFrame[frameNumber] = subFile where frame is found 
-	std::vector<int> & fileNumberForFrame = dbase.get<vector<int> >("fileNumberForFrame");
-	fileNumber =fileNumberForFrame[solutionNumber-1];
+        std::vector<int> & fileNumberForFrame = dbase.get<vector<int> >("fileNumberForFrame");
+        fileNumber =fileNumberForFrame[solutionNumber-1];
       }
       else
       {
         // By default we can often compute the sub-file where the frame is found. 
-	const int fileSolution = (solutionNumber-1)*numberOfFrameSeries+currentFrameSeries;
-	fileNumber= min( (fileSolution)/numberOfFramesPerFile, numberOfShowFiles-1);
+        const int fileSolution = (solutionNumber-1)*numberOfFrameSeries+currentFrameSeries;
+        fileNumber= min( (fileSolution)/numberOfFramesPerFile, numberOfShowFiles-1);
       }
       
       assert( fileNumber<numberOfShowFiles );
 
       if( showFile[fileNumber]==NULL || showFile[fileNumber]->isNull() )
-	openShowFile(fileNumber);
+        openShowFile(fileNumber);
       if ( showFile[fileNumber]->locate(frameSeriesDB,frameSeriesNames[currentFrameSeries],"frameSeries")==0 )
-	found = frameSeriesDB.locate(currentFrame,frameName,"frame")==0;
+        found = frameSeriesDB.locate(currentFrame,frameName,"frame")==0;
 
       if( false )
-	printF("ShowFileReader::getFrame: Look for solution %i in fileNumber=%i : found=%i "
-	       "(numberOfFramesPerFile=%i,numberOfFrameSeries=%i)\n",solutionNumber,fileNumber,(int)found,
-	       numberOfFramesPerFile,numberOfFrameSeries);
+        printF("ShowFileReader::getFrame: Look for solution %i in fileNumber=%i : found=%i "
+               "(numberOfFramesPerFile=%i,numberOfFrameSeries=%i)\n",solutionNumber,fileNumber,(int)found,
+               numberOfFramesPerFile,numberOfFrameSeries);
 
-      if( found )
-	printF("--SFR-- getFrame: solution %i found in file %i.\n",solutionNumber,fileNumber);
+      if( 1==0 && found )
+        printF("--SFR-- getFrame: solution %i found in file %i.\n",solutionNumber,fileNumber);
     }
 
     if( !found )
@@ -805,47 +805,50 @@ getFrame(int solutionNumber /* = -1 */)
         // -- new way: *wdh* 2015/09/08
         // construct a list of where frames are located
 
-	if( !dbase.has_key("fileNumberForFrame") )
-	{ 
-	  locateFramesInFiles();  // this call will build the list fileNumberForFrame
-	}
+        if( !dbase.has_key("fileNumberForFrame") )
+        { 
+          locateFramesInFiles();  // this call will build the list fileNumberForFrame
+        }
         // fileNumberForFrame[frameNumber] = subFile where frame is found 
-	std::vector<int> & fileNumberForFrame = dbase.get<vector<int> >("fileNumberForFrame");
-	fileNumber =fileNumberForFrame[solutionNumber-1];
+        std::vector<int> & fileNumberForFrame = dbase.get<vector<int> >("fileNumberForFrame");
+        fileNumber =fileNumberForFrame[solutionNumber-1];
 
-	if( showFile[fileNumber]==NULL || showFile[fileNumber]->isNull() )
-	  openShowFile(fileNumber);
+        if( showFile[fileNumber]==NULL || showFile[fileNumber]->isNull() )
+          openShowFile(fileNumber);
 
-	if ( showFile[fileNumber]->locate(frameSeriesDB,frameSeriesNames[currentFrameSeries],"frameSeries")==0 )
-	  found = frameSeriesDB.locate(currentFrame,frameName,"frame")==0;
+        if ( showFile[fileNumber]->locate(frameSeriesDB,frameSeriesNames[currentFrameSeries],"frameSeries")==0 )
+          found = frameSeriesDB.locate(currentFrame,frameName,"frame")==0;
 
-	if( found )
-	  printF("--SFR-- getFrame: solution %i found in file %i.\n",solutionNumber,fileNumber);
+        if( found )
+        {
+          if( 1==0 )
+            printF("--SFR-- getFrame: solution %i found in file %i.\n",solutionNumber,fileNumber);
+        }
         else
-	{
-	  printF("--SFR-- getFrame:ERROR solution %i NOT found in file %i (from list).\n",solutionNumber,fileNumber);
-	  OV_ABORT("ERROR -- this should not happen");
-	}
-	
+        {
+          printF("--SFR-- getFrame:ERROR solution %i NOT found in file %i (from list).\n",solutionNumber,fileNumber);
+          OV_ABORT("ERROR -- this should not happen");
+        }
+        
       }
       else
       {
-	// *old way*
-	fileNumber=0;
-	while ( fileNumber<numberOfShowFiles && !found )
-	{// kkc 061023 this will be less efficient when there are lots of show files,
-	  //           but it also works if the number of frames per file is changed on the fly
-	  if( showFile[fileNumber]==NULL || showFile[fileNumber]->isNull() )
-	    openShowFile(fileNumber);
+        // *old way*
+        fileNumber=0;
+        while ( fileNumber<numberOfShowFiles && !found )
+        {// kkc 061023 this will be less efficient when there are lots of show files,
+          //           but it also works if the number of frames per file is changed on the fly
+          if( showFile[fileNumber]==NULL || showFile[fileNumber]->isNull() )
+            openShowFile(fileNumber);
 
-	  if ( showFile[fileNumber]->locate(frameSeriesDB,frameSeriesNames[currentFrameSeries],"frameSeries")==0 )
-	    found = frameSeriesDB.locate(currentFrame,frameName,"frame")==0;
+          if ( showFile[fileNumber]->locate(frameSeriesDB,frameSeriesNames[currentFrameSeries],"frameSeries")==0 )
+            found = frameSeriesDB.locate(currentFrame,frameName,"frame")==0;
 
-	  if( found )
-	    printF("ShowFileReader::getFrame: solution %i found in file %i (after search).\n",solutionNumber,fileNumber);
+          if( found )
+            printF("ShowFileReader::getFrame: solution %i found in file %i (after search).\n",solutionNumber,fileNumber);
 
-	  fileNumber++;
-	}
+          fileNumber++;
+        }
       }
       
     }
@@ -907,7 +910,7 @@ getSequenceNames(aString *name, int maximumNumberOfNames)
 
       for( int s=0; s<min(numberOfSequences,maximumNumberOfNames); s++ )
       {
-	dbSeq[s].get(name[s],"name");
+        dbSeq[s].get(name[s],"name");
         printF("ShowFileReader::getSequenceNames: OLD WAY: sequence %i : seq=[%s] name=[%s]\n",s,
                (const char*)seqNames[s], (const char *)name[s]);
       }
@@ -928,8 +931,8 @@ getSequenceNames(aString *name, int maximumNumberOfNames)
 int ShowFileReader::
 getSequence(int sequenceNumber,
             aString & name, RealArray & time, RealArray & value, 
-	    aString *componentName1, int maxComponentName1,
-	    aString *componentName2, int maxComponentName2)
+            aString *componentName1, int maxComponentName1,
+            aString *componentName2, int maxComponentName2)
 // ====================================================================================
 //   /Description:
 //     Return the data for a sequence.
@@ -968,15 +971,15 @@ getSequence(int sequenceNumber,
       
       if( false )
       {
-	for( int s=0; s<numberOfSequences; s++ )
-	{
-	  aString sname; 
+        for( int s=0; s<numberOfSequences; s++ )
+        {
+          aString sname; 
           dbSeq[s].get(sname,"name");
-	  printF(" ShowFileReader::getSequence: seqNames[%i]=[%s] name=[%s]\n",s,(const char*)seqNames[s],
+          printF(" ShowFileReader::getSequence: seqNames[%i]=[%s] name=[%s]\n",s,(const char*)seqNames[s],
                     (const char*)sname);
-	}
+        }
       }
-	
+        
       delete [] dbSeq;
       delete [] seqNames;
     }
@@ -1022,7 +1025,7 @@ getGeneralParameters( const int displayInfo /* =1 */ )
 
     if( displayInfo )
       printF("ShowFileReader : getting general parameters for %s\n",
-	     (fs ? (const char*)frameSeriesNames[fs-1] : "root directory"));
+             (fs ? (const char*)frameSeriesNames[fs-1] : "root directory"));
     
     int numberOfParameters=-1;
     paramsDB.turnOffWarnings();
@@ -1050,13 +1053,13 @@ getGeneralParameters( const int displayInfo /* =1 */ )
     {
       if( displayInfo )
       {
-	printF("ShowFile: parameter %i: name=%s value=",i,(const char*)name[i]);
-	if( type[i]==(int)ShowFileParameter::intParameter )
-	  printF("%i\n",iv[i]);
-	else if( type[i]==(int)ShowFileParameter::realParameter )
-	  printF("%e\n",rv[i]);
-	else
-	  printF("%s\n",(const char*)sv[i]);
+        printF("ShowFile: parameter %i: name=%s value=",i,(const char*)name[i]);
+        if( type[i]==(int)ShowFileParameter::intParameter )
+          printF("%i\n",iv[i]);
+        else if( type[i]==(int)ShowFileParameter::realParameter )
+          printF("%e\n",rv[i]);
+        else
+          printF("%s\n",(const char*)sv[i]);
       }
       
       sfp.set(name[i],(ShowFileParameter::ParameterType)type[i],iv[i],rv[i],sv[i]);
@@ -1072,9 +1075,9 @@ getGeneralParameters( const int displayInfo /* =1 */ )
     if( displayInfo )
     {
       if ( fs )
-	printF(" %i general parameters were found in frame series %s\n",numberOfParameters,frameSeriesNames[fs-1].c_str());
+        printF(" %i general parameters were found in frame series %s\n",numberOfParameters,frameSeriesNames[fs-1].c_str());
       else
-	printF(" %i general parameters were found in the show file\n",numberOfParameters);
+        printF(" %i general parameters were found in the show file\n",numberOfParameters);
     }
   }
 
@@ -1161,9 +1164,9 @@ getGeneralParameter(const aString & name, ShowFileParameter::ParameterType type,
     if( false )
     {
       printF("ShowFileReader::getGeneralParameter:WARNING: name=%s was not found. currentFrameSeries=%i, "
-	     "placeToSave=%s\n",
-	     (const char*)name,currentFrameSeries, (placeToSave==Ogshow::THECurrentFrameSeries ?
-						    "current frame series" : "root"));
+             "placeToSave=%s\n",
+             (const char*)name,currentFrameSeries, (placeToSave==Ogshow::THECurrentFrameSeries ?
+                                                    "current frame series" : "root"));
     }
     return false;  // not found
   }
@@ -1179,7 +1182,7 @@ getGeneralParameter(const aString & name, ShowFileParameter::ParameterType type,
   else 
   {
     printF("ShowFileReader::getGeneralParameter:WARNING: name=%s found but it is not type=%i (typeFound=%i)\n",
-	   (const char*)name,type,typeFound);
+           (const char*)name,type,typeFound);
     return false;
   }
 
@@ -1265,11 +1268,11 @@ getParameters(const aString & nameOfDirectory, ListOfShowFileParameters & params
     {
       printF("ShowFile:getParameters:parameter %i: name=%s value=",i,(const char*)name[i]);
       if( type[i]==(int)ShowFileParameter::intParameter )
-	printF("%i\n",iv[i]);
+        printF("%i\n",iv[i]);
       else if( type[i]==(int)ShowFileParameter::realParameter )
-	printF("%e\n",rv[i]);
+        printF("%e\n",rv[i]);
       else
-	printF("%s\n",(const char*)sv[i]);
+        printF("%s\n",(const char*)sv[i]);
     }
     
     sfp.set(name[i],(ShowFileParameter::ParameterType)type[i],iv[i],rv[i],sv[i]);
@@ -1359,10 +1362,10 @@ open(const aString & showFileName, const int displayInfo /* =1 */ )
       found = showFile[0]->mount(nameOfShowFile,"R");
       if( found!=0 )
       {
-	printF("ShowFileReader::ERROR: unable to open an old file = %s (or %s) (or %s)\n",
-	       (const char *)showFileName,
+        printF("ShowFileReader::ERROR: unable to open an old file = %s (or %s) (or %s)\n",
+               (const char *)showFileName,
                (const char *)(showFileName+".hdf"),
-	       (const char *)(showFileName+".show"));
+               (const char *)(showFileName+".show"));
         Overture::abort("error");
       }
     }
@@ -1473,20 +1476,20 @@ openShowFile(const int n)
       if( numberOfOpenFiles >= maxNumberOfOpenFiles ) 
       { // close an open file because we have too many
         for( int i=0; i<maxNumberOfShowFiles; i++ )
-	{
+        {
           // look for a previous file to close
           int prev = max(1,maxNumberOfOpenFiles/5); 
-	  
-	  int m = (n-i-prev + 20*maxNumberOfShowFiles) % maxNumberOfShowFiles;
+          
+          int m = (n-i-prev + 20*maxNumberOfShowFiles) % maxNumberOfShowFiles;
           if( showFile[m]!=NULL && !showFile[m]->isNull() &&
               m!=0 && m!=(numberOfShowFiles-1) )  // do not close the first or last file since we get info from it
-	  {
+          {
             printF("openShowFile: too many files, close file m=%i\n",m);
             showFile[m]->unmount(); 
             numberOfOpenFiles--;
             break;
-	  }
-	}
+          }
+        }
       }
 
       if( showFile[n]==NULL )
@@ -1494,9 +1497,9 @@ openShowFile(const int n)
       returnValue = showFile[n]->mount(name,"R");
 
       if( n>0 && !streamMode )
-	showFile[n]->setMode(GenericDataBase::noStreamMode);
+        showFile[n]->setMode(GenericDataBase::noStreamMode);
       else
-	showFile[n]->setMode(GenericDataBase::normalMode);
+        showFile[n]->setMode(GenericDataBase::normalMode);
 
       numberOfOpenFiles++;
     }

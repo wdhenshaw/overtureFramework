@@ -116,10 +116,10 @@ fourierLaplacian(const RealArray & uHat,
 void FourierOperators:: 
 fourierDerivative(const RealArray & uHat, 
                   RealArray & uHatDerivative, 
-		  const int & xDerivative  /* =1 */, 
-		  const int & yDerivative  /* =0 */, 
-		  const int & zDerivative  /* =0 */, 
-		  const Range & Components0 /* =nullRange */ )
+                  const int & xDerivative  /* =1 */, 
+                  const int & yDerivative  /* =0 */, 
+                  const int & zDerivative  /* =0 */, 
+                  const Range & Components0 /* =nullRange */ )
 //-----------------------------------------------------------------------------------------
 // /Description: 
 //  Compute a derivative in Fourier space.
@@ -172,8 +172,8 @@ fourierDerivative(const RealArray & uHat,
     { // even derivatives:
       for( int c0=C0.getBase(); c0<=C0.getBound(); c0++ )  // loop over component 0
       {
-	uHatDerivative(R1,R2,R3,c0)=uHat(R1,R2,R3,c0)*pow(kxDerivative(R1,R2,R3),xDerivative)*pow(-1.,xDerivative/2.);
-	uHatDerivative(R1.getBase(),R2,R3,c0)=0.;
+        uHatDerivative(R1,R2,R3,c0)=uHat(R1,R2,R3,c0)*pow(kxDerivative(R1,R2,R3),xDerivative)*pow(-1.,xDerivative/2.);
+        uHatDerivative(R1.getBase(),R2,R3,c0)=0.;
       }
     }
     else
@@ -181,10 +181,10 @@ fourierDerivative(const RealArray & uHat,
       Range R(R1.getBase()+1,R1.getBound()-2,2); // start from 1  ( 0 c1 s1 c1 s1 ... )
       for( int c0=C0.getBase(); c0<=C0.getBound(); c0++ )  // loop over component 0
       {
-	uHatDerivative(R1.getBase() ,R2,R3,c0)=0.;
+        uHatDerivative(R1.getBase() ,R2,R3,c0)=0.;
         uHatDerivative(R1.getBound(),R2,R3,c0)=0.;
-	uHatDerivative(R  ,R2,R3,c0)=uHat(R+1,R2,R3,c0)*pow(kxDerivative(R  ,R2,R3),xDerivative)*pow(-1.,xDerivative/2.);
-	uHatDerivative(R+1,R2,R3,c0)=uHat(R  ,R2,R3,c0)*pow(kxDerivative(R+1,R2,R3),xDerivative)*pow(-1.,xDerivative/2.);
+        uHatDerivative(R  ,R2,R3,c0)=uHat(R+1,R2,R3,c0)*pow(kxDerivative(R  ,R2,R3),xDerivative)*pow(-1.,xDerivative/2.);
+        uHatDerivative(R+1,R2,R3,c0)=uHat(R  ,R2,R3,c0)*pow(kxDerivative(R+1,R2,R3),xDerivative)*pow(-1.,xDerivative/2.);
       }
     }
   }
@@ -212,7 +212,7 @@ fourierDerivative(const RealArray & uHat,
     {
       for( int c0=C0.getBase(); c0<=C0.getBound(); c0++ )  // loop over component 0
       {
-	uHatDerivative(R1,R2,R3,c0)=v(R1,R2,R3,c0)*pow(kyDerivative(R1,R2,R3),yDerivative)*pow(-1.,yDerivative/2.);
+        uHatDerivative(R1,R2,R3,c0)=v(R1,R2,R3,c0)*pow(kyDerivative(R1,R2,R3),yDerivative)*pow(-1.,yDerivative/2.);
         uHatDerivative(R1,R2.getBase() ,R3,c0)=0.;
       }
     }
@@ -221,10 +221,10 @@ fourierDerivative(const RealArray & uHat,
       Range R(R2.getBase()+1,R2.getBound()-2,2); // start from 1  ( 0 c1 s1 c1 s1 ... )
       for( int c0=C0.getBase(); c0<=C0.getBound(); c0++ )  // loop over component 0
       {
-	uHatDerivative(R1,R2.getBase() ,R3,c0)=0.;
-	uHatDerivative(R1,R2.getBound(),R3,c0)=0.;
-	uHatDerivative(R1,R  ,R3,c0)=v(R1,R+1,R3,c0)*pow(kyDerivative(R1,R  ,R3),yDerivative)*pow(-1.,yDerivative/2.);
-	uHatDerivative(R1,R+1,R3,c0)=v(R1,R  ,R3,c0)*pow(kyDerivative(R1,R+1,R3),yDerivative)*pow(-1.,yDerivative/2.);
+        uHatDerivative(R1,R2.getBase() ,R3,c0)=0.;
+        uHatDerivative(R1,R2.getBound(),R3,c0)=0.;
+        uHatDerivative(R1,R  ,R3,c0)=v(R1,R+1,R3,c0)*pow(kyDerivative(R1,R  ,R3),yDerivative)*pow(-1.,yDerivative/2.);
+        uHatDerivative(R1,R+1,R3,c0)=v(R1,R  ,R3,c0)*pow(kyDerivative(R1,R+1,R3),yDerivative)*pow(-1.,yDerivative/2.);
       }
     }
   }
@@ -250,8 +250,8 @@ fourierDerivative(const RealArray & uHat,
     {
       for( int c0=C0.getBase(); c0<=C0.getBound(); c0++ )  // loop over component 0
       {
-	uHatDerivative(R1,R2,R3,c0)=w(R1,R2,R3,c0)*pow(kzDerivative(R1,R2,R3),zDerivative)*pow(-1.,zDerivative/2.);
-	uHatDerivative(R1,R2,R3.getBase(),c0)=0.;
+        uHatDerivative(R1,R2,R3,c0)=w(R1,R2,R3,c0)*pow(kzDerivative(R1,R2,R3),zDerivative)*pow(-1.,zDerivative/2.);
+        uHatDerivative(R1,R2,R3.getBase(),c0)=0.;
       }
     }
     else
@@ -259,10 +259,10 @@ fourierDerivative(const RealArray & uHat,
       Range R(R3.getBase()+1,R3.getBound()-2,2); // start from 1  ( 0 c1 s1 c1 s1 ... )
       for( int c0=C0.getBase(); c0<=C0.getBound(); c0++ )  // loop over component 0
       {
-	uHatDerivative(R1,R2,R3.getBase() ,c0)=0.;
+        uHatDerivative(R1,R2,R3.getBase() ,c0)=0.;
         uHatDerivative(R1,R2,R3.getBound(),c0)=0.;
-	uHatDerivative(R1,R2,R  ,c0)=w(R1,R2,R+1,c0)*pow(kzDerivative(R1,R2,R  ),zDerivative)*pow(-1.,zDerivative/2.);
-	uHatDerivative(R1,R2,R+1,c0)=w(R1,R2,R  ,c0)*pow(kzDerivative(R1,R2,R+1),zDerivative)*pow(-1.,zDerivative/2.);
+        uHatDerivative(R1,R2,R  ,c0)=w(R1,R2,R+1,c0)*pow(kzDerivative(R1,R2,R  ),zDerivative)*pow(-1.,zDerivative/2.);
+        uHatDerivative(R1,R2,R+1,c0)=w(R1,R2,R  ,c0)*pow(kzDerivative(R1,R2,R+1),zDerivative)*pow(-1.,zDerivative/2.);
       }
     }
   }
@@ -309,8 +309,8 @@ realToFourier(const RealArray & u,
 //\begin{>>FourierOperatorsInclude.tex}{\subsection{setDefaultRanges}} 
 void  FourierOperators::
 setDefaultRanges(const Range & R1_, 
-		 const Range & R2_ /* =nullRange */, 
-		 const Range & R3_ /* =nullRange */ )
+                 const Range & R2_ /* =nullRange */, 
+                 const Range & R3_ /* =nullRange */ )
 //-----------------------------------------------------------------------------------------
 // /Description:
 // Change the Ranges over which the transforms are performed. This may also change
@@ -351,9 +351,9 @@ setDefaultRanges(const Range & R1_,
 //\begin{>>FourierOperatorsInclude.tex}{\subsection{setDimensions}} 
 void FourierOperators::
 setDimensions(const int & numberOfDimensions_, 
-	      const int & nx_, 
-	      const int & ny_ /* =1 */, 
-	      const int & nz_ /* =1 */)
+              const int & nx_, 
+              const int & ny_ /* =1 */, 
+              const int & nz_ /* =1 */)
 //-----------------------------------------------------------------------------------------
 // /Description: Define the number of space dimensions and the number of grid points.
 // /numberOfDimensions\_: The number of space dimensions (1,2, or 3)
@@ -438,7 +438,7 @@ initialize()
       k22=SQR(twoPi/yPeriod*(k2/2));
       for( i1=R1.getBase(), k1=1; i1<=R1.getBound(); i1++,k1++ )
       {
-	kSquared(i1,i2,i3)=-( SQR((twoPi/xPeriod)*(k1/2))+k22+k32 );
+        kSquared(i1,i2,i3)=-( SQR((twoPi/xPeriod)*(k1/2))+k22+k32 );
       }
     }
   }
@@ -487,8 +487,8 @@ initialize()
 void FourierOperators::
 transform(const int & forwardOrBackward,
           const RealArray & u, 
-	  RealArray & uHat, 
-	  const Range & Components0 )
+          RealArray & uHat, 
+          const Range & Components0 )
 //-----------------------------------------------------------------------------------------
 // /Description: 
 //  Perform a forward or backward fourier transform. (This routine is called by
@@ -529,11 +529,11 @@ transform(const int & forwardOrBackward,
       for( i2=R2.getBase(); i2<=R2.getBound(); i2++ )
       {
         for( int c0=C0.getBase(); c0<=C0.getBound(); c0++ )  // loop over component 0
-	{
+        {
           uTemp(0,0,R3)=u(i1,i2,R3,c0);
-  	  forwardOrBackwardFFT( nz,uTemp(0,0,i3a),wsavez(0) );
+          forwardOrBackwardFFT( nz,uTemp(0,0,i3a),wsavez(0) );
           uHat(i1,i2,R3,c0)=uTemp(0,0,R3);
-	}
+        }
       }
     }
   }
@@ -548,11 +548,11 @@ transform(const int & forwardOrBackward,
       for( i1=R1.getBase(); i1<=R1.getBound(); i1++ )
       {
         for( int c0=C0.getBase(); c0<=C0.getBound(); c0++ )  // loop over component 0
-	{
-	  uTemp(0,R2,0)=u2(i1,R2,i3,c0);
-	  forwardOrBackwardFFT( ny,uTemp(0,i2a,0),wsavey(0) );
-	  uHat(i1,R2,i3,c0)=uTemp(0,R2,0);
-	}
+        {
+          uTemp(0,R2,0)=u2(i1,R2,i3,c0);
+          forwardOrBackwardFFT( ny,uTemp(0,i2a,0),wsavey(0) );
+          uHat(i1,R2,i3,c0)=uTemp(0,R2,0);
+        }
       }
     }
   }
@@ -591,8 +591,8 @@ realToFourier( const RealDistributedArray & u, RealDistributedArray & uHat, cons
 // fourier space to real space (backward transform)
 void FourierOperators:: 
 fourierToReal(const RealDistributedArray & uHat, 
-	      RealDistributedArray & u, 
-	      const Range & Components )
+              RealDistributedArray & u, 
+              const Range & Components )
 {
   OV_ABORT("FourierOperators::ERROR: not implemented in parallel");
 }
@@ -600,11 +600,11 @@ fourierToReal(const RealDistributedArray & uHat,
 // compute a derivative (or integral) in Fourier space
 void FourierOperators:: 
 fourierDerivative(const RealDistributedArray & uHat, 
-		  RealDistributedArray & uHatDerivative, 
-		  const int & xDerivative, 
-		  const int & yDerivative, 
-		  const int & zDerivative, 
-		  const Range & Components )
+                  RealDistributedArray & uHatDerivative, 
+                  const int & xDerivative, 
+                  const int & yDerivative, 
+                  const int & zDerivative, 
+                  const Range & Components )
 {
   OV_ABORT("FourierOperators::ERROR: not implemented in parallel");
 }  
@@ -613,18 +613,18 @@ fourierDerivative(const RealDistributedArray & uHat,
 // where power can be positive or negative
 void FourierOperators:: 
 fourierLaplacian(const RealDistributedArray & uHat, 
-		 RealDistributedArray & uHatLaplacian, 
-		 const int & power,
-		 const Range & Components )
+                 RealDistributedArray & uHatLaplacian, 
+                 const int & power,
+                 const Range & Components )
 {
   OV_ABORT("FourierOperators::ERROR: not implemented in parallel");
 }  
 
 void FourierOperators:: 
 transform(const int & forwardOrBackward,
-	  const RealDistributedArray & u, 
-	  RealDistributedArray & uHat, 
-	  const Range & Components )
+          const RealDistributedArray & u, 
+          RealDistributedArray & uHat, 
+          const Range & Components )
 {
   OV_ABORT("FourierOperators::ERROR: not implemented in parallel");
 }

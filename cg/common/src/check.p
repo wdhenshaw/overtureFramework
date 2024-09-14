@@ -315,8 +315,9 @@ foreach $cmdCommand ( @cmdFiles )
 if( $verbose == 0 ){ printf("\n"); }
 if ( $numberOfErrors == 0 )
 {
+  $numChecks=$m+1;   
   printf("========================================================\n");
-  printf("============ $solver: Tests apparently successful =========\n");
+  printf("============ $solver: All $numChecks tests successful =========\n");
   printf("========================================================\n");
   exit 0;
 }

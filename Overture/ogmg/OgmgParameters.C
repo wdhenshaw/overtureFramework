@@ -252,6 +252,8 @@ init()
 
   // Max iterations for the coarse grid solver: 
   if( !dbase.has_key("maxIterationsCoarseGrid") ){ dbase.put<int>( "maxIterationsCoarseGrid")=10000; }// -1 = use default
+
+
 }
 
 // =================================================================================
@@ -690,6 +692,15 @@ operator=(const OgmgParameters& x)
   maximumNumberOfInterpolationIterations=x.maximumNumberOfInterpolationIterations;
   
   ogesSmoothParameters=x.ogesSmoothParameters;
+
+  activeGrids = x.activeGrids; // *wdh* July 5, 2024
+
+
+  // For high-order schemes we may use lower order on the coarser levels *wdh* added July 20, 2024
+  dbase.get<int>("orderOfCoarseLevels")=x.dbase.get<int>( "orderOfCoarseLevels"); 
+  // printF("\n @@@@@@@@@@ OgmgParameters::operator= setting orderOfCoarseLevels=%d @@@@@@@@@@@\n\n",dbase.get<int>("orderOfCoarseLevels"));
+  // Max iterations for the coarse grid solver: *wdh* added July 20, 2024
+  dbase.get<int>("maxIterationsCoarseGrid")=x.dbase.get<int>("maxIterationsCoarseGrid");
 
   return *this;
 }

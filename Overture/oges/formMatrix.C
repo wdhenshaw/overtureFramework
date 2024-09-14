@@ -89,6 +89,16 @@ formMatrix(int & numberOfEquations_, int & numberOfNonzeros_,
   
   numberOfNonzerosBound = int(numberOfEquations*parameters.zeroRatio+.5);
 
+  if( numberOfNonzerosBound<0 )
+  {
+    // numberOfNonzerosBound is < 0 if the number on the RHS is too large
+    printF("Oges::formMatrix:ERROR: numberOfNonzerosBound is too large to store in a single precision integer.\n"
+           "   numberOfEquations TIMES parameters.zeroRatio = %d X %e = %d (numberOfNonzerosBound) < 0 !!\n"
+           "   **FIX ME BILL**\n",
+           numberOfEquations,parameters.zeroRatio,numberOfNonzerosBound);
+    OV_ABORT("FATAL ERROR");
+  }
+
   //...........allocate space for the coefficients of the equation
   if( Oges::debug & 2 ) 
     printF("------OGES::formMatrix --- Allocating space--\n");

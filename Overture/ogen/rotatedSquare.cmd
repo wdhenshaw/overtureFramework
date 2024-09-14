@@ -1,4 +1,4 @@
-* rotated square
+# rotated square
 #
 # ogen noplot rotatedSquare -n=8
 # ogen noplot rotatedSquare -n=16
@@ -9,32 +9,35 @@
 # 
 # ogen noplot rotatedSquare -order=4 -n=16
 # ogen noplot rotatedSquare -order=4 -n=32
-* 
+# 
 # ogen noplot rotatedSquare -n=20
 # ogen noplot rotatedSquare -n=40
 # ogen noplot rotatedSquare -n=80
-* 
+# 
 # ogen noplot rotatedSquare -angle=90 -n=20
 # ogen noplot rotatedSquare -angle=90 -n=40
-* 
+# 
 $order=2; $n=10; # default values
 $angle=45; 
 $orderOfAccuracy = "second order"; $ng=2;
-* 
-* get command line arguments
-GetOptions( "order=i"=>\$order,"n=i"=> \$n,"angle=f"=> \$angle );
+$numGhost=-1;  # if this value is set, then use this number of ghost points
+# 
+# get command line arguments
+GetOptions( "order=i"=>\$order,"n=i"=> \$n,"angle=f"=> \$angle,"numGhost=i"=>\$numGhost );
 $nx=$n+1;
-* 
+# 
 if( $order eq 4 ){ $orderOfAccuracy="fourth order"; $ng=2; }\
 elsif( $order eq 6 ){ $orderOfAccuracy="sixth order"; $ng=4; }\
 elsif( $order eq 8 ){ $orderOfAccuracy="eighth order"; $ng=6; }
-* 
+# 
 $lines = $nx;
 $suffix = ".order$order"; 
+if( $numGhost ne -1 ){ $ng = $numGhost; } # overide number of ghost
+if( $numGhost ne -1 ){ $suffix .= ".ng$numGhost"; } 
 if( $angle ne 45. ){ $suffix=".angle$angle" . $suffix; } 
 $name = "rotatedSquare" . "$n" . $suffix;
-*
-* 
+#
+# 
 create mappings
   rectangle
     mappingName
@@ -48,7 +51,7 @@ create mappings
     mappingName
      rectangularSquare
   exit
-*
+#
   rotate/scale/shift
     rotate
       $angle
@@ -57,7 +60,7 @@ create mappings
       square
   exit
 exit
-*
+#
 generate an overlapping grid
   square
   done
@@ -71,8 +74,8 @@ generate an overlapping grid
   exit
   compute overlap
 exit
-*
-* save an overlapping grid
+#
+# save an overlapping grid
 save a grid (compressed)
   $name.hdf
   rotatedSquare
@@ -91,9 +94,9 @@ exit
 
 
 
-*
-* rotated square in a square
-*
+#
+# rotated square in a square
+#
 create mappings
   rectangle
     set corners
@@ -103,7 +106,7 @@ create mappings
     mappingName
       outer-square
     exit
-*
+#
   rotate/scale/shift
     rotate
       45.
@@ -112,7 +115,7 @@ create mappings
       square
   exit
 exit
-*
+#
 generate an overlapping grid
   square
   done

@@ -1158,7 +1158,8 @@ initializeConstantCoefficients()
             }
             else
             {
-              Overture::abort("ERROR: invalid orderOfAccuacy");
+              printF("Ogmg::predefined: invalid orderOfAccuracy=%d, orderOfThisLevel=%d\n",orderOfAccuracy,orderOfThisLevel);
+              Overture::abort("ERROR: invalid orderOfAccuracy");
             }
 
           }
@@ -2010,7 +2011,8 @@ initializeConstantCoefficients()
             }
             else
             {
-              Overture::abort("ERROR: invalid orderOfAccuacy");
+              printF("Ogmg::predefined: invalid orderOfAccuracy=%d, orderOfThisLevel=%d\n",orderOfAccuracy,orderOfThisLevel);
+              Overture::abort("ERROR: invalid orderOfAccuracy");
             }
 
           }

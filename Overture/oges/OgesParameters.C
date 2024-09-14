@@ -167,10 +167,13 @@ operator=(const OgesParameters& x)
   removeSolutionAndRHSVector=x.removeSolutionAndRHSVector;  
   removeSparseMatrixFactorization=x.removeSparseMatrixFactorization; 
 
+  // printF("\n @@@@@ OgesParameters::operator= : x.ogmgParameters=%p @@@@@@\n\n",(void *)x.ogmgParameters);
+
   if( x.ogmgParameters!=NULL )
   {
     if( ogmgParameters==NULL )
       ogmgParameters = new OgmgParameters();
+    // printF(" @@@@@ OgesParameters::operator= : call OgmgParameters operator=\n");
     *ogmgParameters=*x.ogmgParameters;
   }
   else

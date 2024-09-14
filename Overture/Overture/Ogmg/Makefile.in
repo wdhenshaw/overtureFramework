@@ -2,18 +2,14 @@
 # Makefile.in : used by the configure script
 #
 
-# DYNAMIC_LIBRARY = ../lib/libOgmg.so
-#hpux DYNAMIC_LIBRARY = libOgmg.sl
+# try this: *wdh* July 21, 2023
+FFLAGSO= -O3 $(FF_FLAGS)  -fdefault-real-8 -fdefault-double-8  $(FLAGS) $(Include) 
 
-# NO_REAL is for Ander's files
 .SUFFIXES:
 .SUFFIXES:.C .o .f .o .c .o
-#kkc 100325 .C.o:; $(CC) $(CCFLAGS)  -DNO_REAL  -I$(HDF)/include -c $*.C
-#kkc 100325 .c.o:; $(cc) $(CFLAGS)  -DNO_REAL -I. -I$(HDF)/include -c $*.c
-.C.o:; $(CC) $(CCFLAGS)  -DNO_REAL  -c $*.C
-.c.o:; $(cc) $(CFLAGS)  -DNO_REAL -I.  -c $*.c
-#kkc 050203 because default optimization fails to build on the gps cluster (too much memory) .f.o:; $(FC) $(FFLAGSO) -c $*.f
-.f.o:; $(FC) $(FFLAGS) -c $*.f
+.C.o:; $(CC) $(CCFLAGSO)  -DNO_REAL  -c $*.C
+.c.o:; $(cc) $(CFLAGSO)  -DNO_REAL -I.  -c $*.c
+.f.o:; $(FC) $(FFLAGSO) -c $*.f
 
 default: depend_date Ogmg_Opt_date Ogmg_date 
 
@@ -30,9 +26,9 @@ filesOpt= assignBoundaryConditionCoefficients.C buildExtraLevels.C buildExtraLev
 Ogmg_Opt_date: ${filesOpt:.C=.o}
 	  touch $@
 
-# CCFLAGSOGMG = $(CCFLAGSO)
+CCFLAGSOGMG = $(CCFLAGSO)
 # Don't compile optimized for now:
-CCFLAGSOGMG = $(CCFLAGS)
+# CCFLAGSOGMG = $(CCFLAGS)
 
 assignBoundaryConditionCoefficients.o : ${@:.o=.C}; $(CC) $(CCFLAGSOGMG) -c ${@:.o=.C}
 buildExtraLevelsNew.o :                 ${@:.o=.C}; $(CC) $(CCFLAGSOGMG) -c ${@:.o=.C}

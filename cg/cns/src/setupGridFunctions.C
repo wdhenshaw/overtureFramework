@@ -30,16 +30,16 @@ setupGridFunctions()
       int grid;
       for( grid=0; grid<cg.numberOfComponentGrids(); grid++ )
       {
-	MappedGrid & mg = cg[grid];
-	if( mg.isRectangular() )
-	  {
-	    mg.update(MappedGrid::THEmask);
-	  }
-	else
-	  {
-	    mg.update(MappedGrid::THEinverseVertexDerivative | MappedGrid::THEinverseCenterDerivative | 
-		      MappedGrid::THEcenterJacobian );
-	  }
+        MappedGrid & mg = cg[grid];
+        if( mg.isRectangular() )
+          {
+            mg.update(MappedGrid::THEmask);
+          }
+        else
+          {
+            mg.update(MappedGrid::THEinverseVertexDerivative | MappedGrid::THEinverseCenterDerivative | 
+                      MappedGrid::THEcenterJacobian );
+          }
       }
     }
   // kkc 060228
@@ -47,7 +47,7 @@ setupGridFunctions()
       parameters.dbase.get<Parameters::TimeSteppingMethod >("timeSteppingMethod")==Parameters::steadyStateNewton)
     {
       cg.update(MappedGrid::THEcenterBoundaryTangent |
-		MappedGrid::THEvertexBoundaryNormal );
+                MappedGrid::THEvertexBoundaryNormal );
       buildImplicitSolvers(cg); // This will build the array of implicit solvers
     }
 

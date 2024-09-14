@@ -40,7 +40,7 @@ static FILE *debugFile=NULL;
 #beginMacro defineCopyMacro(real,realArray,realSerialArray,MPI_Real_Type)
 int CopyArray::
 copyArray( realArray & dest, Index *D0, 
-	   const realArray &  src, Index *S0, int nd /* =4 */ )
+           const realArray &  src, Index *S0, int nd /* =4 */ )
 // ===================================================================================
 //   Make the copy:
 //            dest(D[0],D[1], ... D[nd-1]) = src( S[0],...,S[nd-1] ) 
@@ -99,28 +99,28 @@ copyArray( realArray & dest, Index *D0,
         S[axis].getBound()>src.getBound(axis)+src.getGhostBoundaryWidth(axis) )
     {
       printf(" CopyArray::copy:ERROR Source index values are out of bounds!\n"
-	     "   axis=%i S=[%i,%i] but src [base,bound]=[%i,%i]\n",
-	     axis,S[axis].getBase(),S[axis].getBound(),src.getBase(axis),src.getBound(axis));
+             "   axis=%i S=[%i,%i] but src [base,bound]=[%i,%i]\n",
+             axis,S[axis].getBase(),S[axis].getBound(),src.getBase(axis),src.getBound(axis));
       OV_ABORT("error");
     }
     if( D[axis].getBase() <dest.getBase(axis) -dest.getGhostBoundaryWidth(axis) || 
         D[axis].getBound()>dest.getBound(axis)+dest.getGhostBoundaryWidth(axis) )
     {
       printf(" CopyArray::copyArray:ERROR Destination index values are out of bounds!\n"
-	     "   axis=%i D=[%i,%i] but dest [base,bound]=[%i,%i]\n",
-	     axis,D[axis].getBase(),D[axis].getBound(),dest.getBase(axis),dest.getBound(axis));
+             "   axis=%i D=[%i,%i] but dest [base,bound]=[%i,%i]\n",
+             axis,D[axis].getBase(),D[axis].getBound(),dest.getBase(axis),dest.getBound(axis));
       OV_ABORT("CopyArray::error");
     }
     if( (D[axis].getBound()-D[axis].getBase())/D[axis].getStride() != 
         (S[axis].getBound()-S[axis].getBase())/S[axis].getStride() )
     {
       printf(" ParallelUtility::copy:ERROR non-conformable operation!\n"
-	     "   axis=%i src=[%i,%i,%i] with count=%i, but dest=[%i,%i,%i] with count=%i\n",
-	     axis,
+             "   axis=%i src=[%i,%i,%i] with count=%i, but dest=[%i,%i,%i] with count=%i\n",
+             axis,
              D[axis].getBase(),D[axis].getBound(),D[axis].getStride(),
-	     (D[axis].getBound()-D[axis].getBase())/D[axis].getStride(),
+             (D[axis].getBound()-D[axis].getBase())/D[axis].getStride(),
              S[axis].getBase(),S[axis].getBound(),S[axis].getStride(),
-	     (S[axis].getBound()-S[axis].getBase())/S[axis].getStride());
+             (S[axis].getBound()-S[axis].getBase())/S[axis].getStride());
       
       OV_ABORT("CopyArray::error");
     }
@@ -161,15 +161,15 @@ copyArray( realArray & dest, Index *D0,
 
   // Here is the global src sub-array that we want to send:
   IndexBox srcSubArray(S[0].getBase(),S[0].getBound(),
-		       S[1].getBase(),S[1].getBound(),
-		       S[2].getBase(),S[2].getBound(),
-		       S[3].getBase(),S[3].getBound());
+                       S[1].getBase(),S[1].getBound(),
+                       S[2].getBase(),S[2].getBound(),
+                       S[3].getBase(),S[3].getBound());
 
   // Here is the global dest sub-array that we want to assign
   IndexBox destSubArray(D[0].getBase(),D[0].getBound(),
-			D[1].getBase(),D[1].getBound(),
-			D[2].getBase(),D[2].getBound(),
-			D[3].getBase(),D[3].getBound());
+                        D[1].getBase(),D[1].getBound(),
+                        D[2].getBase(),D[2].getBound(),
+                        D[3].getBase(),D[3].getBound());
 
   realSerialArray srcLocal; getLocalArrayWithGhostBoundaries(src,srcLocal);
   realSerialArray destLocal; getLocalArrayWithGhostBoundaries(dest,destLocal);
@@ -183,28 +183,28 @@ copyArray( realArray & dest, Index *D0,
   if( debug!=0 )
   {
     fprintf(debugFile,"copyArray: S=[%i,%i,%i][%i,%i,%i][%i,%i,%i][%i,%i,%i]\n"
-	              "           D=[%i,%i,%i][%i,%i,%i][%i,%i,%i][%i,%i,%i]\n",
-	    S[0].getBase(),S[0].getBound(),S[0].getStride(),
-	    S[1].getBase(),S[1].getBound(),S[1].getStride(),
-	    S[2].getBase(),S[2].getBound(),S[2].getStride(),
-	    S[3].getBase(),S[3].getBound(),S[3].getStride(),
-	    D[0].getBase(),D[0].getBound(),D[0].getStride(),
-	    D[1].getBase(),D[1].getBound(),D[1].getStride(),
-	    D[2].getBase(),D[2].getBound(),D[2].getStride(),
-	    D[3].getBase(),D[3].getBound(),D[3].getStride());
+                      "           D=[%i,%i,%i][%i,%i,%i][%i,%i,%i][%i,%i,%i]\n",
+            S[0].getBase(),S[0].getBound(),S[0].getStride(),
+            S[1].getBase(),S[1].getBound(),S[1].getStride(),
+            S[2].getBase(),S[2].getBound(),S[2].getStride(),
+            S[3].getBase(),S[3].getBound(),S[3].getStride(),
+            D[0].getBase(),D[0].getBound(),D[0].getStride(),
+            D[1].getBase(),D[1].getBound(),D[1].getStride(),
+            D[2].getBase(),D[2].getBound(),D[2].getStride(),
+            D[3].getBase(),D[3].getBound(),D[3].getStride());
 
     fprintf(debugFile,"copyArray: myid=%i srcLocal bounds=[%i,%i][%i,%i][%i,%i][%i,%i] (no ghost)\n",
-	    myid,
-	    srcLocalArrayBox.base(0),srcLocalArrayBox.bound(0),
-	    srcLocalArrayBox.base(1),srcLocalArrayBox.bound(1),
-	    srcLocalArrayBox.base(2),srcLocalArrayBox.bound(2),
-	    srcLocalArrayBox.base(3),srcLocalArrayBox.bound(3)); 
+            myid,
+            srcLocalArrayBox.base(0),srcLocalArrayBox.bound(0),
+            srcLocalArrayBox.base(1),srcLocalArrayBox.bound(1),
+            srcLocalArrayBox.base(2),srcLocalArrayBox.bound(2),
+            srcLocalArrayBox.base(3),srcLocalArrayBox.bound(3)); 
     fprintf(debugFile,"copyArray: myid=%i destLocal bounds=[%i,%i][%i,%i][%i,%i][%i,%i] (with ghost)\n",
-	    myid,
-	    destLocalArrayBox.base(0),destLocalArrayBox.bound(0),
-	    destLocalArrayBox.base(1),destLocalArrayBox.bound(1),
-	    destLocalArrayBox.base(2),destLocalArrayBox.bound(2),
-	    destLocalArrayBox.base(3),destLocalArrayBox.bound(3)); 
+            myid,
+            destLocalArrayBox.base(0),destLocalArrayBox.bound(0),
+            destLocalArrayBox.base(1),destLocalArrayBox.bound(1),
+            destLocalArrayBox.base(2),destLocalArrayBox.bound(2),
+            destLocalArrayBox.base(3),destLocalArrayBox.bound(3)); 
     fflush(debugFile);
   }
   
@@ -288,8 +288,8 @@ copyArray( realArray & dest, Index *D0,
                 " check for send to p=%i: localSrcSubArray=[%i,%i][%i,%i] srcInDest=[%i,%i][%i,%i]"
                 " dest-local-to-p=[%i,%i][%i,%i] destSendBox=[%i,%i][%i,%i] --> notEmpty=%i\n",
                 p,
-		localSrcSubArray.base(0),localSrcSubArray.bound(0),
-		localSrcSubArray.base(1),localSrcSubArray.bound(1),
+                localSrcSubArray.base(0),localSrcSubArray.bound(0),
+                localSrcSubArray.base(1),localSrcSubArray.bound(1),
                 srcInDest.base(0),srcInDest.bound(0),
                 srcInDest.base(1),srcInDest.bound(1),
                 destArrayLocalBoxOnProcessorP.base(0),destArrayLocalBoxOnProcessorP.bound(0),
@@ -304,36 +304,36 @@ copyArray( realArray & dest, Index *D0,
         IndexBox srcSendBox;
         boxSrcFromDest(srcSendBox,destSendBox);
 
-	if( copyOnProcessor && myid==p )
-	{
-	  // Do not send a message to the same processor -- just copy the data
-	  if( debug!=0 )
-	  {
-	    fprintf(debugFile,"****copyArray: myid=%i Just copy data on the same processor: *****\n"
-		    "   src=[%i,%i][%i,%i][%i,%i][%i,%i] \n"
+        if( copyOnProcessor && myid==p )
+        {
+          // Do not send a message to the same processor -- just copy the data
+          if( debug!=0 )
+          {
+            fprintf(debugFile,"****copyArray: myid=%i Just copy data on the same processor: *****\n"
+                    "   src=[%i,%i][%i,%i][%i,%i][%i,%i] \n"
                     "  dest=[%i,%i][%i,%i][%i,%i][%i,%i]\n",
-		    myid,
-		    srcSendBox.base(0),srcSendBox.bound(0),
-		    srcSendBox.base(1),srcSendBox.bound(1),
-		    srcSendBox.base(2),srcSendBox.bound(2),
-		    srcSendBox.base(3),srcSendBox.bound(3),
+                    myid,
+                    srcSendBox.base(0),srcSendBox.bound(0),
+                    srcSendBox.base(1),srcSendBox.bound(1),
+                    srcSendBox.base(2),srcSendBox.bound(2),
+                    srcSendBox.base(3),srcSendBox.bound(3),
                     destSendBox.base(0),destSendBox.bound(0),
-		    destSendBox.base(1),destSendBox.bound(1),
-		    destSendBox.base(2),destSendBox.bound(2),
-		    destSendBox.base(3),destSendBox.bound(3));
-	  }
+                    destSendBox.base(1),destSendBox.bound(1),
+                    destSendBox.base(2),destSendBox.bound(2),
+                    destSendBox.base(3),destSendBox.bound(3));
+          }
 
-	  // assign points defined in srcSendBox
-	  FOR_BOX_BOX_WITH_STRIDE(i0,i1,i2,i3,destSendBox, j0,j1,j2,j3,srcSendBox )  
-	  { 
-	    DEST(i0,i1,i2,i3)=SRC(j0,j1,j2,j3); 
-	  }
-	}
-	else 
-	{
-	  srcSendBox.processor=p;
-	  sendBoxes.push_back(srcSendBox);  // We need to send this box of data to processor p
-	}
+          // assign points defined in srcSendBox
+          FOR_BOX_BOX_WITH_STRIDE(i0,i1,i2,i3,destSendBox, j0,j1,j2,j3,srcSendBox )  
+          { 
+            DEST(i0,i1,i2,i3)=SRC(j0,j1,j2,j3); 
+          }
+        }
+        else 
+        {
+          srcSendBox.processor=p;
+          sendBoxes.push_back(srcSendBox);  // We need to send this box of data to processor p
+        }
       }
     }
     
@@ -343,13 +343,13 @@ copyArray( realArray & dest, Index *D0,
       IndexBox & pSendBox = *iter;
       if( debug!=0 )
       {
-	fprintf(debugFile,"****copyArray:*****\n"
-		">>> myid=%i: Send box =[%i,%i,%i][%i,%i,%i][%i,%i,%i][%i,%i,%i] to processor p=%i\n",
-		myid,
-		pSendBox.base(0),pSendBox.bound(0),S[0].getStride(),
-		pSendBox.base(1),pSendBox.bound(1),S[1].getStride(),
-		pSendBox.base(2),pSendBox.bound(2),S[2].getStride(),
-		pSendBox.base(3),pSendBox.bound(3),S[3].getStride(),
+        fprintf(debugFile,"****copyArray:*****\n"
+                ">>> myid=%i: Send box =[%i,%i,%i][%i,%i,%i][%i,%i,%i][%i,%i,%i] to processor p=%i\n",
+                myid,
+                pSendBox.base(0),pSendBox.bound(0),S[0].getStride(),
+                pSendBox.base(1),pSendBox.bound(1),S[1].getStride(),
+                pSendBox.base(2),pSendBox.bound(2),S[2].getStride(),
+                pSendBox.base(3),pSendBox.bound(3),S[3].getStride(),
                 pSendBox.processor);
       }
       
@@ -364,11 +364,11 @@ copyArray( realArray & dest, Index *D0,
   {
     fprintf(debugFile,"copyArray: myid=%i receive data for : destLocalArrayBox=[%i,%i][%i,%i][%i,%i][%i,%i], "
             "isEmpty=%i\n",
-	    myid,
-	    destLocalArrayBox.base(0),destLocalArrayBox.bound(0),
-	    destLocalArrayBox.base(1),destLocalArrayBox.bound(1),
-	    destLocalArrayBox.base(2),destLocalArrayBox.bound(2),
-	    destLocalArrayBox.base(3),destLocalArrayBox.bound(3),(int)destLocalArrayBox.isEmpty());
+            myid,
+            destLocalArrayBox.base(0),destLocalArrayBox.bound(0),
+            destLocalArrayBox.base(1),destLocalArrayBox.bound(1),
+            destLocalArrayBox.base(2),destLocalArrayBox.bound(2),
+            destLocalArrayBox.base(3),destLocalArrayBox.bound(3),(int)destLocalArrayBox.isEmpty());
     fflush(debugFile);
   }
   
@@ -388,17 +388,17 @@ copyArray( realArray & dest, Index *D0,
     if( debug!=0 )
     {
       fprintf(debugFile," Receive points: localDestSubArray=[%i,%i,%i][%i,%i,%i][%i,%i,%i][%i,%i,%i]\n",
-	      localDestSubArray.base(0),localDestSubArray.bound(0),D[0].getStride(),
-	      localDestSubArray.base(1),localDestSubArray.bound(1),D[1].getStride(),
-	      localDestSubArray.base(2),localDestSubArray.bound(2),D[2].getStride(),
-	      localDestSubArray.base(3),localDestSubArray.bound(3),D[3].getStride());
+              localDestSubArray.base(0),localDestSubArray.bound(0),D[0].getStride(),
+              localDestSubArray.base(1),localDestSubArray.bound(1),D[1].getStride(),
+              localDestSubArray.base(2),localDestSubArray.bound(2),D[2].getStride(),
+              localDestSubArray.base(3),localDestSubArray.bound(3),D[3].getStride());
     }
-	
+        
     // for each processor p, intersect localDestSubArray with srcLocalArrayBoxOnProcessorP
     for( int p=0; p<np; p++ )
     {
       if( copyOnProcessor && myid==p )
-	continue;  // the data has already been transfered between the processor and itself.
+        continue;  // the data has already been transfered between the processor and itself.
       
       IndexBox srcLocalArrayBoxOnProcessorP;  // defines the bounds of src on processor p
       CopyArray::getLocalArrayBox( p,src,srcLocalArrayBoxOnProcessorP );  // this is without ghost pts 
@@ -406,12 +406,12 @@ copyArray( realArray & dest, Index *D0,
 
       if( debug!=0 )
       {
-	fprintf(debugFile,"copyArray: myid=%i srcLocalArrayBox=[%i,%i][%i,%i][%i,%i][%i,%i] on p=%i\n",
-		myid,
-		srcLocalArrayBoxOnProcessorP.base(0),srcLocalArrayBoxOnProcessorP.bound(0),
-		srcLocalArrayBoxOnProcessorP.base(1),srcLocalArrayBoxOnProcessorP.bound(1),
-		srcLocalArrayBoxOnProcessorP.base(2),srcLocalArrayBoxOnProcessorP.bound(2),
-		srcLocalArrayBoxOnProcessorP.base(3),srcLocalArrayBoxOnProcessorP.bound(3),p);
+        fprintf(debugFile,"copyArray: myid=%i srcLocalArrayBox=[%i,%i][%i,%i][%i,%i][%i,%i] on p=%i\n",
+                myid,
+                srcLocalArrayBoxOnProcessorP.base(0),srcLocalArrayBoxOnProcessorP.bound(0),
+                srcLocalArrayBoxOnProcessorP.base(1),srcLocalArrayBoxOnProcessorP.bound(1),
+                srcLocalArrayBoxOnProcessorP.base(2),srcLocalArrayBoxOnProcessorP.bound(2),
+                srcLocalArrayBoxOnProcessorP.base(3),srcLocalArrayBoxOnProcessorP.bound(3),p);
       }
 
       // convert localDestSubArray from dest index-space to src-index-space
@@ -426,31 +426,31 @@ copyArray( realArray & dest, Index *D0,
 
       if( notEmpty )
       {
-	if( debug!=0 )
-	{
-	  fprintf(debugFile," myid=%i: Expecting to receive box =[%i,%i,%i][%i,%i,%i][%i,%i,%i][%i,%i,%i]"
+        if( debug!=0 )
+        {
+          fprintf(debugFile," myid=%i: Expecting to receive box =[%i,%i,%i][%i,%i,%i][%i,%i,%i][%i,%i,%i]"
                   "from processor p=%i\n",
-		  myid,
-		  destReceiveBox.base(0),destReceiveBox.bound(0),S[0].getStride(),
-		  destReceiveBox.base(1),destReceiveBox.bound(1),S[1].getStride(),
-		  destReceiveBox.base(2),destReceiveBox.bound(2),S[2].getStride(),
-		  destReceiveBox.base(3),destReceiveBox.bound(3),S[3].getStride(),p);
-	}
+                  myid,
+                  destReceiveBox.base(0),destReceiveBox.bound(0),S[0].getStride(),
+                  destReceiveBox.base(1),destReceiveBox.bound(1),S[1].getStride(),
+                  destReceiveBox.base(2),destReceiveBox.bound(2),S[2].getStride(),
+                  destReceiveBox.base(3),destReceiveBox.bound(3),S[3].getStride(),p);
+        }
 
         // convert destReceiveBox from src index-space to dest index-space
         boxDestFromSrc(destReceiveBox,destReceiveBox);
-	
-	destReceiveBox.processor=p;
+        
+        destReceiveBox.processor=p;
         receiveBoxes.push_back(destReceiveBox);
 
-	if( debug!=0 )
-	{
-	  fprintf(debugFile,"      --> in dest index-space box =[%i,%i,%i][%i,%i,%i][%i,%i,%i][%i,%i,%i] \n",
-		  destReceiveBox.base(0),destReceiveBox.bound(0),D[0].getStride(),
-		  destReceiveBox.base(1),destReceiveBox.bound(1),D[1].getStride(),
-		  destReceiveBox.base(2),destReceiveBox.bound(2),D[2].getStride(),
-		  destReceiveBox.base(3),destReceiveBox.bound(3),D[3].getStride());
-	}
+        if( debug!=0 )
+        {
+          fprintf(debugFile,"      --> in dest index-space box =[%i,%i,%i][%i,%i,%i][%i,%i,%i][%i,%i,%i] \n",
+                  destReceiveBox.base(0),destReceiveBox.bound(0),D[0].getStride(),
+                  destReceiveBox.base(1),destReceiveBox.bound(1),D[1].getStride(),
+                  destReceiveBox.base(2),destReceiveBox.bound(2),D[2].getStride(),
+                  destReceiveBox.base(3),destReceiveBox.bound(3),D[3].getStride());
+        }
 
       }
     }
@@ -497,7 +497,7 @@ copyArray( realArray & dest, Index *D0,
       receiveBoxIndex[pReceiveBox.processor]=m;  // maps processor number to index in receiveBoxes
       if( debug!=0 )
       {
-	fprintf(debugFile,">>> myid=%i: post a receive for buffer of size %i from p=%i (m=%i,numReceive=%i) \n",
+        fprintf(debugFile,">>> myid=%i: post a receive for buffer of size %i from p=%i (m=%i,numReceive=%i) \n",
                 myid,bufSize,pReceiveBox.processor,m,numReceive);
       }
       MPI_Irecv(rBuff[m],bufSize,MPI_Real_Type,pReceiveBox.processor,MPI_ANY_TAG,MPI_COMM_WORLD,&receiveRequest[m] );
@@ -527,13 +527,13 @@ copyArray( realArray & dest, Index *D0,
       int i=0;
       FOR_BOX_WITH_STRIDE(i0,i1,i2,i3,S[0].getStride(),S[1].getStride(),S[2].getStride(),S[3].getStride(),pSendBox)
       {
-	buff[i]=SRC(i0,i1,i2,i3); 
-	i++;
+        buff[i]=SRC(i0,i1,i2,i3); 
+        i++;
       }
 
       if( debug!=0 )
       {
-	fprintf(debugFile,"<<< myid=%i: send buffer of size %i to p=%i\n",myid,bufSize,pSendBox.processor);
+        fprintf(debugFile,"<<< myid=%i: send buffer of size %i to p=%i\n",myid,bufSize,pSendBox.processor);
       }
       
       MPI_Isend(sBuff[m],bufSize,MPI_Real_Type,pSendBox.processor,bufSize,MPI_COMM_WORLD,&sendRequest[m] );
@@ -552,14 +552,14 @@ copyArray( realArray & dest, Index *D0,
       
       if( debug!=0 )
       {
-	fprintf(debugFile,">>> myid=%i: received buffer of size %i from p=%i (m=%i,numReceive=%i)\n myid=%i: buff=",
+        fprintf(debugFile,">>> myid=%i: received buffer of size %i from p=%i (m=%i,numReceive=%i)\n myid=%i: buff=",
             myid,bufSize,p,m,numReceive,myid);
         #If #MPI_Real_Type eq "MPI_INT"
-  	 for( int j=0; j<bufSize; j++ ) fprintf(debugFile,"%3i ",rBuff[m][j]);
+         for( int j=0; j<bufSize; j++ ) fprintf(debugFile,"%3i ",rBuff[m][j]);
         #Else
-	 for( int j=0; j<bufSize; j++ ) fprintf(debugFile,"%3.1f ",rBuff[m][j]);
+         for( int j=0; j<bufSize; j++ ) fprintf(debugFile,"%3.1f ",rBuff[m][j]);
         #End 
-	fprintf(debugFile,"\n");
+        fprintf(debugFile,"\n");
       }
       
       // fill in the entries of vLocal
@@ -577,8 +577,8 @@ copyArray( realArray & dest, Index *D0,
       int i=0;
       FOR_BOX_WITH_STRIDE(i0,i1,i2,i3,D[0].getStride(),D[1].getStride(),D[2].getStride(),D[3].getStride(),rBox)
       {
-	DEST(i0,i1,i2,i3)=buff[i];   
-	i++;
+        DEST(i0,i1,i2,i3)=buff[i];   
+        i++;
       }
     }
 
@@ -594,7 +594,7 @@ copyArray( realArray & dest, Index *D0,
 //       int bufSize=receiveStatus[m].MPI_TAG;
 
 //       fprintf(debugFile,"<- processor %i: received msg from processor %i, tag=%i p=%i values=",myID,
-// 	      receiveStatus[m].MPI_SOURCE,receiveStatus[m].MPI_TAG,p);
+//            receiveStatus[m].MPI_SOURCE,receiveStatus[m].MPI_TAG,p);
 //       for( j=0; j<nivd; j++ ) fprintf(debugFile,"%8.2e ",dbuff[p][j]);
 //       fprintf(debugFile,"\n");
 
@@ -758,7 +758,7 @@ copyArray( realSerialArray & dest, int destProcessor, realSerialArray & src, int
       {
         dims(0,a)=src.getBase(a);
         dims(1,a)=src.getBound(a);
-	count *= dims(1,a)-dims(0,a)+1;
+        count *= dims(1,a)-dims(0,a)+1;
       }
       assert( count>=0 );
       if( debug>0 ) printf("copySerial:Array dims to send, myid=%i : srcProcessor: count=%i\n",myid,count);
@@ -786,8 +786,8 @@ copyArray( realSerialArray & dest, int destProcessor, realSerialArray & src, int
       count=1;
       for( int a=0; a<MAX_ARRAY_DIMENSION; a++ )
       {
-	D[a]=Range(dims(0,a),dims(1,a));
-	count *= dims(1,a)-dims(0,a)+1;
+        D[a]=Range(dims(0,a),dims(1,a));
+        count *= dims(1,a)-dims(0,a)+1;
       }
       assert( count>=0 );
       assert( MAX_ARRAY_DIMENSION==6 );
@@ -917,13 +917,13 @@ copyArray( const realSerialArray & uLocal,
     if( uLocalIsEmpty && Jv[d].getLength()>0 )
     {
       printf("copyArray:ERROR: copy serial to distributed: uLocal is empty but Jv[%i]=[%i,%i] is not empty!\n",
-	     d,Jv[d].getBase(),Jv[d].getBound());
+             d,Jv[d].getBase(),Jv[d].getBound());
       OV_ABORT("error");
     }
     if(  !uLocalIsEmpty && Jv[d].getLength()<=0  )
     {
       printf("copyArray:ERROR: copy serial to distributed: uLocal is NOT empty but Jv[%i].getLength()=%i is empty!\n",
-	     d,Jv[d].getLength());
+             d,Jv[d].getLength());
       OV_ABORT("error");
       
     }
@@ -953,9 +953,9 @@ copyArray( const realSerialArray & uLocal,
   {
     fprintf(debugFile,"++++ copyArray: v = uLocal,  *start* myid=%i +++++\n",myid);
     fprintf(debugFile," uLocal=[%i,%i][%i,%i][%i,%i], Jv=[%i,%i][%i,%i][%i,%i][%i,%i]\n",
-	    uLocal.getBase(0),uLocal.getBound(0),
-	    uLocal.getBase(1),uLocal.getBound(1),
-	    uLocal.getBase(2),uLocal.getBound(2),
+            uLocal.getBase(0),uLocal.getBound(0),
+            uLocal.getBase(1),uLocal.getBound(1),
+            uLocal.getBase(2),uLocal.getBound(2),
             Jv[0].getBase(),Jv[0].getBound(),
             Jv[1].getBase(),Jv[1].getBound(),
             Jv[2].getBase(),Jv[2].getBound(),
@@ -971,9 +971,9 @@ copyArray( const realSerialArray & uLocal,
       // double check that myid is in uProcessorSet
       if( min(abs(uProcessorSet-myid))!=0 )
       {
-	printf("CopyArray: ERROR: uLocal is NOT empty, but myid=%i is NOT in uProcessorSet.\n",
-	       myid);
-	OV_ABORT("ERROR");
+        printf("CopyArray: ERROR: uLocal is NOT empty, but myid=%i is NOT in uProcessorSet.\n",
+               myid);
+        OV_ABORT("ERROR");
       }
     }
     
@@ -1083,52 +1083,52 @@ copyArray( const realSerialArray & uLocal,
       {
         const int pp = vProcessorSet(p);
         // get vBox: bounds on vLocal on proc. pp 
-	getLocalArrayBox( pp, v, vBoxp );
+        getLocalArrayBox( pp, v, vBoxp );
 
 
         IndexBox pSendBox;
-	notEmpty = IndexBox::intersect( sourceBox,vBoxp, pSendBox); 
+        notEmpty = IndexBox::intersect( sourceBox,vBoxp, pSendBox); 
 
-	if( debug & 2 )
-	{
-	  fprintf(debugFile," pp=%i vBoxp=[%i,%i][%i,%i][%i,%i][%i,%i] notEmpty=%i, pSendBox=[%i,%i][%i,%i]\n",
-		  pp,
-		  vBoxp.base(0),vBoxp.bound(0),
-		  vBoxp.base(1),vBoxp.bound(1),
-		  vBoxp.base(2),vBoxp.bound(2),
-		  vBoxp.base(3),vBoxp.bound(3),notEmpty,
-		  pSendBox.base(0),pSendBox.bound(0),
-		  pSendBox.base(1),pSendBox.bound(1));
-	}
+        if( debug & 2 )
+        {
+          fprintf(debugFile," pp=%i vBoxp=[%i,%i][%i,%i][%i,%i][%i,%i] notEmpty=%i, pSendBox=[%i,%i][%i,%i]\n",
+                  pp,
+                  vBoxp.base(0),vBoxp.bound(0),
+                  vBoxp.base(1),vBoxp.bound(1),
+                  vBoxp.base(2),vBoxp.bound(2),
+                  vBoxp.base(3),vBoxp.bound(3),notEmpty,
+                  pSendBox.base(0),pSendBox.bound(0),
+                  pSendBox.base(1),pSendBox.bound(1));
+        }
 
-	if( copyOnProcessor && notEmpty && myid==pp )
-	{
-	  pSendBox.processor=myid;
-	  mySendBox=pSendBox;  // save this for later 
-	}
+        if( copyOnProcessor && notEmpty && myid==pp )
+        {
+          pSendBox.processor=myid;
+          mySendBox=pSendBox;  // save this for later 
+        }
 
         // save the box (even if it is empty)
-	pSendBox.processor=pp;
-	sendBoxes.push_back(pSendBox);  // We need to send this box of data to processor p
+        pSendBox.processor=pp;
+        sendBoxes.push_back(pSendBox);  // We need to send this box of data to processor p
 
-	if( notEmpty && myid!=pp )
-	  nps++;
+        if( notEmpty && myid!=pp )
+          nps++;
 
       }
     
       if( debug & 2 )
       {
-	for(iter = sendBoxes.begin(); iter!=sendBoxes.end(); iter++ )
-	{
-	  IndexBox & pSendBox = *iter;
-	  fprintf(debugFile,
-		  ">>> myid=%i: Send box =[%i,%i][%i,%i][%i,%i][%i,%i] (empty=%i) to processor p=%i\n",
-		  myid,
-		  pSendBox.base(0),pSendBox.bound(0),
-		  pSendBox.base(1),pSendBox.bound(1),
-		  pSendBox.base(2),pSendBox.bound(2),
-		  pSendBox.base(3),pSendBox.bound(3),(int)pSendBox.isEmpty(),pSendBox.processor);
-	}
+        for(iter = sendBoxes.begin(); iter!=sendBoxes.end(); iter++ )
+        {
+          IndexBox & pSendBox = *iter;
+          fprintf(debugFile,
+                  ">>> myid=%i: Send box =[%i,%i][%i,%i][%i,%i][%i,%i] (empty=%i) to processor p=%i\n",
+                  myid,
+                  pSendBox.base(0),pSendBox.bound(0),
+                  pSendBox.base(1),pSendBox.bound(1),
+                  pSendBox.base(2),pSendBox.bound(2),
+                  pSendBox.base(3),pSendBox.bound(3),(int)pSendBox.isEmpty(),pSendBox.processor);
+        }
       }
     } // end if notEmpty
   } // end if uLocal.getLength(0)>0 )
@@ -1158,7 +1158,7 @@ copyArray( const realSerialArray & uLocal,
     {
       if( debug & 2 )
       {
-	fprintf(debugFile,"send header: p=%i, pp=%i pSendBox.processor=%i\n",p,pp,pSendBox.processor);
+        fprintf(debugFile,"send header: p=%i, pp=%i pSendBox.processor=%i\n",p,pp,pSendBox.processor);
       }
       hbuffSize=numHeader;
       shbuff[p] = new int [hbuffSize];
@@ -1166,8 +1166,8 @@ copyArray( const realSerialArray & uLocal,
       shbuff[p][k]=pSendBox.size(); k++;
       for( int d=0; d<maxDim; d++ )
       {
-	shbuff[p][k]=pSendBox.base(d);  k++;
-	shbuff[p][k]=pSendBox.bound(d); k++;
+        shbuff[p][k]=pSendBox.base(d);  k++;
+        shbuff[p][k]=pSendBox.bound(d); k++;
       }
     }
     else
@@ -1175,19 +1175,19 @@ copyArray( const realSerialArray & uLocal,
       // no data to send to proc. pp : 
       if( debug & 2 )
       {
-	fprintf(debugFile,"send header: p=%i, pp=%i Send header to same proc.\n",p,pp);
+        fprintf(debugFile,"send header: p=%i, pp=%i Send header to same proc.\n",p,pp);
       }
       hbuffSize=1; // we will send 1 "zero" since the rec. proc. expects a message
       shbuff[p] = new int [hbuffSize];
       for( int i=0; i<hbuffSize; i++ )
-	shbuff[p][i]=0;
+        shbuff[p][i]=0;
     }
     if( debug & 2 )
     {
       fprintf(debugFile,"myid=%i : send header info (%i ints) to p=%i\n",myid,hbuffSize,pp);
       fprintf(debugFile,"          shbuff=");
       for( int j=0; j<hbuffSize; j++ )
-	fprintf(debugFile,"%i ",shbuff[p][j]);
+        fprintf(debugFile,"%i ",shbuff[p][j]);
       fprintf(debugFile,"\n");
     }
 
@@ -1217,7 +1217,7 @@ copyArray( const realSerialArray & uLocal,
     if( num>0 )
     { // post receives for data (only from proc's with non-zero amounts)
       if( debug & 2 )
-	fprintf(debugFile,"myid=%i : post receive for %i data items from p=%i\n",myid,num,pp);
+        fprintf(debugFile,"myid=%i : post receive for %i data items from p=%i\n",myid,num,pp);
 
       rbuff[npr] = new real [ num ];
       int tag=tag2+myid;
@@ -1254,20 +1254,20 @@ copyArray( const realSerialArray & uLocal,
       int k=0;
       FOR_BOX(i0,i1,i2,i3,pSendBox)
       {
-	sbuff[p][k] = U(i0,i1,i2,i3); k++;
+        sbuff[p][k] = U(i0,i1,i2,i3); k++;
       }
 
       if( debug & 2 )
       {
-	fprintf(debugFile,"myid=%i : send %i data items to p=%i\n",myid,buffSize,pp);
-	fprintf(debugFile,"          sbuff=");
-	for( int j=0; j<buffSize; j++ )
+        fprintf(debugFile,"myid=%i : send %i data items to p=%i\n",myid,buffSize,pp);
+        fprintf(debugFile,"          sbuff=");
+        for( int j=0; j<buffSize; j++ )
         #If #MPI_Real_Type eq "MPI_INT"
-	  fprintf(debugFile,"%8i ",sbuff[p][j]);
+          fprintf(debugFile,"%8i ",sbuff[p][j]);
         #Else
-	  fprintf(debugFile,"%8.2e ",sbuff[p][j]);
+          fprintf(debugFile,"%8.2e ",sbuff[p][j]);
         #End
-	fprintf(debugFile,"\n");
+        fprintf(debugFile,"\n");
       }
     
       // send data
@@ -1290,9 +1290,9 @@ copyArray( const realSerialArray & uLocal,
   if( debug & 2 )
   {
     fprintf(debugFile," vLocal=[%i,%i][%i,%i][%i,%i]\n",
-	    uLocal.getBase(0),uLocal.getBound(0),
-	    uLocal.getBase(1),uLocal.getBound(1),
-	    uLocal.getBase(2),uLocal.getBound(2));
+            uLocal.getBase(0),uLocal.getBound(0),
+            uLocal.getBase(1),uLocal.getBound(1),
+            uLocal.getBase(2),uLocal.getBound(2));
     fflush(debugFile);
   }
 
@@ -1303,12 +1303,12 @@ copyArray( const realSerialArray & uLocal,
     if( debug & 2 )
     {
       fprintf(debugFile,
-	      ">>> myid=%i: Just copy data: [%i,%i][%i,%i][%i,%i][%i,%i] on the same processor p=%i\n",
-	      myid,
-	      mySendBox.base(0),mySendBox.bound(0),
-	      mySendBox.base(1),mySendBox.bound(1),
-	      mySendBox.base(2),mySendBox.bound(2),
-	      mySendBox.base(3),mySendBox.bound(3),myid);
+              ">>> myid=%i: Just copy data: [%i,%i][%i,%i][%i,%i][%i,%i] on the same processor p=%i\n",
+              myid,
+              mySendBox.base(0),mySendBox.bound(0),
+              mySendBox.base(1),mySendBox.bound(1),
+              mySendBox.base(2),mySendBox.bound(2),
+              mySendBox.base(3),mySendBox.bound(3),myid);
     }
 
     // assign points defined in mySendBox:
@@ -1340,34 +1340,34 @@ copyArray( const realSerialArray & uLocal,
       // }
 
       IndexBox rBox(rhbuff[p][1],rhbuff[p][2],
-		    rhbuff[p][3],rhbuff[p][4],
-		    rhbuff[p][5],rhbuff[p][6],
-		    rhbuff[p][7],rhbuff[p][8]);
+                    rhbuff[p][3],rhbuff[p][4],
+                    rhbuff[p][5],rhbuff[p][6],
+                    rhbuff[p][7],rhbuff[p][8]);
     
       if( debug & 2 )
       {
         fprintf(debugFile," receive data from pp=%i (mpr=%i) data-count=%i\n",pp,mpr,rhbuff[p][0]);
-	fprintf(debugFile,
-		" -- fill v : [%i,%i][%i,%i][%i,%i][%i,%i] with data from p=%i\n",
-		rBox.base(0),rBox.bound(0),
-		rBox.base(1),rBox.bound(1),
-		rBox.base(2),rBox.bound(2),
-		rBox.base(3),rBox.bound(3),pp);
+        fprintf(debugFile,
+                " -- fill v : [%i,%i][%i,%i][%i,%i][%i,%i] with data from p=%i\n",
+                rBox.base(0),rBox.bound(0),
+                rBox.base(1),rBox.bound(1),
+                rBox.base(2),rBox.bound(2),
+                rBox.base(3),rBox.bound(3),pp);
 
-	fprintf(debugFile,"   rbuff=");
-	for( int j=0; j<rhbuff[p][0]; j++ )
+        fprintf(debugFile,"   rbuff=");
+        for( int j=0; j<rhbuff[p][0]; j++ )
           #If #MPI_Real_Type eq "MPI_INT"
-  	    fprintf(debugFile,"%8i ",rbuff[mpr][j]);
+            fprintf(debugFile,"%8i ",rbuff[mpr][j]);
           #Else
-  	    fprintf(debugFile,"%8.2e ",rbuff[mpr][j]);
+            fprintf(debugFile,"%8.2e ",rbuff[mpr][j]);
           #End
-	fprintf(debugFile,"\n");
+        fprintf(debugFile,"\n");
       }
       
       int k=0;
       FOR_BOX(i0,i1,i2,i3,rBox)
       {
-	V(i0,i1,i2,i3) = rbuff[mpr][k]; k++;
+        V(i0,i1,i2,i3) = rbuff[mpr][k]; k++;
       }
       mpr++;
     }
