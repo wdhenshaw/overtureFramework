@@ -14,6 +14,8 @@
 #     ogen -noplot objectsGrid -prefix=multiObjectsGrid -addBackGround=0 -interp=e -order=2 -factor=4 
 #     ogen -noplot objectsGrid -prefix=multiObjectsGrid -addBackGround=0 -interp=e -order=4 -factor=4 
 #
+# *wdh* Oct 3, 2024 -- change the boundary conditions to be distinct
+#
 $prefix="objectsGrid"; 
 $order=2; $factor=1; $interp="i"; # default values
 $orderOfAccuracy = "second order"; $ng=2; $interpType = "implicit for all grids";
@@ -68,7 +70,8 @@ create mappings
     $ny = int( ($yb-$ya)/$ds +1.5 ); 
     $nx $ny
     boundary conditions
-      if( $addBackGround eq 1 ){ $bcCmd="0 0 0 0"; }else{ $bcCmd="1 1 1 1"; }
+      # if( $addBackGround eq 1 ){ $bcCmd="0 0 0 0"; }else{ $bcCmd="1 1 1 1"; }
+      if( $addBackGround eq 1 ){ $bcCmd="0 0 0 0"; }else{ $bcCmd="1 2 3 4"; }
       # 0 0 0 0
       $bcCmd
   exit

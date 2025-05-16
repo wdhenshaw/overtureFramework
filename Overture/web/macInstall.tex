@@ -1,10 +1,10 @@
 \section{Installing Overture on Mac OS/X}  \label{sec:installMac}
 
 
-\subsection{maxOS Sonoma 14.6.1  (Chip: Apple M3 Max)} 
+\subsection{MacOS Sonoma 14.6.1  (Chip: Apple M3 Max)} 
 
 
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\footnotesize]
 -------- STAGE I ---------
 
 (1) Goto Apple app store and install Xcode (developer tools)
@@ -18,15 +18,16 @@
    bash
    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-   Add /opt/homebrew/bin to the path in .cshrc
+   Add /opt/homebrew/bin to the path in .cshrc, for example:
+      set path=(. $HOME/bin  $MPI_ROOT/bin /opt/homebrew/bin  $path)
 
-   NOTE: see https://brew.sh to searching for packages
+   NOTE: see https://brew.sh to search for packages
 
 (4) Install gfortran
    from:
       https://github.com/fxcoudert/gfortran-for-macOS/releases
 
-(5) Install Xquartz from web.  This should install X11 libraries in {\tt /opt/X11/lib}.
+(5) Install Xquartz from web.  This should install X11 libraries in /opt/X11/lib.
 
 (6) Install openmotif
     brew install openmotif
@@ -39,6 +40,7 @@
 -------  STAGE II --------
 
 Get Overture from sourceforge: (NOTE: replace wdhenshaw by your sourceforge account name)
+
   git clone ssh://wdhenshaw@git.code.sf.net/p/overtureframework/code overtureFramework
   <sourceforge password>
 
@@ -50,9 +52,10 @@ Create a software folder:
 
 ---- Stage II: Install HDF in the software folder
 
-   Use overtureFramework/packages/hdf5-1.8.15-macPatch.tar.gz
 
+copy overtureFramework/packages/hdf5-1.8.15-macPatch.tar.gz to the software folder
 
+cd software
 tar xzf hdf5-1.8.15-macPatch.tar.gz
 mv hdf5-1.8.15-macPatch hdf5-1.8.15
 
@@ -89,13 +92,15 @@ make lapacklib
 
 Build PETSc 3.21.5 from the git repo: 
 
+cd software
 git clone -b release https://gitlab.com/petsc/petsc.git petsc
 cd petsc
 git checkout v3.21.5
 
 setenv PETSC_DIR /Users/henshaw/software/petsc
 setenv PETSC_ARCH darwin-opt
-configure --with-cc=clang --with-fc=gfortran --PETSC_ARCH=darwin-opt --with-debugging=0 --with-fortran=0 --with-matlab=0 --with-mpi=0 --with-shared-libraries=1
+configure --with-cc=clang --with-fc=gfortran --PETSC_ARCH=darwin-opt --with-debugging=0 --with-fortran=0 
+          --with-matlab=0 --with-mpi=0 --with-shared-libraries=1
 
 
 make PETSC_DIR=/Users/henshaw/software/petsc PETSC_ARCH=darwin-opt check
@@ -109,7 +114,8 @@ make PETSC_DIR=/Users/henshaw/software/petsc PETSC_ARCH=darwin-opt check
 
 ----- STAGE II: Install Overture
 
-Set env variables:
+Set some environmental variables (you could put these in your .cshrc)
+
 setenv Overture /Users/henshaw/Overture.g
 setenv APlusPlus /Users/henshaw/software/AppPpp-0.8.3/A++/install
 setenev PPlusPlus /Users/henshaw/software/AppPpp-0.8.3/A++/install
@@ -122,11 +128,11 @@ setenv OpenGL /opt/homebrew
 setenv LAPACK /Users/henshaw/software/lapack-3.8.0
 
 goto overtureFramework/Overture, and run buildOverture to copy files to /Users/henshaw/Overture.g
-  
+
 buildOverture
 (enter y if you are over-writing an existing folder)
 
-cd Users/henshaw/Overture.g
+cd /Users/henshaw/Overture.g
 configure 
 make -j2
 make check  (one grid generation check fails)
@@ -135,7 +141,7 @@ make check  (one grid generation check fails)
 ----- STAGE II : Compile CG (PDE solvers)
 
 To compile CG solver with PETSc you should set: 
-  setenv usePETSc  
+  setenv usePETSc yes
 
 cd overtureFramework/cg
 make
@@ -145,7 +151,7 @@ make check-quiet
 
 
 
-\end{verbatim}
+\end{Verbatim}
 
 
 

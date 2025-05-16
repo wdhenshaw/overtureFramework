@@ -19,6 +19,8 @@
 #          <------EW -------->     
 #                                  
 #
+if( $ibeamBC eq "" ){ $ibeamBC=7; }
+#
 $degree=3;  # degree of Nurbs 
 $centerHeight=.75; $centerWidth=.25;
 $edgeHeight=.25;   $edgeWidth=1.;
@@ -102,7 +104,7 @@ exit
     generate
     # open graphics
     boundary conditions
-      -1 -1 7 0 0 0
+      -1 -1 $ibeamBC 0 0 0
     share 
        0 0 100 0 0 0
     name iBeamGridBase

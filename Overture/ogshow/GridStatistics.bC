@@ -371,6 +371,158 @@ computeNegativeVolumes(MappedGrid & mg, int numberOfGhost, FILE *file, int grid,
 }
 
 
+// ================================================================================
+/// \brief Return x,y,z min-max bounds of a component grid
+/// \param xab[axis][side] : 
+///      xMin[0] = min x-coordinate, xMax[0] = max-x coordinate
+///      xMin[1] = min y-coordinate, xMax[1] = max-y coordinate
+///      xMin[2] = min z-coordinate, xMax[2] = max-z coordinate
+// ================================================================================
+void GridStatistics::
+getGridCoordinateBounds(MappedGrid & mg, Real xMin[3], Real xMax[3], MaskOptionEnum maskOption /* =positiveMask */ )
+{
+
+  const int domainDimension = mg.domainDimension();
+  const int rangeDimension  = mg.rangeDimension();
+  const IntegerArray & gid  = mg.gridIndexRange();
+  
+  Index Iv[3], &I1=Iv[0], &I2=Iv[1], &I3=Iv[2];
+  int iv[3], &i1=iv[0], &i2=iv[1], &i3=iv[2];  // NOTE: iv[0]==i1, iv[1]==i2, iv[2]==i3
+  ::getIndex(gid,I1,I2,I3); 
+
+  mg.update(MappedGrid::THEmask );
+  OV_GET_SERIAL_ARRAY(int,mg.mask(),maskLocal);
+  bool ok = ParallelUtility::getLocalArrayBounds(mg.mask(),maskLocal,I1,I2,I3);
+  
+  for( int axis=0; axis<3; axis++ )
+  {
+    xMin[axis]=.1*REAL_MAX;
+    xMax[axis]=-xMin[axis];
+  }
+  if( mg.getGridType()==GenericGrid::structuredGrid )
+  {
+    const bool isRectangular=mg.isRectangular();
+    if( ok && isRectangular )
+    {
+       // --- CARTESIAN GRID ----
+      real dvx[3]={1.,1.,1.}, xab[2][3]={{0.,0.,0.},{0.,0.,0.}};
+      int iv0[3]={0,0,0}; //
+      // real xv[3]={0.,0.,0.};
+      mg.getRectangularGridParameters( dvx, xab );
+      for( int dir=0; dir<mg.numberOfDimensions(); dir++ )
+      {
+        iv0[dir]=mg.gridIndexRange(0,dir);
+        if( mg.isAllCellCentered() )
+          xab[0][dir]+=.5*dvx[dir];  // offset for cell centered
+      }
+      // This macro defines the grid points for rectangular grids:
+      #undef XC
+      #define XC(iv,axis) (xab[0][axis]+dvx[axis]*(iv[axis]-iv0[axis]))
+
+      if( maskOption==ignoreMask )
+      {
+        for( int axis=0; axis<3; axis++ )
+        {
+          xMin[axis] = xab[0][axis];
+          xMax[axis] = xab[1][axis];
+        }
+      }
+      else
+      {
+        FOR_3D(i1,i2,i3,I1,I2,I3)
+        {
+         if(
+              (maskOption==positiveMask && maskLocal(i1,i2,i3)>0  ) ||
+              (maskOption==nonZeroMask  && maskLocal(i1,i2,i3)!=0 )
+            )
+          {
+            for( int axis=0; axis<rangeDimension; axis++ )
+            {
+              xMin[axis] = min( xMin[axis],XC(iv,axis) );
+              xMax[axis] = max( xMax[axis],XC(iv,axis) );
+            }
+          }
+        }
+      }
+      #undef XC
+
+    }
+    else if( ok )
+    {
+      // -------------------------------
+      // ------ CURVILINEAR GRID -------
+      // -------------------------------
+
+      mg.update(MappedGrid::THEvertex );
+      OV_GET_SERIAL_ARRAY(Real,mg.vertex(),vertex);
+
+      const Real *vertexp = vertex.Array_Descriptor.Array_View_Pointer3;
+      const int vertexDim0=vertex.getRawDataSize(0);
+      const int vertexDim1=vertex.getRawDataSize(1);
+      const int vertexDim2=vertex.getRawDataSize(2);
+#define x(i0,i1,i2,i3) vertexp[i0+vertexDim0*(i1+vertexDim1*(i2+vertexDim2*(i3)))]
+
+      FOR_3D(i1,i2,i3,I1,I2,I3)
+      {
+        if( (maskOption==ignoreMask )                             ||
+            (maskOption==positiveMask && maskLocal(i1,i2,i3)>0  ) ||
+            (maskOption==nonZeroMask  && maskLocal(i1,i2,i3)!=0 )
+          )
+        {
+          for( int axis=0; axis<rangeDimension; axis++ )
+          {
+            xMin[axis] = min( xMin[axis],x(i1,i2,i3,axis) );
+            xMax[axis] = max( xMax[axis],x(i1,i2,i3,axis) );
+          }
+        }
+      }
+
+    } 
+
+    for( int axis=0; axis<rangeDimension; axis++ )
+    {
+      xMin[axis]=ParallelUtility::getMinValue(xMin[axis]);
+      xMax[axis]=ParallelUtility::getMaxValue(xMax[axis]);
+
+    }     
+  }
+  else // unstructured grid
+  {
+    printF("GridStatistics::getGridBounds: WARNING: Not implemented yet for unstructured grids\n");
+
+  }
+
+}
+
+// ================================================================================
+// Return x,y,z min-max bounds of a grid collection
+/// \param xab[axis][side] : 
+///      xab[0][0] = min x-coordinate, xab[0][1] = max-x coordinate
+///      xab[1][0] = min y-coordinate, xab[0][1] = max-y coordinate
+///      xab[2][0] = min z-coordinate, xab[0][1] = max-z coordinate
+// ================================================================================
+void GridStatistics::
+getGridCoordinateBounds(GridCollection & gc, Real xMin[3], Real xMax[3], MaskOptionEnum maskOption /* =positiveMask */ )
+{
+
+  for( int axis=0; axis<3; axis++ )
+  {
+    xMin[axis]=.1*REAL_MAX;
+    xMax[axis]=-xMin[axis];
+  }
+  Real xMing[3], xMaxg[3]; // holds component grid min/max
+  for( int grid=0; grid<gc.numberOfComponentGrids(); grid++ )
+  {
+    MappedGrid & mg = gc[grid];
+    getGridCoordinateBounds(mg, xMing, xMaxg, maskOption );
+
+    for( int axis=0; axis<3; axis++ )
+    {
+      xMin[axis] = min(xMin[axis],xMing[axis]);
+      xMax[axis] = max(xMax[axis],xMaxg[axis]);
+    }
+  }
+}
 
 
 
@@ -468,8 +620,9 @@ printGridStatistics(MappedGrid & mg, FILE *file /* =stdout */,
 ///      }
 // =================================================================================================
 {
-  real volMin=REAL_MAX,volAve=0.,volMax=0.;
-  real dsMin[3], dsAve[3], dsMax[3];
+  Real volMin=REAL_MAX,volAve=0.,volMax=0.;
+  Real dsMin[3], dsAve[3], dsMax[3];
+  Real xMin[3], xMax[3];
   int numberOfVolumes=0;
   int numberOfNegativeVolumes=0;
   int numberOfGridPoints=0;
@@ -484,6 +637,7 @@ printGridStatistics(MappedGrid & mg, FILE *file /* =stdout */,
   const IntegerArray & dw = mg.discretizationWidth();
   
   getGridSpacing(mg,dsMin,dsAve,dsMax );
+  getGridCoordinateBounds( mg,xMin,xMax );
   
 
   Index Iv[3], &I1=Iv[0], &I2=Iv[1], &I3=Iv[2];
@@ -643,14 +797,18 @@ printGridStatistics(MappedGrid & mg, FILE *file /* =stdout */,
       if( rangeDimension==2 )
       {
         fPrintF(file,
+                " xMin=[%9.2e,%9.2e], xMax=[%9.2e,%9.2e] (mask>0)\n"
                 " bc = [%i,%i, %i,%i] share=[%i,%i, %i,%i] isPeriodic=[%i,%i] dw=%i\n",
+                xMin[0],xMin[1], xMax[0],xMax[1],
                 bc(0,0),bc(1,0),bc(0,1),bc(1,1),share(0,0),share(1,0),share(0,1),share(1,1),
                 isPeriodic(0),isPeriodic(1),dw(0) );
       }
       else if( rangeDimension==3 )
       {
         fPrintF(file,
+                " xMin=[%9.2e,%9.2e,%9.2e], xMax=[%9.2e,%9.2e,%9.2e] (mask>0)\n"
                 " bc = [%i,%i, %i,%i, %i,%i] share=[%i,%i, %i,%i, %i,%i] isPeriodic=[%i,%i,%i] dw=%i\n",
+                xMin[0],xMin[1],xMin[2], xMax[0],xMax[1],xMax[2],
                 bc(0,0),bc(1,0),bc(0,1),bc(1,1),bc(0,2),bc(1,2),
                 share(0,0),share(1,0),share(0,1),share(1,1),share(0,2),share(1,2),
                 isPeriodic(0),isPeriodic(1),isPeriodic(2),dw(0) );
@@ -683,6 +841,7 @@ printGridStatistics(MappedGrid & mg, FILE *file /* =stdout */,
                 " ghost points: [%i:%i,%i:%i,%i:%i]\n"
                 " cell volume : %8.2e \n"
                 " grid spacing: [%8.2e,%8.2e,%8.2e] [dx,dy,dz]\n"
+                " xMin=[%9.2e,%9.2e,%9.2e], xMax=[%9.2e,%9.2e,%9.2e] (mask>0)\n"
                 " bc = [%i,%i, %i,%i, %i,%i] share=[%i,%i, %i,%i, %i,%i] isPeriodic=[%i,%i,%i] dw=%i\n"
                 ,grid,(const char*)mg.getName(),(const char*)mg.mapping().getClassName(),
                 gid(0,0),gid(1,0),gid(0,1),gid(1,1),gid(0,2),gid(1,2),
@@ -692,6 +851,7 @@ printGridStatistics(MappedGrid & mg, FILE *file /* =stdout */,
                 mg.numberOfGhostPoints(0,2),mg.numberOfGhostPoints(1,2),
                 volMin,
                 dx[0],dx[1],dx[2],
+                xMin[0],xMin[1],xMin[2], xMax[0],xMax[1],xMax[2],
                 bc(0,0),bc(1,0),bc(0,1),bc(1,1),bc(0,2),bc(1,2),
                 share(0,0),share(1,0),share(0,1),share(1,1),share(0,2),share(1,2),
                 isPeriodic(0),isPeriodic(1),isPeriodic(2), dw(0));
@@ -705,6 +865,7 @@ printGridStatistics(MappedGrid & mg, FILE *file /* =stdout */,
                 " ghost points: [%i:%i,%i:%i]\n"
                 " cell volume : %8.2e \n"
                 " grid spacing: [%8.2e,%8.2e] [dx,dy]\n"
+                " xMin=[%9.2e,%9.2e], xMax=[%9.2e,%9.2e] (mask>0)\n"
                 " bc = [%i,%i, %i,%i] share=[%i,%i, %i,%i] isPeriodic=[%i,%i] dw=%i\n"
                 ,grid,(const char*)mg.getName(),(const char*)mg.mapping().getClassName(),
                 gid(0,0),gid(1,0),gid(0,1),gid(1,1),
@@ -713,6 +874,7 @@ printGridStatistics(MappedGrid & mg, FILE *file /* =stdout */,
                 mg.numberOfGhostPoints(0,1),mg.numberOfGhostPoints(1,1),
                 volMin,
                 dx[0],dx[1],
+                xMin[0],xMin[1], xMax[0],xMax[1],
                 bc(0,0),bc(1,0),bc(0,1),bc(1,1),share(0,0),share(1,0),share(0,1),share(1,1),
                 isPeriodic(0),isPeriodic(1), dw(0));
       }

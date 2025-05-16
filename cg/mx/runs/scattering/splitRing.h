@@ -21,6 +21,7 @@
 #
 #
 #
+if( $splitRingBC eq "" ){ $splitRingBC=8; }
 $degree=3;  # degree of Nurbs 
 $H=.5; $W=.5; $w=.2; $d=.2;
 # $cx=0.; $cy=0.;  # center for the I-beam
@@ -106,7 +107,7 @@ exit
     generate
     # open graphics
     boundary conditions
-      -1 -1 7 0 0 0
+      -1 -1 $splitRingBC 0 0 0
     share 
        0 0 100 0 0 0
     name splitRingGridBase

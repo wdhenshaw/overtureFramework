@@ -16,6 +16,7 @@
 \usepackage{calc}
 \usepackage[lmargin=.5in,rmargin=.5in,tmargin=.5in,bmargin=.5in]{geometry}
 
+\usepackage{fancyvrb}% fancy verbatim
 
 % \usepackage{html}
 
@@ -25,7 +26,7 @@
 \begin{document}
 
 \begin{center}
-{\Large Overture Installation Instructions} \\
+{\Large Overture Installation Instructions } \\
 ~~ \\
 W.D. Henshaw, \\
 Department of Mathematical Sciences, \\
@@ -35,6 +36,8 @@ Overture : http://www.overtureFramework.org
 
 
 \begin{abstract}
+{ \color{red} NOTE: This document is out of date -- see the README and install files when you get the overtureFramework from sourceforge}
+
 % \large Overture is not easy to install.  Overture is a research code. Overture is a
 % large code. If you don't know C++ or you don't know how to use a debugger then
 % Overture is not for you.
@@ -49,11 +52,15 @@ supporting packages.
 \tableofcontents
 
 \clearpage
+
+{ \color{red} NOTE: This document is out of date -- see files README and install files when you get the overtureFramework from sourceforge}
+
+
 \input installedMachines
 
 \section{Installing Open Motif}
 
-Note: Mac OS/X users should skip ahead to Section~\ref{sec:installMac}.
+Note: Mac OS users should skip ahead to Section~\ref{sec:installMac}.
 \vskip\baselineskip
 
 You may need to install Motif if you do not already have a version. 
@@ -63,8 +70,8 @@ machines) in which case you can skip this step.
 The Motif library
 is called {\tt libXm.a} or {\tt libXm.so}. In older versions of Linux the default version of
 Motif is probably LessTif. I have had trouble with LessTif 
-so you should install open Motif which you can get for free from 
-\htmladdnormallink{open Motif}{http://www.openmotif.com/}. I have tried version 2.2.1.
+so you should install open Motif which you can get for free from \texttt{http://www.openmotif.com}. 
+I have tried version 2.2.1.
 There is an rpm available with precompiled binaries.
 Here are the steps I took to install open Motif from the source files:
 \begin{enumerate}
@@ -83,7 +90,7 @@ Here are the steps I took to install open Motif from the source files:
 \clearpage
 \section{Installing Mesa OpenGL}
 
-You may need to install \htmladdnormallink{Mesa}{http://www.mesa3d.org/} (OpenGL),
+You may need to install Mesa \texttt{http://www.mesa3d.org} (OpenGL),
 Most Linux systems should already have OpenGL. However, if you would like off-screen rendering
 support (for making high-resolution hard copies) then you should install Mesa. I normally run with
 Mesa rather than the native OpenGL.
@@ -208,11 +215,11 @@ serial version and/or parallel version depending on which version of Overture yo
 \section{Installing A++}
 
 A++/P++ is the serial/parallel array class.
-To get A++/P++ you will need to go to the \htmladdnormallink{Overture home page}{http://www.llnl.gov/CASC/Overture}
+To get A++/P++ you will need to go to the Overture home page \texttt{http://www.llnl.gov/CASC/Overture}
 and register under software.
 
 The A++ installation process requires the gnu autoconf package and gmake, available from the
-gnu site \htmladdnormallink{http://www.gnu.org/order/ftp.html}{http://www.gnu.org/order/ftp.html}.
+gnu site \texttt{http://www.gnu.org/order/ftp.html}.
 
 If you have downloaded AP-nnn.tar.gz into directory XXX then the basic steps 
 are as follows (if something goes wrong, consult the documentation that comes with A++). 
@@ -426,7 +433,7 @@ Overture can optionally use PETSc to solve sparse matrix problems. You will prob
 to get PETSc if you want to solve the 3D incompressible Navier-Stokes equations with cgins.
 
 The version of PETSc that works
-with Overture.v25 or v22 is PETSc 2.3.2\htmladdnormallink{petsc-lite-2.3.2-p6.tar.gz}{\software/petsc-lite-2.3.2-p6.tar.gz}.
+with Overture.v25 or v22 is PETSc 2.3.2 \texttt{petsc-lite-2.3.2-p6.tar.gz}
 Here are the steps I took to install the (uni-processor version)
 on my Linux machine where I use the gcc and PGI fortran compilers:
 %   setenv PETSC_DIR `pwd`
@@ -543,11 +550,11 @@ on my Linux machine where I use the gcc and PGI fortran compilers:
 \section{Installing Overture}\label{sec:installingOverture}
 
 Here are instructions to install the Overture library. See also the README file that comes with Overture.
-To get Overture you will need to go to the \htmladdnormallink{Overture home page}{http://www.llnl.gov/CASC/Overture}
+To get Overture you will need to go to the Overture home page \texttt{http://www.llnl.gov/CASC/Overture}
 and register under software.
 
 Overture requires perl for configuration and running tests. If you don't have perl you
-can get it for free from \htmladdnormallink{http://www.perl.com}{http://www.perl.com}
+can get it for free from \texttt{http://www.perl.com}
 
 
 Overture needs a collection of environment variables to be set. These variables tell Overture
@@ -718,7 +725,9 @@ Here are some steps that I would take to track down bugs.
 % ----------- Installation on the Mac ----------------------
 
 
-\input macInstall2020April6.tex
+\input macInstall.tex
+
+% \input macInstall2020April6.tex
 
 % Overture and cg have been build on Mac OS/X although we are still working on getting
 % the configuration files properly set. 

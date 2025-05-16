@@ -2,12 +2,13 @@
 #   Grid for a cylindrical pipe
 #
 # usage: ogen [noplot] pipe -factor=<num> -order=[2/4/6/8] -interp=[e/i]  -rgd=[fixed|var] -name= ...
-#                           -sa=<f> -sb=<f> -radius=<f> -axial=[x|y|z] -per=[0|1] -numGhost=<i>
+#                           -sa=<f> -sb=<f> -radius=<f> -axial=[x|y|z] -per=[0|1] -ml=<i> -numGhost=<i>
 # 
 #   [sa,sb] : bounds on the axial length of the pipe
 #   radius  : radius of the pipe
 #  -rgd : var=variable : decrease radial grid distance as grids are refined. fixed=fix radial grid distance
 #  -axial : x,y or z indicates axial axis (default is "x")
+#  -ml= number of multigrid levels
 # 
 # examples:
 #     ogen -noplot pipe -order=2 -interp=e -factor=1 
@@ -55,12 +56,17 @@ $stretchFactor=0; #  2; # make BL grid spacing this many times finer
 $order=2; $factor=1; $interp="i"; $name="";
 $orderOfAccuracy = "second order"; $ng=2; $interpType = "implicit for all grids";
 $numGhost=-1;  # if this value is set, then use this number of ghost points
+$ml=0; 
 # 
 # get command line arguments
 GetOptions("order=i"=>\$order,"factor=i"=>\$factor,"interp=s"=>\$interp,"sa=f"=>\$sa,"sb=f"=> \$sb,"radius=f"=>\$radius,\
            "name=s"=>\$name,"stretchFactor=f"=> \$stretchFactor,"rgd=s"=>\$rgd,"axial=s"=>\$axial,"prefix=s"=>\$prefix,\
-           "perr=i"=>\$per,"numGhost=i"=>\$numGhost );
+           "perr=i"=>\$per,"numGhost=i"=>\$numGhost,"ml=i"=>\$ml );
 # 
+# -- convert a number so that it is a power of 2 plus 1 --
+#    ml = number of multigrid levels 
+$ml2 = 2**$ml; 
+sub intmg{ local($n)=@_; $n = int(int($n+$ml2-2)/$ml2)*$ml2+1; return $n; }
 sub min{ local($n,$m)=@_; if( $n<$m ){ return $n; }else{ return $m; } }
 # 
 if( $order eq 4 ){ $orderOfAccuracy="fourth order"; $ng=2; }\
@@ -72,6 +78,7 @@ $suffix = ".order$order";
 if( $per eq 1 ){ $suffix .= "p"; }
 if( $numGhost ne -1 ){ $ng = $numGhost; } # overide number of ghost
 if( $numGhost ne -1 ){ $suffix .= ".ng$numGhost"; } 
+if( $ml ne 0 ){ $suffix .= ".ml$ml"; }
 if( $axial ne "x" ){ $prefix .= $axial; }
 if( $rgd eq "fixed" ){ $prefix = $prefix . "Fixed"; }
 if( $name eq "" ){ $name = $prefix . "$interp$factor" . $suffix . ".hdf"; }
@@ -97,7 +104,7 @@ if( $per == 0 ){ $bc12 = "1 2"; }else{ $bc12="-1 -1"; }
   set corners
     $xa $xb  $ya $yb  $za $zb
   lines
-   $nx = int( ($xb-$xa)/$ds + 1.5 ); $ny = int( ($yb-$ya)/$ds + 1.5 ); $nz = int( ($zb-$za)/$ds + 1.5 );
+   $nx = intmg( ($xb-$xa)/$ds + 1.5 ); $ny = intmg( ($yb-$ya)/$ds + 1.5 ); $nz = intmg( ($zb-$za)/$ds + 1.5 );
    $nx $ny $nz
   boundary conditions
     $bc
@@ -129,7 +136,7 @@ if( $per == 0 ){ $bc12 = "1 2"; }else{ $bc12="-1 -1"; }
     share 
        0  0 1 2 0 0
     lines
-      $nTheta = int( 2.*$pi*($ra+$rb)/2./$ds + 1.5 );  $nr = int( 2*$width/$ds + 1.5 ); 
+      $nTheta = intmg( 2.*$pi*($ra+$rb)/2./$ds + 1.5 );  $nr = intmg( 2*$width/$ds + 1.5 ); 
       $nTheta $nx  $nr 
   mappingName
      if( $stretchFactor==0 ){ $cylName = "cylinder"; }else{ $cylName="unstretched-cylinder"; }

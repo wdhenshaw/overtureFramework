@@ -1,6 +1,7 @@
 #
 #  ----- Build a triangle ------
 #
+if( $triangleBC eq "" ){ $triangleBC=9; }
   SmoothedPolygon
     vertices
       5
@@ -10,7 +11,7 @@
        .866025 -.5
        .866025 0.
     boundary conditions
-      -1 -1 1 0
+      -1 -1 $triangleBC 0
     n-dist
     fixed normal distance
       $nr=9+$order;

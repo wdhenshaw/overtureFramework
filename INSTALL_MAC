@@ -1,0 +1,161 @@
+
+Installation instructions (serial only) for 
+        MacOS Sonoma 14.6.1  (Chip: Apple M3 Max)} 
+
+
+-------- STAGE I ---------
+
+(1) Goto Apple app store and install Xcode (developer tools)
+
+(2) Install Xcode commandline tools (see previous help)
+       xcode-select --install    
+
+(3) Install homebrew  (package installer) from https://brew.sh
+
+   From bash shell: 
+   bash
+   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+   Add /opt/homebrew/bin to the path in .cshrc, for example:
+      set path=(. $HOME/bin  $MPI_ROOT/bin /opt/homebrew/bin  $path)
+
+   NOTE: see https://brew.sh to search for packages
+
+(4) Install gfortran
+   from:
+      https://github.com/fxcoudert/gfortran-for-macOS/releases
+
+(5) Install Xquartz from web.  This should install X11 libraries in /opt/X11/lib.
+
+(6) Install openmotif
+    brew install openmotif
+    brew install mesa
+    brew install mesa-glu
+
+(7) Perl development 
+    brew install perl
+    
+-------  STAGE II --------
+
+Get Overture from sourceforge: 
+Goto 
+   https://sourceforge.net/projects/overtureframework
+
+and clone a version of the OvertureFramework repo:
+
+  git clone https://git.code.sf.net/p/overtureframework/code overtureFramework
+
+OR if you have an account on sourceForge you can use
+
+  git clone ssh://USERNAME@git.code.sf.net/p/overtureframework/code overtureFramework
+
+where USERNAME is your sourceForge account name.
+
+
+Create a software folder:
+   mkdir software
+   cd software
+
+
+---- Stage II: Install HDF in the software folder
+
+
+copy overtureFramework/packages/hdf5-1.8.15-macPatch.tar.gz to the software folder
+
+cd software
+tar xzf hdf5-1.8.15-macPatch.tar.gz
+mv hdf5-1.8.15-macPatch hdf5-1.8.15
+
+cd hdf5-1.8.15
+ ./configure --prefix=`pwd` 
+make
+make install
+
+
+---- Stage II: Install A++P++:
+
+copy overtureFramework/packages/AP-0.8.3.tar.gz to the software folder
+
+tar -xzf AP-0.8.3.tar.gz
+
+mv -r A++P++-0.8.3 AppPpp-0.8.3
+cd AppPpp-0.8.3
+
+./configure --disable-SHARED\_LIBS --prefix=`pwd`  
+make MAKE=make install
+
+
+---- Stage II: Install lapack
+
+cd software
+tar xzf lapack-3.8.0.tar.gz
+cd lapack-3.8.0
+cp make.inc.example make.inc
+make blaslib
+make lapacklib
+
+
+---- STAGE II: install PETSc (optional)
+
+Build PETSc 3.21.5 from the git repo: 
+
+cd software
+git clone -b release https://gitlab.com/petsc/petsc.git petsc
+cd petsc
+git checkout v3.21.5
+
+setenv PETSC_DIR /Users/henshaw/software/petsc
+setenv PETSC_ARCH darwin-opt
+configure --with-cc=clang --with-fc=gfortran --PETSC_ARCH=darwin-opt --with-debugging=0 --with-fortran=0 
+          --with-matlab=0 --with-mpi=0 --with-shared-libraries=1
+
+
+make PETSC_DIR=/Users/henshaw/software/petsc PETSC_ARCH=darwin-opt check
+
+>> Running PETSc check examples to verify correct installation
+>> Using PETSC_DIR=/Users/henshaw/software/petsc and PETSC_ARCH=darwin-opt
+>> C/C++ example src/snes/tutorials/ex19 run successfully with 1 MPI process
+>> Fortran example src/snes/tutorials/ex5f run successfully with 1 MPI process
+>> Completed PETSc check examples
+
+
+----- STAGE III: Install Overture
+
+Set some environmental variables (you could put these in your .cshrc)
+
+setenv Overture /Users/henshaw/Overture.g
+setenv APlusPlus /Users/henshaw/software/AppPpp-0.8.3/A++/install
+setenev PPlusPlus /Users/henshaw/software/AppPpp-0.8.3/A++/install
+setenv PETSC_DIR /Users/henshaw/software/petsc
+setenv PETSC_ARCH darwin-opt
+
+setenv XLIBS /opt/homebrew
+setenv MOTIF /opt/homebrew
+setenv OpenGL /opt/homebrew
+setenv LAPACK /Users/henshaw/software/lapack-3.8.0
+
+Define the environmental variable $OvertureBuild to be the directory where you want to build distribution.
+ For example,
+      setenv OvertureBuild /home/henshaw/Overture.g
+
+goto overtureFramework/Overture, and run buildOverture to copy files to /Users/henshaw/Overture.g
+
+buildOverture
+(enter y if you are over-writing an existing folder)
+
+cd /Users/henshaw/Overture.g
+configure 
+make -j2
+make check  (one grid generation check fails)
+
+
+----- STAGE III : Compile CG (PDE solvers)
+
+To compile CG solver with PETSc you should set: 
+  setenv usePETSc yes
+
+cd overtureFramework/cg
+make
+
+make check-quiet
+

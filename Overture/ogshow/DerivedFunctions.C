@@ -762,6 +762,7 @@ computeDerivedFunctions( realCompositeGridFunction & u )
       else if( derived(i,0)==speed )
       {
         getVelocityComponents(uc,vc,wc);
+        printF("DerivedFunctions: computing the speed from compnents [uc,vc,wc]=[%d,%d,%d]\n",uc,vc,wc);
         
         if( numberOfDimensions==1 )
           v(I1,I2,I3,j)=fabs(v(I1,I2,I3,uc));

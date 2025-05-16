@@ -2077,7 +2077,7 @@ initializeConstantCoefficients()
   
     
 
-  if( this )  // ******  don't do for now. Need to finish 3d
+  if( true )  // ******  don't do for now. Need to finish 3d
     return 0;
   
   Index I1,I2,I3;

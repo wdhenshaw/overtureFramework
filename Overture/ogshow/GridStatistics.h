@@ -34,6 +34,14 @@ checkForNegativeVolumes(MappedGrid & mg, int numberOfGhost=0, FILE *file=stdout,
 static real
 checkForTallCells( CompositeGrid & cg, std::vector<InterfaceInfo> & interfaceInfo, real tallCellRatioBound=-1 );
 
+// Return x,y,z min-max bounds of a component grid
+static void 
+getGridCoordinateBounds(MappedGrid & mg, Real xMin[3], Real xMax[3], MaskOptionEnum maskOption=positiveMask );
+
+// Return x,y,z min-maxbounds of a grid collection
+static void 
+getGridCoordinateBounds(GridCollection & gc, Real xMin[3], Real xMax[3], MaskOptionEnum maskOption=positiveMask );
+
 static void 
 getGridSpacing(MappedGrid & mg, real dsMin[3], real dsAve[3], real dsMax[3], MaskOptionEnum maskOption=ignoreMask );
 

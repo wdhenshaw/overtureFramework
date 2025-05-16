@@ -9,6 +9,7 @@
 #define wdpulse EXTERN_C_NAME(wdpulse)
 #define radEval EXTERN_C_NAME(radeval)
 
+
 extern "C"
 {
 
@@ -285,7 +286,8 @@ initialize( realMappedGridFunction & u,
       numberOfModes1=min(maxModes1,max(8,int(sqrt(numberOfGridPoints1))));  
 
 
-    printF(" **** RadiationBC: numberOfModes1=%i (numberOfGridPoints1=%i) ****\n",numberOfModes1,numberOfGridPoints1);
+    printF(" **** RadiationBC: numberOfModes1=%i (numberOfGridPoints1=%i) (isde,axis)=(%d,%d) useParallelVersion-%d ****\n",
+         numberOfModes1,numberOfGridPoints1,side,axis,useParallelVersion);
     
   }
   

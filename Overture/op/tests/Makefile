@@ -21,11 +21,9 @@ EXTRA_FFLAGS = -I../include
 # LAPACK_LIBRARIES = -Wl,-rpath,/nfs/apps/pgi/6.1-3/linux86-64/6.1/lib -L/nfs/apps/pgi/6.1-3/linux86-64/6.1/lib -llapack -lblas
 
 
-
-
 Oges = ../../oges
 # PETSC_LIBS = -L$(PETSC_LIB) -lpetscksp -lpetscdm -lpetscmat -lpetscvec -lpetsc -lmpiuni
-OGES_PETSC = buildEquationSolvers.o PETScEquationSolver.o
+OGES_PETSC = $(Oges)/buildEquationSolvers.o $(Oges)/PETScEquationSolver.o
 
 
 current = .
@@ -343,7 +341,7 @@ tcm3 = tcm3.o Checker.o $(PETSC)  ../../grid/MappedGridGeometry2.o
 tcm3 = tcm3.o Checker.o $(PETSC) LoadBalancer.o ../../oges/OgesParameters.o
 tcm3 = tcm3.o Checker.o $(PETSC) ../../oges/OgesParameters.o 
 tcm3 = tcm3.o Checker.o $(PETSC) laplacianFDCoefficients.o Oges.o
-tcm3 = tcm3.o Checker.o $(PETSC) 
+tcm3 = tcm3.o Checker.o $(OGES_PETSC) 
 tcm3: $(tcm3) 
 	$(CC) $(CCFLAGS) -o tcm3 $(tcm3) \
          $(CLIBS) $(PETSC_LIBS) $(FLIBS) $(GLIBS)

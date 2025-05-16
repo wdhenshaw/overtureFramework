@@ -444,6 +444,7 @@ int RadiationKernel::initialize( int numberOfDimensions_,
                                  int orderOfTimeStepping_, int numberOfPoles_,
                                  real radius_ /* =1. */ )
 {
+  
   const int & debug = dbase.get<int>("debug");
   
   int & numberOfDimensions = dbase.get<int>("numberOfDimensions");

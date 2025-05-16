@@ -1,4 +1,31 @@
 *************************
+**** Fri Oct 3, 2024
+
+MOVIE FOR JEFF FOR OVERSET 2024
+
+ogen -noplot rpiGrid -ya=-4 -periodic=p -interp=e -order=2 -factor=16
+ogen -noplot rpiGrid -ya=-4 -periodic=p -interp=e -order=2 -factor=8
+ogen -noplot rpiGrid -ya=-4 -periodic=p -interp=e -order=2 -factor=4
+
+TO DO 
+cgsm -noplot scattering.cmd -g=rpiGride16p.order2.hdf -kx=0 -ky=1 -ax=1 -ay=0 -beta=20 -k0=5 -y0=-2.0 -ts=me -tf=3.5 -tp=.1 -cfl=0.9 -cdv=.25 -upwindSOS=1 -show=ileRpiG16.show -go=go 
+
+plotStuff plotScattering -show=ileRpiG16.show -name=ileRpiG16 -max=1.2
+
+MOVIE: 
+cgsm -noplot scattering.cmd -g=rpiGride8p.order2.hdf -kx=0 -ky=1 -ax=1 -ay=0 -beta=20 -k0=5 -y0=-2.0 -ts=me -tf=3.5 -tp=.01 -cfl=0.9 -cdv=.25 -upwindSOS=1 -show=ileRpiG8.show -go=go 
+
+plotStuff plotScattering -show=ileRpiG8.show -name=ileRpiG8 -max=1.2
+
+
+cgsm -noplot scattering.cmd -g=rpiGride4p.order2.hdf -kx=0 -ky=1 -ax=1 -ay=0 -beta=20 -k0=5 -y0=-2.0 -ts=me -tf=3.5 -tp=.1 -cfl=0.9 -cdv=.25 -upwindSOS=1 -show=ileRpiG4.show -go=go 
+
+
+plotStuff plotScattering -show=ileRpiG4.show -name=ileRpiG4 -max=1.2
+
+
+
+*************************
 **** Fri May 13, 2022
 
 REVIST SCATTERING FOR ISM PAPER 

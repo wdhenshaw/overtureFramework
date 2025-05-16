@@ -6382,7 +6382,7 @@ outputProbes( real t, int stepNumber )
 	  
 	  fPrintF(probeFile,"%% Probe file written from the BeamModel class: %s"
 		  "%% Probe location: %12.5e (normalized coordinates in [0,1])\n"
-		  "%%       t       displacement       velocity      acceleration\n",probePosition,dateString);
+		  "%%       t       displacement       velocity      acceleration\n",dateString,probePosition);
 	
 	  delete tp;
 	}

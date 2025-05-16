@@ -271,7 +271,8 @@ outputLatexTable( const std::vector<aString> gridName,
                   const aString & captionLabel,
                   const int norm=-1,
                   FILE *file=stdout,
-                  const bool assumeFineGridHoldsExactSolution=false )
+                  const bool assumeFineGridHoldsExactSolution=false,
+                  const bool outputRelativeErrors=false )
 {
   if( norm==0 )
     fprintf(file,"%% -------------- max norm results -------------\n");
@@ -331,8 +332,10 @@ outputLatexTable( const std::vector<aString> gridName,
   aString dateString = ctime(tp);
   delete tp;
     
-  fprintf(file,"\\caption{%s. %s-norm self convergence results, t=%12.6e, %s. }\n",(const char*)captionLabel,
-          (norm==0 ? "Max" : norm==1 ? "L2" : "L1"),timeArray(0),
+  fprintf(file,"\\caption{%s. %s-norm self convergence results, %s, t=%12.6e, %s. }\n",(const char*)captionLabel,
+          (norm==0 ? "Max" : norm==1 ? "L2" : "L1"),
+          (outputRelativeErrors? "relative-errors" : "absolute-errors"),
+          timeArray(0),
           (const char*)dateString(0,dateString.length()-2) );   // caption
 
   fprintf(file,"\\end{center}\n");
@@ -354,7 +357,8 @@ outputMatlabFile( const std::vector<aString> gridName,
                   const aString & captionLabel,
                   const int norm=-1,
                   FILE *file=stdout,
-                  const bool assumeFineGridHoldsExactSolution=false )
+                  const bool assumeFineGridHoldsExactSolution=false,
+                  const bool outputRelativeErrors=false  )
 {
   if( norm==0 )
   {
@@ -367,7 +371,7 @@ outputMatlabFile( const std::vector<aString> gridName,
     delete tp;
 
     fprintf(file,"%% Matlab readable file written by Overture program comp.C, date=%s\n",(const char*)dateString(0,dateString.length()-2));
-    fprintf(file,"%% Errors at time t=%14.8e\n",timeArray(0));
+    fprintf(file,"%% %s at time t=%14.8e\n", (outputRelativeErrors? "Relative-errors" : "Absolute-errors"),timeArray(0));
     fprintf(file,"%% %s\n",(const char*)captionLabel);
     for( int grid=0; grid<gridName.size(); grid++ )
     {
@@ -976,6 +980,10 @@ main(int argc, char *argv[])
   RealArray l2Diff(maxNumberOfFiles,maxNumberOfComponents);
   RealArray l1Diff(maxNumberOfFiles,maxNumberOfComponents);
 
+  RealArray maxNorm(maxNumberOfFiles,maxNumberOfComponents);
+  RealArray l2Norm(maxNumberOfFiles,maxNumberOfComponents);
+  RealArray l1Norm(maxNumberOfFiles,maxNumberOfComponents);
+
   // sigmaRate(c,norm) : convergence rate for a component c and norm
   RealArray sigmaRate; 
   int interpolationWidth=3;  // width for interpolation formula
@@ -1015,6 +1023,9 @@ main(int argc, char *argv[])
 
   // By default interpolate grids from the same domain only 
   bool interpolateFromSameDomain=true;
+
+  // If true output relative errors
+  bool outputRelativeErrors=false;
   
   // We can define components to use from each file
   IntegerArray numComponentsPerFile, componentsPerFile;
@@ -1053,10 +1064,12 @@ main(int argc, char *argv[])
 
   aString tbCommands[] = {"assume fine grid holds exact solution",
                           "interpolate from same domain",
+                          "output relative errors",
                           ""};
   int tbState[10];
   tbState[0] = assumeFineGridHoldsExactSolution;
   tbState[1] = interpolateFromSameDomain;
+  tbState[2] = outputRelativeErrors;
   int numColumns=1;
   dialog.setToggleButtons(tbCommands, tbCommands, tbState, numColumns);
 
@@ -1191,7 +1204,10 @@ main(int argc, char *argv[])
       }
       
     }
-    
+    else if( dialog.getToggleValue(answer,"output relative errors",outputRelativeErrors) )
+    {
+      printF("outputRelativeErrors=%d: 1=output relative errors (lp-error/lp-norm-on-fine-grid)\n",outputRelativeErrors);
+    }    
 
     // --- commands done the old way before dialog ---
 
@@ -1456,17 +1472,29 @@ main(int argc, char *argv[])
       //    du[i] = Interp(uFine) - uCoarse[i] 
       computeDifferences( numberOfFiles, cg, u, ud, interpolationWidth, useOldWay, useNewWay,interpolateFromSameDomain,
                           boundaryErrorOffset,absorbingLayerWidth );
-      
-      for( int i=0; i<n; i++ )
+
+      const int useAreaWeightedNorm=1;
+      // --- compute norms of the solutions so that we can compute relative errors -- *wdh* Jan 9, 2025
+      for( int i=0; i<numberOfFiles; i++ )
       {
-   
-        const realCompositeGridFunction & v = u[i];  // here is the coarse grid solution
-        const int useAreaWeightedNorm=1;
+        const realCompositeGridFunction & v = u[i]; 
         for( int c=v.getComponentBase(0); c<=v.getComponentBound(0); c++ )
         {
-          l2Diff(i,c) = lpNorm(2,ud[i],c,0,0,useAreaWeightedNorm);
-          l1Diff(i,c) = lpNorm(1,ud[i],c,0,0,useAreaWeightedNorm);
-          maxDiff(i,c)=maxNorm(ud[i],c,0,0);
+          l2Norm(i,c) =  lpNorm(2,v,c,0,0,useAreaWeightedNorm);
+          l1Norm(i,c) =  lpNorm(1,v,c,0,0,useAreaWeightedNorm);
+          maxNorm(i,c)=::maxNorm(v,c,0,0);
+        }        
+
+      }
+      for( int i=0; i<n; i++ )
+      {
+        const realCompositeGridFunction & v = u[i];  // here is the coarser grid solution
+        // const int useAreaWeightedNorm=1;
+        for( int c=v.getComponentBase(0); c<=v.getComponentBound(0); c++ )
+        {
+          l2Diff(i,c) =   lpNorm(2,ud[i],c,0,0,useAreaWeightedNorm);
+          l1Diff(i,c) =   lpNorm(1,ud[i],c,0,0,useAreaWeightedNorm);
+          maxDiff(i,c)=::maxNorm(ud[i],c,0,0);
         }
         for( int io=0; io<=1; io++ )
         {
@@ -1560,6 +1588,8 @@ main(int argc, char *argv[])
 
             sigmaRate(c,norm)=sigma;  // save for plotting errors
 
+            const Real uNorm = norm==0 ? maxNorm(n,c) : norm==1 ? l2Norm(n,c) : l1Norm(n,c);
+
             for( int io=0; io<=1; io++ )
             {
               FILE *file = io==0 ? stdout : outFile;
@@ -1570,18 +1600,30 @@ main(int argc, char *argv[])
                 // estimated errors:
                 if( i==n && assumeFineGridHoldsExactSolution )
                   continue;
+
+                if( outputRelativeErrors ) 
+                  cc = cc/uNorm; // scale errors by norm of solution on the finest grid
+
                 fPrintF(file,"ee(%i) = %8.2e, ",i,cc*pow(h(i),sigma));
                 if( i>0 ) fPrintF(file,"[r=%5.2f], ",pow(h(i-1)/h(i),sigma));
 
                 if( ncu>0 ){ cErr(i,c)=cc*pow(h(i),sigma); cSigma(c)=sigma; }// save for latex
               }
+              fPrintF(file," norm=%9.3e",uNorm);
               fPrintF(file,"\n");
+            
             }
+
 
           }
           // --- estimate errors in the vector components ---
           if( componentVector.size()>0 )
           {
+            if( outputRelativeErrors )
+            {
+              printF("comp:ERROR: FINISH outputRelativeErrors for vector components.\n");
+              OV_ABORT("ERROR");
+            }
             for( int c=0; c<componentVector.size(); c++ ) // c = vector 
             {
               ComponentVector & v = componentVector[c];
@@ -1646,11 +1688,11 @@ main(int argc, char *argv[])
           for( int io=0; io<=1; io++ )
           {
             FILE *file = io==0 ? stdout : outFile;
-            outputLatexTable( gridName, cName, cErr, cSigma, time, captionLabel, norm, file, assumeFineGridHoldsExactSolution );
+            outputLatexTable( gridName, cName, cErr, cSigma, time, captionLabel, norm, file, assumeFineGridHoldsExactSolution,outputRelativeErrors );
 
             // *new* Sept 20, 2019 *wdh*
             if( io==1 )
-              outputMatlabFile( gridName, cName, h, cErr, cSigma, time, captionLabel, norm, matlabFile, assumeFineGridHoldsExactSolution );
+              outputMatlabFile( gridName, cName, h, cErr, cSigma, time, captionLabel, norm, matlabFile, assumeFineGridHoldsExactSolution,outputRelativeErrors );
           }
 
 

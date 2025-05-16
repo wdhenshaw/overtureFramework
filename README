@@ -1,9 +1,8 @@
-This is the Overture from the Sourceforge git repository.
+This is Overture from the Sourceforge git repository.
 
-o See INSTALL_UBUNTU for detailed installation instructions for Ubuntu (these are the latest instructions).
+o See INSTALL_UBUNTU for detailed installation instructions for Ubuntu.
 
-o See overtureFramework/Overture/web/install.pdf for installation instructions for a Mac.
-
+o See INSTALL_MAC for detailed installation instructions for macOS.
 
 
 (0) Make sure sure that "." is in your path, many Overture and cg scripts assume this.
@@ -15,7 +14,7 @@ To build a distribution of Overture:
   (1) Define the environmental variable $OvertureBuild to be
       the directory where you want to build distribution.
       For example,
-         setenv OvertureBuild /home/henshaw/Overture.v18
+         setenv OvertureBuild /home/henshaw/Overture.g
 
   (2) type 
          buildOverture

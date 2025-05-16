@@ -20,6 +20,71 @@ Doxygen source code documentation:
 http://www.overtureframework.org/doxygen/Overture/index.html
 http://www.overtureframework.org/doxygen/CG/index.html
 
+
+===================================================================================
+==== May 16, 2025
+
+CHECK IN LATEST RELEASE WITH CHGANGES FOR MAC 
+
+--- START cg66: 
+ gits
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+   new file:   INSTALL_MAC
+   renamed:    Overture/INSTALL_UBUNTU -> INSTALL_UBUNTU
+   renamed:    Overture/README -> README
+   new file:   cg/mx/runs/solidObjects/threeSolidsGrid.cmd
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+   modified:   INSTALL_MAC
+   modified:   Overture/Overture/config/MakeDefs.darwin
+   modified:   Overture/config/Makefile.intel
+   modified:   Overture/gf/comp.C
+   modified:   Overture/ogen/pipe.cmd
+   modified:   Overture/ogmg/predefined.C
+   modified:   Overture/ogshow/DerivedFunctions.C
+   modified:   Overture/ogshow/GridStatistics.C
+   modified:   Overture/ogshow/GridStatistics.bC
+   modified:   Overture/ogshow/GridStatistics.h
+   modified:   Overture/op/tests/Makefile
+   modified:   Overture/web/install.pdf
+   modified:   Overture/web/install.tex
+   modified:   Overture/web/installedMachines.tex
+   modified:   Overture/web/macInstall.tex
+   modified:   README
+   modified:   cg/common/moving/src/BeamModel.C
+   modified:   cg/mx/runs/scattering/iBeam.h
+   modified:   cg/mx/runs/scattering/objectsGrid.cmd
+   modified:   cg/mx/runs/scattering/splitRing.h
+   modified:   cg/mx/runs/scattering/triangle.h
+   modified:   cg/mx/src/RadiationBoundaryCondition.C
+   modified:   cg/mx/src/RadiationKernel.C
+   modified:   cg/sm/runs/scattering/memo
+
+Untracked files not listed (use -u option to show untracked files)
+
+--- END cg66: 
+
+---- START my MAC at home
+Mac22: gits
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+   modified:   Overture/Overture/config/MakeDefs.darwin
+   modified:   cg/common/moving/src/BeamModel.C
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+--- END My Mac at home
+
 ==============================================================================================
 Overture.v27 - released ??
 Changes:
