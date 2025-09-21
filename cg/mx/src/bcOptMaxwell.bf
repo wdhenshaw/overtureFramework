@@ -2,9 +2,6 @@
 ! ************** Boundary Conditions for Maxwell ********************************
 ! *******************************************************************************
 
-
-
-
 ! These next include files will define the macros that will define the difference approximations
 ! The actual macro is called below
 #Include "defineDiffOrder2f.h"

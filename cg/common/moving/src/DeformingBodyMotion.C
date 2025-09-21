@@ -217,7 +217,7 @@ outputProbes( GridFunction & gf0, int stepNumber )
     }
 
   // **finish me for other deforming body types **
-
+    return 0;
 }
 
 //=================================================================================

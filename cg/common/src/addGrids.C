@@ -24,9 +24,9 @@ int createMappings( MappingInformation & mapInfo );
 
 int 
 userDefinedErrorEstimator(realCompositeGridFunction & u, 
-                    			  real t,
-                    			  Parameters & parameters,
-                    			  realCompositeGridFunction & error );
+                                                    real t,
+                                                    Parameters & parameters,
+                                                    realCompositeGridFunction & error );
 
 
 int
@@ -65,13 +65,15 @@ updateEquationDomainsForAMR( CompositeGrid & cg, Parameters & parameters )
         
             if( base!=grid )
             {
-	// this is not a base grid -- update the global list:
-      	equationDomainList.gridDomainNumberList[grid]=baseGridEquationDomainNumber;
+        // this is not a base grid -- update the global list:
+                equationDomainList.gridDomainNumberList[grid]=baseGridEquationDomainNumber;
             
             }
             baseEquationDomain.gridList.push_back(grid);  // add this grid to this EquationDomain
         }
     }
+
+    return 0;
 }
 
 
@@ -114,8 +116,8 @@ getAmrErrorFunction(realCompositeGridFunction & u,
             error=0.;
         
     // add in truncation error
-        if(	parameters.dbase.get<realCompositeGridFunction* >("truncationError")!=NULL && 
-      	parameters.dbase.get<real >("truncationErrorCoefficient")>0. )
+        if( parameters.dbase.get<realCompositeGridFunction* >("truncationError")!=NULL && 
+                parameters.dbase.get<real >("truncationErrorCoefficient")>0. )
         {
             if( parameters.dbase.get<int >("debug") & 1) printF("**** getAmrErrorFunction: add truncation error *******\n");
 
@@ -124,11 +126,11 @@ getAmrErrorFunction(realCompositeGridFunction & u,
             int actualNumberOfRefinementLevels=1;
             for( int l=cg.numberOfRefinementLevels()-1; l>0; l-- )
             {
-      	if( cg.refinementLevel[l].numberOfComponentGrids()>0 )
-      	{
-        	  actualNumberOfRefinementLevels=l+1;
-        	  break;
-      	}
+                if( cg.refinementLevel[l].numberOfComponentGrids()>0 )
+                {
+                    actualNumberOfRefinementLevels=l+1;
+                    break;
+                }
             }
             
             realCompositeGridFunction & truncation = *parameters.dbase.get<realCompositeGridFunction* >("truncationError");
@@ -141,23 +143,23 @@ getAmrErrorFunction(realCompositeGridFunction & u,
 
                 real factor=1;
                 real exponent = 2.*(actualNumberOfRefinementLevels-1 -cg.refinementLevelNumber(grid));
-      	if( exponent>0. )
+                if( exponent>0. )
                     factor=pow(rf,exponent);
 
                 if( parameters.dbase.get<int >("debug") & 4 )
-      	{
-        	  printF("**** getAmrErrorFunction: add truncation error: grid=%i, level=%i (max=%i), rf=%3.1f, "
+                {
+                    printF("**** getAmrErrorFunction: add truncation error: grid=%i, level=%i (max=%i), rf=%3.1f, "
                                   " scale by =%9.3e, max(trunc)=%9.2e \n",
-             		 grid,cg.refinementLevelNumber(grid),actualNumberOfRefinementLevels,
-             		 rf,factor,max(fabs((*parameters.dbase.get<realCompositeGridFunction* >("truncationError")))));
+                                  grid,cg.refinementLevelNumber(grid),actualNumberOfRefinementLevels,
+                                  rf,factor,max(fabs((*parameters.dbase.get<realCompositeGridFunction* >("truncationError")))));
 
-        	  if( parameters.dbase.get<int >("debug") & 8 && parameters.dbase.get<GenericGraphicsInterface* >("ps")!=NULL )
-        	  {
-          	    parameters.dbase.get<GraphicsParameters >("psp").set(GI_TOP_LABEL,"truncation error at t=0");
-          	    PlotIt::contour(*parameters.dbase.get<GenericGraphicsInterface* >("ps"), *parameters.dbase.get<realCompositeGridFunction* >("truncationError"),parameters.dbase.get<GraphicsParameters >("psp"));
-        	  }
-      	}
-      	
+                    if( parameters.dbase.get<int >("debug") & 8 && parameters.dbase.get<GenericGraphicsInterface* >("ps")!=NULL )
+                    {
+                        parameters.dbase.get<GraphicsParameters >("psp").set(GI_TOP_LABEL,"truncation error at t=0");
+                        PlotIt::contour(*parameters.dbase.get<GenericGraphicsInterface* >("ps"), *parameters.dbase.get<realCompositeGridFunction* >("truncationError"),parameters.dbase.get<GraphicsParameters >("psp"));
+                    }
+                }
+                
                 error[grid]+=(parameters.dbase.get<real >("truncationErrorCoefficient")*factor)*truncation[grid];
             }
             
@@ -174,13 +176,13 @@ getAmrErrorFunction(realCompositeGridFunction & u,
             const int levelsToCheck = max(1,cg.numberOfRefinementLevels()-1);
             for( int level=0; level<levelsToCheck; level++ ) // note: do not print on finest level
             {
-      	GridCollection & rl = cg.numberOfRefinementLevels()==1 ? cg : cg.refinementLevel[level];
-      	for( int g=0; g<rl.numberOfGrids(); g++ )
-      	{
-        	  int grid=rl.gridNumber(g);
-        	  ::display(error[grid],sPrintF(buff,"error est. before smooth grid=%i",grid),
+                GridCollection & rl = cg.numberOfRefinementLevels()==1 ? cg : cg.refinementLevel[level];
+                for( int g=0; g<rl.numberOfGrids(); g++ )
+                {
+                    int grid=rl.gridNumber(g);
+                    ::display(error[grid],sPrintF(buff,"error est. before smooth grid=%i",grid),
                                         parameters.dbase.get<FILE* >("debugFile"),parameters.dbase.get<aString >("outputFormat"));
-      	}
+                }
             }
         }
 
@@ -291,7 +293,7 @@ getAmrErrorFunction(realCompositeGridFunction & u,
     {
         l2Err=sqrt(l2Err);
         fPrintF(parameters.dbase.get<FILE* >("logFile"),"Compute Error estimate at step=%i, t=%9.3e, maxErr=%8.2e l2Err=%8.2e\n",
-          	    parameters.dbase.get<int >("globalStepNumber"),t,maxErr,l2Err);
+                        parameters.dbase.get<int >("globalStepNumber"),t,maxErr,l2Err);
     }
 
     parameters.dbase.get<RealArray>("timing")(parameters.dbase.get<int>("timeForAmrErrorFunction"))+=getCPU()-time0;
@@ -466,7 +468,7 @@ adaptGrids(GridFunction & gf0,
     Range C=parameters.dbase.get<int >("numberOfComponents");
 
 //   printF(" *** before getAmrErrorFunction: gf0.form = %s\n",
-// 	 gf0.form==GridFunction::primitiveVariables ? "primitive" : "conservative");
+//       gf0.form==GridFunction::primitiveVariables ? "primitive" : "conservative");
 //   if( gf0.form!=GridFunction::primitiveVariables )
 //   {
 //     printF("adaptGrids:ERROR: gf0.form!=GridFunction::primitiveVariables\n");
@@ -486,7 +488,7 @@ adaptGrids(GridFunction & gf0,
             gf0.u.applyBoundaryCondition(C,BCTypes::extrapolateInterpolationNeighbours,BCTypes::allBoundaries,0.,0.,extrapParams);
             
             if( Parameters::checkForFloatingPointErrors )
-      	checkSolution(gf0.u,"adaptGrids:gf0.u after extrapInterpN");
+                checkSolution(gf0.u,"adaptGrids:gf0.u after extrapInterpN");
         }
     intCompositeGridFunction errorFlag(cg);       // ************** use a work space *************
     realCompositeGridFunction error; // (cg); 
@@ -519,8 +521,8 @@ adaptGrids(GridFunction & gf0,
             GridCollection & rl = cg.numberOfRefinementLevels()==1 ? cg : cg.refinementLevel[level];
             for( int g=0; g<rl.numberOfGrids(); g++ )
             {
-      	int grid=rl.gridNumber(g);
-      	::display(err[grid],sPrintF(buff,"error est. grid=%i",grid),parameters.dbase.get<FILE* >("debugFile"),parameters.dbase.get<aString >("outputFormat"));
+                int grid=rl.gridNumber(g);
+                ::display(err[grid],sPrintF(buff,"error est. grid=%i",grid),parameters.dbase.get<FILE* >("debugFile"),parameters.dbase.get<aString >("outputFormat"));
             }
         }
     }
@@ -720,7 +722,7 @@ adaptGrids(GridFunction & gf0,
         const int np= max(1,Communication_Manager::numberOfProcessors());
         if( np>1 )
             cgNew.displayDistribution(sPrintF("cgNew after AMR regrid step=%i, t=%9.3e",
-                              					parameters.dbase.get<int >("globalStepNumber"),gf0.t),parameters.dbase.get<FILE* >("logFile"));
+                                                                                parameters.dbase.get<int >("globalStepNumber"),gf0.t),parameters.dbase.get<FILE* >("logFile"));
     }
     
   // keep track of the max min and ave number of grids
@@ -757,9 +759,9 @@ adaptGrids(GridFunction & gf0,
             GridCollection & rl = cgNew.numberOfRefinementLevels()==1 ? cgNew : cgNew.refinementLevel[level];
             for( int g=0; g<rl.numberOfGrids(); g++ )
             {
-      	int grid=rl.gridNumber(g);
-      	const IntegerArray & d=cgNew[grid].dimension();
-      	numberOfPoints+=(d(1,0)-d(0,0)+1)*(d(1,1)-d(0,1)+1)*(d(1,2)-d(0,2)+1);
+                int grid=rl.gridNumber(g);
+                const IntegerArray & d=cgNew[grid].dimension();
+                numberOfPoints+=(d(1,0)-d(0,0)+1)*(d(1,1)-d(0,1)+1)*(d(1,2)-d(0,2)+1);
 
         // for parallel debugging -- output grid sizes
                 fPrintF(parameters.dbase.get<FILE* >("debugFile"),"  level %i: grid=%i dimension=[%i,%i][%i,%i][%i,%i]\n",
@@ -917,7 +919,7 @@ adaptGrids(GridFunction & gf0,
 
         if ( parameters.dbase.get<int >("extrapolateInterpolationNeighbours")) 
             { // kkc 060711
-      	u.applyBoundaryCondition(C,BCTypes::extrapolateInterpolationNeighbours);
+                u.applyBoundaryCondition(C,BCTypes::extrapolateInterpolationNeighbours);
             }
 
         uNew.updateToMatchGrid(cgNew,all,all,all,C);
@@ -941,16 +943,16 @@ adaptGrids(GridFunction & gf0,
             {
         // assert( gf0.transform[grid]!=NULL );
                 MatrixTransform & transform = *gf0.transform[grid];
-      	if( transform.decrementReferenceCount()==0 )
-        	  delete &transform;
+                if( transform.decrementReferenceCount()==0 )
+                    delete &transform;
 
         // Mapping & map = gf0.cg[grid].mapping().getMapping();
                 Mapping & map = cgNew[grid].mapping().getMapping();
-      	assert( map.getClassName()=="MatrixTransform" );   
-      	gf0.transform[grid]=(MatrixTransform *)(&map); 
-      	gf0.transform[grid]->incrementReferenceCount();
+                assert( map.getClassName()=="MatrixTransform" );   
+                gf0.transform[grid]=(MatrixTransform *)(&map); 
+                gf0.transform[grid]->incrementReferenceCount();
 
-      	
+                
             }
         }
     }
@@ -1027,13 +1029,13 @@ adaptGrids(GridFunction & gf0,
                                 gid(0,0),gid(1,0),gid(0,1),gid(1,1));
             Range all;
             for( int axis=0; axis<cg.numberOfDimensions(); axis++ ) 
-      	for( int side=0; side<=1; side++ )
-      	{
-        	  const RealArray & bcd = parameters.dbase.get<RealArray>("bcData")(all,side,axis,grid);
-        	  const RealArray & bcp = parameters.dbase.get<RealArray>("bcParameters")(all,side,axis,grid);
-        	  printF("       side=%i, axis=%i, bcData=%5.1f,%5.1f,%5.1f,%5.1f,  bcParameters=%5.1f,%5.1f,%5.1f,%5.1f\n",
-             		 side,axis,bcd(0),bcd(1),bcd(2),bcd(3),bcp(0),bcp(1),bcp(2),bcp(3));
-      	}
+                for( int side=0; side<=1; side++ )
+                {
+                    const RealArray & bcd = parameters.dbase.get<RealArray>("bcData")(all,side,axis,grid);
+                    const RealArray & bcp = parameters.dbase.get<RealArray>("bcParameters")(all,side,axis,grid);
+                    printF("       side=%i, axis=%i, bcData=%5.1f,%5.1f,%5.1f,%5.1f,  bcParameters=%5.1f,%5.1f,%5.1f,%5.1f\n",
+                                  side,axis,bcd(0),bcd(1),bcd(2),bcd(3),bcp(0),bcp(1),bcp(2),bcp(3));
+                }
         }
     }
     
@@ -1100,15 +1102,15 @@ addGrids()
     DialogData & dialog = gui;
 
     aString pbLabels[] = {"change a grid",
-			// "add a rectangle",
-                  			"add a refinement",
-                  			"add a new grid",
-                  			"remove a grid",
-                  			"remove a refinement",
-                  			"adapt a grid",
-                  			"build a grid",
+                        // "add a rectangle",
+                                                "add a refinement",
+                                                "add a new grid",
+                                                "remove a grid",
+                                                "remove a refinement",
+                                                "adapt a grid",
+                                                "build a grid",
                                                 "user defined grid",
-                  			""};
+                                                ""};
   // addPrefix(pbLabels,prefix,cmd,maxCommands);
     int numRows=7;
     dialog.setPushButtons( pbLabels, pbLabels, numRows ); 
@@ -1205,126 +1207,126 @@ addGrids()
             
             if( grid>=0 && grid<cg.numberOfGrids() )
             {
-      	mappingWasAdded=true;
+                mappingWasAdded=true;
                 newGrid=newNumberOfGrids; newNumberOfGrids++;
 
                 changes(0,numberOfChanges)=newGrid;
                 changes(1,numberOfChanges)=refinementWasAdded;
-      	numberOfChanges++;
+                numberOfChanges++;
 
                 MappedGrid & c=cg[grid];
                 const IntegerArray & gid=c.gridIndexRange();
-      	printf("refine grid %s : gridIndexRange=[%i,%i]x[%i,%i]x[%i,%i]\n",(const char*)c.getName(),
-             	       gid(0,0),gid(1,0),gid(0,1),gid(1,1),gid(0,2),gid(1,2));
+                printf("refine grid %s : gridIndexRange=[%i,%i]x[%i,%i]x[%i,%i]\n",(const char*)c.getName(),
+                              gid(0,0),gid(1,0),gid(0,1),gid(1,1),gid(0,2),gid(1,2));
 
                 Mapping & map =c.mapping().getMapping();
                 ReparameterizationTransform & refine = 
                                     *new ReparameterizationTransform (c.mapping(),ReparameterizationTransform::restriction);
 
                 refine.incrementReferenceCount();
-      	newMapping=&refine;
-      	
+                newMapping=&refine;
+                
                 refine.setName(Mapping::mappingName,sPrintF(buff,"grid %i",newGrid));
 
                 RealArray ra(2,3);
                 ra(0,nullRange)=.25; ra(1,nullRange)=.75;
 
-      	refine.setBounds(ra(0,0),ra(1,0),ra(0,1),ra(1,1),ra(0,2),ra(1,2));
+                refine.setBounds(ra(0,0),ra(1,0),ra(0,1),ra(1,1),ra(0,2),ra(1,2));
         // scale bounds in case we change a previous refinement.
-	// refine.scaleBounds(ra(0,0),ra(1,0),ra(0,1),ra(1,1),ra(0,2),ra(1,2));
+        // refine.scaleBounds(ra(0,0),ra(1,0),ra(0,1),ra(1,1),ra(0,2),ra(1,2));
 
                 int side,axis;
-      	for( axis=0; axis<cg.numberOfDimensions(); axis++ )
-      	{
-        	  for( side=Start; side<=End; side++ )
-        	  {
-          	    refine.setBoundaryCondition(side,axis,0);
-        	  }
-      	}
-            	      
+                for( axis=0; axis<cg.numberOfDimensions(); axis++ )
+                {
+                    for( side=Start; side<=End; side++ )
+                    {
+                        refine.setBoundaryCondition(side,axis,0);
+                    }
+                }
+                            
                 aString menu3[]=
-      	{
-        	  "set bounds",
+                {
+                    "set bounds",
                     "lines",
                     "update the mapping",
                     "done",
                     ""
-      	};
-      	aString answer3;
-      	
-      	for(;;)
-      	{
+                };
+                aString answer3;
+                
+                for(;;)
+                {
                     ps.erase();
                     psp.set(GI_PLOT_THE_OBJECT_AND_EXIT,true);
                     PlotIt::plot(ps,cg,psp);
-        	  PlotIt::plot(ps,refine,psp);
-        	  psp.set(GI_PLOT_THE_OBJECT_AND_EXIT,false);
+                    PlotIt::plot(ps,refine,psp);
+                    psp.set(GI_PLOT_THE_OBJECT_AND_EXIT,false);
                     
                     ps.getMenuItem(menu3,answer3);
-        	  if( answer3=="done" || answer3=="exit" )
-        	  {
+                    if( answer3=="done" || answer3=="exit" )
+                    {
                         break;
-        	  }
-        	  else if( answer3=="set bounds" )
-        	  {
+                    }
+                    else if( answer3=="set bounds" )
+                    {
                         printF("Current bounds: ra=%e, rb=%e, sa=%e, sb=%e, ta=%e, tb=%e\n",
                                         ra(0,0),ra(1,0),ra(0,1),ra(1,1),ra(0,2),ra(1,2));
 
                         ps.inputString(answer3,"Enter ra,rb,sa,sb,ta,tb");
-          	    if( answer3!="" )
-          	    {
-            	      sScanF(answer3,"%e %e %e %e %e %e",&ra(0,0),&ra(1,0),&ra(0,1),&ra(1,1),&ra(0,2),&ra(1,2));
+                        if( answer3!="" )
+                        {
+                            sScanF(answer3,"%e %e %e %e %e %e",&ra(0,0),&ra(1,0),&ra(0,1),&ra(1,1),&ra(0,2),&ra(1,2));
 
                             refine.setBounds(ra(0,0),ra(1,0),ra(0,1),ra(1,1),ra(0,2),ra(1,2));
               // refine.scaleBounds(ra(0,0),ra(1,0),ra(0,1),ra(1,1),ra(0,2),ra(1,2));
 
                             for( axis=0; axis<cg.numberOfDimensions(); axis++ )
-            	      {
-            		for( side=Start; side<=End; side++ )
-            		{
-              		  if( ra(side,axis)==(real)side && c.boundaryCondition(side,axis)>=0 )
-              		  {
-                		    refine.setBoundaryCondition(side,axis,c.boundaryCondition(side,axis));
+                            {
+                                for( side=Start; side<=End; side++ )
+                                {
+                                    if( ra(side,axis)==(real)side && c.boundaryCondition(side,axis)>=0 )
+                                    {
+                                        refine.setBoundaryCondition(side,axis,c.boundaryCondition(side,axis));
                                         printF(" refine.getBoundaryCondition(%i,%i)=%i\n",side,axis,refine.getBoundaryCondition(side,axis));
-              		  }
-            		}
+                                    }
+                                }
                                 if( ra(Start,axis)==0. && ra(End,axis)==1. )
-            		{
-              		  refine.setIsPeriodic(axis,map.getIsPeriodic(axis));
-            		}
-            	      }
-          	    }
-        	  }
+                                {
+                                    refine.setIsPeriodic(axis,map.getIsPeriodic(axis));
+                                }
+                            }
+                        }
+                    }
                     else if( answer3=="lines" )
-        	  {
-          	    int nd[3];
-          	    printF("Current number of grid lines:");
-          	    for( axis=0; axis<cg.numberOfDimensions(); axis++ )
-          	    {
-            	      nd[axis]=refine.getGridDimensions(axis);
-            	      printF(" %i,",nd[axis]);
-          	    }
-          	    printF("\n");
-          	    ps.inputString(answer3,"Enter number of grid lines");
-          	    if( answer3!="" )
-          	    {
-            	      sScanF(answer3,"%i %i %i",&nd[0],&nd[1],&nd[2]);
-            	      for( axis=0; axis<cg.numberOfDimensions(); axis++ )
-            		refine.setGridDimensions(axis,nd[axis]);
-          	    }
-        	  }
+                    {
+                        int nd[3];
+                        printF("Current number of grid lines:");
+                        for( axis=0; axis<cg.numberOfDimensions(); axis++ )
+                        {
+                            nd[axis]=refine.getGridDimensions(axis);
+                            printF(" %i,",nd[axis]);
+                        }
+                        printF("\n");
+                        ps.inputString(answer3,"Enter number of grid lines");
+                        if( answer3!="" )
+                        {
+                            sScanF(answer3,"%i %i %i",&nd[0],&nd[1],&nd[2]);
+                            for( axis=0; axis<cg.numberOfDimensions(); axis++ )
+                                refine.setGridDimensions(axis,nd[axis]);
+                        }
+                    }
                     else if( answer3=="update the mapping")
-        	  {
+                    {
                         MappingInformation mapInfo;
-          	    mapInfo.graphXInterface=&ps;
-          	    refine.update(mapInfo);
-        	  }
-        	  else
-        	  {
-          	    printF("Unknown answer=[%s]\n",(const char *)answer3);
-          	    ps.stopReadingCommandFile();
-        	  }
-      	} 
+                        mapInfo.graphXInterface=&ps;
+                        refine.update(mapInfo);
+                    }
+                    else
+                    {
+                        printF("Unknown answer=[%s]\n",(const char *)answer3);
+                        ps.stopReadingCommandFile();
+                    }
+                } 
             }
             else if( answer2=="done" || answer2=="exit" )
             {
@@ -1369,14 +1371,14 @@ addGrids()
             
             if( mapInfo.mappingList.getLength()>0 )
             {
-      	mappingWasAdded=true;
-      	newGrid=newNumberOfGrids; newNumberOfGrids++;
+                mappingWasAdded=true;
+                newGrid=newNumberOfGrids; newNumberOfGrids++;
             
-      	changes(0,numberOfChanges)=newGrid;
-      	changes(1,numberOfChanges)=gridWasAdded;
-      	numberOfChanges++;
+                changes(0,numberOfChanges)=newGrid;
+                changes(1,numberOfChanges)=gridWasAdded;
+                numberOfChanges++;
 
-      	newMapping=&(mapInfo.mappingList[0].getMapping());
+                newMapping=&(mapInfo.mappingList[0].getMapping());
                 newMapping->incrementReferenceCount();
             }
         }
@@ -1386,12 +1388,12 @@ addGrids()
 
             if( newMapping!=NULL )
             {
-      	mappingWasAdded=true;
-      	newGrid=newNumberOfGrids; newNumberOfGrids++;
+                mappingWasAdded=true;
+                newGrid=newNumberOfGrids; newNumberOfGrids++;
             
-      	changes(0,numberOfChanges)=newGrid;
-      	changes(1,numberOfChanges)=gridWasAdded;
-      	numberOfChanges++;
+                changes(0,numberOfChanges)=newGrid;
+                changes(1,numberOfChanges)=gridWasAdded;
+                numberOfChanges++;
 
             }      
         }
@@ -1401,12 +1403,12 @@ addGrids()
 
             if( newMapping!=NULL )
             {
-      	mappingWasAdded=true;
-      	newGrid=newNumberOfGrids; newNumberOfGrids++;
+                mappingWasAdded=true;
+                newGrid=newNumberOfGrids; newNumberOfGrids++;
             
-      	changes(0,numberOfChanges)=newGrid;
-      	changes(1,numberOfChanges)=gridWasAdded;
-      	numberOfChanges++;
+                changes(0,numberOfChanges)=newGrid;
+                changes(1,numberOfChanges)=gridWasAdded;
+                numberOfChanges++;
 
             }      
         }
@@ -1427,75 +1429,75 @@ addGrids()
             
             if( grid>=0 && grid<cg.numberOfGrids() )
             {
-      	newGrid=grid;
+                newGrid=grid;
 
-      	changes(0,numberOfChanges)=newGrid;
-      	changes(1,numberOfChanges)=gridWasChanged;
-      	numberOfChanges++;
+                changes(0,numberOfChanges)=newGrid;
+                changes(1,numberOfChanges)=gridWasChanged;
+                numberOfChanges++;
 
 
                 MappedGrid & c=cgNew[grid];
                 const IntegerArray & gid=c.gridIndexRange();
-      	printf("refine grid %s : gridIndexRange=[%i,%i]x[%i,%i]x[%i,%i]\n",(const char*)c.getName(),
-             	       gid(0,0),gid(1,0),gid(0,1),gid(1,1),gid(0,2),gid(1,2));
+                printf("refine grid %s : gridIndexRange=[%i,%i]x[%i,%i]x[%i,%i]\n",(const char*)c.getName(),
+                              gid(0,0),gid(1,0),gid(0,1),gid(1,1),gid(0,2),gid(1,2));
 
                 Mapping & map =c.mapping().getMapping();
 
                 aString menu3[]=
-      	{
+                {
                     "lines",
                     "update the mapping",
                     "done",
                     ""
-      	};
-      	aString answer3;
-      	
-      	for(;;)
-      	{
+                };
+                aString answer3;
+                
+                for(;;)
+                {
                     ps.erase();
                     psp.set(GI_PLOT_THE_OBJECT_AND_EXIT,true);
                     PlotIt::plot(ps,cg,psp);
                     
                     ps.getMenuItem(menu3,answer3);
-        	  if( answer3=="done" || answer3=="exit" )
-        	  {
+                    if( answer3=="done" || answer3=="exit" )
+                    {
                         break;
-        	  }
+                    }
                     else if( answer3=="lines" )
-        	  {
-          	    int nd[3];
-          	    printF("Current number of grid lines:");
+                    {
+                        int nd[3];
+                        printF("Current number of grid lines:");
                         int axis;
-          	    for( axis=0; axis<cg.numberOfDimensions(); axis++ )
-          	    {
-            	      nd[axis]=c.gridIndexRange(End,axis)-c.gridIndexRange(Start,axis)+1;
-            	      printF(" %i,",nd[axis]);
-          	    }
-          	    printF("\n");
-          	    ps.inputString(answer3,"Enter number of grid lines");
-          	    if( answer3!="" )
-          	    {
-            	      sScanF(answer3,"%i %i %i",&nd[0],&nd[1],&nd[2]);
-            	      for( axis=0; axis<cg.numberOfDimensions(); axis++ )
-            		c.setGridIndexRange(End,axis,nd[axis]+c.gridIndexRange(Start,axis)-1);
-          	    }
-        	  }
+                        for( axis=0; axis<cg.numberOfDimensions(); axis++ )
+                        {
+                            nd[axis]=c.gridIndexRange(End,axis)-c.gridIndexRange(Start,axis)+1;
+                            printF(" %i,",nd[axis]);
+                        }
+                        printF("\n");
+                        ps.inputString(answer3,"Enter number of grid lines");
+                        if( answer3!="" )
+                        {
+                            sScanF(answer3,"%i %i %i",&nd[0],&nd[1],&nd[2]);
+                            for( axis=0; axis<cg.numberOfDimensions(); axis++ )
+                                c.setGridIndexRange(End,axis,nd[axis]+c.gridIndexRange(Start,axis)-1);
+                        }
+                    }
                     else if( answer3=="update the mapping")
-        	  {
+                    {
                         MappingInformation mapInfo;
-          	    mapInfo.graphXInterface=&ps;
-          	    map.update(mapInfo);
-        	  }
-        	  else
-        	  {
-          	    printF("Unknown answer=[%s]\n",(const char *)answer3);
-          	    ps.stopReadingCommandFile();
-        	  }
+                        mapInfo.graphXInterface=&ps;
+                        map.update(mapInfo);
+                    }
+                    else
+                    {
+                        printF("Unknown answer=[%s]\n",(const char *)answer3);
+                        ps.stopReadingCommandFile();
+                    }
                     if( gridChanged )
-        	  {
-          	    c.update(MappedGrid::THEmask);
-        	  }
-      	} 
+                    {
+                        c.update(MappedGrid::THEmask);
+                    }
+                } 
             }
             else if( answer2=="done" || answer2=="exit" )
             {
@@ -1524,12 +1526,12 @@ addGrids()
             
             if( grid>=0 && grid<cg.numberOfGrids() )
             {
-      	gridChanged=true;
-      	newGrid=grid;
+                gridChanged=true;
+                newGrid=grid;
 
-      	changes(0,numberOfChanges)=newGrid;
-      	changes(1,numberOfChanges)=gridWasRemoved;
-      	numberOfChanges++;
+                changes(0,numberOfChanges)=newGrid;
+                changes(1,numberOfChanges)=gridWasRemoved;
+                numberOfChanges++;
 
             }
             else
@@ -1543,7 +1545,7 @@ addGrids()
         {
             realCompositeGridFunction error(cgNew);
             if( parameters.dbase.get<ErrorEstimator* >("errorEstimator")!=NULL )
-      	parameters.buildErrorEstimator();
+                parameters.buildErrorEstimator();
             parameters.dbase.get<ErrorEstimator* >("errorEstimator")->computeErrorFunction( error,ErrorEstimator::diagonal );
 
             int level=1, baseLevel=0;
@@ -1551,7 +1553,7 @@ addGrids()
             const int oldNumberOfGrids=cgNew.numberOfComponentGrids();
 
             if( parameters.dbase.get<Regrid* >("regrid")==NULL )
-      	parameters.dbase.get<Regrid* >("regrid") = new Regrid();
+                parameters.dbase.get<Regrid* >("regrid") = new Regrid();
 
             Regrid & regrid = *parameters.dbase.get<Regrid* >("regrid");
             
@@ -1565,24 +1567,24 @@ addGrids()
 
             if( true || debug() & 2 )
             {
-      	printF("After AMR regrid: oldNumberOfGrids=%i, new number=%i\n",oldNumberOfGrids,
-             	       cgNew.numberOfComponentGrids());
+                printF("After AMR regrid: oldNumberOfGrids=%i, new number=%i\n",oldNumberOfGrids,
+                              cgNew.numberOfComponentGrids());
             }
 
             int newNum=cgNew.numberOfComponentGrids()-oldNumberOfGrids+numberOfChanges;
             if( newNum >= changes.getBound(1) )
             {
-      	Range R(changes.getBound(1)+1,newNum+10);
-      	changes.resize(2,R.getBound()+1);
-      	changes(changes.dimension(0),R)=-1;
+                Range R(changes.getBound(1)+1,newNum+10);
+                changes.resize(2,R.getBound()+1);
+                changes(changes.dimension(0),R)=-1;
             }
 
 
             for( int grid=oldNumberOfGrids; grid<cgNew.numberOfComponentGrids(); grid++ )
             {
-      	changes(0,numberOfChanges)=grid;
-      	changes(1,numberOfChanges)=gridWasAdded;
-      	numberOfChanges++;
+                changes(0,numberOfChanges)=grid;
+                changes(1,numberOfChanges)=gridWasAdded;
+                numberOfChanges++;
             }
             psp.set(GI_PLOT_THE_OBJECT_AND_EXIT,false); 
             ps.erase();
@@ -1617,13 +1619,13 @@ addGrids()
         {
             if( changes(1,i)==gridWasAdded || changes(1,i)==refinementWasAdded )
             {
-	// this was dealt with above
+        // this was dealt with above
             }
             else if( changes(1,i)==gridWasRemoved || changes(1,i)==refinementWasRemoved  )
             {
-      	cgNew.deleteGrid( changes(0,i) );
-      	printf("After deleteGrid: numberOfComponentGrids=%i, numberOfGrids=%i\n",
-             	       cgNew.numberOfComponentGrids(),cgNew.numberOfGrids());
+                cgNew.deleteGrid( changes(0,i) );
+                printf("After deleteGrid: numberOfComponentGrids=%i, numberOfGrids=%i\n",
+                              cgNew.numberOfComponentGrids(),cgNew.numberOfGrids());
             
             }
             else if( changes(1,i)==gridWasChanged )
@@ -1631,8 +1633,8 @@ addGrids()
             }
             else
             {
-      	printf("addGrids:ERROR: unknown change! \n");
-      	Overture::abort("error");
+                printf("addGrids:ERROR: unknown change! \n");
+                Overture::abort("error");
             }
         }
             
@@ -1713,13 +1715,13 @@ buildGrid( Mapping *&newMapping, int newGridNumber, IntegerArray & sharedBoundar
                                 gid(0,0),gid(1,0),gid(0,1),gid(1,1));
             Range all;
             for( int axis=0; axis<cg.numberOfDimensions(); axis++ ) 
-      	for( int side=0; side<=1; side++ )
-      	{
-        	  const RealArray & bcd = parameters.dbase.get<RealArray>("bcData")(all,side,axis,grid);
-        	  const RealArray & bcp = parameters.dbase.get<RealArray>("bcParameters")(all,side,axis,grid);
-        	  printF("       side=%i, axis=%i, bcData=%5.1f,%5.1f,%5.1f,%5.1f,  bcParameters=%5.1f,%5.1f,%5.1f,%5.1f\n",
-             		 side,axis,bcd(0),bcd(1),bcd(2),bcd(3),bcp(0),bcp(1),bcp(2),bcp(3));
-      	}
+                for( int side=0; side<=1; side++ )
+                {
+                    const RealArray & bcd = parameters.dbase.get<RealArray>("bcData")(all,side,axis,grid);
+                    const RealArray & bcp = parameters.dbase.get<RealArray>("bcParameters")(all,side,axis,grid);
+                    printF("       side=%i, axis=%i, bcData=%5.1f,%5.1f,%5.1f,%5.1f,  bcParameters=%5.1f,%5.1f,%5.1f,%5.1f\n",
+                                  side,axis,bcd(0),bcd(1),bcd(2),bcd(3),bcp(0),bcp(1),bcp(2),bcp(3));
+                }
         }
     }
 
@@ -1741,7 +1743,7 @@ buildGrid( Mapping *&newMapping, int newGridNumber, IntegerArray & sharedBoundar
                                                 "pick points (right curve)",
                                                 "edit mapping...",
                                                 "contour",
-                  			""};
+                                                ""};
   // addPrefix(pbLabels,prefix,cmd,maxCommands);
     int numRows=3;
     dialog.setPushButtons( pbLabels, pbLabels, numRows ); 
@@ -1823,51 +1825,51 @@ buildGrid( Mapping *&newMapping, int newGridNumber, IntegerArray & sharedBoundar
             
             for (int i=0; i<select.nSelect && gridFound<0; i++)
             {
-      	printf("i=%i, ID=%i, minZ=%i, maxZ=%i\n", i,select.selection(i,0),
-             	       select.selection(i,1),select.selection(i,2));
-      	for( int grid=0; grid<cg.numberOfComponentGrids(); grid++ )
-      	{
-        	  if( cg[grid].getGlobalID()==select.selection(i,0) )
-        	  {
-          	    printF("Grid %i selected\n",grid);
+                printf("i=%i, ID=%i, minZ=%i, maxZ=%i\n", i,select.selection(i,0),
+                              select.selection(i,1),select.selection(i,2));
+                for( int grid=0; grid<cg.numberOfComponentGrids(); grid++ )
+                {
+                    if( cg[grid].getGlobalID()==select.selection(i,0) )
+                    {
+                        printF("Grid %i selected\n",grid);
                         gridFound=grid;
                         break;
-        	  }
-      	}
+                    }
+                }
             }
             if( gridFound>=0 )
             {
-      	assert( select.active == 1 );
+                assert( select.active == 1 );
         
-      	printf("World coordinates: %e, %e, %e\n", select.x[0], select.x[1], select.x[2]);
+                printf("World coordinates: %e, %e, %e\n", select.x[0], select.x[1], select.x[2]);
 
-      	realArray x(1,3), r(1,3);
-      	x(0,0)=select.x[0]; x(0,1)=select.x[1]; x(0,2)=select.x[2];
+                realArray x(1,3), r(1,3);
+                x(0,0)=select.x[0]; x(0,1)=select.x[1]; x(0,2)=select.x[2];
 
                 Mapping & mapping = cg[gridFound].mapping().getMapping();
                 r=-1;
-      	mapping.inverseMap(x,r);
-      	
+                mapping.inverseMap(x,r);
+                
                 printF(" Point chosen on grid=%i is x=(%8.2e,%8.2e,%8.2e) r=(%8.2e,%8.2e,%8.2e) \n",
-             	       gridFound, x(0,0),x(0,1),x(0,2),r(0,0),r(0,1),r(0,2));
-      	
-      	if( choice==chooseStartingPoint )
-      	{
+                              gridFound, x(0,0),x(0,1),x(0,2),r(0,0),r(0,1),r(0,2));
+                
+                if( choice==chooseStartingPoint )
+                {
                     xp(0,R3)=x(0,R3);
-        	  rp(0,R3)=r(0,R3);
+                    rp(0,R3)=r(0,R3);
                     gridStart=gridFound;
-        	  
+                    
                     firstPointChosen=true;
-      	}
+                }
                 else
-      	{
+                {
                     xp(1,R3)=x(0,R3);
-        	  rp(1,R3)=r(0,R3);
+                    rp(1,R3)=r(0,R3);
                     gridEnd=gridFound;
 
                     lastPointChosen=true;
-      	}
-      	
+                }
+                
 
 
             }
@@ -1878,13 +1880,13 @@ buildGrid( Mapping *&newMapping, int newGridNumber, IntegerArray & sharedBoundar
         {
             if( cg.numberOfDimensions()!=2 )
             {
-      	printf("Sorry, one can only pick points with the mouse in 2D\n");
+                printf("Sorry, one can only pick points with the mouse in 2D\n");
                 continue;
             }
 
             if( newMapping!=NULL && newMapping->decrementReferenceCount()==0 )
             {
-      	delete newMapping;
+                delete newMapping;
                 newMapping=NULL;
             }
 
@@ -1900,64 +1902,64 @@ buildGrid( Mapping *&newMapping, int newGridNumber, IntegerArray & sharedBoundar
 
             if( numberOfPoints>0 )
             {
-      	pt.resize(numberOfPoints,2);
+                pt.resize(numberOfPoints,2);
 
         // project end points onto the boundary if they are close
 
                 if( snapPointsToBoundary )
-      	{
-        	  int gridFound=0;
-        	  Mapping & map = cg[gridFound].mapping().getMapping();
+                {
+                    int gridFound=0;
+                    Mapping & map = cg[gridFound].mapping().getMapping();
 
-        	  RealArray r(1,2), x(1,2);
-        	  for( int side=0; side<=1; side++ )
-        	  {
-          	    int n= side==0 ? 0 : numberOfPoints-1;
-          	    x(0,0)=pt(n,0);
-          	    x(0,1)=pt(n,1);
-          	    
-          	    r=-1;
+                    RealArray r(1,2), x(1,2);
+                    for( int side=0; side<=1; side++ )
+                    {
+                        int n= side==0 ? 0 : numberOfPoints-1;
+                        x(0,0)=pt(n,0);
+                        x(0,1)=pt(n,1);
+                        
+                        r=-1;
                         #ifdef USE_PPP
-           	     map.inverseMapS(x,r);
+                          map.inverseMapS(x,r);
                         #else
-           	     map.inverseMap(x,r);
+                          map.inverseMap(x,r);
                         #endif
-          	    const real eps =.05;
-          	    bool projected=false;
-          	    for( int dir=0; dir<=1; dir++ )
-          	    {
-            	      if( fabs(r(0,0)-dir)<eps )
-            	      {
-            		r(0,0)=dir; projected=true;
-            	      }
-            	      else if( fabs(r(0,1)-dir)<eps )
-            	      {
-            		r(0,1)=dir; projected=true;
-            	      }
-          	    }
-          	    if( projected )
-          	    {
-            	      printF("End point on side=%i, r=%e,%e was projected to the boundary of the grid=%i\n",side,
-                 		     r(0,0),r(0,1),gridFound);
+                        const real eps =.05;
+                        bool projected=false;
+                        for( int dir=0; dir<=1; dir++ )
+                        {
+                            if( fabs(r(0,0)-dir)<eps )
+                            {
+                                r(0,0)=dir; projected=true;
+                            }
+                            else if( fabs(r(0,1)-dir)<eps )
+                            {
+                                r(0,1)=dir; projected=true;
+                            }
+                        }
+                        if( projected )
+                        {
+                            printF("End point on side=%i, r=%e,%e was projected to the boundary of the grid=%i\n",side,
+                                          r(0,0),r(0,1),gridFound);
                             #ifdef USE_PPP
-             	       map.mapS(r,x);
+                              map.mapS(r,x);
                             #else
-             	       map.map(r,x);
+                              map.map(r,x);
                             #endif
-            	      pt(n,0)=x(0,0);
-            	      pt(n,1)=x(0,1);
-          	    }
-        	  }
-      	}
-      	
-      	if( mapPointer==NULL )
-      	{
-        	  mapPointer=new SplineMapping; mapPointer->incrementReferenceCount();
-      	}
-      	SplineMapping & curve = (SplineMapping&)(*mapPointer);
-      	Range R=numberOfPoints;
-      	curve.setPoints(pt(R,0),pt(R,1));
-      	
+                            pt(n,0)=x(0,0);
+                            pt(n,1)=x(0,1);
+                        }
+                    }
+                }
+                
+                if( mapPointer==NULL )
+                {
+                    mapPointer=new SplineMapping; mapPointer->incrementReferenceCount();
+                }
+                SplineMapping & curve = (SplineMapping&)(*mapPointer);
+                Range R=numberOfPoints;
+                curve.setPoints(pt(R,0),pt(R,1));
+                
             }
         }
         else if( answer=="choose starting point" )
@@ -1972,7 +1974,7 @@ buildGrid( Mapping *&newMapping, int newGridNumber, IntegerArray & sharedBoundar
         {
             if( newMapping!=NULL )
             {
-      	newMapping->interactiveUpdate(gi);
+                newMapping->interactiveUpdate(gi);
             }
             else
             {
@@ -2001,100 +2003,100 @@ buildGrid( Mapping *&newMapping, int newGridNumber, IntegerArray & sharedBoundar
 
             const realArray & xLeft = edgeCurve[0][0]->getGrid();
             const realArray & xRight = edgeCurve[1][0]->getGrid();
-      	
+                
             realArray x(2,2),r(2,2);
             int bc[2][2]={0,0,0,0}; // default BC is interpolation
-      	
+                
             for( int direction=0; direction<=1; direction++ )
             {
-             		 
+                                  
         // project the end points onto the boundary of the grid
 
-      	int n1=direction==0 ? xLeft.getBase(0) : xLeft.getBound(0);
-      	int n2=direction==0 ? xRight.getBase(0) : xRight.getBound(0);
+                int n1=direction==0 ? xLeft.getBase(0) : xLeft.getBound(0);
+                int n2=direction==0 ? xRight.getBase(0) : xRight.getBound(0);
 
-      	x(0,0)= xLeft(n1,0,0,0); x(0,1)= xLeft(n1,0,0,1);
-      	x(1,0)=xRight(n2,0,0,0); x(1,1)=xRight(n2,0,0,1);
-      	
-      	int gridFound=0;  // **************************************** fix this ***** find actual grid ****
-      	Mapping & map = cg[gridFound].mapping().getMapping();
+                x(0,0)= xLeft(n1,0,0,0); x(0,1)= xLeft(n1,0,0,1);
+                x(1,0)=xRight(n2,0,0,0); x(1,1)=xRight(n2,0,0,1);
+                
+                int gridFound=0;  // **************************************** fix this ***** find actual grid ****
+                Mapping & map = cg[gridFound].mapping().getMapping();
 
-      	r=-1;
-      	map.inverseMap(x,r);
-      	
-      	printf("match curve to boundary? r=[%e,%e] and [%e,%e] \n",r(0,0),r(0,1),r(1,0),r(1,1));
+                r=-1;
+                map.inverseMap(x,r);
+                
+                printf("match curve to boundary? r=[%e,%e] and [%e,%e] \n",r(0,0),r(0,1),r(1,0),r(1,1));
 
-      	int side=-1, axis=-1;
-      	real ra,rb;
-      	real sa,sb;
-      	const real eps = .01;  // REAL_EPSILON*10.;
-      	for( int dir=0; dir<=1; dir++ )
-      	{
-        	  if( fabs(r(0,0)-dir)<eps && fabs(r(1,0)-dir)<eps )
-        	  {
-          	    side=dir, axis=0; 
-          	    ra=r(0,1), rb=r(1,1);
-        	  }
-        	  else if( fabs(r(0,1)-dir)<eps && fabs(r(1,1)-dir)<eps )
-        	  {
-          	    side=dir, axis=1;
-          	    ra=r(0,0), rb=r(1,0);
-        	  }
-      	}
-      	if( side!=-1 )
-      	{
-        	  real sa,sb;
-        	  if( axis==1 )
-        	  {
-          	    sa=-1;
-          	    sb=(real)side;
-        	  }
-        	  else
-        	  {
-          	    sa=(real)side;
-          	    sb=-1;
-        	  }
-        	  
-        	  ReductionMapping & edge = * new ReductionMapping(map,sa,sb);
+                int side=-1, axis=-1;
+                real ra,rb;
+                real sa,sb;
+                const real eps = .01;  // REAL_EPSILON*10.;
+                for( int dir=0; dir<=1; dir++ )
+                {
+                    if( fabs(r(0,0)-dir)<eps && fabs(r(1,0)-dir)<eps )
+                    {
+                        side=dir, axis=0; 
+                        ra=r(0,1), rb=r(1,1);
+                    }
+                    else if( fabs(r(0,1)-dir)<eps && fabs(r(1,1)-dir)<eps )
+                    {
+                        side=dir, axis=1;
+                        ra=r(0,0), rb=r(1,0);
+                    }
+                }
+                if( side!=-1 )
+                {
+                    real sa,sb;
+                    if( axis==1 )
+                    {
+                        sa=-1;
+                        sb=(real)side;
+                    }
+                    else
+                    {
+                        sa=(real)side;
+                        sb=-1;
+                    }
+                    
+                    ReductionMapping & edge = * new ReductionMapping(map,sa,sb);
                     edge.incrementReferenceCount();
 
-        	  ReparameterizationTransform & curve= 
-          	    *new ReparameterizationTransform(edge,ReparameterizationTransform::restriction);
+                    ReparameterizationTransform & curve= 
+                        *new ReparameterizationTransform(edge,ReparameterizationTransform::restriction);
 
-        	  edge.decrementReferenceCount();
-        	  
-        	  curve.setBounds(ra,rb);
+                    edge.decrementReferenceCount();
+                    
+                    curve.setBounds(ra,rb);
                       
-	  // curveEdge[side]=&curve;
-        	  
+          // curveEdge[side]=&curve;
+                    
                     int bcg=cg[gridFound].boundaryCondition(side,axis);
-        	  
-	  // ::display(cg[gridFound].boundaryCondition(),"cg[gridFound].boundaryCondition");
-        	  
+                    
+          // ::display(cg[gridFound].boundaryCondition(),"cg[gridFound].boundaryCondition");
+                    
 
-        	  edgeCurve[direction][1] = &curve; edgeCurve[direction][1]->incrementReferenceCount();
+                    edgeCurve[direction][1] = &curve; edgeCurve[direction][1]->incrementReferenceCount();
 
                     printF(" set bc[%i][%i] = boundaryCondition(%i,%i) = %i\n",direction,1,side,axis, bcg);
-        	  
+                    
                     bc[direction][1] = bcg;
 
           // in order to update BC's we keep track of where boundaries on the new grid match to old.
                     sharedBoundaryCondition(direction,1,newGridNumber)=side+2*(axis+3*gridFound);
 
-      	}
+                }
             }
             
             if( edgeCurve[0][1]!=NULL && edgeCurve[1][1]!=NULL )
-      	newMapping = new TFIMapping(edgeCurve[0][0],edgeCurve[1][0],edgeCurve[0][1],edgeCurve[1][1]);
+                newMapping = new TFIMapping(edgeCurve[0][0],edgeCurve[1][0],edgeCurve[0][1],edgeCurve[1][1]);
             else
-      	newMapping = new TFIMapping(edgeCurve[0][0],edgeCurve[1][0]);
+                newMapping = new TFIMapping(edgeCurve[0][0],edgeCurve[1][0]);
 
             newMapping->incrementReferenceCount();
 
             int side,axis;
             for( side=0; side<=1; side++ )
-      	for( axis=0; axis<2; axis++ )
-        	  newMapping->setBoundaryCondition(side,axis,bc[side][axis]);
+                for( axis=0; axis<2; axis++ )
+                    newMapping->setBoundaryCondition(side,axis,bc[side][axis]);
             
         }
         
@@ -2114,16 +2116,16 @@ buildGrid( Mapping *&newMapping, int newGridNumber, IntegerArray & sharedBoundar
 
             for( int side=0; side<=1; side++ )
             {
-      	for( int axis=0; axis<2; axis++ )
-      	{
+                for( int axis=0; axis<2; axis++ )
+                {
                     int num = side+2*axis;
-        	  if( edgeCurve[side][axis]!=NULL )
-        	  {
-          	    aString colour = num==0 ? "green" : num==1 ? "red" : num==2 ? "yellow" : "orange";
-          	    psp.set(GI_MAPPING_COLOUR,colour);
-          	    PlotIt::plot(gi,*edgeCurve[side][axis],psp);
-        	  }
-      	}
+                    if( edgeCurve[side][axis]!=NULL )
+                    {
+                        aString colour = num==0 ? "green" : num==1 ? "red" : num==2 ? "yellow" : "orange";
+                        psp.set(GI_MAPPING_COLOUR,colour);
+                        PlotIt::plot(gi,*edgeCurve[side][axis],psp);
+                    }
+                }
             }
             psp.set(GraphicsParameters::curveLineWidth,oldCurveLineWidth);
             
@@ -2141,7 +2143,7 @@ buildGrid( Mapping *&newMapping, int newGridNumber, IntegerArray & sharedBoundar
         {
             if( edgeCurve[side][axis]!=NULL && edgeCurve[side][axis]->decrementReferenceCount()==0 )
             {
-      	delete edgeCurve[side][axis];
+                delete edgeCurve[side][axis];
             }
         }
     }
@@ -2245,10 +2247,10 @@ updateToMatchNewGrid(CompositeGrid & cgNew,
             numberOfChanges++;
             if( changes(1,i)==gridWasAdded || changes(1,i)==refinementWasAdded )
             {
-      	gridsAdded(numberAdded)=changes(0,i);  // grid number of cgNew that is new.
+                gridsAdded(numberAdded)=changes(0,i);  // grid number of cgNew that is new.
                 numberAdded++;
                 printF("updateToMatchNewGrid: grid %i was added\n",changes(0,i));
-      	
+                
             }
             else if( changes(1,i)==gridWasRemoved || changes(1,i)==refinementWasRemoved  )
             {
@@ -2257,13 +2259,13 @@ updateToMatchNewGrid(CompositeGrid & cgNew,
 
         // shift gridsAdded:
                 for( int j=0; j<numberAdded; j++ )
-      	{
-        	  if( gridsAdded(j)>gridsDeleted(numberDeleted) )
-        	  {
-          	    gridsAdded(j)-=1;
-        	  }
-      	}
-      	numberDeleted++;
+                {
+                    if( gridsAdded(j)>gridsDeleted(numberDeleted) )
+                    {
+                        gridsAdded(j)-=1;
+                    }
+                }
+                numberDeleted++;
             }
             
         }
@@ -2353,73 +2355,73 @@ updateToMatchNewGrid(CompositeGrid & cgNew,
             for( grid=0; grid<numberOfGrids; grid++ )
             {
                 if( max(abs(gridsDeleted-grid))>0 ) // no need to interpolate a grid that was deleted.
-      	{
-                    	  const intArray & mask = cg[grid].mask();
+                {
+                    const intArray & mask = cg[grid].mask();
                     int newGrid=grid;
-        	  newGrid -= sum( (grid-gridsDeleted) > 0 );
-        	  
-                    	  const intArray & newMask = cgNew[grid].mask();
-        	  intArray ia;
+                    newGrid -= sum( (grid-gridsDeleted) > 0 );
+                    
+                    const intArray & newMask = cgNew[grid].mask();
+                    intArray ia;
                     ia= (mask==0 && newMask!=0 ).indexMap();
                     if( ia.getLength(0) > 0 )
-        	  {
-	    // there are exposed points
+                    {
+            // there are exposed points
 
                         printF("*** interpolate %i exposed points on grid %i (newGrid=%i)\n",ia.getLength(0),grid,newGrid);
 
-          	    Range I=ia.getLength(0);
-          	    if( cg.numberOfDimensions()==2 )
-          	    {
-            	      ia.resize(I,3);
-            	      ia(I,2)=cg[grid].dimension(Start,axis3);
-          	    }
+                        Range I=ia.getLength(0);
+                        if( cg.numberOfDimensions()==2 )
+                        {
+                            ia.resize(I,3);
+                            ia(I,2)=cg[grid].dimension(Start,axis3);
+                        }
 
                         const realArray & vertex = cg[grid].vertex();
-          	    realArray x(I,cg.numberOfDimensions());
+                        realArray x(I,cg.numberOfDimensions());
                         for( int axis=0; axis<cg.numberOfDimensions(); axis++ )
-                	      x(I,axis)=vertex(ia(I,0),ia(I,1),ia(I,2),axis);
+                            x(I,axis)=vertex(ia(I,0),ia(I,1),ia(I,2),axis);
 
             // interpolate points
                         realArray uii(I,parameters.dbase.get<int >("numberOfComponents"));
 
                         #ifndef USE_PPP
-            	      interpolator.interpolatePoints(x,u,uii);
+                            interpolator.interpolatePoints(x,u,uii);
                         #else
-            	      Overture::abort("finish me for parallel Bill!");
+                            Overture::abort("finish me for parallel Bill!");
                         #endif
 
-	    // interpolatePoints(x,u,uii);
+            // interpolatePoints(x,u,uii);
                         realArray & uNew = u[newGrid];
                         for( int c=0; c<parameters.dbase.get<int >("numberOfComponents"); c++ )
-            	      uNew(ia(I,0),ia(I,1),ia(I,2),c)=uii(I,c);
+                            uNew(ia(I,0),ia(I,1),ia(I,2),c)=uii(I,c);
 
-          	    for( j=0; j<numberOfGridFunctionsToInterpolate; j++ )
-          	    {
+                        for( j=0; j<numberOfGridFunctionsToInterpolate; j++ )
+                        {
                             #ifndef USE_PPP
                                 interpolator.interpolatePoints(x,gf[j].u,uii);
                             #else
                                 Overture::abort("finish me for parallel Bill!");
                             #endif
-            	      realArray & uNew = gf[j].u[newGrid];
-            	      for( int c=0; c<parameters.dbase.get<int >("numberOfComponents"); c++ )
-            		uNew(ia(I,0),ia(I,1),ia(I,2),c)=uii(I,c);
-            	      
-          	    }
+                            realArray & uNew = gf[j].u[newGrid];
+                            for( int c=0; c<parameters.dbase.get<int >("numberOfComponents"); c++ )
+                                uNew(ia(I,0),ia(I,1),ia(I,2),c)=uii(I,c);
+                            
+                        }
 
-          	    for( j=0; j<numberOfFnToInterpolate; j++ )
-          	    {
+                        for( j=0; j<numberOfFnToInterpolate; j++ )
+                        {
                             #ifndef USE_PPP
                                 interpolator.interpolatePoints(x,fn[j],uii);
                             #else
                                 Overture::abort("finish me for parallel Bill!");
                             #endif
-            	      realArray & uNew = fn[j][newGrid];
-            	      for( int c=0; c<parameters.dbase.get<int >("numberOfComponents"); c++ )
-            		uNew(ia(I,0),ia(I,1),ia(I,2),c)=uii(I,c);
-          	    }
-          	    
-        	  }
-      	}
+                            realArray & uNew = fn[j][newGrid];
+                            for( int c=0; c<parameters.dbase.get<int >("numberOfComponents"); c++ )
+                                uNew(ia(I,0),ia(I,1),ia(I,2),c)=uii(I,c);
+                        }
+                        
+                    }
+                }
             }
         }
         
@@ -2445,20 +2447,20 @@ updateToMatchNewGrid(CompositeGrid & cgNew,
 
             if( j < numberOfGridFunctionsToInterpolate )
             {
-      	for( i=0; i<numberAdded; i++ )
-      	{
-        	  printF("update for new grid %i on gf[%i]\n",i,j);
+                for( i=0; i<numberAdded; i++ )
+                {
+                    printF("update for new grid %i on gf[%i]\n",i,j);
                     va[i]=1.;
-        	  interpolator.interpolateAllPoints(gf[j].u,va[i]); 
-      	}
+                    interpolator.interpolateAllPoints(gf[j].u,va[i]); 
+                }
             }
 
             gf[j].u.updateToMatchGrid(cgNew);
 
             if( j < numberOfGridFunctionsToInterpolate )
             {
-      	for( i=0; i<numberAdded; i++ )
-        	  gf[j].u[gridsAdded(i)]=va[i];
+                for( i=0; i<numberAdded; i++ )
+                    gf[j].u[gridsAdded(i)]=va[i];
             }
             
 
@@ -2468,20 +2470,20 @@ updateToMatchNewGrid(CompositeGrid & cgNew,
         {
             if( j<numberOfFnToInterpolate )
             {
-      	for( i=0; i<numberAdded; i++ )
-      	{
-        	  printF("update for new grid %i on fn[%i]\n",i,j);
+                for( i=0; i<numberAdded; i++ )
+                {
+                    printF("update for new grid %i on fn[%i]\n",i,j);
                     fn[j]=0.;
-        	  interpolator.interpolateAllPoints(fn[j],va[i]);
-      	}
+                    interpolator.interpolateAllPoints(fn[j],va[i]);
+                }
             }
             
             fn[j].updateToMatchGrid(cgNew);
 
             if( j<numberOfFnToInterpolate )
             {
-      	for( i=0; i<numberAdded; i++ )
-        	  fn[j][gridsAdded(i)]=va[i];
+                for( i=0; i<numberAdded; i++ )
+                    fn[j][gridsAdded(i)]=va[i];
             }
         }
 
@@ -2592,13 +2594,13 @@ updateToMatchNewGrid(CompositeGrid & cgNew,
                                 gid(0,0),gid(1,0),gid(0,1),gid(1,1));
             Range all;
             for( int axis=0; axis<cg.numberOfDimensions(); axis++ ) 
-      	for( int side=0; side<=1; side++ )
-      	{
-        	  const RealArray & bcd = parameters.dbase.get<RealArray>("bcData")(all,side,axis,grid);
-        	  const RealArray & bcp = parameters.dbase.get<RealArray>("bcParameters")(all,side,axis,grid);
-        	  printF("       side=%i, axis=%i, bcData=%5.1f,%5.1f,%5.1f,%5.1f,  bcParameters=%5.1f,%5.1f,%5.1f,%5.1f\n",
-             		 side,axis,bcd(0),bcd(1),bcd(2),bcd(3),bcp(0),bcp(1),bcp(2),bcp(3));
-      	}
+                for( int side=0; side<=1; side++ )
+                {
+                    const RealArray & bcd = parameters.dbase.get<RealArray>("bcData")(all,side,axis,grid);
+                    const RealArray & bcp = parameters.dbase.get<RealArray>("bcParameters")(all,side,axis,grid);
+                    printF("       side=%i, axis=%i, bcData=%5.1f,%5.1f,%5.1f,%5.1f,  bcParameters=%5.1f,%5.1f,%5.1f,%5.1f\n",
+                                  side,axis,bcd(0),bcd(1),bcd(2),bcd(3),bcp(0),bcp(1),bcp(2),bcp(3));
+                }
         }
     }
 

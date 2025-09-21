@@ -1244,9 +1244,9 @@ setPressureConstraintValues( GridFunction & gf0, realCompositeGridFunction & f )
         
         } //end if useAddedMass
     
+    return 0;
 
-
-    }
+}
 
 
 
@@ -1442,6 +1442,7 @@ setPressureConstraintValues( GridFunction & gf0, realCompositeGridFunction & f )
         }
 
     }
-
+    
+    return 0;
 }
 

@@ -94,6 +94,7 @@ setInterfaceBoundaryCondition( GridFaceDescriptor & info )
                       interfaceCondition(side,axis,grid));
     }
 
+    return 0;
 }
 
 // ===================================================================================

@@ -14,6 +14,7 @@
        !             = 1 : apply boundary conditions to the time-derivatives of the field variables
        ! polarizationOption = 0 : no polarization
        !                    = 1 : apply BCs to polarization vector
+       !
        ! ===============================================================================================
         implicit none
         integer nd, nd1a,nd1b,nd2a,nd2b,nd3a,nd3b, ndf1a,ndf1b,ndf2a,

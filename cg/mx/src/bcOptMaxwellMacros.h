@@ -957,6 +957,7 @@ do i1=nn1a,nn1b
 !             = 1 : apply boundary conditions to the time-derivatives of the field variables
 ! polarizationOption = 0 : no polarization
 !                    = 1 : apply BCs to polarization vector
+!
 ! ===============================================================================================
 
  implicit none

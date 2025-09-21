@@ -8,6 +8,7 @@
        !  gridType : 0=rectangular, 1=curvilinear
        !  useForcing : 1=use f for RHS to BC
        !  side,axis : 0:1 and 0:2
+       !
        ! ===================================================================================
         implicit none
         integer nd, nd1a,nd1b,nd2a,nd2b,nd3a,nd3b, ndf1a,ndf1b,ndf2a,

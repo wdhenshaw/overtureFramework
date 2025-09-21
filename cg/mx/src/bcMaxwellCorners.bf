@@ -4,6 +4,7 @@
 #Include "defineDiffOrder4f.h"
 
 
+
 !**************************************************************************
 
 ! Include macros that are common to different orders of accuracy
@@ -3867,6 +3868,7 @@ else
 !  gridType : 0=rectangular, 1=curvilinear
 !  useForcing : 1=use f for RHS to BC
 !  side,axis : 0:1 and 0:2
+!
 ! ===================================================================================
 
  implicit none

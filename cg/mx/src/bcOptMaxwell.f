@@ -3,9 +3,6 @@
 ! ************** Boundary Conditions for Maxwell ********************************
 ! *******************************************************************************
 
-
-
-
 ! These next include files will define the macros that will define the difference approximations
 ! The actual macro is called below
 ! Use this next macro to declare the statement functions that are defined below
