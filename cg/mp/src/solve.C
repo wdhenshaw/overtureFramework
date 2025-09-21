@@ -58,7 +58,7 @@ solve()
   {
     real cpuTime=getCPU()-cpu0;
     if( (!parameters.isSteadyStateSolver() && t >= nextTimeToPrint-dt*.25) ||
-	( parameters.isSteadyStateSolver() && (parameters.dbase.get<int >("globalStepNumber")+1) > nextTimeToPrint-.1) )
+        ( parameters.isSteadyStateSolver() && (parameters.dbase.get<int >("globalStepNumber")+1) > nextTimeToPrint-.1) )
     {
       
       fPrintF(parameters.dbase.get<FILE* >("debugFile")," advance::printTimeStepInfo at t=%20.12e, dt=%20.12e \n",t,dt);
@@ -66,7 +66,7 @@ solve()
       
       
       if( frequencyToSaveInShowFile>0 && (iPrint % frequencyToSaveInShowFile == 0) )
-	saveShow( gf[current] );  // save the current solution in the show file
+        saveShow( gf[current] );  // save the current solution in the show file
       
       // *wdh* 080829 finish = plot(t, plotOption, tFinal);
       int optionIn = step==0 && plotOption ? 1 : plotOption; // wait on first step
@@ -74,51 +74,51 @@ solve()
       if ( finish ) break;
 
       if( (!parameters.isSteadyStateSolver() && t >tFinal-.5*dt) ||
-	  ( parameters.isSteadyStateSolver() && parameters.dbase.get<int >("globalStepNumber")+1>=parameters.dbase.get<int >("maxIterations")) )
+          ( parameters.isSteadyStateSolver() && parameters.dbase.get<int >("globalStepNumber")+1>=parameters.dbase.get<int >("maxIterations")) )
       {
-	// we are done (unless tFinal is increased in plot). plot solution at final time
-	if( true || plotOption & 1 )
-	  plot(t,1, tFinal);
+        // we are done (unless tFinal is increased in plot). plot solution at final time
+        if( true || plotOption & 1 )
+          plot(t,1, tFinal);
 
-	// tFinal may have been increased, so check again
-	if( (!parameters.isSteadyStateSolver() && t >tFinal-.5*dt) ||
-	    ( parameters.isSteadyStateSolver() && parameters.dbase.get<int >("globalStepNumber")+1>=parameters.dbase.get<int >("maxIterations")) )
-	{ 
-	  finish=true;
-	  break;
-	}
+        // tFinal may have been increased, so check again
+        if( (!parameters.isSteadyStateSolver() && t >tFinal-.5*dt) ||
+            ( parameters.isSteadyStateSolver() && parameters.dbase.get<int >("globalStepNumber")+1>=parameters.dbase.get<int >("maxIterations")) )
+        { 
+          finish=true;
+          break;
+        }
       }
 
       ForDomain(d) // *wdh* check this 
       {
-	// this will close any open sub-file if it contains the max number of solutions allowed.
-	// do this here since we save sequences if we finish, so we cannot do this in saveShow.
-	if( domainSolver[d]->parameters.dbase.get<Ogshow* >("show")!=NULL )
-	{
-	  parameters.dbase.get<Ogshow* >("show")->setCurrentFrameSeries(cg.getDomainName(d));
-	  domainSolver[d]->parameters.dbase.get<Ogshow* >("show")->endFrame();
-	}
+        // this will close any open sub-file if it contains the max number of solutions allowed.
+        // do this here since we save sequences if we finish, so we cannot do this in saveShow.
+        if( domainSolver[d]->parameters.dbase.get<Ogshow* >("show")!=NULL )
+        {
+          parameters.dbase.get<Ogshow* >("show")->setCurrentFrameSeries(cg.getDomainName(d));
+          domainSolver[d]->parameters.dbase.get<Ogshow* >("show")->endFrame();
+        }
       }
       
       if( printArray(nextPrintValue) != (int)Parameters::defaultValue )
-	nextTimeToPrint=min(printArray(nextPrintValue++),tFinal);   //  ...new time to print:
+        nextTimeToPrint=min(printArray(nextPrintValue++),tFinal);   //  ...new time to print:
       else
       {
-	// **** this next line is possibly wrong if tPrint has changed!!  *****
-	// ***** or if t/tPrint > MAX_INT
-	if( !parameters.isSteadyStateSolver() )
-	{
-	  nextTimeToPrint=min(ceil(t/tPrint-.5)*tPrint+tPrint,tFinal);   //  ...new time to print:
-	}
-	else
-	  nextTimeToPrint=min(int(nextTimeToPrint+parameters.dbase.get<int >("plotIterations")+.5),parameters.dbase.get<int >("maxIterations"));
+        // **** this next line is possibly wrong if tPrint has changed!!  *****
+        // ***** or if t/tPrint > MAX_INT
+        if( !parameters.isSteadyStateSolver() )
+        {
+          nextTimeToPrint=min(ceil(t/tPrint-.5)*tPrint+tPrint,tFinal);   //  ...new time to print:
+        }
+        else
+          nextTimeToPrint=min(int(nextTimeToPrint+parameters.dbase.get<int >("plotIterations")+.5),parameters.dbase.get<int >("maxIterations"));
       }
       if( debug() & 4 )
       {
-	printF("advance: nextTimeToPrint=%18.10e, t=%18.10e \n",nextTimeToPrint,t);
+        printF("advance: nextTimeToPrint=%18.10e, t=%18.10e \n",nextTimeToPrint,t);
       }
   
-	
+        
       iPrint++;
     }
 
@@ -158,23 +158,23 @@ solve()
   {
     Parameters & parameters = domainSolver[d]->parameters;
     if( parameters.dbase.get<Ogshow* >("show")!=NULL &&
-	(!parameters.dbase.get<Ogshow* >("show")->isLastFrameInSubFile() || 
-	 !parameters.dbase.get<bool >("saveSequencesEveryTime")) )
+        (!parameters.dbase.get<Ogshow* >("show")->isLastFrameInSubFile() || 
+         !parameters.dbase.get<bool >("saveSequencesEveryTime")) )
     {
       // printF("\n *********** saveSequencesToShowFile() *********\n");
       domainSolver[d]->saveSequencesToShowFile();
     
       // time sequence info for moving grids is saved here
       if( parameters.isMovingGridProblem() )
-	parameters.dbase.get<MovingGrids >("movingGrids").saveToShowFile();
+        parameters.dbase.get<MovingGrids >("movingGrids").saveToShowFile();
     }
     if( parameters.dbase.get<Ogshow* >("show")!=NULL )
     {
       // printF("\n *********** AT END parameters.dbase.get<Ogshow* >("show")->endFrame(); *********\n");
       if( domainSolver[d]->parameters.dbase.get<Ogshow* >("show")!=NULL )
       {
-	parameters.dbase.get<Ogshow* >("show")->setCurrentFrameSeries(cg.getDomainName(d));
-	domainSolver[d]->parameters.dbase.get<Ogshow* >("show")->endFrame();
+        parameters.dbase.get<Ogshow* >("show")->setCurrentFrameSeries(cg.getDomainName(d));
+        domainSolver[d]->parameters.dbase.get<Ogshow* >("show")->endFrame();
       }
     }
   } // for each domain
@@ -265,11 +265,11 @@ solve()
 
 //       if( false )
 //       {
-// 	FILE *file = stdout;
-// 	fprintf(file,"\n ++++++++++++advance before plot+++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-// 	for( int grid=0; grid<gf[current].cg.numberOfComponentGrids(); grid++ )
-// 	  gf[current].cg[grid].displayComputedGeometry(file);
-// 	fprintf(file," +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+//      FILE *file = stdout;
+//      fprintf(file,"\n ++++++++++++advance before plot+++++++++++++++++++++++++++++++++++++++++++++++++++\n");
+//      for( int grid=0; grid<gf[current].cg.numberOfComponentGrids(); grid++ )
+//        gf[current].cg[grid].displayComputedGeometry(file);
+//      fprintf(file," +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 //       }
 
 
@@ -281,31 +281,31 @@ solve()
 //       if( (!parameters.isSteadyStateSolver() && t >tFinal-.5*dt) ||
 //           ( parameters.isSteadyStateSolver() && parameters.dbase.get<int >("globalStepNumber")+1>=parameters.dbase.get<int >("maxIterations")) )
 //       {
-// 	// we are done (unless tFinal is increased in plot). plot solution at final time
-// 	if( true || plotOption & 1 )
-// 	  plot(t,1, tFinal);
+//      // we are done (unless tFinal is increased in plot). plot solution at final time
+//      if( true || plotOption & 1 )
+//        plot(t,1, tFinal);
 
 //          // tFinal may have been increased, so check again
 //         if( (!parameters.isSteadyStateSolver() && t >tFinal-.5*dt) ||
 //             ( parameters.isSteadyStateSolver() && parameters.dbase.get<int >("globalStepNumber")+1>=parameters.dbase.get<int >("maxIterations")) )
-// 	{ 
-// 	  finish=true;
-// 	  break;
-// 	}
+//      { 
+//        finish=true;
+//        break;
+//      }
 //       }
 
 //       for( int d=0; d<domainSolver.size(); d++ )
 //       {
 //         // this will close any open sub-file if it contains the max number of solutions allowed.
 //         // do this here since we save sequences if we finish, so we cannot do this in saveShow.
-// 	if( domainSolver[d]->parameters.dbase.get<Ogshow* >("show")!=NULL )
-// 	{
-// 	  for( int d=0; d<domainSolver.size(); d++ )
-// 	  {
+//      if( domainSolver[d]->parameters.dbase.get<Ogshow* >("show")!=NULL )
+//      {
+//        for( int d=0; d<domainSolver.size(); d++ )
+//        {
 //             parameters.dbase.get<Ogshow* >("show")->setCurrentFrameSeries(cg.getDomainName(d));
-// 	    domainSolver[d]->parameters.dbase.get<Ogshow* >("show")->endFrame();
-// 	  }
-// 	}
+//          domainSolver[d]->parameters.dbase.get<Ogshow* >("show")->endFrame();
+//        }
+//      }
 //       }
       
 //       if( printArray(nextPrintValue) != (int)Parameters::defaultValue )
@@ -314,16 +314,16 @@ solve()
 //       {
 //         // **** this next line is possibly wrong if tPrint has changed!!  *****
 //         // ***** or if t/tPrint > MAX_INT
-// 	if( !parameters.isSteadyStateSolver() )
-// 	{
+//      if( !parameters.isSteadyStateSolver() )
+//      {
 //           nextTimeToPrint=min(ceil(t/tPrint-.5)*tPrint+tPrint,tFinal);   //  ...new time to print:
-// 	}
+//      }
 //         else
-// 	  nextTimeToPrint=min(int(nextTimeToPrint+parameters.dbase.get<int >("plotIterations")+.5),parameters.dbase.get<int >("maxIterations"));
+//        nextTimeToPrint=min(int(nextTimeToPrint+parameters.dbase.get<int >("plotIterations")+.5),parameters.dbase.get<int >("maxIterations"));
 //       }
 //       if( true )
 //       {
-// 	printF("advance: nextTimeToPrint=%18.10e, t=%18.10e \n",nextTimeToPrint,t);
+//      printF("advance: nextTimeToPrint=%18.10e, t=%18.10e \n",nextTimeToPrint,t);
 //       }
       
 
@@ -333,17 +333,17 @@ solve()
 
 
 //     if(  timeSteppingMethod!=Parameters::implicit 
-// 	 && timeSteppingMethod!=Parameters::implicitAllSpeed 
-// 	 && timeSteppingMethod!=Parameters::rKutta ) 
+//       && timeSteppingMethod!=Parameters::implicitAllSpeed 
+//       && timeSteppingMethod!=Parameters::rKutta ) 
 //     {  //   ===Choose a new time step====
 
 //       real dtNew= getTimeStep( gf[current] ); //       ===Choose time step====
 //       computeNumberOfStepsAndAdjustTheTimeStep(t,tFinal,nextTimeToPrint,numberOfSubSteps,dtNew);
-	
+        
 //       if( debug() & 1 )
 //       {
-// 	printF("Cgmp::solve:recompute dt: dt(old)=%8.3e, dtNew = %8.3e numberOfSubSteps=%i\n",
-// 	       dt,dtNew,numberOfSubSteps);
+//      printF("Cgmp::solve:recompute dt: dt(old)=%8.3e, dtNew = %8.3e numberOfSubSteps=%i\n",
+//             dt,dtNew,numberOfSubSteps);
 //       }
 //       dt=dtNew;
 //     }
@@ -392,50 +392,50 @@ solve()
 //       {
 //         const int next = (current+1) %2;
 //         for( int d=0; d<domainSolver.size(); d++ )
-// 	{
-// 	  if( false )
-// 	  {
-// 	    // old way: 
-// 	    GridFunction & gf0 = domainSolver[d]->gf[current];
-// 	    GridFunction & gf1 = domainSolver[d]->gf[next];
-// 	    realCompositeGridFunction & fn0 = domainSolver[d]->fn[0];
-	  
-// 	    domainSolver[d]->eulerStep(t,t,t+dt,dt,gf0,gf0,gf1,fn0,fn0,i  ,numberOfSubSteps);
-// 	  }
-// 	  else
-// 	  {
+//      {
+//        if( false )
+//        {
+//          // old way: 
+//          GridFunction & gf0 = domainSolver[d]->gf[current];
+//          GridFunction & gf1 = domainSolver[d]->gf[next];
+//          realCompositeGridFunction & fn0 = domainSolver[d]->fn[0];
+          
+//          domainSolver[d]->eulerStep(t,t,t+dt,dt,gf0,gf0,gf1,fn0,fn0,i  ,numberOfSubSteps);
+//        }
+//        else
+//        {
 //           // new way:
 //             domainSolver[d]->takeOneStep( t,dt,i,numberOfSubSteps );
-// 	  }
-	  
+//        }
+          
 //           domainSolver[d]->numberOfStepsTaken++; 
-// 	}
+//      }
 
 //         // now apply interface boundary conditions 
 
-// 	// gfIndex[domain] : indicates which solution to use in each domain 
+//      // gfIndex[domain] : indicates which solution to use in each domain 
 //         std::vector<int> gfIndex(numberOfDomains,next); 
-// 	assignInterfaceBoundaryConditions(gfIndex, dt );
+//      assignInterfaceBoundaryConditions(gfIndex, dt );
 
-// 	t+=dt; 	step++; numberOfStepsTaken++; 
+//      t+=dt;  step++; numberOfStepsTaken++; 
 //         current=next;
-// 	for( int d=0; d<domainSolver.size(); d++ )
+//      for( int d=0; d<domainSolver.size(); d++ )
 //           domainSolver[d]->current=current;
-	
-// 	for( int d=0; d<domainSolver.size(); d++ )
-// 	  domainSolver[d]->output( domainSolver[d]->gf[current],step );
+        
+//      for( int d=0; d<domainSolver.size(); d++ )
+//        domainSolver[d]->output( domainSolver[d]->gf[current],step );
 
-//  	if( false && (numberOfStepsTaken-1) % parameters.dbase.get<int >("frequencyToSaveSequenceInfo") == 0 )
-//  	{  // fix this -- trouble if residual is not there...
-// 	  for( int d=0; d<domainSolver.size(); d++ )
-// 	  {
-// 	    if( !domainSolver[d]->parameters.isAdaptiveGridProblem() )  // fn[0] is not valid for AMR (?) -- fix this
-// 	    {
-// 	      domainSolver[d]->saveSequenceInfo(t,fn[0]);
-// 	    }
-// 	  }
-//  	}
-	
+//      if( false && (numberOfStepsTaken-1) % parameters.dbase.get<int >("frequencyToSaveSequenceInfo") == 0 )
+//      {  // fix this -- trouble if residual is not there...
+//        for( int d=0; d<domainSolver.size(); d++ )
+//        {
+//          if( !domainSolver[d]->parameters.isAdaptiveGridProblem() )  // fn[0] is not valid for AMR (?) -- fix this
+//          {
+//            domainSolver[d]->saveSequenceInfo(t,fn[0]);
+//          }
+//        }
+//      }
+        
 
 //       }
       
@@ -460,26 +460,26 @@ solve()
 //   {
 //     Parameters & parameters = domainSolver[d]->parameters;
 //     if( parameters.dbase.get<Ogshow* >("show")!=NULL &&
-// 	(!parameters.dbase.get<Ogshow* >("show")->isLastFrameInSubFile() || 
-// 	 !parameters.dbase.get<bool >("saveSequencesEveryTime")) )
+//      (!parameters.dbase.get<Ogshow* >("show")->isLastFrameInSubFile() || 
+//       !parameters.dbase.get<bool >("saveSequencesEveryTime")) )
 //     {
 //       // printF("\n *********** saveSequencesToShowFile() *********\n");
 //       domainSolver[d]->saveSequencesToShowFile();
     
 //       // time sequence info for moving grids is saved here
 //       if( parameters.isMovingGridProblem() )
-// 	parameters.dbase.get<MovingGrids >("movingGrids").saveToShowFile();
+//      parameters.dbase.get<MovingGrids >("movingGrids").saveToShowFile();
 //     }
 //     if( parameters.dbase.get<Ogshow* >("show")!=NULL )
 //     {
 //       // printF("\n *********** AT END parameters.dbase.get<Ogshow* >("show")->endFrame(); *********\n");
 //       if( domainSolver[d]->parameters.dbase.get<Ogshow* >("show")!=NULL )
 //       {
-// 	for( int d=0; d<domainSolver.size(); d++ )
-// 	{
-// 	  parameters.dbase.get<Ogshow* >("show")->setCurrentFrameSeries(cg.getDomainName(d));
-// 	  domainSolver[d]->parameters.dbase.get<Ogshow* >("show")->endFrame();
-// 	}
+//      for( int d=0; d<domainSolver.size(); d++ )
+//      {
+//        parameters.dbase.get<Ogshow* >("show")->setCurrentFrameSeries(cg.getDomainName(d));
+//        domainSolver[d]->parameters.dbase.get<Ogshow* >("show")->endFrame();
+//      }
 //       }
 //     }
 //   }
@@ -505,9 +505,9 @@ printStatistics(FILE *file /* = stdout */)
   Communication_Manager::Sync();
 
  fPrintF(file,"\n"
-	 " ***************************************************************************\n"
-	 " **************************** CGMP SUMMARY *********************************\n"
-	 " ***************************************************************************\n");
+         " ***************************************************************************\n"
+         " **************************** CGMP SUMMARY *********************************\n"
+         " ***************************************************************************\n");
  
   int numberOfDomains=0;
   ForDomain(d)
@@ -542,7 +542,7 @@ printStatistics(FILE *file /* = stdout */)
     if( parameters.dbase.get<real >("numberOfRegrids")==0. )
     {
       for( int grid=0; grid<cg.numberOfComponentGrids(); grid++ )
-	totalNumberOfGridPoints+=domainSolver[d]->numberOfGridPoints[grid];
+        totalNumberOfGridPoints+=domainSolver[d]->numberOfGridPoints[grid];
     }
     else
     {
@@ -571,7 +571,7 @@ printStatistics(FILE *file /* = stdout */)
 
 //   printF(" ***** totalTime = %8.2e  max=%8.2e  ave=%8.2e \n",
 //          timing(totalTimeIndex),maxTiming(totalTimeIndex),
-// 	 aveTiming(totalTimeIndex));
+//       aveTiming(totalTimeIndex));
 
   real mem=Overture::getCurrentMemoryUsage();
   real maxMem=ParallelUtility::getMaxValue(mem);  // max over all processors
@@ -584,10 +584,10 @@ printStatistics(FILE *file /* = stdout */)
   // save a summary to the interface file
   FILE *& interfaceFile =parameters.dbase.get<FILE* >("interfaceFile");
   fPrintF(interfaceFile,"\n"
-	  " ***************************************************************************\n"
-	  "         **************** %s Interface Summary ***************\n"
-	  "               number of steps = %i\n",
-	  (const char*)getClassName(),numberOfStepsTaken);
+          " ***************************************************************************\n"
+          "         **************** %s Interface Summary ***************\n"
+          "               number of steps = %i\n",
+          (const char*)getClassName(),numberOfStepsTaken);
   ((MpParameters&)parameters).displayInterfaceInfo(interfaceFile);
   fPrintF(interfaceFile," ***************************************************************************\n");
 
@@ -600,32 +600,32 @@ printStatistics(FILE *file /* = stdout */)
 
       // print statistics for cgmp 
       fPrintF(output,"\n"
-	      "*****************************************************************************************\n");
+              "*****************************************************************************************\n");
       fPrintF(output,
-	      "             %s Version 0.1                                 \n"
-	      "             -----------------                              \n"
-	      "             %s                                             \n",
-	      (const char*)getClassName(),(const char*)dateString   );
+              "             %s Version 0.1                                 \n"
+              "             -----------------                              \n"
+              "             %s                                             \n",
+              (const char*)getClassName(),(const char*)dateString   );
     
 
       fPrintF(output," numberOfDomains=%i, processors=%i\n",numberOfDomains,np);
 
       fPrintF(output," numberOfStepsTaken=%i, total time = %e \n",numberOfStepsTaken,
-	      parameters.dbase.get<RealArray>("timing")(totalTimeIndex));
+              parameters.dbase.get<RealArray>("timing")(totalTimeIndex));
     
       Parameters::TimeSteppingMethod & timeSteppingMethod= 
               parameters.dbase.get<Parameters::TimeSteppingMethod >("timeSteppingMethod");
       fprintf(file,"\n"
-	      " cfl = %f, tFinal=%e, tPrint = %e                                 \n"
-	      " Time stepping method: %s\n"
-	      " solveCoupledInterfaceEquations = %i, useMixedInterfaceConditions=%i\n"
+              " cfl = %f, tFinal=%e, tPrint = %e                                 \n"
+              " Time stepping method: %s\n"
+              " solveCoupledInterfaceEquations = %i, useMixedInterfaceConditions=%i\n"
               " interface-tolerance=%8.2e, interface-omega=%8.2e\n"
-	      ,
-	      parameters.dbase.get<real >("cfl"),
-	      parameters.dbase.get<real >("tFinal"),
-	      parameters.dbase.get<real >("tPrint"),
-	      (const char*)Parameters::timeSteppingName[timeSteppingMethod],
-	      (int)parameters.dbase.get<bool>("solveCoupledInterfaceEquations"),
+              ,
+              parameters.dbase.get<real >("cfl"),
+              parameters.dbase.get<real >("tFinal"),
+              parameters.dbase.get<real >("tPrint"),
+              (const char*)Parameters::timeSteppingName[timeSteppingMethod],
+              (int)parameters.dbase.get<bool>("solveCoupledInterfaceEquations"),
               (int)parameters.dbase.get<bool>("useMixedInterfaceConditions"),
               parameters.dbase.get<real>("interfaceTolerance"),parameters.dbase.get<real>("interfaceOmega"));
 
@@ -636,74 +636,74 @@ printStatistics(FILE *file /* = stdout */)
 
       if( parameters.dbase.get<real >("numberOfRegrids")==0 )
       {
-	fprintf(output,
+        fprintf(output,
                 "\n"
                 "         ---%s Summary : %s --- \n"
                 "            %s"          
-		"  ==== numberOfStepsTaken =%i, number of grids=%i, number of gridpts =%g, processors=%i ==== \n"
-		"  ==== memory per-proc: [min=%g,ave=%g,max=%g](Mb), max-recorded=%g (Mb), total=%g (Mb)\n"
-		"   Timings:           (ave-sec/proc:) seconds    sec/step   sec/step/pt     %%     [max-s/proc] [min-s/proc]\n",
-		(const char*)getClassName(),(const char*)getName(),
+                "  ==== numberOfStepsTaken =%i, number of grids=%i, number of gridpts =%g, processors=%i ==== \n"
+                "  ==== memory per-proc: [min=%g,ave=%g,max=%g](Mb), max-recorded=%g (Mb), total=%g (Mb)\n"
+                "   Timings:           (ave-sec/proc:) seconds    sec/step   sec/step/pt     %%     [max-s/proc] [min-s/proc]\n",
+                (const char*)getClassName(),(const char*)getName(),
                 dateString,
-		numSteps,cg.numberOfComponentGrids(),totalNumberOfGridPoints,np,
+                numSteps,cg.numberOfComponentGrids(),totalNumberOfGridPoints,np,
                 minMem,aveMem,maxMem,maxMemRecorded,totalMem);
       }
       else
       {
-	int levels = 1, ratio=1;
-	aString loadBalanceName="off";
-	if( parameters.dbase.get<Regrid* >("regrid")!=NULL )
-	{
-	  levels=parameters.dbase.get<Regrid* >("regrid")->getDefaultNumberOfRefinementLevels();
-	  ratio=parameters.dbase.get<Regrid* >("regrid")->getRefinementRatio();
-	  if( parameters.dbase.get<Regrid* >("regrid")->loadBalancingIsOn() )
-	    loadBalanceName=parameters.dbase.get<Regrid* >("regrid")->getLoadBalancer().getLoadBalancerTypeName();
-	}
+        int levels = 1, ratio=1;
+        aString loadBalanceName="off";
+        if( parameters.dbase.get<Regrid* >("regrid")!=NULL )
+        {
+          levels=parameters.dbase.get<Regrid* >("regrid")->getDefaultNumberOfRefinementLevels();
+          ratio=parameters.dbase.get<Regrid* >("regrid")->getRefinementRatio();
+          if( parameters.dbase.get<Regrid* >("regrid")->loadBalancingIsOn() )
+            loadBalanceName=parameters.dbase.get<Regrid* >("regrid")->getLoadBalancer().getLoadBalancerTypeName();
+        }
       
-	fprintf(output,
+        fprintf(output,
                 "\n"
                 "         ---%s Summary : %s --- \n"
                 "           %s"          
-		"  ==== numberOfStepsTaken =%i, processors=%i\n"
-		"  ==== AMR levels=%i, AMR ratio=%i, load-balance=%s\n"
-		"  ==== number of grids:   [min=%g,max=%g,ave=%g] (number of regrid steps=%g)\n"
-		"  ==== number of gridpts: [min=%g,max=%g,ave=%g], \n"
-		"  ==== memory per-proc: [min=%g,ave=%g,max=%g](Mb), max-recorded=%g (Mb), total=%g (Mb)\n"
-		"   Timings:           (ave-sec/proc:) seconds    sec/step   sec/step/pt     %%     [max-s/proc] [min-s/proc]\n",
-		(const char*)getClassName(),(const char*)getName(),
+                "  ==== numberOfStepsTaken =%i, processors=%i\n"
+                "  ==== AMR levels=%i, AMR ratio=%i, load-balance=%s\n"
+                "  ==== number of grids:   [min=%g,max=%g,ave=%g] (number of regrid steps=%g)\n"
+                "  ==== number of gridpts: [min=%g,max=%g,ave=%g], \n"
+                "  ==== memory per-proc: [min=%g,ave=%g,max=%g](Mb), max-recorded=%g (Mb), total=%g (Mb)\n"
+                "   Timings:           (ave-sec/proc:) seconds    sec/step   sec/step/pt     %%     [max-s/proc] [min-s/proc]\n",
+                (const char*)getClassName(),(const char*)getName(),
                 dateString,
-		numSteps,np,
-		levels,ratio,(const char*)loadBalanceName,
-		parameters.dbase.get<real >("minimumNumberOfGrids"),
-		parameters.dbase.get<real >("maximumNumberOfGrids"),
-		parameters.dbase.get<real >("totalNumberOfGrids")/parameters.dbase.get<real >("numberOfRegrids"),
-		parameters.dbase.get<real >("numberOfRegrids"),
-		parameters.dbase.get<real >("minimumNumberOfGridPoints"),parameters.dbase.get<real >("maximumNumberOfGridPoints"),
-		parameters.dbase.get<real >("sumTotalNumberOfGridPoints")/parameters.dbase.get<real >("numberOfRegrids"),
-		minMem,aveMem,maxMem,maxMemRecorded,totalMem);
+                numSteps,np,
+                levels,ratio,(const char*)loadBalanceName,
+                parameters.dbase.get<real >("minimumNumberOfGrids"),
+                parameters.dbase.get<real >("maximumNumberOfGrids"),
+                parameters.dbase.get<real >("totalNumberOfGrids")/parameters.dbase.get<real >("numberOfRegrids"),
+                parameters.dbase.get<real >("numberOfRegrids"),
+                parameters.dbase.get<real >("minimumNumberOfGridPoints"),parameters.dbase.get<real >("maximumNumberOfGridPoints"),
+                parameters.dbase.get<real >("sumTotalNumberOfGridPoints")/parameters.dbase.get<real >("numberOfRegrids"),
+                minMem,aveMem,maxMem,maxMemRecorded,totalMem);
       }
     
   
       int nSpace=35;
       aString dots="........................................................................";
       if( maxTiming(0)==0. )
-	maxTiming(0)=REAL_MIN;
+        maxTiming(0)=REAL_MIN;
       for( int i=0; i<maximumNumberOfTimings; i++ )
-	if( timingName[i]!="" && aveTiming(i)!=0. )    
-	  fprintf(output,"%s%s%10.3e  %10.3e  %10.3e   %7.3f  %10.3e  %10.3e\n",(const char*)timingName[i],
-		  (const char*)dots(0,max(0,nSpace-timingName[i].length())),
-		  aveTiming(i),aveTiming(i)/numSteps,aveTiming(i)/numSteps/totalNumberOfGridPoints,
-		  100.*aveTiming(i)/aveTiming(totalTimeIndex),maxTiming(i),minTiming(i));
+        if( timingName[i]!="" && aveTiming(i)!=0. )    
+          fprintf(output,"%s%s%10.3e  %10.3e  %10.3e   %7.3f  %10.3e  %10.3e\n",(const char*)timingName[i],
+                  (const char*)dots(0,max(0,nSpace-timingName[i].length())),
+                  aveTiming(i),aveTiming(i)/numSteps,aveTiming(i)/numSteps/totalNumberOfGridPoints,
+                  100.*aveTiming(i)/aveTiming(totalTimeIndex),maxTiming(i),minTiming(i));
 
       if( parameters.dbase.get<Parameters::TimeSteppingMethod >("timeSteppingMethod")==Parameters::implicit )
-	fprintf(output,"implicit time stepping: average number of iterations to solve implicit system =%5.1f/step\n",
-		real(parameters.dbase.get<int >("numberOfIterationsForImplicitTimeStepping"))/max(1,numSteps));
+        fprintf(output,"implicit time stepping: average number of iterations to solve implicit system =%5.1f/step\n",
+                real(parameters.dbase.get<int >("numberOfIterationsForImplicitTimeStepping"))/max(1,numSteps));
 
       if( poisson )//parameters.dbase.get<Parameters::PDE >("pde")==Parameters::incompressibleNavierStokes ||
-	//	  parameters.dbase.get<Parameters::PDE >("pde")==Parameters::allSpeedNavierStokes )
-	fprintf(output,"pressure equation: average number of iterations to solve =%f/solve (%3.2f solves/step)\n",
-		real(parameters.dbase.get<int >("numberOfIterationsForConstraints"))/max(1,parameters.dbase.get<int >("numberOfSolvesForConstraints")),
-		real(parameters.dbase.get<int >("numberOfSolvesForConstraints"))/max(1,numSteps));
+        //        parameters.dbase.get<Parameters::PDE >("pde")==Parameters::allSpeedNavierStokes )
+        fprintf(output,"pressure equation: average number of iterations to solve =%f/solve (%3.2f solves/step)\n",
+                real(parameters.dbase.get<int >("numberOfIterationsForConstraints"))/max(1,parameters.dbase.get<int >("numberOfSolvesForConstraints")),
+                real(parameters.dbase.get<int >("numberOfSolvesForConstraints"))/max(1,numSteps));
     
 #ifdef USE_PPP
       fprintf(output," Total: messages sent=%i messages received=%i\n",
@@ -714,7 +714,7 @@ printStatistics(FILE *file /* = stdout */)
 #endif
 
       fPrintF(output,
-	      "*****************************************************************************************\n\n");
+              "*****************************************************************************************\n\n");
       
     }
   }
@@ -728,38 +728,38 @@ printStatistics(FILE *file /* = stdout */)
       FILE *output = fileio==0 ? parameters.dbase.get<FILE* >("logFile") : file;
       fflush(output);
       fPrintF(output,"\n"
-	      " ------- Summary: Timings per processor -----------\n"
-	      "   p   ");
+              " ------- Summary: Timings per processor -----------\n"
+              "   p   ");
       for( int i=0; i<maximumNumberOfTimings; i++ )
       { // output a short-form name (7 chars)
-	if( timingName[i]!="" && maxTiming(i)!=0. )  
-	{
+        if( timingName[i]!="" && maxTiming(i)!=0. )  
+        {
           aString shortName="       ";
           int m=0;
-	  for( int s=0; m<7 && s<timingName[i].length(); s++ ) 
-	  { // strip off blanks
-	    if( timingName[i][s]!=' ' ) {shortName[m]=timingName[i][s]; m++;} //
-	  }
+          for( int s=0; m<7 && s<timingName[i].length(); s++ ) 
+          { // strip off blanks
+            if( timingName[i][s]!=' ' ) {shortName[m]=timingName[i][s]; m++;} //
+          }
           fPrintF(output,"%7.7s ",(const char*)shortName);
-	}
+        }
       }
       fPrintF(output,"\n");
       fflush(output);
       RealArray timingLocal(timing.dimension(0));
       for( int p=0; p<np; p++ )
       {
-	// Note -- it did not work very well to have processor p try to write results, so instead
+        // Note -- it did not work very well to have processor p try to write results, so instead
         // we copy results to processor 0 to print 
         timingLocal=timing;
         broadCast(timingLocal,p);  // send timing info from processor p   -- don't need a broad cast here **fix**
-	fPrintF(output,"%4i : ",p);
-	for( int i=0; i<maximumNumberOfTimings; i++ )
-	{
-	  if( timingName[i]!="" && maxTiming(i)!=0. )    
-	    fPrintF(output,"%7.1e ",timingLocal(i));
-	}
-	fflush(output);
-	fPrintF(output,"\n");
+        fPrintF(output,"%4i : ",p);
+        for( int i=0; i<maximumNumberOfTimings; i++ )
+        {
+          if( timingName[i]!="" && maxTiming(i)!=0. )    
+            fPrintF(output,"%7.1e ",timingLocal(i));
+        }
+        fflush(output);
+        fPrintF(output,"\n");
       }
       fPrintF(output,"\n");
       fflush(output);
@@ -775,4 +775,6 @@ printStatistics(FILE *file /* = stdout */)
   timing(parameters.dbase.get<int>("timeForPlotting"))+=timeForWaiting;
   timing(parameters.dbase.get<int>("totalTime"))+=timeForWaiting;
   // timing(Parameters::timeForAdvance)+=timeForWaiting;
+
+  return 0;
 }

@@ -20,11 +20,65 @@ Doxygen source code documentation:
 http://www.overtureframework.org/doxygen/Overture/index.html
 http://www.overtureframework.org/doxygen/CG/index.html
 
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.
+------------- NOTE FROM A USER for MAX OS 15.4.1 -----
+On May 19, 2025, at 3:44 PM, Sturdevant, Ben <sturdb@rpi.edu> wrote:
+
+Hi Bill,
+
+Success!
+
+It went smoothly for the most part. There were just a couple of workarounds that I needed. In case it's helpful, these were:
+
+-------------------------------------------------------
+
+HDF5:
+During installation, I had to run:
+
+CFLAGS="-Wno-int-conversion" ./configure --prefix=\pwd` 
+
+This was needed to suppress the following error:
+error: incompatible integer to pointer conversion assigning  to 'void *' from 'int' [-Wint-conversion]`
+
+-------------------------------------------------------
+
+Overture:
+I had to edit config/MakeDefs.darwin, adding:
+
+CCFLAGS += -std=gnu++03
+
+I put it just after the line:
+
+CCFLAGS = $(CC_INCLUDES) $(CPP_OPTIMIZATION_FLAG)
+
+This resolved the error:
+error: ISO C++11 does not allow access declarations; use using declarations instead
+
+-------------------------------------------------------
+
+Best,
+Ben
+From: Sturdevant, Ben <sturdb@rpi.edu>
+Sent: Friday, May 16, 2025 4:35 PM
+To: Banks, Jeffrey William <banksj3@rpi.edu>; Henshaw, William Douglas <henshw@rpi.edu>
+Subject: Re: Installing Overture on a Mac
+ 
+Yes, thank you very much Bill! I'll give it a try soon.
+
+Best,
+Ben''
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 
 ===================================================================================
 ==== May 16, 2025
 
-CHECK IN LATEST RELEASE WITH CHGANGES FOR MAC 
+CHECK IN LATEST RELEASE WITH CHANGES FOR MAC 
+
+MAC: 
+git checkout 
+cp Overture/Overture/config/MakeDefs.darwin Overture/Overture/config/MakeDefs.darwin2025May16
+cp cg/common/moving/src/BeamModel.C cg/common/moving/src/BeamModel.C2025May16
 
 --- START cg66: 
  gits

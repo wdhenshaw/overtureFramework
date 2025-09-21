@@ -21,20 +21,22 @@
 $prefix="rectangle"; $xa=-1.; $xb=1.; $ya=-1.; $yb=1.;
 $Nx=-1; $Ny=-1; # if set, use this many grid points in x or y 
 $adjustCC=0; # apply cell-=centered adjustment for painted interface 
-$order=2; $factor=1; $ds0=.1; # default values
+$order=2; $factor=1; $ds0=.1; $yFactor=-1; $dyRatio=-1; # default values
 $orderOfAccuracy = "second order"; $ng=2;  $periodic=""; $name=""; 
 $numGhost=-1;  # if this value is set, then use this number of ghost points
 $extraLines=0; 
 # 
 # get command line arguments
 # Getopt::Long::Configure("prefix_pattern=(--rectangleArg|--|-)");
-GetOptions( "order=i"=>\$order,"factor=f"=>\$factor,"xa=f"=>\$xa,"xb=f"=>\$xb,"ds0=f"=>\$ds0,\
-            "ya=f"=>\$ya,"yb=f"=>\$yb,"ybx=f"=>\$ybx,\
+GetOptions( "order=i"=>\$order,"factor=f"=>\$factor,"yFactor=f"=>\$yFactor,"xa=f"=>\$xa,"xb=f"=>\$xb,"ds0=f"=>\$ds0,\
+            "ya=f"=>\$ya,"yb=f"=>\$yb,"ybx=f"=>\$ybx,"dyRatio=f"=>\$dyRatio,\
             "periodic=s"=>\$periodic,"name=s"=>\$name,"prefix=s"=>\$prefix,"numGhost=i"=> \$numGhost, \
 	    "extraLines=i"=> \$extraLines,"Nx=i"=>\$Nx,"Ny=i"=>\$Ny,"adjustCC=i"=>\$adjustCC );
 # printf("rectangleArg: factor=$factor xa=$xa xb=$xb ya=$ya yb=$yb ybx=$ybx\n");
 # pause
 # 
+if( $yFactor eq -1 ){ $yFactor=$factor; }
+if( $dyRatio ne -1 ){ $yFactor=$factor/$dyRatio; } # use $dyRatio if supplied
 if( $order eq 4 ){ $orderOfAccuracy="fourth order"; $ng=2; }\
 elsif( $order eq 6 ){ $orderOfAccuracy="sixth order"; $ng=4; }\
 elsif( $order eq 8 ){ $orderOfAccuracy="eighth order"; $ng=6; }
@@ -49,7 +51,8 @@ if( $numGhost ne -1 ){ $ng = $numGhost; } # overide number of ghost
 if( $numGhost ne -1 ){ $suffix .= ".ng$numGhost"; }
 if( $name eq "" ){$name = $prefix . $factor . $suffix . ".hdf";}
 # 
-$ds=$ds0/$factor;
+$dx=$ds0/$factor;
+$dy=$ds0/$yFactor;
 # 
 create mappings
 #
@@ -57,8 +60,8 @@ rectangle
   set corners
     $xa $xb $ya $yb
   lines
-    $nx = int( ($xb-$xa)/$ds +1.5 + $extraLines );
-    $ny = int( ($yb-$ya)/$ds +1.5 + $extraLines );
+    $nx = int( ($xb-$xa)/$dx +1.5 + $extraLines );
+    $ny = int( ($yb-$ya)/$dy +1.5 + $extraLines );
     if( $Nx > 0 ){ $nx=$Nx; }
     if( $Ny > 0 ){ $ny=$Ny; }
     # Adjust $nx so that points x=-.5 and x=.5 are at cell centers if $xb=-$xa and $xb = integer (for bamx interface code)

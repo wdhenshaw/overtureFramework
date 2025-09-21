@@ -126,22 +126,22 @@ getStandingWave( real t, RealArray & u, RealArray & v, RealArray & a ) const
       real xl = ( (real)i /numElem) *  beamLength;
 
       if(xd)
-	{
-	  // each nodes has 2 solutions, u and ux
-	  u(2*i,0,0,0)   = W(xl,t);     // w 
-	  v(2*i,0,0,0)   = Wt(xl,t);    // w_t 
-	  a(2*i,0,0,0)   = Wtt(xl,t);    // w_tt 
-	  u(2*i+1,0,0,0) = Wx(xl,t);    // w_x
-	  v(2*i+1,0,0,0) = Wtx(xl,t);   // w_tx 
-	  a(2*i+1,0,0,0) = Wttx(xl,t);   // w_ttx
-	}
+      {
+        // each nodes has 2 solutions, u and ux
+        u(2*i,0,0,0)   = W(xl,t);     // w 
+        v(2*i,0,0,0)   = Wt(xl,t);    // w_t 
+        a(2*i,0,0,0)   = Wtt(xl,t);    // w_tt 
+        u(2*i+1,0,0,0) = Wx(xl,t);    // w_x
+        v(2*i+1,0,0,0) = Wtx(xl,t);   // w_tx 
+        a(2*i+1,0,0,0) = Wttx(xl,t);   // w_ttx
+      }
       else
-	{
-	  // each nodes has 1 solution: u
-	  u(i,0,0,0)   = W(xl,t);     // w 
-	  v(i,0,0,0)   = Wt(xl,t);    // w_t 
-	  a(i,0,0,0)   = Wtt(xl,t);    // w_tt 
-	}
+      {
+        // each nodes has 1 solution: u
+        u(i,0,0,0)   = W(xl,t);     // w 
+        v(i,0,0,0)   = Wt(xl,t);    // w_t 
+        a(i,0,0,0)   = Wtt(xl,t);    // w_tt 
+      }
     
 
     }
@@ -189,15 +189,15 @@ getBeamEigenmode( real t, RealArray & u, RealArray & v, RealArray & a ) const
       // BC: clamped + clamped:
       //     cosh(lambda*L)*cos(lambda*L)=1 
       if( eigenMode==1 )
-	lambda = 4.7300407448627040;
+      lambda = 4.7300407448627040;
       else if( eigenMode==2 )
-	lambda=7.8532046240958376;
+      lambda=7.8532046240958376;
       else if( eigenMode==3 )
-	lambda = 1.0995607838001671e+01;
+      lambda = 1.0995607838001671e+01;
       else
-	{
-	  OV_ABORT("finish me");
-	}
+      {
+        OV_ABORT("finish me");
+      }
   
       c1 = -sinh(lambda)+sin(lambda);
       c2 =  cosh(lambda)-cos(lambda);
@@ -208,15 +208,15 @@ getBeamEigenmode( real t, RealArray & u, RealArray & v, RealArray & a ) const
       //     cosh(lambda*L)*cos(lambda*L)=-1 
 
       if( eigenMode==1 )
-	lambda = 1.8751040687119612;
+      lambda = 1.8751040687119612;
       else if( eigenMode==2 )
-	lambda=4.6940911329741746;
+      lambda=4.6940911329741746;
       else if( eigenMode==3 )
-	lambda = 7.8547574382376126;
+      lambda = 7.8547574382376126;
       else
-	{
-	  OV_ABORT("finish me");
-	}
+      {
+        OV_ABORT("finish me");
+      }
   
       c1 = -sinh(lambda)-sin(lambda);
       c2 =  cosh(lambda)+cos(lambda);
@@ -227,15 +227,15 @@ getBeamEigenmode( real t, RealArray & u, RealArray & v, RealArray & a ) const
       //     sinh(lambda*L)*cos(lambda*L) + cosh()*sin() = 0
 
       if( eigenMode==1 )
-	lambda = 2.3650203724313520;
+      lambda = 2.3650203724313520;
       else if( eigenMode==2 )
-	lambda=5.4978039190008355;
+      lambda=5.4978039190008355;
       else if( eigenMode==3 )
-	lambda =8.6393798286997407;
+      lambda =8.6393798286997407;
       else
-	{
-	  OV_ABORT("finish me");
-	}
+      {
+        OV_ABORT("finish me");
+      }
   
       c1 = -cosh(lambda)+cos(lambda);
       c2 =  sinh(lambda)+sin(lambda);
@@ -288,22 +288,22 @@ getBeamEigenmode( real t, RealArray & u, RealArray & v, RealArray & a ) const
       real wex = WEx(xl);
       
       if(xd)
-	{
-	  // each node has 2 solutions: u and ux
-	  u(2*i,0,0,0)   = we*cost;     // w 
-	  v(2*i,0,0,0)   = we*(-w*sint);    // w_t 
-	  a(2*i,0,0,0)   = we*(-w*w*cost);    // w_tt
-	  u(2*i+1,0,0,0) = wex*cost;    // w_x
-	  v(2*i+1,0,0,0) = wex*(-w*sint);   // w_tx 
-	  a(2*i+1,0,0,0) = wex*(-w*w*cost);   // w_ttx	
-	}
+      {
+        // each node has 2 solutions: u and ux
+        u(2*i,0,0,0)   = we*cost;     // w 
+        v(2*i,0,0,0)   = we*(-w*sint);    // w_t 
+        a(2*i,0,0,0)   = we*(-w*w*cost);    // w_tt
+        u(2*i+1,0,0,0) = wex*cost;    // w_x
+        v(2*i+1,0,0,0) = wex*(-w*sint);   // w_tx 
+        a(2*i+1,0,0,0) = wex*(-w*w*cost);   // w_ttx  
+      }
       else
-	{
-	  // each node has 1 solution: u 
-	  u(i,0,0,0)   = we*cost;     // w 
-	  v(i,0,0,0)   = we*(-w*sint);    // w_t 
-	  a(i,0,0,0)   = we*(-w*w*cost);    // w_tt
-	}
+      {
+        // each node has 1 solution: u 
+        u(i,0,0,0)   = we*cost;     // w 
+        v(i,0,0,0)   = we*(-w*sint);    // w_t 
+        a(i,0,0,0)   = we*(-w*w*cost);    // w_tt
+      }
     }
   return 0;
 }
@@ -362,22 +362,22 @@ getTravelingWaveFSI( real t, RealArray & u, RealArray & v, RealArray & a ) const
     {
 
       if(xd)
-	{
-	  // each nodes has 2 solutions: u and ux
-	  u(2*i,0,0,0)   = ue(i,0,0,1);     // w 
-	  v(2*i,0,0,0)   = ve(i,0,0,1);     // w_t 
-	  a(2*i,0,0,0)   = ae(i,0,0,1);     // w_tt 
-	  u(2*i+1,0,0,0) = (ue(i+1,0,0,1)-ue(i-1,0,0,1))/(2.*dx);  // w_x   *** DO THIS FOR NOW **
-	  v(2*i+1,0,0,0) = (ve(i+1,0,0,1)-ve(i-1,0,0,1))/(2.*dx);      // w_xt *** DO THIS FOR NOW **
-	  a(2*i+1,0,0,0) = (ae(i+1,0,0,1)-ae(i-1,0,0,1))/(2.*dx);      // w_xtt *** DO THIS FOR NOW **
-	}
+      {
+        // each nodes has 2 solutions: u and ux
+        u(2*i,0,0,0)   = ue(i,0,0,1);     // w 
+        v(2*i,0,0,0)   = ve(i,0,0,1);     // w_t 
+        a(2*i,0,0,0)   = ae(i,0,0,1);     // w_tt 
+        u(2*i+1,0,0,0) = (ue(i+1,0,0,1)-ue(i-1,0,0,1))/(2.*dx);  // w_x   *** DO THIS FOR NOW **
+        v(2*i+1,0,0,0) = (ve(i+1,0,0,1)-ve(i-1,0,0,1))/(2.*dx);      // w_xt *** DO THIS FOR NOW **
+        a(2*i+1,0,0,0) = (ae(i+1,0,0,1)-ae(i-1,0,0,1))/(2.*dx);      // w_xtt *** DO THIS FOR NOW **
+      }
       else
-	{
-	  // each nodes has 1 solutions: u and ux
-	  u(i,0,0,0)   = ue(i,0,0,1);     // w 
-	  v(i,0,0,0)   = ve(i,0,0,1);     // w_t 
-	  a(i,0,0,0)   = ae(i,0,0,1);     // w_tt 
-	}
+      {
+        // each nodes has 1 solutions: u and ux
+        u(i,0,0,0)   = ue(i,0,0,1);     // w 
+        v(i,0,0,0)   = ve(i,0,0,1);     // w_t 
+        a(i,0,0,0)   = ae(i,0,0,1);     // w_tt 
+      }
 
     }
 
@@ -428,7 +428,7 @@ getBeamPiston( real t, RealArray & u, RealArray & v, RealArray & a ) const
   if( t<=0 || t<=3.*dt )
     printF("-- BM%i -- getBeamPiston solution at t=%9.3e, rhos*hs=%8.2e, rho*H=%8.2e, K0=%8.2e, pa=%g pb=%g dpdy=%g"
            " w=%g, wt=%g, wtt=%g\n",
-	   getBeamID(), t,rhos*hs,rho*fluidHeight,K0,pa,pb,dpdy,w,wt,wtt);
+         getBeamID(), t,rhos*hs,rho*fluidHeight,K0,pa,pb,dpdy,w,wt,wtt);
 
   const bool xd = dbase.get<bool>("isCubicHermiteFEM");
   const int & numElem = dbase.get<int>("numElem");
@@ -439,22 +439,22 @@ getBeamPiston( real t, RealArray & u, RealArray & v, RealArray & a ) const
     {
 
       if(xd)
-	{
-	  // each node has 2 solutions: u and ux
-	  u(2*i,0,0,0)   = w;      // w 
-	  v(2*i,0,0,0)   = wt;     // w_t 
-	  a(2*i,0,0,0)   = wtt;    // w_tt 
-	  u(2*i+1,0,0,0) = 0.;     // w_x
-	  v(2*i+1,0,0,0) = 0.;     // w_tx 
-	  a(2*i+1,0,0,0) = 0.;     // w_ttx	  
-	}
+      {
+        // each node has 2 solutions: u and ux
+        u(2*i,0,0,0)   = w;      // w 
+        v(2*i,0,0,0)   = wt;     // w_t 
+        a(2*i,0,0,0)   = wtt;    // w_tt 
+        u(2*i+1,0,0,0) = 0.;     // w_x
+        v(2*i+1,0,0,0) = 0.;     // w_tx 
+        a(2*i+1,0,0,0) = 0.;     // w_ttx   
+      }
       else
-	{
-	  // each node has 1 solution: u
-	  u(i,0,0,0)   = w;      // w 
-	  v(i,0,0,0)   = wt;     // w_t 
-	  a(i,0,0,0)   = wtt;    // w_tt 
-	}
+      {
+        // each node has 1 solution: u
+        u(i,0,0,0)   = w;      // w 
+        v(i,0,0,0)   = wt;     // w_t 
+        a(i,0,0,0)   = wtt;    // w_tt 
+      }
       
 
     }
@@ -523,44 +523,44 @@ getBeamUnderPressure( real t, RealArray & u, RealArray & v, RealArray & a ) cons
     {  
       real x = ( (real)i /numElem) *  beamLength;
       if( tension!=0. && elasticModulus==0. )
-	{ // solution is a quadratic
-	  if (xd)
-	    {
-	      // each node has 2 solutions: u and ux
-	      u(2*i,0,0,0)   = factor*(x-xa)*(xb-x);           // w 
-	      u(2*i+1,0,0,0) = factor*( (xb-x) - (x-xa) );     // w_x
-	    }
-	  else
-	    {
-	      // each node has 1 solution: u
-	      u(i,0,0,0)   = factor*(x-xa)*(xb-x);           // w 
-	    }
-	}
+      { // solution is a quadratic
+        if (xd)
+          {
+            // each node has 2 solutions: u and ux
+            u(2*i,0,0,0)   = factor*(x-xa)*(xb-x);           // w 
+            u(2*i+1,0,0,0) = factor*( (xb-x) - (x-xa) );     // w_x
+          }
+        else
+          {
+            // each node has 1 solution: u
+            u(i,0,0,0)   = factor*(x-xa)*(xb-x);           // w 
+          }
+      }
       else if( tension==0. && elasticModulus!=0. )
-	{ // solution is a quartic
-	  if(xd)
-	    {
-	      u(2*i,0,0,0)   = factor*SQR(x-xa)*SQR(x-xb);     // w
-	      u(2*i+1,0,0,0) = factor*( 2.*(x-xa)*SQR(x-xb) + 2.*(x-xb)*SQR(x-xa) );     // w_x
-	    }
-	  else
-	    {
-	      u(i,0,0,0)   = factor*SQR(x-xa)*SQR(x-xb);     // w 
-	    }
-	}
+      { // solution is a quartic
+        if(xd)
+          {
+            u(2*i,0,0,0)   = factor*SQR(x-xa)*SQR(x-xb);     // w
+            u(2*i+1,0,0,0) = factor*( 2.*(x-xa)*SQR(x-xb) + 2.*(x-xb)*SQR(x-xa) );     // w_x
+          }
+        else
+          {
+            u(i,0,0,0)   = factor*SQR(x-xa)*SQR(x-xb);     // w 
+          }
+      }
     
       if(xd)
-	{
-	  v(2*i,0,0,0)   = 0.;     // w_t 
-	  a(2*i,0,0,0)   = 0.;    // w_t
-	  v(2*i+1,0,0,0) = 0.;     // w_tx 
-	  a(2*i+1,0,0,0) = 0.;     // w_ttx
-	}
+      {
+        v(2*i,0,0,0)   = 0.;     // w_t 
+        a(2*i,0,0,0)   = 0.;    // w_t
+        v(2*i+1,0,0,0) = 0.;     // w_tx 
+        a(2*i+1,0,0,0) = 0.;     // w_ttx
+      }
       else
-	{
-	  v(i,0,0,0)   = 0.;     // w_t 
-	  a(i,0,0,0)   = 0.;    // w_tt
-	}
+      {
+        v(i,0,0,0)   = 0.;     // w_t 
+        a(i,0,0,0)   = 0.;    // w_tt
+      }
     }
 
 
@@ -629,22 +629,22 @@ getTwilightZone( real t, RealArray & u, RealArray & v, RealArray & a ) const
     {
   
       if(xd)
-	{
-	  u(2*i,0,0,0) = ue(i,0,0,0);
-	  v(2*i,0,0,0) = ve(i,0,0,0);
-	  a(2*i,0,0,0) = ae(i,0,0,0);
-	  u(2*i+1,0,0,0) = uxe(i,0,0,0);
-	  v(2*i+1,0,0,0) = vxe(i,0,0,0);
-	  a(2*i+1,0,0,0) = axe(i,0,0,0);
-	}
+      {
+        u(2*i,0,0,0) = ue(i,0,0,0);
+        v(2*i,0,0,0) = ve(i,0,0,0);
+        a(2*i,0,0,0) = ae(i,0,0,0);
+        u(2*i+1,0,0,0) = uxe(i,0,0,0);
+        v(2*i+1,0,0,0) = vxe(i,0,0,0);
+        a(2*i+1,0,0,0) = axe(i,0,0,0);
+      }
       else
-	{
-	  u(i,0,0,0) = ue(i,0,0,0) ;
-	  v(i,0,0,0) = ve(i,0,0,0) ;
-	  a(i,0,0,0) = ae(i,0,0,0) ;
-	}
+      {
+        u(i,0,0,0) = ue(i,0,0,0) ;
+        v(i,0,0,0) = ve(i,0,0,0) ;
+        a(i,0,0,0) = ae(i,0,0,0) ;
+      }
     }
-	
+      
   if( false )
     {
       RealArray uxe(I1,I2,I3,1);
@@ -656,6 +656,7 @@ getTwilightZone( real t, RealArray & u, RealArray & v, RealArray & a ) const
     
     }
 
+  return 0;
 }
 
 
@@ -743,7 +744,7 @@ assignInitialConditions( real t, RealArray & u, RealArray & v, RealArray & a )
   else
     {
       printF("BeamModel::assignInitialConditions:ERROR:unknown initialConditionOption=[%s]\n",
-	     (const char*)initialConditionOption);
+           (const char*)initialConditionOption);
       OV_ABORT("error");
     }
   
@@ -783,17 +784,17 @@ chooseExactSolution(CompositeGrid & cg, GenericGraphicsInterface & gi )
   aString cmd[maxCommands];
 
   aString exactSolutionOptions[] = {"no exact solution",
-				    "twilight zone",
-				    "standing wave",
-				    "traveling wave FSI-INS",
-				    //"old traveling wave FSI-INS",
-				    "beam piston",
+                            "twilight zone",
+                            "standing wave",
+                            "traveling wave FSI-INS",
+                            //"old traveling wave FSI-INS",
+                            "beam piston",
                                     "beam under pressure",
                                     "eigenmode",
-				    ""};
+                            ""};
   GUIState::addPrefix(exactSolutionOptions,"Exact solution:",cmd,maxCommands);
   int option  =(exactSolutionOption=="none"                ? 0 : 
-		exactSolutionOption=="twilightZone"        ? 1 : 
+            exactSolutionOption=="twilightZone"        ? 1 : 
                 exactSolutionOption=="standingWave"        ? 2 :
                 exactSolutionOption=="travelingWaveFSI"    ? 3 :
                 //exactSolutionOption=="oldTravelingWaveFsi" ? 4 :
@@ -831,152 +832,152 @@ chooseExactSolution(CompositeGrid & cg, GenericGraphicsInterface & gi )
   int len=0;
   for( ;; ) 
     {
-	    
+          
       gi.getAnswer(answer,"");
   
       // printF(answer,"answer=[answer]\n",(const char *)answer);
 
       if( answer(0,prefix.length()-1)==prefix )
-	answer=answer(prefix.length(),answer.length()-1);
+      answer=answer(prefix.length(),answer.length()-1);
 
 
       if( answer=="done" || answer=="exit" )
-	{
-	  break;
-	}
+      {
+        break;
+      }
       else if( (len=answer.matches("Exact solution:")) )
-	{
-	  aString option = answer(len,answer.length()-1);
-	  if( option=="no exact solution" )
-	    {
-	      exactSolutionOption="none";
-	      printF("Setting exactSolutionOption=[%s]\n",(const char*)exactSolutionOption);
-	    }
-	  else if( option=="twilight zone" )
-	    {
-	      exactSolutionOption="twilightZone";
-	      dbase.get<bool>("twilightZone")=true;
-	      printF("Setting exactSolutionOption=[%s]\n",(const char*)exactSolutionOption);
-	    }
-	  else if( option=="standing wave" )
-	    {
-	      exactSolutionOption="standingWave"; 
-	      printF("Setting exactSolutionOption=[%s]\n",(const char*)exactSolutionOption);
-	    }
-	  else if( option=="eigenmode" )
-	    {
-	      exactSolutionOption="eigenmode";
+      {
+        aString option = answer(len,answer.length()-1);
+        if( option=="no exact solution" )
+          {
+            exactSolutionOption="none";
+            printF("Setting exactSolutionOption=[%s]\n",(const char*)exactSolutionOption);
+          }
+        else if( option=="twilight zone" )
+          {
+            exactSolutionOption="twilightZone";
+            dbase.get<bool>("twilightZone")=true;
+            printF("Setting exactSolutionOption=[%s]\n",(const char*)exactSolutionOption);
+          }
+        else if( option=="standing wave" )
+          {
+            exactSolutionOption="standingWave"; 
+            printF("Setting exactSolutionOption=[%s]\n",(const char*)exactSolutionOption);
+          }
+        else if( option=="eigenmode" )
+          {
+            exactSolutionOption="eigenmode";
 
-	      if( !dbase.has_key("eigenMode") )
-		dbase.put<int>("eigenMode")=1;
+            if( !dbase.has_key("eigenMode") )
+            dbase.put<int>("eigenMode")=1;
 
-	      int & eigenMode = dbase.get<int>("eigenMode");
-	      gi.inputString(answer,sPrintF("Enter the eigemode: 1,2,3,..."));
-	      sScanF(answer,"%i",&eigenMode);
-	      printF("Setting eigenMode=%i\n",eigenMode);
+            int & eigenMode = dbase.get<int>("eigenMode");
+            gi.inputString(answer,sPrintF("Enter the eigemode: 1,2,3,..."));
+            sScanF(answer,"%i",&eigenMode);
+            printF("Setting eigenMode=%i\n",eigenMode);
 
-	    }
-	  // Longfei 20160120: removed
-	  // else if( option=="old traveling wave FSI-INS" )
-	  // {
-	  // 	// *old way*
-	  // 	exactSolutionOption="oldTravelingWaveFsi";
-	  // }
-	  else if( option=="traveling wave FSI-INS" )
-	    {
-	      exactSolutionOption="travelingWaveFSI"; 
-	      printF("Setting exactSolutionOption=[%s]\n",(const char*)exactSolutionOption);
+          }
+        // Longfei 20160120: removed
+        // else if( option=="old traveling wave FSI-INS" )
+        // {
+        //  // *old way*
+        //  exactSolutionOption="oldTravelingWaveFsi";
+        // }
+        else if( option=="traveling wave FSI-INS" )
+          {
+            exactSolutionOption="travelingWaveFSI"; 
+            printF("Setting exactSolutionOption=[%s]\n",(const char*)exactSolutionOption);
 
-	      printF("INFO:The FSI traveling wave solution is an exact solution for a solid (shell or bulk)\n"
-		     "coupled to a linearized incompressible fluid\n"
-		     "See: `An analysis of a new stable partitioned algorithm for FSI problems.\n"
-		     "      Part I: Incompressible flow and elastic solids'. \n"
-		     "      J.W. Banks, W.D. Henshaw and D.W. Schwendeman, JCP 2014.\n");
+            printF("INFO:The FSI traveling wave solution is an exact solution for a solid (shell or bulk)\n"
+                 "coupled to a linearized incompressible fluid\n"
+                 "See: `An analysis of a new stable partitioned algorithm for FSI problems.\n"
+                 "      Part I: Incompressible flow and elastic solids'. \n"
+                 "      J.W. Banks, W.D. Henshaw and D.W. Schwendeman, JCP 2014.\n");
     
       
-	      // *************** WE should share this object with the fluid domain ********************   **FIX ME*
+            // *************** WE should share this object with the fluid domain ********************   **FIX ME*
 
-	      if( !dbase.has_key("travelingWaveFsi") )
-		dbase.put<TravelingWaveFsi*>("travelingWaveFsi")=NULL;
+            if( !dbase.has_key("travelingWaveFsi") )
+            dbase.put<TravelingWaveFsi*>("travelingWaveFsi")=NULL;
 
-	      if( dbase.get<TravelingWaveFsi*>("travelingWaveFsi")==NULL )
-		dbase.get<TravelingWaveFsi*>("travelingWaveFsi")= new TravelingWaveFsi; // who will delete ???
-	      TravelingWaveFsi & travelingWaveFsi = *dbase.get<TravelingWaveFsi*>("travelingWaveFsi");
+            if( dbase.get<TravelingWaveFsi*>("travelingWaveFsi")==NULL )
+            dbase.get<TravelingWaveFsi*>("travelingWaveFsi")= new TravelingWaveFsi; // who will delete ???
+            TravelingWaveFsi & travelingWaveFsi = *dbase.get<TravelingWaveFsi*>("travelingWaveFsi");
 
-	      travelingWaveFsi.update(gi );
+            travelingWaveFsi.update(gi );
 
-	      // we also pass the grid for the solid:
-	      CompositeGrid & cgSolid = cg; // do this for now  -- only used for number of grid points
+            // we also pass the grid for the solid:
+            CompositeGrid & cgSolid = cg; // do this for now  -- only used for number of grid points
 
-	      int numberOfFluidGridPoints=21, numberOfSolidGridPoints=21;  // I don't think these matter
-	      travelingWaveFsi.setup( numberOfFluidGridPoints, numberOfSolidGridPoints );
-
-
-	    }
-	  else if( option=="beam piston" )
-	    {
-	      exactSolutionOption="beamPiston"; 
-	      printF("-- BM%i -- The beam piston solution is an FSI solution for a horizontal beam adjacent to one or two fluid domains.\n"
-		     " The vertical motion of the beam is of the form:\n"
-		     "      y(t) = (dp/K0)*( 1 - cos(omega*t) )   (for an undamped beam, Kt=0)\n", getBeamID());
-
-	      if( !dbase.has_key("beamPistonPar") )
-		dbase.put<real[10]>("beamPistonPar");
-	      real *rpar = dbase.get<real[10]>("beamPistonPar");
-
-	      real & ya          = rpar[0];    
-	      real & yb          = rpar[1];    
-	      real & pa          = rpar[2];   
-	      real & pb          = rpar[3];   
-	      real & rhos        = rpar[4];    
-	      real & hs          = rpar[5];    
-	      real & fluidHeight = rpar[6];    
-	      real & K0          = rpar[7];    
-	      real & Kt          = rpar[8];    
-
-	      gi.inputString(answer,sPrintF("Enter ya,yb,pa,pb,rhos,hs,fluidHeight,K0,Kt"));
-	      sScanF(answer,"%e %e %e %e %e  %e %e %e %e %e %e %e %e",&ya,&yb,&pa,&pb,&rhos,&hs,&fluidHeight,&K0,&Kt);
-	      printF("Setting ya=%g, yb=%g, pa=%g, pb=%g, rhos=%g, hs=%g, fluidHeight=%g, K0=%g, Kt=%g \n",
-		     ya,yb,pa,pb,rhos,hs,fluidHeight,K0,Kt);   
+            int numberOfFluidGridPoints=21, numberOfSolidGridPoints=21;  // I don't think these matter
+            travelingWaveFsi.setup( numberOfFluidGridPoints, numberOfSolidGridPoints );
 
 
-	    }
-	  else if( option=="beam under pressure" )
-	    {
-	      exactSolutionOption="beamUnderPressure"; 
-	      printF("-- BM%i -- The `beam under pressure' solution is a steady FSI solution for a horizontal beam \n"
-		     " pinned (or clamped) on both ends and with constant pressure force.\n"
-		     " The vertical displacement of the beam is of the form :\n"
-		     "      y(t) = ( dp/(2T) )*(x-a)(b-x) )          (for T!=0, E=0)\n"
-		     "      y(t) = ( dp/(24 EI) )*(x-a)^2*(b-x)^2 )  (for T=0, E!=0)\n"
-		     "      dp = pressure force\n", getBeamID()
-		     );
+          }
+        else if( option=="beam piston" )
+          {
+            exactSolutionOption="beamPiston"; 
+            printF("-- BM%i -- The beam piston solution is an FSI solution for a horizontal beam adjacent to one or two fluid domains.\n"
+                 " The vertical motion of the beam is of the form:\n"
+                 "      y(t) = (dp/K0)*( 1 - cos(omega*t) )   (for an undamped beam, Kt=0)\n", getBeamID());
 
-	      if( !dbase.has_key("beamUnderPressurePar") )
-		dbase.put<real[10]>("beamUnderPressurePar");
-	      real *rpar = dbase.get<real[10]>("beamUnderPressurePar");
-	      real & dp          = rpar[0];    
-	      gi.inputString(answer,sPrintF("Enter dp"));
-	      sScanF(answer,"%e",&dp);
-	      printF("Setting dp=%g\n",dp);
+            if( !dbase.has_key("beamPistonPar") )
+            dbase.put<real[10]>("beamPistonPar");
+            real *rpar = dbase.get<real[10]>("beamPistonPar");
 
-	    }
-	  else
-	    {
-	      printF("BeamModel::chooseExactSolution:ERROR:unknown response=[%s]\n",(const char*)answer);
-	      gi.stopReadingCommandFile();
-	    }
+            real & ya          = rpar[0];    
+            real & yb          = rpar[1];    
+            real & pa          = rpar[2];   
+            real & pb          = rpar[3];   
+            real & rhos        = rpar[4];    
+            real & hs          = rpar[5];    
+            real & fluidHeight = rpar[6];    
+            real & K0          = rpar[7];    
+            real & Kt          = rpar[8];    
+
+            gi.inputString(answer,sPrintF("Enter ya,yb,pa,pb,rhos,hs,fluidHeight,K0,Kt"));
+            sScanF(answer,"%e %e %e %e %e  %e %e %e %e %e %e %e %e",&ya,&yb,&pa,&pb,&rhos,&hs,&fluidHeight,&K0,&Kt);
+            printF("Setting ya=%g, yb=%g, pa=%g, pb=%g, rhos=%g, hs=%g, fluidHeight=%g, K0=%g, Kt=%g \n",
+                 ya,yb,pa,pb,rhos,hs,fluidHeight,K0,Kt);   
+
+
+          }
+        else if( option=="beam under pressure" )
+          {
+            exactSolutionOption="beamUnderPressure"; 
+            printF("-- BM%i -- The `beam under pressure' solution is a steady FSI solution for a horizontal beam \n"
+                 " pinned (or clamped) on both ends and with constant pressure force.\n"
+                 " The vertical displacement of the beam is of the form :\n"
+                 "      y(t) = ( dp/(2T) )*(x-a)(b-x) )          (for T!=0, E=0)\n"
+                 "      y(t) = ( dp/(24 EI) )*(x-a)^2*(b-x)^2 )  (for T=0, E!=0)\n"
+                 "      dp = pressure force\n", getBeamID()
+                 );
+
+            if( !dbase.has_key("beamUnderPressurePar") )
+            dbase.put<real[10]>("beamUnderPressurePar");
+            real *rpar = dbase.get<real[10]>("beamUnderPressurePar");
+            real & dp          = rpar[0];    
+            gi.inputString(answer,sPrintF("Enter dp"));
+            sScanF(answer,"%e",&dp);
+            printF("Setting dp=%g\n",dp);
+
+          }
+        else
+          {
+            printF("BeamModel::chooseExactSolution:ERROR:unknown response=[%s]\n",(const char*)answer);
+            gi.stopReadingCommandFile();
+          }
       
-	}
+      }
     
       else if( dialog.getTextValue(answer,"amplitude:","%g",amplitude) ){} //
       else if( dialog.getTextValue(answer,"wave number:","%g",waveNumber) ){} //
       else if( dialog.getTextValue(answer,"standing wave t0:","%g",dbase.get<real>("standingWaveTimeOffset")) ){} //
       else
-	{
-	  printF("BeamModel::chooseExactSolution:ERROR:unknown response=[%s]\n",(const char*)answer);
-	  gi.stopReadingCommandFile();
-	}
+      {
+        printF("BeamModel::chooseExactSolution:ERROR:unknown response=[%s]\n",(const char*)answer);
+        gi.stopReadingCommandFile();
+      }
 
 
 
@@ -1012,19 +1013,19 @@ chooseInitialConditions(CompositeGrid & cg, GenericGraphicsInterface & gi )
   aString cmd[maxCommands];
 
   aString initialConditionOptions[] = { "zero",
-					"exact solution",
+                              "exact solution",
                                         "none", 
-					"" };
+                              "" };
 
   GUIState::addPrefix(initialConditionOptions,"Initial conditions:",cmd,maxCommands);
   dialog.addOptionMenu("Initial conditions:",cmd,initialConditionOptions,(initialConditionOption=="zero" ? 0 : 
-									  initialConditionOption=="exact" ? 1 : 2) );
+                                                        initialConditionOption=="exact" ? 1 : 2) );
 
 
 
   // aString pbLabels[] = {"zero initial conditions",
   //                       "exact solution initial conditions",
-  // 			""};
+  //              ""};
 
   // int numRows=4;
   // dialog.setPushButtons( pbLabels, pbLabels, numRows ); 
@@ -1057,49 +1058,49 @@ chooseInitialConditions(CompositeGrid & cg, GenericGraphicsInterface & gi )
   int len=0;
   for( ;; ) 
     {
-	    
+          
       gi.getAnswer(answer,"");
   
       // printF(answer,"answer=[answer]\n",(const char *)answer);
 
       if( answer(0,prefix.length()-1)==prefix )
-	answer=answer(prefix.length(),answer.length()-1);
+      answer=answer(prefix.length(),answer.length()-1);
 
 
       if( answer=="done" || answer=="exit" )
-	{
-	  break;
-	}
+      {
+        break;
+      }
       else if( (len=answer.matches("Initial conditions:")) )
-	{
-	  aString option = answer(len,answer.length()-1);
-	  if( option=="zero" )
-	    {
-	      initialConditionOption="zero";
-	      printF("Setting initialConditionOption=[%s]\n",(const char*)initialConditionOption);
-	    }
-	  else if( option=="exact solution" )
-	    {
-	      initialConditionOption="exact";
-	      printF("Setting initialConditionOption=[%s]\n",(const char*)initialConditionOption);
-	    }
-	  else if( option=="none" )
-	    {
-	      initialConditionOption="none";
-	      printF("Setting initialConditionOption=[%s]\n",(const char*)initialConditionOption);
-	    }
-	  else 
-	    {
-	      printF("BeamModel::chooseInitialConditions:ERROR:unknown response=[%s]\n",(const char*)answer);
-	      gi.stopReadingCommandFile();
-	    }
-	}
+      {
+        aString option = answer(len,answer.length()-1);
+        if( option=="zero" )
+          {
+            initialConditionOption="zero";
+            printF("Setting initialConditionOption=[%s]\n",(const char*)initialConditionOption);
+          }
+        else if( option=="exact solution" )
+          {
+            initialConditionOption="exact";
+            printF("Setting initialConditionOption=[%s]\n",(const char*)initialConditionOption);
+          }
+        else if( option=="none" )
+          {
+            initialConditionOption="none";
+            printF("Setting initialConditionOption=[%s]\n",(const char*)initialConditionOption);
+          }
+        else 
+          {
+            printF("BeamModel::chooseInitialConditions:ERROR:unknown response=[%s]\n",(const char*)answer);
+            gi.stopReadingCommandFile();
+          }
+      }
     
       else
-	{
-	  printF("BeamModel::chooseInitialConditions:ERROR:unknown response=[%s]\n",(const char*)answer);
-	  gi.stopReadingCommandFile();
-	}
+      {
+        printF("BeamModel::chooseInitialConditions:ERROR:unknown response=[%s]\n",(const char*)answer);
+        gi.stopReadingCommandFile();
+      }
 
     }
     

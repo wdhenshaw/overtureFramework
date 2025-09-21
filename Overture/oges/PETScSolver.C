@@ -1,5 +1,4 @@
 // This file automatically generated from PETScSolver.bC with bpp.
-
 #ifdef OVERTURE_USE_PETSC
 
 // **************************************************************************
@@ -1039,7 +1038,9 @@ buildMatrix( realCompositeGridFunction & coeff, realCompositeGridFunction & uu )
     Real time=getCPU();
     
     if( debug & 1 )
-        printF("PETScSolver:: build matrix... Oges::debug=%i\n",Oges::debug);
+        printF("****** PETScSolver:: build matrix... Oges::debug=%i *******\n",Oges::debug);
+
+
 
     if( false ) 
         printF("*********** PETScSolver:: build matrix : parameters.rescaleRowNorms=%i ****************\n",parameters.rescaleRowNorms);
@@ -1078,19 +1079,21 @@ buildMatrix( realCompositeGridFunction & coeff, realCompositeGridFunction & uu )
     numberOfUnknowns=numberOfGridPoints*numberOfComponents;
     numberOfUnknownsThisProcessor=numberOfGridPointsThisProcessor*numberOfComponents;
 
-    if (false)
-        printf("PETScSolver:INFO: myid=%i,unknowns of this processor=%i\n",
-                    myid,numberOfUnknownsThisProcessor);
+    if( true )
+        printf("PETScSolver:INFO: myid=%i, number of unknowns of this processor=%i\n",myid,numberOfUnknownsThisProcessor);
 
     int iv[3], &i1=iv[0], &i2=iv[1], &i3=iv[2]; 
     int jv[3], &j1=jv[0], &j2=jv[1], &j3=jv[2]; 
     int kv[3], &k1=kv[0], &k2=kv[1], &k3=kv[2]; 
 
+  // --- Tell PETSc how many unknowns at each grid point ----
+  //  d_nnz[i] : number of unknowns on the diagonal block (i.e. on this processor)
+  //  o_nnz[i] : number of unknowns on the OFF diagonal block (i.e. on other processors)
     const bool fillInCount=true;
-    int  *d_nnzv = new int [numberOfUnknownsThisProcessor];
-    int  *o_nnzv = new int [numberOfUnknownsThisProcessor]();            //initialize o_nnzv to be 0
+    int *d_nnzv = new int [numberOfUnknownsThisProcessor];
+    int *o_nnzv = new int [numberOfUnknownsThisProcessor];            //initialize o_nnzv to be 0
     if (fillInCount)
-        for( int i=0; i<numberOfUnknownsThisProcessor; i++ ){ d_nnzv[i]=1; } //initialize d_nnzv to be 1 for safe
+        for( int i=0; i<numberOfUnknownsThisProcessor; i++ ){ d_nnzv[i]=1; o_nnzv[i]=0; } //initialize d_nnzv to be 1 for safe
         
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   // the following parts are moved here -QT
@@ -1168,7 +1171,7 @@ buildMatrix( realCompositeGridFunction & coeff, realCompositeGridFunction & uu )
   // equationBounds(0:1,grid) : 
   // IntegerArray equationBounds(2,cg.numberOfComponentGrids());
     int *eqnBound = new int [2*numberOfComponentGrids];
-#define equationBounds(side,grid) eqnBound[(side)+2*(grid)]
+    #define equationBounds(side,grid) eqnBound[(side)+2*(grid)]
     for( int grid=0; grid<cg.numberOfComponentGrids(); grid++ )
     {
         equationBounds(0,grid)=coeff[grid].sparse->equationOffset;
@@ -1265,14 +1268,16 @@ buildMatrix( realCompositeGridFunction & coeff, realCompositeGridFunction & uu )
                 int ig=getGlobalIndex( n, iv, grid, myid );  // get the global index (equation number, base 0)
                 if( ig==denseExtraEquation ) continue; 
 
-                int igLocal=ig-noffset(myid,0);  //get local PETSc index=ig-noffset(myid,grid=0)
+        // int igLocal=ig-noffset(myid,0);  // get local PETSc index=ig-noffset(myid,grid=0)
+        // wdh: June 8, 2025
+                int igLocal=ig-noffset(myid,0)*numberOfComponents;  // get local PETSc index=ig-noffset(myid,grid=0)
 
                 if( classify(i1,i2,i3,n)==-1 )  // interp. points
                 {
                     if (interpolationPoints)
                     {
                         d_nnzv[igLocal]=1 + pow(maxWidth,numberOfDimensions);
-                        o_nnzv[igLocal]=pow(maxWidth,numberOfDimensions);              
+                        o_nnzv[igLocal]=    pow(maxWidth,numberOfDimensions);              
                     }
                     continue;
                 }
@@ -1286,8 +1291,8 @@ buildMatrix( realCompositeGridFunction & coeff, realCompositeGridFunction & uu )
                 else
                 {      
                     bool exteriorPoint = (i1<ir(0,0) || i1>ir(1,0) || 
-                                                            i2<ir(0,1) || i2>ir(1,1) || 
-                                                            i3<ir(0,2) || i3>ir(1,2));
+                                                                i2<ir(0,1) || i2>ir(1,1) || 
+                                                                i3<ir(0,2) || i3>ir(1,2));
                     Real dScale;
                     if( parameters.rescaleRowNorms )
                     {
@@ -1481,7 +1486,9 @@ buildMatrix( realCompositeGridFunction & coeff, realCompositeGridFunction & uu )
                 int numPerRow = iaExtra(iExtraEquation+1)-iaExtra(iExtraEquation);
 
         //a simple way to count
-                int igLocal=ig-noffset(myid,0);  //local PETSc index=ig-noffset(myid,grid=0)
+        // int igLocal=ig-noffset(myid,0);  //local PETSc index=ig-noffset(myid,grid=0)
+        // wdh: June 8, 2025
+                int igLocal=ig-noffset(myid,0)*numberOfComponents;  // get local PETSc index=ig-noffset(myid,grid=0)        
                 if (pi==myid) 
                 {
                     d_nnzv[igLocal]=numPerRow;
@@ -1552,8 +1559,8 @@ buildMatrix( realCompositeGridFunction & coeff, realCompositeGridFunction & uu )
     // ****** fix these:
         int d_nz = fullStencilDimension;  // expected number of non-zero entries on this processor ("diagonal block")
         int o_nz = 2;  // expected number of non-zero entries off processor
-        int *d_nnz=PETSC_NULL;
-        int *o_nnz=PETSC_NULL;
+
+
       
     // --- We should first determine the actual number of non-zeros in each row to be more efficient ----
         
@@ -1562,12 +1569,11 @@ buildMatrix( realCompositeGridFunction & coeff, realCompositeGridFunction & uu )
       //        numberOfMats++;
       //        printF("MatCreateMPIAIJ: create object %i.\n",numberOfMats);
 
-            if( true )
+
+      // d_nz = fullStencilDimension;  // expected number of non-zero entries on this processor ("diagonal block")
+      // o_nz = fullStencilDimension;
+            if (fillInCount)
             {
-        // d_nz = fullStencilDimension;  // expected number of non-zero entries on this processor ("diagonal block")
-        // o_nz = fullStencilDimension;
-                if (fillInCount)
-                {
         //d_nz and o_nz will be ignored when d_nnzv and o_nnzv are provided
                 ierr = MatCreateAIJ(OGES_COMM,numberOfUnknownsThisProcessor,numberOfUnknownsThisProcessor,
                                                         numberOfUnknowns,numberOfUnknowns,
@@ -1577,9 +1583,17 @@ buildMatrix( realCompositeGridFunction & coeff, realCompositeGridFunction & uu )
         //turning on the following option will avoid PETSc malloc errors. However, Petsc fillin may become slow
         //When the options is needed, it means the nonzeros are not counted correctly -QT
         //MatSetOption(A,MAT_NEW_NONZERO_ALLOCATION_ERR,PETSC_FALSE);
-                }
-                else
+                if( 1==0 )
                 {
+                    printF("****** PETScSolver:: build matrix... TURN OFF ERRORS WHEN NEW ENTRIES NEED TO BE ADDED (i.e. estimated storage per point is wrong) *******\n");   
+                    MatSetOption(A, MAT_NEW_NONZERO_ALLOCATION_ERR, PETSC_FALSE);  
+                }         
+            }
+            else
+            {
+        // --- do NOT specify exactly how many entries per row ---
+                int *d_nnz=PETSC_NULL;
+                int *o_nnz=PETSC_NULL;          
                 ierr = MatCreateAIJ(OGES_COMM,numberOfUnknownsThisProcessor,numberOfUnknownsThisProcessor,
                                                         numberOfUnknowns,numberOfUnknowns,
                                                         d_nz,d_nnz,o_nz,o_nnz,
@@ -1587,19 +1601,19 @@ buildMatrix( realCompositeGridFunction & coeff, realCompositeGridFunction & uu )
         // This next line is needed to avoid error when malloc'ing an additional entry that was more
         // than the estimated number
                 MatSetOption(A,MAT_NEW_NONZERO_ALLOCATION_ERR,PETSC_FALSE);
-                }
             }
-            else
-            {
-        // v 2.3.2
-        // ierr = MatCreateMPIAIJ(OGES_COMM,numberOfUnknownsThisProcessor,numberOfUnknownsThisProcessor,
-        //                     numberOfUnknowns,numberOfUnknowns,
-        //                     d_nz,d_nnz,o_nz,o_nnz,
-                ierr = MatCreateAIJ(OGES_COMM,numberOfUnknownsThisProcessor,numberOfUnknownsThisProcessor,
-                                                        numberOfUnknowns,numberOfUnknowns,
-                                                        d_nz,d_nnz,o_nz,o_nnz,
-                                                        &A); CHKERRQ(ierr);
-            }
+
+      // else
+      // {
+      //   // v 2.3.2
+      //   // ierr = MatCreateMPIAIJ(OGES_COMM,numberOfUnknownsThisProcessor,numberOfUnknownsThisProcessor,
+      //   //                     numberOfUnknowns,numberOfUnknowns,
+      //   //                     d_nz,d_nnz,o_nz,o_nnz,
+      //   ierr = MatCreateAIJ(OGES_COMM,numberOfUnknownsThisProcessor,numberOfUnknownsThisProcessor,
+      //                       numberOfUnknowns,numberOfUnknowns,
+      //                       d_nz,d_nnz,o_nz,o_nnz,
+      //                       &A); CHKERRQ(ierr);
+      // }
 
       // // PETSc documentation recommends doing this instead **FINISH ME**
       // ierr = MatCreate(OGES_COMM,&A);  CHKERRQ(ierr);
@@ -1620,7 +1634,8 @@ buildMatrix( realCompositeGridFunction & coeff, realCompositeGridFunction & uu )
       // v 2.3.2
       // ierr = MatCreateMPIBAIJ(PETSC_COMM_SELF,blockSize,numberOfUnknownsThisProcessor,numberOfUnknownsThisProcessor,
       //                             numberOfUnknowns,numberOfUnknowns,d_nz,d_nnz,o_nz,o_nnz,&A); CHKERRQ(ierr);
-
+            int *d_nnz=PETSC_NULL;
+            int *o_nnz=PETSC_NULL;   
             ierr = MatCreateBAIJ(PETSC_COMM_SELF,blockSize,numberOfUnknownsThisProcessor,numberOfUnknownsThisProcessor,
                                                       numberOfUnknowns,numberOfUnknowns,d_nz,d_nnz,o_nz,o_nnz,&A); CHKERRQ(ierr);
 
@@ -1641,6 +1656,8 @@ buildMatrix( realCompositeGridFunction & coeff, realCompositeGridFunction & uu )
     
     
     ierr = MatSetFromOptions(A);CHKERRQ(ierr);
+
+  
 
     /* 
           Currently, all PETSc parallel matrix formats are partitioned by

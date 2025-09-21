@@ -167,17 +167,17 @@ getInitialConditions( InitialConditionOptionEnum option, realCompositeGridFuncti
 
         if( !ok ) continue;  // nothing to do on this processor
 
-	real dx[3]={0.,0.,0.}, xab[2][3]={0.,0.,0.,0.,0.,0.};
-	if( cg[grid].isRectangular() )
-	  cg[grid].getRectangularGridParameters( dx, xab );
+        real dx[3]={0.,0.,0.}, xab[2][3]={0.,0.,0.,0.,0.,0.};
+        if( cg[grid].isRectangular() )
+          cg[grid].getRectangularGridParameters( dx, xab );
 
-	const real xa=xab[0][0], dx0=dx[0];
-	const real ya=xab[0][1], dy0=dx[1];
-	const real za=xab[0][2], dz0=dx[2];
+        const real xa=xab[0][0], dx0=dx[0];
+        const real ya=xab[0][1], dy0=dx[1];
+        const real za=xab[0][2], dz0=dx[2];
 
-	const int i0a=cg[grid].gridIndexRange(0,0);
-	const int i1a=cg[grid].gridIndexRange(0,1);
-	const int i2a=cg[grid].gridIndexRange(0,2);
+        const int i0a=cg[grid].gridIndexRange(0,0);
+        const int i1a=cg[grid].gridIndexRange(0,1);
+        const int i2a=cg[grid].gridIndexRange(0,2);
 
 #define VERTEX0(i0,i1,i2) xa+dx0*(i0-i0a)
 #define VERTEX1(i0,i1,i2) ya+dy0*(i1-i1a)
@@ -193,12 +193,12 @@ getInitialConditions( InitialConditionOptionEnum option, realCompositeGridFuncti
 #define UM(i0,i1,i2) upm[(i0)+(i1)*d1+(i2)*d2]
 
         int i1,i2,i3;
-	FOR_3(i1,i2,i3,I1,I2,I3) // loop over all points
-	{
+        FOR_3(i1,i2,i3,I1,I2,I3) // loop over all points
+        {
           UM(i1,i2,i3)=U0(VERTEX0(i1,i2,i3),VERTEX1(i1,i2,i3),-dt);
           U(i1,i2,i3) =U0(VERTEX0(i1,i2,i3),VERTEX1(i1,i2,i3),0.);
-	}
-	
+        }
+        
 #undef VERTEX0
 #undef VERTEX1
 #undef VERTEX2
@@ -207,8 +207,8 @@ getInitialConditions( InitialConditionOptionEnum option, realCompositeGridFuncti
       }
       else
       {
-	cg[grid].update(MappedGrid::THEvertex);  // build the array of vertices
-	realArray & vertex = cg[grid].vertex();
+        cg[grid].update(MappedGrid::THEvertex);  // build the array of vertices
+        realArray & vertex = cg[grid].vertex();
 
         if( !ok ) continue;  // nothing to do on this processor
 
@@ -216,8 +216,8 @@ getInitialConditions( InitialConditionOptionEnum option, realCompositeGridFuncti
         // display(vertex,"vertex",NULL,"%4.1f ");
         // display(xLocal,"xLocal",NULL,"%4.1f ");
 
-// 	u[1][grid]=U0(vertex(I1,I2,I3,0),vertex(I1,I2,I3,1),-dt);
-// 	u[0][grid]=U0(vertex(I1,I2,I3,0),vertex(I1,I2,I3,1),0.);
+//      u[1][grid]=U0(vertex(I1,I2,I3,0),vertex(I1,I2,I3,1),-dt);
+//      u[0][grid]=U0(vertex(I1,I2,I3,0),vertex(I1,I2,I3,1),0.);
 
         real *upm= u1Local.Array_Descriptor.Array_View_Pointer3;
         real *up = u0Local.Array_Descriptor.Array_View_Pointer3;
@@ -235,11 +235,11 @@ getInitialConditions( InitialConditionOptionEnum option, realCompositeGridFuncti
 #define VERTEX(i0,i1,i2,i3) vertexp[i0+vertexDim0*(i1+vertexDim1*(i2+vertexDim2*(i3)))]
 
         int i1,i2,i3;
-	FOR_3(i1,i2,i3,I1,I2,I3) // loop over all points
-	{
+        FOR_3(i1,i2,i3,I1,I2,I3) // loop over all points
+        {
           UM(i1,i2,i3)=U0(VERTEX(i1,i2,i3,0),VERTEX(i1,i2,i3,1),-dt);
           U(i1,i2,i3) =U0(VERTEX(i1,i2,i3,0),VERTEX(i1,i2,i3,1),0.);
-	}
+        }
 
       }
 #undef U
@@ -256,12 +256,12 @@ getInitialConditions( InitialConditionOptionEnum option, realCompositeGridFuncti
       u[1][grid]=0.;
       where( fabs(vertex(I1,I2,I3,0)-(xPulse-c*dt))<.2 )
       {
-	u[1][grid]=1.;
+        u[1][grid]=1.;
       }
       u[0][grid]=0.;
       where( fabs(vertex(I1,I2,I3,0)-xPulse)<.2 )
       {
-	u[0][grid]=1.;
+        u[0][grid]=1.;
       }
     }
     if( !plotOption ) 
@@ -309,12 +309,12 @@ main(int argc, char *argv[])
         plotOption=false; 
       else if( len=line.matches("-grid=") )
       {
-	nameOfOGFile=line(len,line.length()-1);
+        nameOfOGFile=line(len,line.length()-1);
         // printf("\n$$$$ node %i : use grid=[%s]\n",myid,(const char*)nameOfOGFile);
       }
       else if( len=line.matches("-cmd=") )
       {
-	commandFileName=line(len,line.length()-1);
+        commandFileName=line(len,line.length()-1);
         // printf("\n$$$$ node %i : read command file %s\n",myid,(const char*)commandFileName);
       }
     }
@@ -461,7 +461,7 @@ main(int argc, char *argv[])
                         "erase",
                         "reset",
                         "exit",
-			""};
+                        ""};
   int numRows=2;
   dialog.setPushButtons( pbLabels, pbLabels, numRows ); 
 
@@ -648,7 +648,7 @@ main(int argc, char *argv[])
        printf(" numberOfTimeSteps=%i\n",numberOfTimeSteps);
       if( numberOfTimeSteps<=0 )
       {
-	if( myid==0 )
+        if( myid==0 )
           printf("*** Increase tFinal if you want to take more steps, or `reset' to time 0\n");
         continue;
       }
@@ -658,7 +658,7 @@ main(int argc, char *argv[])
       real time0=CPU(), timeb;
 
       real timeForLaplace=0, timeForBoundaryConditions=0., timeForUpdateGhostBoundaries=0.,
-	timeForInterpolate=0., timeForAdvance=0., timeForGetLocalArray=0.,
+        timeForInterpolate=0., timeForAdvance=0., timeForGetLocalArray=0.,
         timeForFinishBoundaryConditions=0.;
       
       int i1,i2,i3;
@@ -666,235 +666,235 @@ main(int argc, char *argv[])
       for( int i=0; i<numberOfTimeSteps; i++ )                    // take some time steps
       {
         step++;
-	realCompositeGridFunction & u1 = u[step % 2];
-	realCompositeGridFunction & u2 = u[(step+1) %2];
+        realCompositeGridFunction & u1 = u[step % 2];
+        realCompositeGridFunction & u2 = u[(step+1) %2];
     
-	if( i!=0 && (i % plotSteps) == 0 )  // plot solution every 'plotSteps' steps
-	{
+        if( i!=0 && (i % plotSteps) == 0 )  // plot solution every 'plotSteps' steps
+        {
           printF("completed step %i, t=%8.2e (cpu =%8.2e)\n",i,t,CPU()-time0);
-	  // psp.set(GI_PLOT_THE_OBJECT_AND_EXIT,false);
-  	  psp.set(GI_TOP_LABEL,sPrintF(buff,"Wave equation, t=%5.3f (order=%i)",t,orderOfAccuracy));
-  	  ps.erase();
-  	  PlotIt::contour(ps,u1,psp);
-  	  ps.redraw(true);
+          // psp.set(GI_PLOT_THE_OBJECT_AND_EXIT,false);
+          psp.set(GI_TOP_LABEL,sPrintF(buff,"Wave equation, t=%5.3f (order=%i)",t,orderOfAccuracy));
+          ps.erase();
+          PlotIt::contour(ps,u1,psp);
+          ps.redraw(true);
           // psp.set(GI_PLOT_THE_OBJECT_AND_EXIT,TRUE);
 
-	}
-	if( saveShowFile && (i % showSteps == 0) )  // save solution every 'showSteps' steps
-	{
-	  show.startFrame();                                         // start a new frame
-	  show.saveComment(0,sPrintF(buff,"Wave equation"));
-	  show.saveComment(1,sPrintF(buff,"t=%5.2f c=%3.1f ad4=%3.1f",t,c,ad4));
-	  show.saveSolution( u1 );                                        // save the current grid function
-	}
+        }
+        if( saveShowFile && (i % showSteps == 0) )  // save solution every 'showSteps' steps
+        {
+          show.startFrame();                                         // start a new frame
+          show.saveComment(0,sPrintF(buff,"Wave equation"));
+          show.saveComment(1,sPrintF(buff,"t=%5.2f c=%3.1f ad4=%3.1f",t,c,ad4));
+          show.saveSolution( u1 );                                        // save the current grid function
+        }
 
 
-	// advance the solution   u_tt = c^2 laplacian(u) + artificial dissipation
-	// This next line could be used instead for part of the loop below (high level but slower)
-	// u2=2.*u1-u2  + (dtSquared*cSquared)*u1.laplacian(); 
+        // advance the solution   u_tt = c^2 laplacian(u) + artificial dissipation
+        // This next line could be used instead for part of the loop below (high level but slower)
+        // u2=2.*u1-u2  + (dtSquared*cSquared)*u1.laplacian(); 
     
-	// Here is a more efficient method
-	for( grid=0; grid<cg.numberOfComponentGrids(); grid++ )
-	{
+        // Here is a more efficient method
+        for( grid=0; grid<cg.numberOfComponentGrids(); grid++ )
+        {
           if( debug & 2 ) printf("Advance grid %i, step=%i...\n",grid,step);
-	  
+          
 
-	  realArray & u1g = u1[grid];
-	  realArray & u2g = u2[grid];
-	  realArray & lap = laplacian[grid];
+          realArray & u1g = u1[grid];
+          realArray & u2g = u2[grid];
+          realArray & lap = laplacian[grid];
           // evaluate laplacian(u1) and save in lap
 
           if( debug & 2 ) printf("pwave: compute laplacian...\n");
           timea=CPU();
-	  operators[grid].derivative(MappedGridOperators::laplacianOperator,u1g,lap);
+          operators[grid].derivative(MappedGridOperators::laplacianOperator,u1g,lap);
           timeForLaplace+=CPU()-timea;
-	  
+          
           if( debug & 2 ) printf("pwave: ...done laplacian\n");
 
       
           // The next line could also be used for part of the loop below but is slightly
           // less efficient and uses a temporary array the size of 1 grid function.
-	  // u2g=2.*u1g-u2g  + (dtSquared*cSquared)*lap; // this version uses A++ statements
+          // u2g=2.*u1g-u2g  + (dtSquared*cSquared)*lap; // this version uses A++ statements
 
 
           timea=CPU();
           // These next macros get the local serial array on this processor
-	  OV_GET_SERIAL_ARRAY(real,u1g,u1gLocal);
-	  OV_GET_SERIAL_ARRAY(real,u2g,u2gLocal);
-	  OV_GET_SERIAL_ARRAY(real,lap,lapLocal);
-	  
+          OV_GET_SERIAL_ARRAY(real,u1g,u1gLocal);
+          OV_GET_SERIAL_ARRAY(real,u2g,u2gLocal);
+          OV_GET_SERIAL_ARRAY(real,lap,lapLocal);
+          
 
           timeForGetLocalArray+=CPU()-timea;
-	  timea=CPU();
+          timea=CPU();
 
           // Here we grab a pointer to the data of the array so we can index it as a C-array
-	  real *u1gp= u1gLocal.Array_Descriptor.Array_View_Pointer3;
-	  real *u2gp= u2gLocal.Array_Descriptor.Array_View_Pointer3;
-	  real *lapp= lapLocal.Array_Descriptor.Array_View_Pointer3;
-	  const int uDim0=u1gLocal.getRawDataSize(0);
-	  const int uDim1=u1gLocal.getRawDataSize(1);
-	  const int d1=uDim0, d2=d1*uDim1; 
+          real *u1gp= u1gLocal.Array_Descriptor.Array_View_Pointer3;
+          real *u2gp= u2gLocal.Array_Descriptor.Array_View_Pointer3;
+          real *lapp= lapLocal.Array_Descriptor.Array_View_Pointer3;
+          const int uDim0=u1gLocal.getRawDataSize(0);
+          const int uDim1=u1gLocal.getRawDataSize(1);
+          const int d1=uDim0, d2=d1*uDim1; 
 #define U1G(i1,i2,i3) u1gp[(i1)+(i2)*d1+(i3)*d2]
 #define U2G(i1,i2,i3) u2gp[(i1)+(i2)*d1+(i3)*d2]
 
 #define LAP(i1,i2,i3) lapp[(i1)+(i2)*d1+(i3)*d2]
 
           real cdtsq=dtSquared*cSquared;
-	  real ad4dt=ad4*dt;
+          real ad4dt=ad4*dt;
           getIndex(cg[grid].gridIndexRange(),I1,I2,I3);
 
           // restrict the bounds (I1,I2,i3) to the local array bounds:
           bool ok=ParallelUtility::getLocalArrayBounds(u1g,u1gLocal,I1,I2,I3);
-	  if( ok ) // there are points on this processor
-	  {
-	    if( ad4>0. )
-	    {
-	      if( cg.numberOfDimensions()==2 )
-	      {
-		FOR_3(i1,i2,i3,I1,I2,I3) // loop over all points
-		{
-		  // add a 'fourth' order dissipation  ad4 h^4 dt (u.xxxx).t to (c*dt)^2*laplacian(u)
-		  LAP(i1,i2,i3)=cdtsq*LAP(i1,i2,i3)+ad4dt*( FD4_2D(U1G,i1,i2,i3)-FD4_2D(U2G,i1,i2,i3) );
-		}
-	      }
-	      else
-	      {
-		FOR_3(i1,i2,i3,I1,I2,I3) // loop over all points
-		{
-		  // add a 'fourth' order dissipation  ad4 h^4 dt (u.xxxx).t to (c*dt)^2*laplacian(u)
-		  LAP(i1,i2,i3)=cdtsq*LAP(i1,i2,i3)+ad4dt*( FD4_3D(U1G,i1,i2,i3)-FD4_3D(U2G,i1,i2,i3) );
-		}
-	      }
-	    }
-	    else
-	    {
-	      FOR_3(i1,i2,i3,I1,I2,I3) // loop over all points
-	      {
-		LAP(i1,i2,i3)=cdtsq*LAP(i1,i2,i3);
-	      }
-	    }
-	  
-	    FOR_3(i1,i2,i3,I1,I2,I3) 
-	    {
-	      U2G(i1,i2,i3)=2.*U1G(i1,i2,i3)-U2G(i1,i2,i3)  + LAP(i1,i2,i3);
+          if( ok ) // there are points on this processor
+          {
+            if( ad4>0. )
+            {
+              if( cg.numberOfDimensions()==2 )
+              {
+                FOR_3(i1,i2,i3,I1,I2,I3) // loop over all points
+                {
+                  // add a 'fourth' order dissipation  ad4 h^4 dt (u.xxxx).t to (c*dt)^2*laplacian(u)
+                  LAP(i1,i2,i3)=cdtsq*LAP(i1,i2,i3)+ad4dt*( FD4_2D(U1G,i1,i2,i3)-FD4_2D(U2G,i1,i2,i3) );
+                }
+              }
+              else
+              {
+                FOR_3(i1,i2,i3,I1,I2,I3) // loop over all points
+                {
+                  // add a 'fourth' order dissipation  ad4 h^4 dt (u.xxxx).t to (c*dt)^2*laplacian(u)
+                  LAP(i1,i2,i3)=cdtsq*LAP(i1,i2,i3)+ad4dt*( FD4_3D(U1G,i1,i2,i3)-FD4_3D(U2G,i1,i2,i3) );
+                }
+              }
+            }
+            else
+            {
+              FOR_3(i1,i2,i3,I1,I2,I3) // loop over all points
+              {
+                LAP(i1,i2,i3)=cdtsq*LAP(i1,i2,i3);
+              }
+            }
+          
+            FOR_3(i1,i2,i3,I1,I2,I3) 
+            {
+              U2G(i1,i2,i3)=2.*U1G(i1,i2,i3)-U2G(i1,i2,i3)  + LAP(i1,i2,i3);
             
-	    }
-	  }
-   	  timeForAdvance+=CPU()-timea;
+            }
+          }
+          timeForAdvance+=CPU()-timea;
 
 
           timea=CPU();
           u2[grid].updateGhostBoundaries();
           timeForUpdateGhostBoundaries+=CPU()-timea;
-	}  // end for grid
-	
-	t+=dt;
+        }  // end for grid
+        
+        t+=dt;
 
         if( debug & 2 ) printf("...done advance, now interpolate...\n");
 
-	
+        
         // *** Note: interpolate also does a periodic update **** 
-	timea=CPU();
+        timea=CPU();
 
-	u2.interpolate();
+        u2.interpolate();
 
-	timeForInterpolate+=CPU()-timea;
-	if( debug & 2 ) printf("...done interpolate, now apply BC's...\n");
+        timeForInterpolate+=CPU()-timea;
+        if( debug & 2 ) printf("...done interpolate, now apply BC's...\n");
 
-	BCTypes::BCNames boundaryCondition=BCTypes::evenSymmetry; 
-	// BCTypes::BCNames boundaryCondition=BCTypes::dirichlet;
+        BCTypes::BCNames boundaryCondition=BCTypes::evenSymmetry; 
+        // BCTypes::BCNames boundaryCondition=BCTypes::dirichlet;
 
         timea=CPU();
-	if( boundaryCondition==BCTypes::evenSymmetry )  
-	{
+        if( boundaryCondition==BCTypes::evenSymmetry )  
+        {
           // apply a symmetry BC
           if( orderOfAccuracy==4 || ad4!=0. )
-	  {
+          {
             for( grid=0; grid<cg.numberOfComponentGrids(); grid++ )
-	    {
-	      MappedGrid & mg = cg[grid];
+            {
+              MappedGrid & mg = cg[grid];
               const IntegerArray & dimension = mg.dimension();
-	      
-	      int isv[3], &is1=isv[0], &is2=isv[1], &is3=isv[2];
-	    
+              
+              int isv[3], &is1=isv[0], &is2=isv[1], &is3=isv[2];
+            
               realArray & u2g = u2[grid];
               OV_GET_SERIAL_ARRAY(real,u2g,u2gLocal);
-	      real *u2gp= u2gLocal.Array_Descriptor.Array_View_Pointer3;
-	      const int uDim0=u2gLocal.getRawDataSize(0);
-	      const int uDim1=u2gLocal.getRawDataSize(1);
-	      const int d1=uDim0, d2=d1*uDim1; 
+              real *u2gp= u2gLocal.Array_Descriptor.Array_View_Pointer3;
+              const int uDim0=u2gLocal.getRawDataSize(0);
+              const int uDim1=u2gLocal.getRawDataSize(1);
+              const int d1=uDim0, d2=d1*uDim1; 
 
-	      for( int axis=0; axis<cg.numberOfDimensions(); axis++ )
-	      {
-		for( int side=0; side<=1; side++ )
-		{
-		  if( mg.boundaryCondition(side,axis)>0 && (
+              for( int axis=0; axis<cg.numberOfDimensions(); axis++ )
+              {
+                for( int side=0; side<=1; side++ )
+                {
+                  if( mg.boundaryCondition(side,axis)>0 && (
                      (side==0 && u2gLocal.getBase(axis) <=dimension(0,axis) ) ||
                      (side==1 && u2gLocal.getBound(axis)>=dimension(1,axis) ) ) )
-		  {
-		    getBoundaryIndex(mg.gridIndexRange(),side,axis,I1,I2,I3);
-		    I1 = Range(max(I1.getBase(),u2gLocal.getBase(0)),min(I1.getBound(),u2gLocal.getBound(0)));
-		    I2 = Range(max(I2.getBase(),u2gLocal.getBase(1)),min(I2.getBound(),u2gLocal.getBound(1)));
-		    I3 = Range(max(I3.getBase(),u2gLocal.getBase(2)),min(I3.getBound(),u2gLocal.getBound(2)));
+                  {
+                    getBoundaryIndex(mg.gridIndexRange(),side,axis,I1,I2,I3);
+                    I1 = Range(max(I1.getBase(),u2gLocal.getBase(0)),min(I1.getBound(),u2gLocal.getBound(0)));
+                    I2 = Range(max(I2.getBase(),u2gLocal.getBase(1)),min(I2.getBound(),u2gLocal.getBound(1)));
+                    I3 = Range(max(I3.getBase(),u2gLocal.getBase(2)),min(I3.getBound(),u2gLocal.getBound(2)));
 
-		    is1=is2=is3=0;
-		    isv[axis]=1-2*side;
-		    FOR_3(i1,i2,i3,I1,I2,I3) 
-		    {
-		      U2G(i1-  is1,i2-  is2,i3-  is3)=U2G(i1+  is1,i2+  is2,i3+  is3);
-		      U2G(i1-2*is1,i2-2*is2,i3-2*is3)=U2G(i1+2*is1,i2+2*is2,i3+2*is3);
+                    is1=is2=is3=0;
+                    isv[axis]=1-2*side;
+                    FOR_3(i1,i2,i3,I1,I2,I3) 
+                    {
+                      U2G(i1-  is1,i2-  is2,i3-  is3)=U2G(i1+  is1,i2+  is2,i3+  is3);
+                      U2G(i1-2*is1,i2-2*is2,i3-2*is3)=U2G(i1+2*is1,i2+2*is2,i3+2*is3);
             
-		    }
+                    }
 
-		  }
-		}
-	      }
-	    }
-	    
-	  }
-	  else // non-opt verions
-	  {
-	    u2.applyBoundaryCondition(0,BCTypes::evenSymmetry,BCTypes::allBoundaries,0.);
+                  }
+                }
+              }
+            }
+            
+          }
+          else // non-opt verions
+          {
+            u2.applyBoundaryCondition(0,BCTypes::evenSymmetry,BCTypes::allBoundaries,0.);
 
-	    if( orderOfAccuracy==4 || ad4!=0. )
-	    {
-	      bcParams.ghostLineToAssign=2;
-	      u2.applyBoundaryCondition(0,BCTypes::evenSymmetry,BCTypes::allBoundaries,0.,t,bcParams);
-	    }
-	  }
-	  
+            if( orderOfAccuracy==4 || ad4!=0. )
+            {
+              bcParams.ghostLineToAssign=2;
+              u2.applyBoundaryCondition(0,BCTypes::evenSymmetry,BCTypes::allBoundaries,0.,t,bcParams);
+            }
+          }
+          
           if( debug & 2 ) printf("...done evenSymmetry\n");
-	}
-	else if( boundaryCondition==BCTypes::dirichlet )
-	{
+        }
+        else if( boundaryCondition==BCTypes::dirichlet )
+        {
           if( debug & 2 ) printf("start dirichlet...\n");
-	  u2.applyBoundaryCondition(0,BCTypes::dirichlet,BCTypes::allBoundaries,0.);
+          u2.applyBoundaryCondition(0,BCTypes::dirichlet,BCTypes::allBoundaries,0.);
           if( debug & 2 ) printf("...done dirichlet\n");
-	  if( orderOfAccuracy==4 || ad4!=0. )
-	  {
+          if( orderOfAccuracy==4 || ad4!=0. )
+          {
             if( debug & 2 ) printf("start extrapolate...\n");
-	    u2.applyBoundaryCondition(0,BCTypes::extrapolate,BCTypes::allBoundaries,0.); // for 4th order
+            u2.applyBoundaryCondition(0,BCTypes::extrapolate,BCTypes::allBoundaries,0.); // for 4th order
             if( debug & 2 ) printf("...done extrapolate\n");
-	  }
-	}
-	else if( boundaryCondition==BCTypes::neumann )     
-	{
-	  assert( orderOfAccuracy==2 );
-	  u2.applyBoundaryCondition(0,BCTypes::neumann,BCTypes::allBoundaries,0.);  // not implemented for 4th order
-	}
+          }
+        }
+        else if( boundaryCondition==BCTypes::neumann )     
+        {
+          assert( orderOfAccuracy==2 );
+          u2.applyBoundaryCondition(0,BCTypes::neumann,BCTypes::allBoundaries,0.);  // not implemented for 4th order
+        }
 
-	if( boundaryCondition!=BCTypes::evenSymmetry && (orderOfAccuracy==4 || ad4!=0.) )
-	{ // extrapolate 2nd ghostline for 4th order when the grid only supports second order
-	  bcParams.ghostLineToAssign=2;
-	  bcParams.orderOfExtrapolation=4;
-	  u2.applyBoundaryCondition(0,BCTypes::extrapolate,BCTypes::allBoundaries,0.,t,bcParams);
+        if( boundaryCondition!=BCTypes::evenSymmetry && (orderOfAccuracy==4 || ad4!=0.) )
+        { // extrapolate 2nd ghostline for 4th order when the grid only supports second order
+          bcParams.ghostLineToAssign=2;
+          bcParams.orderOfExtrapolation=4;
+          u2.applyBoundaryCondition(0,BCTypes::extrapolate,BCTypes::allBoundaries,0.,t,bcParams);
           if( secondOrderGrid )
-	  {
-	    // also extrapolate unused points next to interpolation points -- this allows us to
-	    // avoid making a grid with 2 lines of interpolation.
-	    u2.applyBoundaryCondition(0,BCTypes::extrapolateInterpolationNeighbours);
-	  }
-	}
+          {
+            // also extrapolate unused points next to interpolation points -- this allows us to
+            // avoid making a grid with 2 lines of interpolation.
+            u2.applyBoundaryCondition(0,BCTypes::extrapolateInterpolationNeighbours);
+          }
+        }
 
         if( debug & 2 ) printf("...BC's, now finishBoundaryConditions...\n");
 
@@ -902,12 +902,12 @@ main(int argc, char *argv[])
         timeForBoundaryConditions+=CPU()-timea;
         timea=CPU();
 
-	u2.finishBoundaryConditions();
-	timeForFinishBoundaryConditions+=CPU()-timea;
+        u2.finishBoundaryConditions();
+        timeForFinishBoundaryConditions+=CPU()-timea;
 
         timea=CPU();
         for( grid=0; grid<cg.numberOfComponentGrids(); grid++ )
-	  u2[grid].updateGhostBoundaries();
+          u2[grid].updateGhostBoundaries();
         timeForUpdateGhostBoundaries+=CPU()-timea;
 
 
@@ -923,33 +923,33 @@ main(int argc, char *argv[])
       timeForFinishBoundaryConditions=getMaxTime(timeForFinishBoundaryConditions);
       timeForUpdateGhostBoundaries=getMaxTime(timeForUpdateGhostBoundaries);
       timeForInterpolate=getMaxTime(timeForInterpolate);
-	
+        
 
       real sum=timeForAdvance+timeForGetLocalArray+timeForLaplace+
-	timeForBoundaryConditions+timeForUpdateGhostBoundaries+timeForInterpolate;
+        timeForBoundaryConditions+timeForUpdateGhostBoundaries+timeForInterpolate;
 
       printF("\n"
-	     " ================== number of processors =%i =======================================\n"
-	     "     t=%8.2e, %i steps, %i grid-points \n"
-	     " advance..........................%7.2f (%6.2f%%)\n"
-	     " laplace..........................%7.2f (%6.2f%%)\n"
-	     " get local array..................%7.2f (%6.2f%%)\n"
-	     " boundary conditions..............%7.2f (%6.2f%%)\n"
-	     " boundary finish BC...............%7.2f (%6.2f%%)\n"
-	     " update ghost boundaries..........%7.2f (%6.2f%%)\n"
-	     " interpolate......................%7.2f (%6.2f%%)\n"
-	     " sum of above.....................%7.2f (%6.2f%%)\n"
-	     " total............................%7.2f (%6.2f%%)\n"
-	     ,np,t,numberOfTimeSteps,cg.numberOfGridPoints(),
-	     timeForAdvance,timeForAdvance/totalTime*100.,
-	     timeForLaplace,timeForLaplace/totalTime*100.,
-	     timeForGetLocalArray,timeForGetLocalArray/totalTime*100.,
-	     timeForBoundaryConditions,timeForBoundaryConditions/totalTime*100.,
-	     timeForFinishBoundaryConditions,timeForFinishBoundaryConditions/totalTime*100.,
-	     timeForUpdateGhostBoundaries,timeForUpdateGhostBoundaries/totalTime*100.,
-	     timeForInterpolate,timeForInterpolate/totalTime*100.,
-	     sum,sum/totalTime*100.,
-	     totalTime,totalTime/totalTime*100.);
+             " ================== number of processors =%i =======================================\n"
+             "     t=%8.2e, %i steps, %i grid-points \n"
+             " advance..........................%7.2f (%6.2f%%)\n"
+             " laplace..........................%7.2f (%6.2f%%)\n"
+             " get local array..................%7.2f (%6.2f%%)\n"
+             " boundary conditions..............%7.2f (%6.2f%%)\n"
+             " boundary finish BC...............%7.2f (%6.2f%%)\n"
+             " update ghost boundaries..........%7.2f (%6.2f%%)\n"
+             " interpolate......................%7.2f (%6.2f%%)\n"
+             " sum of above.....................%7.2f (%6.2f%%)\n"
+             " total............................%7.2f (%6.2f%%)\n"
+             ,np,t,numberOfTimeSteps,cg.numberOfGridPoints(),
+             timeForAdvance,timeForAdvance/totalTime*100.,
+             timeForLaplace,timeForLaplace/totalTime*100.,
+             timeForGetLocalArray,timeForGetLocalArray/totalTime*100.,
+             timeForBoundaryConditions,timeForBoundaryConditions/totalTime*100.,
+             timeForFinishBoundaryConditions,timeForFinishBoundaryConditions/totalTime*100.,
+             timeForUpdateGhostBoundaries,timeForUpdateGhostBoundaries/totalTime*100.,
+             timeForInterpolate,timeForInterpolate/totalTime*100.,
+             sum,sum/totalTime*100.,
+             totalTime,totalTime/totalTime*100.);
       
       current=(numberOfTimeSteps-1)%2;
     }
@@ -974,24 +974,24 @@ main(int argc, char *argv[])
 //            maskLocal.getBase(0),maskLocal.getBound(0),
 //            maskLocal.getBase(1),maskLocal.getBound(1),
 //            maskLocal.getBase(2),maskLocal.getBound(2),
-	     mask.getLocalBase(0),mask.getLocalBound(0),
-	     mask.getLocalBase(1),mask.getLocalBound(1),
-	     mask.getLocalBase(2),mask.getLocalBound(2),
-	     mask.getBase(0),mask.getBound(0),
-	     mask.getBase(1),mask.getBound(1),
-	     mask.getBase(2),mask.getBound(2));
+             mask.getLocalBase(0),mask.getLocalBound(0),
+             mask.getLocalBase(1),mask.getLocalBound(1),
+             mask.getLocalBase(2),mask.getLocalBound(2),
+             mask.getBase(0),mask.getBound(0),
+             mask.getBase(1),mask.getBound(1),
+             mask.getBase(2),mask.getBound(2));
 
       Communication_Manager::Sync();
     
       if( debug & 4 )
       {
-	printF("\n\n***************partition grid %i*********************************\n",grid);
+        printF("\n\n***************partition grid %i*********************************\n",grid);
       }
     
       Communication_Manager::Sync();
 
       if( debug & 4 )
-	cg[grid].getPartition().display(sPrintF("grid %i : partition",grid));
+        cg[grid].getPartition().display(sPrintF("grid %i : partition",grid));
     }
   }
   

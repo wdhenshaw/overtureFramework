@@ -2261,7 +2261,7 @@ getGravityVector( real gravityVector[3], real t )
     //     gravityVector[0],gravityVector[1],gravityVector[2] );
   }
   
-  
+  return 0;
 }
 
 

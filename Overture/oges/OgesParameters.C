@@ -928,7 +928,12 @@ set( SolverMethodEnum option )
   //   KSPCR           = Conj. Resid.
   //   KSPPREONLY      = Use only the preconditioner
 {
-  solverMethod=option;
+  // *wdh* June 5, 2025 -- added check for parallel
+  #ifndef USE_PPP
+    solverMethod=option;
+  #else
+    parallelSolverMethod=option;
+  #endif
   return 0;
 }
 

@@ -222,32 +222,32 @@ writeParameterSummary( FILE *file /* =stdout */ )
   fPrintF(file,"--------------------------------------------------------------------\n");
   fPrintF(file,"------------------- Rigid body : %s -----------------------\n",(const char*)dbase.get<aString>("bodyName"));
   fPrintF(file," mass=%9.3e : mass of the body,\n"
-	  " prinicpal moments of inertia: (I1,I2,I3)=(%.5g,%.5g,%.5g)\n",mass,mI(0),mI(1),mI(2));
+          " prinicpal moments of inertia: (I1,I2,I3)=(%.5g,%.5g,%.5g)\n",mass,mI(0),mI(1),mI(2));
   if( density>=0 ) fPrintF(file," density=%9.3e\n",density);
   if( volume >=0 ) fPrintF(file," volume=%9.3e\n",volume);
   fPrintF(file," Initial center of mass=(%10.3e,%10.3e,%10.3e)\n",x0(0),x0(1),x0(2));
   fPrintF(file," includeAddedMass=%i : include added mass tensors from AMP scheme, \n"
-	  " relaxCorrectionSteps=%i : under-relax correction steps: \n"
-	  "   force : omega=%9.3e, tolerances: relative=%8.2e, absolute=%8.2e\n"
-	  "   torque: omega=%9.3e, tolerances: relative=%8.2e, absolute=%8.2e\n"
-	  " directProjectionAddedMass=%i, : use the direct-projection AMP scheme,\n"
-	  " useProvidedAcceleration=%i  : use provided accelerations (e.g. from AMP scheme),\n"
-	  " useExtrapolationInPredictor=%i, orderOfExtrapolationPredictor=%i\n"
-	  " time-stepping= %s, implicitFactor=%g (.5=Trap, 1=Backward-Euler)\n"
-	  " order of accuracy= %i, twilight-zone=%i,\n"
-	  " number of past time values= %i\n",
-	  (int)dbase.get<bool>("includeAddedMass"),
-	  (int)relaxCorrectionSteps,
-	  correctionRelaxationParameterForce,correctionRelativeToleranceForce,correctionAbsoluteToleranceForce,
+          " relaxCorrectionSteps=%i : under-relax correction steps: \n"
+          "   force : omega=%9.3e, tolerances: relative=%8.2e, absolute=%8.2e\n"
+          "   torque: omega=%9.3e, tolerances: relative=%8.2e, absolute=%8.2e\n"
+          " directProjectionAddedMass=%i, : use the direct-projection AMP scheme,\n"
+          " useProvidedAcceleration=%i  : use provided accelerations (e.g. from AMP scheme),\n"
+          " useExtrapolationInPredictor=%i, orderOfExtrapolationPredictor=%i\n"
+          " time-stepping= %s, implicitFactor=%g (.5=Trap, 1=Backward-Euler)\n"
+          " order of accuracy= %i, twilight-zone=%i,\n"
+          " number of past time values= %i\n",
+          (int)dbase.get<bool>("includeAddedMass"),
+          (int)relaxCorrectionSteps,
+          correctionRelaxationParameterForce,correctionRelativeToleranceForce,correctionAbsoluteToleranceForce,
           correctionRelaxationParameterTorque,correctionRelativeToleranceTorque,correctionAbsoluteToleranceTorque,
           (int)dbase.get<bool>("directProjectionAddedMass"),(int)useProvidedAcceleration,
           (int)dbase.get<bool>("useExtrapolationInPredictor"),
           dbase.get<int>("orderOfExtrapolationPredictor"),
           (timeSteppingMethod==leapFrogTrapezoidal ? "Leap-frog predictor, Trapezodial corrector" :
-	   timeSteppingMethod==improvedEuler ? "Improved-Euler" :
-	   timeSteppingMethod==implicitRungeKutta ? "Implicit Runge-Kutta" : "unknown"),
+           timeSteppingMethod==improvedEuler ? "Improved-Euler" :
+           timeSteppingMethod==implicitRungeKutta ? "Implicit Runge-Kutta" : "unknown"),
           dbase.get<real>("implicitFactor"),
-	  (int)twilightZone,
+          (int)twilightZone,
           dbase.get<int>("orderOfAccuracy"),
           dbase.get<int>("numberOfPastTimeValues")
     );
@@ -271,9 +271,9 @@ writeParameterSummary( FILE *file /* =stdout */ )
       if( dbase.has_key(timeFunctionName) )
       {
         fPrintF(file," Body force : %s time function:\n",timeFunctionName);
-	TimeFunction & timeFunction = dbase.get<TimeFunction>(timeFunctionName);
-	timeFunction.display(file);  // print TimeFunction parameters
-	
+        TimeFunction & timeFunction = dbase.get<TimeFunction>(timeFunctionName);
+        timeFunction.display(file);  // print TimeFunction parameters
+        
       }
     }
   } 
@@ -323,7 +323,7 @@ writeCheckFile( real t)
 
       int bodyNumber=0;
       if( dbase.has_key("bodyNumber") )
-	bodyNumber=dbase.get<int>("bodyNumber");
+        bodyNumber=dbase.get<int>("bodyNumber");
 
       sPrintF(checkFileName,"%sNumber%d.check",(const char*)bodyName,bodyNumber);
     }
@@ -359,11 +359,11 @@ writeCheckFile( real t)
     // -- compute errors from the known solution ---
     RealArray xe(3), ve(3), we(3), ae(3), wte(3);
     getKnownSolution( t, 
-		      xe,  // xCM
-		      ve,  // vCM
-		      ae,
-		      we, // omega
-		      wte );
+                      xe,  // xCM
+                      ve,  // vCM
+                      ae,
+                      we, // omega
+                      wte );
     int n=0; // counts components
     for( int d=0; d<numberOfDimensions; d++ ){ err(n) = fabs(x(d)-xe(d)); uNorm(n)=fabs(xe(d)); n++; } // 
     for( int d=0; d<numberOfDimensions; d++ ){ err(n) = fabs(v(d)-ve(d)); uNorm(n)=fabs(ve(d)); n++; } // 
@@ -472,7 +472,7 @@ mult( const RealArray & a, const RealArray & b )
     {
       real t=0;
       for( int k=0; k<l; k++ )
-	t=t+a(i+aBase0,k+aBase1)*b(k+bBase0,j+bBase1);
+        t=t+a(i+aBase0,k+aBase1)*b(k+bBase0,j+bBase1);
       c(i,j)=t;
     }
   }
@@ -708,9 +708,9 @@ getBodyForces( const real t, RealArray & bodyForce, RealArray & bodyTorque ) con
   if( bodyForceType==timePolynomialBodyForce )
   {
     bodyForce(R) = bodyForceCoeff(R,0) + t*( bodyForceCoeff(R,1) + t*( bodyForceCoeff(R,2) 
-								       + t*(bodyForceCoeff(R,3))));
+                                                                       + t*(bodyForceCoeff(R,3))));
     bodyTorque(R) = bodyTorqueCoeff(R,0) + t*( bodyTorqueCoeff(R,1) + t*( bodyTorqueCoeff(R,2) 
-									  + t*(bodyTorqueCoeff(R,3))));
+                                                                          + t*(bodyTorqueCoeff(R,3))));
   }
   else if( bodyForceType==timeFunctionBodyForce )
   {
@@ -724,11 +724,11 @@ getBodyForces( const real t, RealArray & bodyForce, RealArray & bodyTorque ) con
       const char* timeFunctionName = ( axis==0 ? "bodyForceX" : axis==1 ? "bodyForceY" : "bodyForceZ" );
       if( dbase.has_key(timeFunctionName) )
       {
-	TimeFunction & timeFunction = dbase.get<TimeFunction>(timeFunctionName);
-	timeFunction.eval(t,f );
-	bodyForce(axis)=f;
-	printF("RigidBodyMotion::getBodyForces: %s : t=%9.3e, force=%9.3e\n",timeFunctionName,t,f);
-	
+        TimeFunction & timeFunction = dbase.get<TimeFunction>(timeFunctionName);
+        timeFunction.eval(t,f );
+        bodyForce(axis)=f;
+        printF("RigidBodyMotion::getBodyForces: %s : t=%9.3e, force=%9.3e\n",timeFunctionName,t,f);
+        
       }
     }
     for( int axis=0; axis<3; axis++ )
@@ -736,10 +736,10 @@ getBodyForces( const real t, RealArray & bodyForce, RealArray & bodyTorque ) con
       const char* timeFunctionName = ( axis==0 ? "bodyTorqueX" : axis==1 ? "bodyTorqueY" : "bodyTorqueZ" );
       if( dbase.has_key(timeFunctionName) )
       {
-	TimeFunction & timeFunction = dbase.get<TimeFunction>(timeFunctionName);
-	timeFunction.eval(t,g );
+        TimeFunction & timeFunction = dbase.get<TimeFunction>(timeFunctionName);
+        timeFunction.eval(t,g );
         bodyTorque(axis)=g;
-	printF("RigidBodyMotion::getBodyForces: %s : t=%9.3e, torque=%9.3e\n",timeFunctionName,t,g);
+        printF("RigidBodyMotion::getBodyForces: %s : t=%9.3e, torque=%9.3e\n",timeFunctionName,t,g);
       }
     }
 
@@ -912,7 +912,7 @@ getAddedMassMatrices( const real t, RealArray & A11 , RealArray & A12 , RealArra
       real c2 = (t-t1)/(t2-t1);
       for( int k=0; k<4; k++ )
       {
-	*AM[k] = c1*AddedMass(R,R,k,next) + c2*AddedMass(R,R,k,current);
+        *AM[k] = c1*AddedMass(R,R,k,next) + c2*AddedMass(R,R,k,current);
       }
 
     }
@@ -926,7 +926,7 @@ getAddedMassMatrices( const real t, RealArray & A11 , RealArray & A12 , RealArra
 
       for( int k=0; k<4; k++ )
       {
-	*AM[k] = c1*AddedMass(R,R,k,next) + c2*AddedMass(R,R,k,current) + c3*AddedMass(R,R,k,previous);
+        *AM[k] = c1*AddedMass(R,R,k,next) + c2*AddedMass(R,R,k,current) + c3*AddedMass(R,R,k,previous);
       }
 
     }
@@ -944,7 +944,7 @@ getAddedMassMatrices( const real t, RealArray & A11 , RealArray & A12 , RealArra
       
       for( int k=0; k<4; k++ )
       {
-	*AM[k] = c1*AddedMass(R,R,k,next) + c2*AddedMass(R,R,k,current) + c3*AddedMass(R,R,k,previous) + c4*AddedMass(R,R,k,prev2);
+        *AM[k] = c1*AddedMass(R,R,k,next) + c2*AddedMass(R,R,k,current) + c3*AddedMass(R,R,k,previous) + c4*AddedMass(R,R,k,prev2);
       }
       
     }
@@ -1006,11 +1006,11 @@ int RigidBodyMotion::setParameters( Parameters & parameters )
 /// \brief return the known solution (if available)
 // =================================================================================
 int RigidBodyMotion::getKnownSolution( real t, 
-				       RealArray & xCM      /* = Overture::nullRealArray() */, 
-				       RealArray & vCM      /* = Overture::nullRealArray() */,
-				       RealArray & aCM      /* = Overture::nullRealArray() */,
-				       RealArray & omega    /* = Overture::nullRealArray() */, 
-				       RealArray & omegaDot /* = Overture::nullRealArray() */ ) const
+                                       RealArray & xCM      /* = Overture::nullRealArray() */, 
+                                       RealArray & vCM      /* = Overture::nullRealArray() */,
+                                       RealArray & aCM      /* = Overture::nullRealArray() */,
+                                       RealArray & omega    /* = Overture::nullRealArray() */, 
+                                       RealArray & omegaDot /* = Overture::nullRealArray() */ ) const
 {
   if( !dbase.has_key("Parameters" ) )
   {
@@ -1081,7 +1081,9 @@ reset()
   e0=0.;  e0(0,0)=e0(1,1)=e0(2,2)=1.;
   
   bodyForceCoeff=0.;   
-  bodyTorqueCoeff=0.;   
+  bodyTorqueCoeff=0.;  
+
+  return 0; 
 
 }
 
@@ -1089,8 +1091,8 @@ reset()
 //\begin{>>RigidBodyMotionInclude.tex}{\subsection{setProperties}} 
 int RigidBodyMotion:: 
 setProperties(real totalMass, 
-	      const RealArray & momentOfInertia, 
-	      const int numberOfDimensions_ /* = 3 */ )
+              const RealArray & momentOfInertia, 
+              const int numberOfDimensions_ /* = 3 */ )
 // =======================================================================================
 // /Description:
 //    Specify properties of the rigid body.
@@ -1173,20 +1175,20 @@ int RigidBodyMotion::getAddedDampingTensors( RealArray & addedDampingTensors, co
       // ADT = R ADT(0) R^T 
       for( int j=0; j<=2; j++ )
       {
-	for( int i=0; i<=2; i++ )
-	{
+        for( int i=0; i<=2; i++ )
+        {
           // Compute entry (i,j) in R * ADT(0:2,0:2,vc,wc) * R^T 
           real temp=0;
-	  for( int k=0; k<=2; k++ )
-	  {
-	    for( int l=0; l<=2; l++ )
-	    {
-	      temp += r(i,k)*adt(k,l,vc,wc)*r(j,l);
-	    }
-	  }
-	  addedDampingTensors(i,j,vc,wc)=temp;
+          for( int k=0; k<=2; k++ )
+          {
+            for( int l=0; l<=2; l++ )
+            {
+              temp += r(i,k)*adt(k,l,vc,wc)*r(j,l);
+            }
+          }
+          addedDampingTensors(i,j,vc,wc)=temp;
 
-	}
+        }
       }
     }
   }
@@ -1239,8 +1241,8 @@ int RigidBodyMotion::setAddedDampingTensors( const RealArray & addedDampingTenso
 /// 
 // =================================================================================================
 int RigidBodyMotion::displayAddedDampingTensors( const aString & label, 
-						 const real t /* = 0. */, 
-						 FILE *file /* =stdout */ ) const
+                                                 const real t /* = 0. */, 
+                                                 FILE *file /* =stdout */ ) const
 {
   if( !dbase.has_key("addedDampingTensors") )    
     return 1;  // tensors have not yet been defined
@@ -1258,33 +1260,33 @@ int RigidBodyMotion::displayAddedDampingTensors( const aString & label,
 
   fPrintF(file,"%s \n",(const char*)label);
   fPrintF(file,
-	  "             Added Damping Tensors (without scale factor=%9.2e) t=%9.3e body=%s\n"
-	  "             ----------------------------------------------------------\n"
-	  "       [ %12.4e %12.4e %12.4e ]        [ %12.4e %12.4e %12.4e ]\n"
-	  " Dvv = [ %12.4e %12.4e %12.4e ]  Dvw = [ %12.4e %12.4e %12.4e ]\n"
-	  "       [ %12.4e %12.4e %12.4e ]        [ %12.4e %12.4e %12.4e ]\n"
-	  " \n"
-	  "       [ %12.4e %12.4e %12.4e ]        [ %12.4e %12.4e %12.4e ]\n"
-	  " Dwv = [ %12.4e %12.4e %12.4e ]  Dww = [ %12.4e %12.4e %12.4e ]\n"
-	  "       [ %12.4e %12.4e %12.4e ]        [ %12.4e %12.4e %12.4e ]\n",
-	  addedDampingScaleFactor,t,(const char*)bodyName,
-	  adt(0,0,vbc,vbc),adt(0,1,vbc,vbc),adt(0,2,vbc,vbc),
-	  adt(0,0,vbc,wbc),adt(0,1,vbc,wbc),adt(0,2,vbc,wbc),
+          "             Added Damping Tensors (without scale factor=%9.2e) t=%9.3e body=%s\n"
+          "             ----------------------------------------------------------\n"
+          "       [ %12.4e %12.4e %12.4e ]        [ %12.4e %12.4e %12.4e ]\n"
+          " Dvv = [ %12.4e %12.4e %12.4e ]  Dvw = [ %12.4e %12.4e %12.4e ]\n"
+          "       [ %12.4e %12.4e %12.4e ]        [ %12.4e %12.4e %12.4e ]\n"
+          " \n"
+          "       [ %12.4e %12.4e %12.4e ]        [ %12.4e %12.4e %12.4e ]\n"
+          " Dwv = [ %12.4e %12.4e %12.4e ]  Dww = [ %12.4e %12.4e %12.4e ]\n"
+          "       [ %12.4e %12.4e %12.4e ]        [ %12.4e %12.4e %12.4e ]\n",
+          addedDampingScaleFactor,t,(const char*)bodyName,
+          adt(0,0,vbc,vbc),adt(0,1,vbc,vbc),adt(0,2,vbc,vbc),
+          adt(0,0,vbc,wbc),adt(0,1,vbc,wbc),adt(0,2,vbc,wbc),
 
-	  adt(1,0,vbc,vbc),adt(1,1,vbc,vbc),adt(1,2,vbc,vbc),
-	  adt(1,0,vbc,wbc),adt(1,1,vbc,wbc),adt(1,2,vbc,wbc),
+          adt(1,0,vbc,vbc),adt(1,1,vbc,vbc),adt(1,2,vbc,vbc),
+          adt(1,0,vbc,wbc),adt(1,1,vbc,wbc),adt(1,2,vbc,wbc),
 
-	  adt(2,0,vbc,vbc),adt(2,1,vbc,vbc),adt(2,2,vbc,vbc),
-	  adt(2,0,vbc,wbc),adt(2,1,vbc,wbc),adt(2,2,vbc,wbc),
+          adt(2,0,vbc,vbc),adt(2,1,vbc,vbc),adt(2,2,vbc,vbc),
+          adt(2,0,vbc,wbc),adt(2,1,vbc,wbc),adt(2,2,vbc,wbc),
 
-	  adt(0,0,wbc,vbc),adt(0,1,wbc,vbc),adt(0,2,wbc,vbc),
-	  adt(0,0,wbc,wbc),adt(0,1,wbc,wbc),adt(0,2,wbc,wbc),
+          adt(0,0,wbc,vbc),adt(0,1,wbc,vbc),adt(0,2,wbc,vbc),
+          adt(0,0,wbc,wbc),adt(0,1,wbc,wbc),adt(0,2,wbc,wbc),
 
-	  adt(1,0,wbc,vbc),adt(1,1,wbc,vbc),adt(1,2,wbc,vbc),
-	  adt(1,0,wbc,wbc),adt(1,1,wbc,wbc),adt(1,2,wbc,wbc),
+          adt(1,0,wbc,vbc),adt(1,1,wbc,vbc),adt(1,2,wbc,vbc),
+          adt(1,0,wbc,wbc),adt(1,1,wbc,wbc),adt(1,2,wbc,wbc),
 
-	  adt(2,0,wbc,vbc),adt(2,1,wbc,vbc),adt(2,2,wbc,vbc),
-	  adt(2,0,wbc,wbc),adt(2,1,wbc,wbc),adt(2,2,wbc,wbc));
+          adt(2,0,wbc,vbc),adt(2,1,wbc,vbc),adt(2,2,wbc,vbc),
+          adt(2,0,wbc,wbc),adt(2,1,wbc,wbc),adt(2,2,wbc,wbc));
   return 0;
 }
 
@@ -1362,8 +1364,8 @@ int RigidBodyMotion::setAxesOfInertial( const RealArray & axesOfInertia )
       real dot = e(0,axis)*e(0,dir)+e(1,axis)*e(1,dir)+e(2,axis)*e(2,dir);
       if( fabs(dot)>REAL_EPSILON*10. )
       {
-	printF("RigidBodyMotion::setAxesOfInertial:ERROR: axis of inertia %i is not orthogonal "
-	       "to axis %i. dot-product=%e \n",axis,dir,dot);
+        printF("RigidBodyMotion::setAxesOfInertial:ERROR: axis of inertia %i is not orthogonal "
+               "to axis %i. dot-product=%e \n",axis,dir,dot);
       }
     }
   }
@@ -1512,7 +1514,7 @@ setAcceleration( real t0, RealArray & vDot, RealArray & wDot )
       stageToSet=prev;
       int & numberProvided = dbase.get<int>("numberProvided");
       printF("--RBM--::setAccel: INFO: setting accel at PREVIOUS TIME t0=%9.3e <0 numberProvided=%i\n",t0,
-	     numberProvided);
+             numberProvided);
     }
     
   }
@@ -1571,38 +1573,38 @@ setAcceleration( real t0, RealArray & vDot, RealArray & wDot )
     {
       RealArray vDot(3),omegaDot(3);
       getKnownSolution( t0, 
-			Overture::nullRealArray(),  // xCM
-			Overture::nullRealArray(),  // vCM
-			vDot,
-			Overture::nullRealArray(), // omega
-			omegaDot );
+                        Overture::nullRealArray(),  // xCM
+                        Overture::nullRealArray(),  // vCM
+                        vDot,
+                        Overture::nullRealArray(), // omega
+                        omegaDot );
 
       vDotProvided(R3  ,stageToSet)=vDot;
       vDotProvided(R3+3,stageToSet)=omegaDot;
 
       if( true )
       {
-	printF("--RBM--setAcceleration:INFO t=%9.3e <=0 : "
-	       "Using known solution, vDot=[%g,%g,%g] omegaDot=[%g,%g,%g].\n",t0,
-	       vDot(0),vDot(1),vDot(2),omegaDot(0),omegaDot(1),omegaDot(2) );
+        printF("--RBM--setAcceleration:INFO t=%9.3e <=0 : "
+               "Using known solution, vDot=[%g,%g,%g] omegaDot=[%g,%g,%g].\n",t0,
+               vDot(0),vDot(1),vDot(2),omegaDot(0),omegaDot(1),omegaDot(2) );
       }
       
 
       if( logFile!=NULL )
-	fPrintF(logFile,"--RBM--setAcceleration:INFO t=%9.3e <=0 : "
-		"Using known solution, vDot=[%g,%g,%g] omegaDot=[%g,%g,%g].\n",t0,
-		vDot(0),vDot(1),vDot(2),omegaDot(0),omegaDot(1),omegaDot(2) );
+        fPrintF(logFile,"--RBM--setAcceleration:INFO t=%9.3e <=0 : "
+                "Using known solution, vDot=[%g,%g,%g] omegaDot=[%g,%g,%g].\n",t0,
+                vDot(0),vDot(1),vDot(2),omegaDot(0),omegaDot(1),omegaDot(2) );
     }
   }
   else
   {
     if( logFile!=NULL )
       fPrintF(logFile,"--RBM-- setAcceleration: t0=%9.3e, vDot=(%9.2e,%9.2e,%9.2e) wDot=(%9.2e,%9.2e,%9.2e)\n",
-	      t0,vDot(0),vDot(1),vDot(2), wDot(0),wDot(1),wDot(2));
+              t0,vDot(0),vDot(1),vDot(2), wDot(0),wDot(1),wDot(2));
 
     if( true || debug & 8 )
       printF("--RBM-- setAcceleration: t0=%9.3e, vDot=(%12.5e,%12.5e,%12.5e) wDot=(%12.5e,%12.5e,%12.5e)\n",
-	     t0,vDot(0),vDot(1),vDot(2), wDot(0),wDot(1),wDot(2));
+             t0,vDot(0),vDot(1),vDot(2), wDot(0),wDot(1),wDot(2));
   }
   
   return 0;
@@ -1785,17 +1787,17 @@ applyConstraints( const int step, const ConstraintApplicationEnum option )
     {
       if( numberOfDimensions==3 )
       {
-	RealArray v1(3), v2(3), v3(3); 
+        RealArray v1(3), v2(3), v3(3); 
         v1=constraintValues(Range(3,5)); v2=constraintValues(Range(6,8));
         // v3 is orthogonal to v1 and b2
         v3(0) = v1(1)*v2(2)-v1(2)*v2(1);
         v3(1) = v1(2)*v2(0)-v1(0)*v2(2);
         v3(2) = v1(0)*v2(1)-v1(1)*v2(0);
-	
-	// subtract off the component of f in the direction of v3 -- this will project f onto the
+        
+        // subtract off the component of f in the direction of v3 -- this will project f onto the
         // plane spanned by (v1,v2)
-	real dot= sum(f(R,step)*v3(R)); 
-	f(R,step) -=  dot*v3(R);
+        real dot= sum(f(R,step)*v3(R)); 
+        f(R,step) -=  dot*v3(R);
       }
     }
     else if( positionConstraint==positionIsFixed )
@@ -1820,17 +1822,17 @@ applyConstraints( const int step, const ConstraintApplicationEnum option )
     {
       if( numberOfDimensions==3 )
       {
-	RealArray v1(3), v2(3), v3(3); 
+        RealArray v1(3), v2(3), v3(3); 
         v1=constraintValues(Range(9,11)); v2=constraintValues(Range(12,14));
         // v3 is orthogonal to v1 and b2
         v3(0) = v1(1)*v2(2)-v1(2)*v2(1);
         v3(1) = v1(2)*v2(0)-v1(0)*v2(2);
         v3(2) = v1(0)*v2(1)-v1(1)*v2(0);
-	
-	// subtract off the component of g in the direction of v3 -- this will project g onto the
+        
+        // subtract off the component of g in the direction of v3 -- this will project g onto the
         // plane spanned by (v1,v2)
-	real dot= sum(g(R,step)*v3(R)); 
-	g(R,step) -=  dot*v3(R);
+        real dot= sum(g(R,step)*v3(R)); 
+        g(R,step) -=  dot*v3(R);
       }
     }
     
@@ -1858,20 +1860,20 @@ applyConstraints( const int step, const ConstraintApplicationEnum option )
     {
       if( numberOfDimensions==3 )
       {
-	RealArray v1(3), v2(3), v3(3); 
+        RealArray v1(3), v2(3), v3(3); 
         v1=constraintValues(Range(3,5)); v2=constraintValues(Range(6,8));
         // v3 is orthogonal to v1 and b2
         v3(0) = v1(1)*v2(2)-v1(2)*v2(1);
         v3(1) = v1(2)*v2(0)-v1(0)*v2(2);
         v3(2) = v1(0)*v2(1)-v1(1)*v2(0);
-	
-	// subtract off the component of x-x0 in the direction of v3 -- this will project x onto the
+        
+        // subtract off the component of x-x0 in the direction of v3 -- this will project x onto the
         // plane x0 + Span(v1,v2)
         //   b = [(x-x0).v3]v3
         //   xNew = x - b
         // => (xNew-x0).v3 = 0
-	real dot= sum((x(R,step)-x0(R))*v3(R)); 
-	x(R,step) -= dot*v3(R);
+        real dot= sum((x(R,step)-x0(R))*v3(R)); 
+        x(R,step) -= dot*v3(R);
       }
     }
     else if( positionConstraint==positionIsFixed )
@@ -1896,17 +1898,17 @@ applyConstraints( const int step, const ConstraintApplicationEnum option )
     {
       if( numberOfDimensions==3 )
       {
-	RealArray v1(3), v2(3), v3(3); 
+        RealArray v1(3), v2(3), v3(3); 
         v1=constraintValues(Range(9,11)); v2=constraintValues(Range(12,14));
         // v3 is orthogonal to v1 and b2
         v3(0) = v1(1)*v2(2)-v1(2)*v2(1);
         v3(1) = v1(2)*v2(0)-v1(0)*v2(2);
         v3(2) = v1(0)*v2(1)-v1(1)*v2(0);
-	
-	// subtract off the component of g in the direction of v3 -- this will project g onto the
+        
+        // subtract off the component of g in the direction of v3 -- this will project g onto the
         // plane spanned by (v1,v2)
-	real dot= sum((w(R,step)-w0(R))*v3(R)); 
-	w(R,step) -=  dot*v3(R);
+        real dot= sum((w(R,step)-w0(R))*v3(R)); 
+        w(R,step) -=  dot*v3(R);
       }
     }
   }
@@ -1946,7 +1948,7 @@ setPastTimeForcing( real t, const RealArray & force, const RealArray & torque )
 // ==================================================================================
 int RigidBodyMotion::
 setPastTimeForcing( real t, const RealArray & force, const RealArray & torque,
-		    const RealArray & A11, const RealArray & A12, const RealArray & A21, const RealArray & A22  )
+                    const RealArray & A11, const RealArray & A12, const RealArray & A21, const RealArray & A22  )
 {
   int & numberOfPastTimeValues = dbase.get<int>("numberOfPastTimeValues");
 
@@ -1977,7 +1979,7 @@ setPastTimeForcing( real t, const RealArray & force, const RealArray & torque,
   time(prev)=t;
   
   printF("RigidBodyMotion::setPastTimeForcing: prev=%i, t=%9.3e f=(%8.2e,%8.2e,%8.2e) g=(%8.2e,%8.2e,%8.2e)\n",
-	 prev, t, force(0),force(1),force(2),torque(0),torque(1),torque(2) );
+         prev, t, force(0),force(1),force(2),torque(0),torque(1),torque(2) );
 
   f(R,prev)=force;
   g(R,prev)=torque;
@@ -2030,10 +2032,10 @@ setPastTimeForcing( real t, const RealArray & force, const RealArray & torque,
 int RigidBodyMotion:: 
 integrate(real t0, 
           const RealArray & force, 
-	  const RealArray & torque,
-	  real t, 
+          const RealArray & torque,
+          real t, 
           RealArray & xCM, 
-	  RealArray & rotation )
+          RealArray & rotation )
 {
   return integrate(t0,force,torque,t,
                    Overture::nullRealArray(),
@@ -2063,11 +2065,11 @@ integrate(real t0,
 int RigidBodyMotion:: 
 integrate(real t0, 
           const RealArray & force, 
-	  const RealArray & torque,
-	  real t, 
+          const RealArray & torque,
+          real t, 
           const RealArray & A11, const RealArray & A12, const RealArray & A21, const RealArray & A22, 
           RealArray & xCM, 
-	  RealArray & rotation )
+          RealArray & rotation )
 {
   if( numberOfSteps<0 )
   {
@@ -2085,7 +2087,7 @@ integrate(real t0,
   if( (current>=0 &&  t0<time(current)) || (numberOfSteps==0 && t0<time(0)) )
   {
     printf("RigidBodyMotion::integrate:ERROR: t0=%6.2e < time(current)=%6.2e integrating backwards in time?\n",t0,
-	   numberOfSteps==0  ? time(0) : time(current));
+           numberOfSteps==0  ? time(0) : time(current));
     OV_ABORT("error");
   }
   
@@ -2139,7 +2141,7 @@ integrate(real t0,
     if( logFile!=NULL )
     {
       fPrintF(logFile,"  Input: f=(%9.3e,%9.3e,%9.3e) g=(%9.3e,%9.3e,%9.3e)\n",f(0,current),f(1,current),f(2,current),
-	      g(0,current),g(1,current),g(2,current));
+              g(0,current),g(1,current),g(2,current));
     }
 
     f(R,current) += mult(A11,v(R,current)) + mult(A12,w(R,current));
@@ -2148,7 +2150,7 @@ integrate(real t0,
     if( logFile!=NULL )
     {
       fPrintF(logFile," Add added mass: f=(%9.3e,%9.3e,%9.3e) g=(%9.3e,%9.3e,%9.3e)\n",f(0,current),f(1,current),f(2,current),
-	      g(0,current),g(1,current),g(2,current));
+              g(0,current),g(1,current),g(2,current));
     }
 
   }
@@ -2169,7 +2171,7 @@ integrate(real t0,
       // guess for added mass at next time
       RealArray & AddedMass = dbase.get<RealArray>("AddedMass");
       for( int k=0; k<4; k++ )
-	AddedMass(R,R,k,next)=AddedMass(R,R,k,current);
+        AddedMass(R,R,k,next)=AddedMass(R,R,k,current);
     }
 
   }
@@ -2178,7 +2180,7 @@ integrate(real t0,
     if( false && numberOfPastTimeValues>0  )
     {
       printF("numberOfPastTimeValues=%i, t=%9.3e, t(prev)=%9.3e \n", numberOfPastTimeValues,time(current),
-	     time(previous));
+             time(previous));
       
     }
     
@@ -2190,9 +2192,9 @@ integrate(real t0,
       real dtOld= numberOfForcingsSaved>1 ? time(current)-time(previous) : 0.;
       real dtRatio;
       if( dtOld!=0. )
-	dtRatio=dt/dtOld;
+        dtRatio=dt/dtOld;
       else
-	dtRatio=0.;
+        dtRatio=0.;
       real ab1= 1.+dtRatio; // normally 2
       real ab2= -dtRatio;   // normally -1
 
@@ -2202,8 +2204,8 @@ integrate(real t0,
       if( includeAddedMass )
       {
         RealArray & AddedMass = dbase.get<RealArray>("AddedMass");
-	for( int k=0; k<4; k++ )
-	  AddedMass(R,R,k,next)=ab1*AddedMass(R,R,k,current)+ab2*AddedMass(R,R,k,previous);
+        for( int k=0; k<4; k++ )
+          AddedMass(R,R,k,next)=ab1*AddedMass(R,R,k,current)+ab2*AddedMass(R,R,k,previous);
       }
     }
     else
@@ -2227,10 +2229,10 @@ integrate(real t0,
       if( includeAddedMass )
       {
         RealArray & AddedMass = dbase.get<RealArray>("AddedMass");
-	for( int k=0; k<4; k++ )
-	{
-	  AddedMass(R,R,k,next) = c1*AddedMass(R,R,k,current) + c2*AddedMass(R,R,k,previous) + c3*AddedMass(R,R,k,prev2);
-	}
+        for( int k=0; k<4; k++ )
+        {
+          AddedMass(R,R,k,next) = c1*AddedMass(R,R,k,current) + c2*AddedMass(R,R,k,previous) + c3*AddedMass(R,R,k,prev2);
+        }
       }
       
     }
@@ -2260,14 +2262,14 @@ integrate(real t0,
   if( false )
   {
     printF("integrate: t=%e, current=%i x(next)=(%6.2e,%6.2e,%6.2e), w(current)=(%6.2e,%6.2e,%6.2e)\n",
-	   t,current,x(0,next),x(1,next),x(2,next),w(0,current),w(1,current),w(2,current));
+           t,current,x(0,next),x(1,next),x(2,next),w(0,current),w(1,current),w(2,current));
   }
   if( debug & 1 )
   {
     printF("RB: integrate: t0=%9.3e, t=%9.3e, current=%i x(next)=(%8.2e,%8.2e,%8.2e), force=(%8.2e,%8.2e,%8.2e)\n"
            "     bodyForce=(%8.2e,%8.2e,%8.2e), f(cur)=(%8.2e,%8.2e,%8.2e), f(next)=(%8.2e,%8.2e,%8.2e)\n"
            "     bodyTorque=(%8.2e,%8.2e,%8.2e), g(cur)=(%8.2e,%8.2e,%8.2e), g(next)=(%8.2e,%8.2e,%8.2e)\n",
-	   t0,t,current,x(0,next),x(1,next),x(2,next),force(0),force(1),force(2),
+           t0,t,current,x(0,next),x(1,next),x(2,next),force(0),force(1),force(2),
            bodyForce(0),bodyForce(1),bodyForce(2),
            f(0,current),f(1,current),f(2,current),
            f(0,next),f(1,next),f(2,next),
@@ -2278,17 +2280,17 @@ integrate(real t0,
   if( logFile!=NULL )
   {
     fPrintF(logFile," integrate: t0=%9.3e, t=%9.3e, x(next)=(%8.2e,%8.2e,%8.2e) v(next)=(%8.2e,%8.2e,%8.2e), cur=%i next=%i\n"
-	    "     w(next)=(%8.2e,%8.2e,%8.2e) force=(%8.2e,%8.2e,%8.2e) torque=(%8.2e,%8.2e,%8.2e)\n"
-	    "     bodyForce=(%8.2e,%8.2e,%8.2e), bodyTorque=(%8.2e,%8.2e,%8.2e)\n"
-	    "     f(cur)=(%8.2e,%8.2e,%8.2e), f(next)=(%8.2e,%8.2e,%8.2e)\n"
-	    "     g(cur)=(%8.2e,%8.2e,%8.2e), g(next)=(%8.2e,%8.2e,%8.2e)\n",
-	    t0,t,x(0,next),x(1,next),x(2,next), v(0,next),v(1,next),v(2,next),current,next,
+            "     w(next)=(%8.2e,%8.2e,%8.2e) force=(%8.2e,%8.2e,%8.2e) torque=(%8.2e,%8.2e,%8.2e)\n"
+            "     bodyForce=(%8.2e,%8.2e,%8.2e), bodyTorque=(%8.2e,%8.2e,%8.2e)\n"
+            "     f(cur)=(%8.2e,%8.2e,%8.2e), f(next)=(%8.2e,%8.2e,%8.2e)\n"
+            "     g(cur)=(%8.2e,%8.2e,%8.2e), g(next)=(%8.2e,%8.2e,%8.2e)\n",
+            t0,t,x(0,next),x(1,next),x(2,next), v(0,next),v(1,next),v(2,next),current,next,
             w(0,next),w(1,next),w(2,next),
             force(0),force(1),force(2),torque(0),torque(1),torque(2),
             bodyForce(0),bodyForce(1),bodyForce(2),
             bodyTorque(0),bodyTorque(1),bodyTorque(2),
             f(0,current),f(1,current),f(2,current),f(0,next),f(1,next),f(2,next),
-	    g(0,current),g(1,current),g(2,current),g(0,next),g(1,next),g(2,next));
+            g(0,current),g(1,current),g(2,current),g(0,next),g(1,next),g(2,next));
     fflush(logFile);
   }
   
@@ -2302,9 +2304,9 @@ integrate(real t0,
       real dtOld= numberSaved>1 ? time(current)-time(previous) : 0.;
       real dtRatio;
       if( dtOld!=0. )
-	dtRatio=dt/dtOld;
+        dtRatio=dt/dtOld;
       else
-	dtRatio=0.;
+        dtRatio=0.;
       real ab1= 1.+dtRatio; // normally 2
       real ab2= -dtRatio;   // normally -1
 
@@ -2329,7 +2331,7 @@ integrate(real t0,
       e(R,R,next)= c1*e(R,R,current)+ c2*e(R,R,previous)+ c3*e(R,R,prev2);
 
       if( logFile!=NULL )
-	fPrintF(logFile," EXTRAP: (t1,t2,t3)=(%9.3e,%9.3e,%9.3e) c1=%8.2e, c2=%8.2e c3=%8.2e\n",t1,t2,t3,c1,c2,c3);
+        fPrintF(logFile," EXTRAP: (t1,t2,t3)=(%9.3e,%9.3e,%9.3e) c1=%8.2e, c2=%8.2e c3=%8.2e\n",t1,t2,t3,c1,c2,c3);
       
 
     }
@@ -2337,8 +2339,8 @@ integrate(real t0,
     if( logFile!=NULL )
     {
       fPrintF(logFile," EXTRAP to t=%9.3e: x(next)=(%11.4e,%11.4e,%11.4e) v(next)=(%11.4e,%11.4e,%11.4e) "
-	      "w(next)=(%11.4e,%11.4e,%11.4e)\n",t,x(0,next),x(1,next),x(2,next), 
-	      v(0,next),v(1,next),v(2,next),w(0,next),w(1,next),w(2,next));
+              "w(next)=(%11.4e,%11.4e,%11.4e)\n",t,x(0,next),x(1,next),x(2,next), 
+              v(0,next),v(1,next),v(2,next),w(0,next),w(1,next),w(2,next));
     }
   }
   
@@ -2372,24 +2374,24 @@ integrate(real t0,
 // ==================================================================================
 int RigidBodyMotion:: 
 correct(real t, 
-	const RealArray & force, 
-	const RealArray & torque,
-	RealArray & xCM, 
-	RealArray & rotation )
+        const RealArray & force, 
+        const RealArray & torque,
+        RealArray & xCM, 
+        RealArray & rotation )
 {
   return correct( t,force,torque,
-		  Overture::nullRealArray(),
-		  Overture::nullRealArray(),
-		  Overture::nullRealArray(),
-		  Overture::nullRealArray(),
+                  Overture::nullRealArray(),
+                  Overture::nullRealArray(),
+                  Overture::nullRealArray(),
+                  Overture::nullRealArray(),
                   xCM,rotation);
 }
 // =========================================================================================
 /// \brief Under-relax the forces on the body. This is needed to stabilize some algorithms 
 // =========================================================================================
 int RigidBodyMotion::relaxForce( real t, int next, 
-				 const RealArray & f, const RealArray & force, const RealArray & bodyForce, 
-				 const RealArray & g, const RealArray & torque, const RealArray & bodyTorque )
+                                 const RealArray & f, const RealArray & force, const RealArray & bodyForce, 
+                                 const RealArray & g, const RealArray & torque, const RealArray & bodyTorque )
 {
        
   // --- under-relax the new value for f(t+dt), force(R), with the old value for f(t+dt), f(R,next). ---
@@ -2412,10 +2414,10 @@ int RigidBodyMotion::relaxForce( real t, int next,
 
   // The corrections are assumed to have converged if the relative OR the absolute tolerance has been met:
   bool forceHasConverged = fDiffRelative<correctionRelativeToleranceForce ||
-					 fDiff < correctionAbsoluteToleranceForce;
+                                         fDiff < correctionAbsoluteToleranceForce;
 
   bool torqueHasConverged = gDiffRelative<correctionRelativeToleranceTorque ||
-					  gDiff < correctionAbsoluteToleranceTorque;
+                                          gDiff < correctionAbsoluteToleranceTorque;
 
   correctionHasConverged= forceHasConverged && torqueHasConverged;
 
@@ -2424,12 +2426,12 @@ int RigidBodyMotion::relaxForce( real t, int next,
   if( debug & 2 )
   {
     printF("RB:correct: relax force : t=%8.2e alpha=%8.2e: fDiff=%8.2e <? %8.2e or fDiff/fNorm=%8.2e <? %8.2e\n"
-	   "          : relax torque: t=%8.2e beta =%8.2e: gDiff=%8.2e <? %8.2e or gDiff/gNorm=%8.2e <? %8.2e\n"
-	   "           f(old)=(%8.2e,%8.2e,%8.2e) f(new)=(%8.2e,%8.2e,%8.2e), g(new)=(%8.2e,%8.2e,%8.2e)\n",
-	   t,alpha,fDiff,correctionAbsoluteToleranceForce,fDiffRelative,correctionRelativeToleranceForce,
-	   t,beta, gDiff,correctionAbsoluteToleranceTorque,gDiffRelative,correctionRelativeToleranceTorque,
-	   f(0,next),f(1,next),f(2,next),force(0),force(1),force(2),
-	   torque(0),torque(1),torque(2));
+           "          : relax torque: t=%8.2e beta =%8.2e: gDiff=%8.2e <? %8.2e or gDiff/gNorm=%8.2e <? %8.2e\n"
+           "           f(old)=(%8.2e,%8.2e,%8.2e) f(new)=(%8.2e,%8.2e,%8.2e), g(new)=(%8.2e,%8.2e,%8.2e)\n",
+           t,alpha,fDiff,correctionAbsoluteToleranceForce,fDiffRelative,correctionRelativeToleranceForce,
+           t,beta, gDiff,correctionAbsoluteToleranceTorque,gDiffRelative,correctionRelativeToleranceTorque,
+           f(0,next),f(1,next),f(2,next),force(0),force(1),force(2),
+           torque(0),torque(1),torque(2));
   }
       
   f(R,next)=alpha*( force(R)+bodyForce(R)  ) + (1.-alpha)*f(R,next);
@@ -2458,11 +2460,11 @@ int RigidBodyMotion::relaxForce( real t, int next,
 // ==================================================================================
 int RigidBodyMotion:: 
 correct(real t, 
-	const RealArray & force, 
-	const RealArray & torque,
+        const RealArray & force, 
+        const RealArray & torque,
         const RealArray & A11, const RealArray & A12, const RealArray & A21, const RealArray & A22,
-	RealArray & xCM, 
-	RealArray & rotation )
+        RealArray & xCM, 
+        RealArray & rotation )
 
 {
   if( logFile!=NULL )
@@ -2528,7 +2530,7 @@ correct(real t,
     {
       RealArray & AddedMass = dbase.get<RealArray>("AddedMass");
       for( int k=0; k<4; k++ )
-	AddedMass(R,R,k,0)=*AM[k];
+        AddedMass(R,R,k,0)=*AM[k];
     }
     
 
@@ -2583,10 +2585,10 @@ correct(real t,
 
       // // The corrections are assumed to have converged if the relative OR the absolute tolerance has been met:
       // bool forceHasConverged = fDiffRelative<correctionRelativeToleranceForce ||
-      // 	fDiff < correctionAbsoluteToleranceForce;
+      //        fDiff < correctionAbsoluteToleranceForce;
 
       // bool torqueHasConverged = gDiffRelative<correctionRelativeToleranceTorque ||
-      // 	gDiff < correctionAbsoluteToleranceTorque;
+      //        gDiff < correctionAbsoluteToleranceTorque;
 
       // correctionHasConverged= forceHasConverged && torqueHasConverged;
 
@@ -2594,13 +2596,13 @@ correct(real t,
       // const real beta =correctionRelaxationParameterTorque; 
       // if( true || debug & 2 )
       // {
-      // 	printF("RB:correct: relax force : t=%8.2e alpha=%8.2e: fDiff=%8.2e <? %8.2e or fDiff/fNorm=%8.2e <? %8.2e\n"
-      // 	       "          : relax torque: t=%8.2e beta =%8.2e: gDiff=%8.2e <? %8.2e or gDiff/gNorm=%8.2e <? %8.2e\n"
-      // 	       "           f(old)=(%8.2e,%8.2e,%8.2e) f(new)=(%8.2e,%8.2e,%8.2e), g(new)=(%8.2e,%8.2e,%8.2e)\n",
-      // 	       t,alpha,fDiff,correctionAbsoluteToleranceForce,fDiffRelative,correctionRelativeToleranceForce,
+      //        printF("RB:correct: relax force : t=%8.2e alpha=%8.2e: fDiff=%8.2e <? %8.2e or fDiff/fNorm=%8.2e <? %8.2e\n"
+      //               "          : relax torque: t=%8.2e beta =%8.2e: gDiff=%8.2e <? %8.2e or gDiff/gNorm=%8.2e <? %8.2e\n"
+      //               "           f(old)=(%8.2e,%8.2e,%8.2e) f(new)=(%8.2e,%8.2e,%8.2e), g(new)=(%8.2e,%8.2e,%8.2e)\n",
+      //               t,alpha,fDiff,correctionAbsoluteToleranceForce,fDiffRelative,correctionRelativeToleranceForce,
       //          t,beta, gDiff,correctionAbsoluteToleranceTorque,gDiffRelative,correctionRelativeToleranceTorque,
       //          f(0,next),f(1,next),f(2,next),force(0),force(1),force(2),
-      // 	       torque(0),torque(1),torque(2));
+      //               torque(0),torque(1),torque(2));
       // }
       
       // f(R,next)=alpha*( force(R)+bodyForce(R)  ) + (1.-alpha)*f(R,next);
@@ -2661,20 +2663,20 @@ correct(real t,
   if( debug & 4 )
   {
     printF("RB: correct: t=%e, dt=%e, current=%i x(next)=(%6.2e,%6.2e,%6.2e), f(next)=(%6.2e,%6.2e,%6.2e), g(next)=(%6.2e,%6.2e,%6.2e)\n",
-	   t,dt,current,x(0,next),x(1,next),x(2,next),f(0,next),f(1,next),f(2,next),g(0,next),g(1,next),g(2,next));
+           t,dt,current,x(0,next),x(1,next),x(2,next),f(0,next),f(1,next),f(2,next),g(0,next),g(1,next),g(2,next));
     printF("  : vCM=(%6.2e,%6.2e,%6.2e), w=(%6.2e,%6.2e,%6.2e)\n",v(0,next),v(1,next),v(2,next),
-	   w(0,next),w(1,next),w(2,next));
+           w(0,next),w(1,next),w(2,next));
   }
 
   if( logFile!=NULL )
   {
     fPrintF(logFile," correct: t=%9.3e, x(next)=(%11.4e,%11.4e,%11.4e), v(next)=(%11.4e,%11.4e,%11.4e), cur=%i, next=%i\n"
-	    "     w(next)=(%11.4e,%11.4e,%11.4e), force=(%11.4e,%11.4e,%11.4e), torque=(%11.4e,%11.4e,%11.4e), \n"
-	    "     f(next)=(%11.4e,%11.4e,%11.4e), g(next)=(%11.4e,%11.4e,%11.4e)\n\n",
-	    t,x(0,next),x(1,next),x(2,next),v(0,next),v(1,next),v(2,next),current,next,
+            "     w(next)=(%11.4e,%11.4e,%11.4e), force=(%11.4e,%11.4e,%11.4e), torque=(%11.4e,%11.4e,%11.4e), \n"
+            "     f(next)=(%11.4e,%11.4e,%11.4e), g(next)=(%11.4e,%11.4e,%11.4e)\n\n",
+            t,x(0,next),x(1,next),x(2,next),v(0,next),v(1,next),v(2,next),current,next,
             w(0,next),w(1,next),w(2,next),
             force(0),force(1),force(2), torque(0),torque(1),torque(2),
-	    f(0,next),f(1,next),f(2,next),g(0,next),g(1,next),g(2,next)); 
+            f(0,next),f(1,next),f(2,next),g(0,next),g(1,next),g(2,next)); 
 
     fflush(logFile);
   }
@@ -2697,25 +2699,25 @@ correct(real t,
 
       RealArray ae(3), wte(3);
       getKnownSolution( t, 
-			Overture::nullRealArray(),  // xCM
-			Overture::nullRealArray(),  // vCM
-			ae,
-			Overture::nullRealArray(), // omega
-			wte );
+                        Overture::nullRealArray(),  // xCM
+                        Overture::nullRealArray(),  // vCM
+                        ae,
+                        Overture::nullRealArray(), // omega
+                        wte );
       if( numberOfDimensions==2 )
       {
-	real err =max( fabs(ae(0)-aCM(0)),fabs(ae(1)-aCM(1)));
-	err =max( err, fabs(wte(2)-wDot(2)) );
-	// real errTol= .02; // .05; // .1 
-	printF("--RBM-- t=%9.3e err=%9.3e (errTol=%9.3e)\n",t,err,exitOnInstabilityErrorTol);
+        real err =max( fabs(ae(0)-aCM(0)),fabs(ae(1)-aCM(1)));
+        err =max( err, fabs(wte(2)-wDot(2)) );
+        // real errTol= .02; // .05; // .1 
+        printF("--RBM-- t=%9.3e err=%9.3e (errTol=%9.3e)\n",t,err,exitOnInstabilityErrorTol);
 
-	if( err > exitOnInstabilityErrorTol )
-	{
-	  printF("--RBM--correct: likely INSTABILITY detected: t=%9.3e aCM=[%9.3e,%9.3e] wDot=[%9.3e]\n",
-		 t,aCM(0),aCM(1),wDot(2));
-	  exit(4); // 1--> 256, 2--> 512, 3->768=256+512, 4->1024
-	}
-	  
+        if( err > exitOnInstabilityErrorTol )
+        {
+          printF("--RBM--correct: likely INSTABILITY detected: t=%9.3e aCM=[%9.3e,%9.3e] wDot=[%9.3e]\n",
+                 t,aCM(0),aCM(1),wDot(2));
+          exit(4); // 1--> 256, 2--> 512, 3->768=256+512, 4->1024
+        }
+          
       }
       else
       {
@@ -2767,11 +2769,11 @@ takeStepLeapFrog( const real t0, const real dt )
     if( debug & 2 )
     {
       printF("--RBM-LF-- t=%9.3e Provided: t0=%9.3e time=%9.3e, vDot=(%9.2e,%9.2e,%9.2e) wDot=(%9.2e,%9.2e,%9.2e)\n",
-	     t,t0,timeProvided(current),
-	     vDotProvided(0,current),vDotProvided(1,current),vDotProvided(2,current),
-	     vDotProvided(3,current),vDotProvided(4,current),vDotProvided(5,current));
+             t,t0,timeProvided(current),
+             vDotProvided(0,current),vDotProvided(1,current),vDotProvided(2,current),
+             vDotProvided(3,current),vDotProvided(4,current),vDotProvided(5,current));
      printF("--RBM-LF-- mI(2)=%8.4e, totalTorque(2)=%8.4e\n",
-	     mI(2),mI(2)*vDotProvided(5,current)); 
+             mI(2),mI(2)*vDotProvided(5,current)); 
     }
     
     vDot(R)=vDotProvided(R,current);
@@ -2820,7 +2822,7 @@ takeStepLeapFrog( const real t0, const real dt )
   {
     variableTimeStep=true;
     printF("--RBM--takeStepLeapFrog:INFO: time-step has changed! dt=%12.4e dtOld=%12.4e"
-	   " dt-dtOld=%8.2e ab1/dt=%4.2f ab2/dt=%4.2f \n",dt,dtOld,dt-dtOld,ab1/dt,ab2/dt);
+           " dt-dtOld=%8.2e ab1/dt=%4.2f ab2/dt=%4.2f \n",dt,dtOld,dt-dtOld,ab1/dt,ab2/dt);
   }
   // variableTimeStep=true; // ******* TEMP**** always use AB2 predictor
   
@@ -2843,13 +2845,13 @@ takeStepLeapFrog( const real t0, const real dt )
   if( false )
   {
     printf("RigidBodyMotion:takeStepLeapFrog: current=%i numberOfSteps=%i v0=(%8.2e,%8.2e) \n",current,numberOfSteps,
-	   v0(0),v0(1));
+           v0(0),v0(1));
   }
   
   if( debug & 2 )
   {
     printF("--RB-- LeapFrog: numberOfSteps=%i t=%9.2e x(cur)=[%9.3e,%9.3e] v(cur)=[%9.3e,%9.3e] \n",numberOfSteps,t0,
-	   x(0,current),x(1,current),v(0,current),v(1,current));
+           x(0,current),x(1,current),v(0,current),v(1,current));
   }
 
   if( numberOfSteps==1 )
@@ -2865,11 +2867,11 @@ takeStepLeapFrog( const real t0, const real dt )
       printF("--RBM-LF-- Step 1: use known solution to get negative time initial conditions for x,v.\n");
       RealArray xp(3), vp(3);
       getKnownSolution( t0-dt, 
-			xp,  // xCM
-			vp,  // vCM
-			Overture::nullRealArray(), // aCM
-			Overture::nullRealArray(), // omega
-			Overture::nullRealArray() );
+                        xp,  // xCM
+                        vp,  // vCM
+                        Overture::nullRealArray(), // aCM
+                        Overture::nullRealArray(), // omega
+                        Overture::nullRealArray() );
 
       v(R,next)=vp +(2.*dt)*vDot(R);  // leap frog
       x(R,next)=2.*x(R,current)-xp + (dt*dt)*( vDot(R) );
@@ -2887,7 +2889,7 @@ takeStepLeapFrog( const real t0, const real dt )
       { 
         // when dt varies we use Adams-Bashforth
         printF("--RB-- LeapFrog: USE AB2 at t=%9.3e\n",t);
-	v(R,next)=v(R,current) + ab1*vDot(R) + ab2*vDotOld(R);
+        v(R,next)=v(R,current) + ab1*vDot(R) + ab2*vDotOld(R);
       }
       
     }
@@ -2953,11 +2955,11 @@ takeStepLeapFrog( const real t0, const real dt )
       printF("--RBM-LF-- Step 1: use known solution to get negative time initial conditions for w.\n");
       RealArray wp(3);
       getKnownSolution( t0-dt, 
-			Overture::nullRealArray(),  // xCM
-			Overture::nullRealArray(),  // vCM
-			Overture::nullRealArray(), // aCM
-			wp, // omega
-			Overture::nullRealArray() );
+                        Overture::nullRealArray(),  // xCM
+                        Overture::nullRealArray(),  // vCM
+                        Overture::nullRealArray(), // aCM
+                        wp, // omega
+                        Overture::nullRealArray() );
 
       w(R,next)=wp +(2.*dt)*wDot(R);  // leap frog
     }
@@ -2984,7 +2986,7 @@ takeStepLeapFrog( const real t0, const real dt )
     assert( timeProvided(current)==t0 );
 
     printF("--RBM-LF-- torque=gv=(%8.2e,%8.2e,%8.2e), w=(%8.2e,%8.2e,%8.2e)\n",
-	   gv(0),gv(1),gv(2), w(0,current),w(1,current),w(2,current));
+           gv(0),gv(1),gv(2), w(0,current),w(1,current),w(2,current));
     ::display(A,"A");
     ::display(Ai,"Ai");
     ::display(Omega,"Omega");
@@ -2992,11 +2994,11 @@ takeStepLeapFrog( const real t0, const real dt )
 
 
     printF("--RBM-LF-- vDot=(%8.2e,%8.2e,%8.2e), wDot=(%8.2e,%8.2e,%8.2e)  (t=%9.3e)\n"
-	   " provided: vDot=(%8.2e,%8.2e,%8.2e), wDot=(%8.2e,%8.2e,%8.2e) \n",        
-	   vDot(0),vDot(1),vDot(2),
-	   wDot(0),wDot(1),wDot(2), t,
-	   vDotProvided(0,current),vDotProvided(1,current),vDotProvided(2,current),
-	   vDotProvided(3,current),vDotProvided(4,current),vDotProvided(5,current));
+           " provided: vDot=(%8.2e,%8.2e,%8.2e), wDot=(%8.2e,%8.2e,%8.2e) \n",        
+           vDot(0),vDot(1),vDot(2),
+           wDot(0),wDot(1),wDot(2), t,
+           vDotProvided(0,current),vDotProvided(1,current),vDotProvided(2,current),
+           vDotProvided(3,current),vDotProvided(4,current),vDotProvided(5,current));
   }
   
 
@@ -3011,11 +3013,11 @@ takeStepLeapFrog( const real t0, const real dt )
     RealArray eDotDot(3,3);
     
     eDotDot(0,R)=(wDot(1,current)*   e(2,R,current)-wDot(2,current)*   e(1,R,current)+
-		  w(1,current)*eDot(2,R,current)-   w(2,current)*eDot(1,R,current));
+                  w(1,current)*eDot(2,R,current)-   w(2,current)*eDot(1,R,current));
     eDotDot(1,R)=(wDot(2,current)*   e(0,R,current)-wDot(0,current)*   e(2,R,current)+
-		  w(2,current)*eDot(0,R,current)-   w(0,current)*eDot(2,R,current));
+                  w(2,current)*eDot(0,R,current)-   w(0,current)*eDot(2,R,current));
     eDotDot(2,R)=(wDot(0,current)*   e(1,R,current)-wDot(1,current)*   e(0,R,current)+
-		  w(0,current)*eDot(1,R,current)-   w(1,current)*eDot(0,R,current));
+                  w(0,current)*eDot(1,R,current)-   w(1,current)*eDot(0,R,current));
     
     e(R,R,next)=e(R,R,current)+dt*(eDot(R,R)+.5*dt*eDotDot(R,R));
   }
@@ -3053,8 +3055,8 @@ takeStepLeapFrog( const real t0, const real dt )
       // make column "n" orthogonal to all previous columns "m"
       for( int m=0; m<n; m++ )
       {
-	real dot=e(0,m,next)*e(0,n,next)+e(1,m,next)*e(1,n,next)+e(2,m,next)*e(2,n,next);
-	e(R,n,next)-=dot*e(R,m,next);
+        real dot=e(0,m,next)*e(0,n,next)+e(1,m,next)*e(1,n,next)+e(2,m,next)*e(2,n,next);
+        e(R,n,next)-=dot*e(R,m,next);
       }
       // normalized column n
       real normInverse=1./max(REAL_MIN,SQRT( SQR(e(0,n,next))+SQR(e(1,n,next))+SQR(e(2,n,next))));
@@ -3080,12 +3082,12 @@ takeStepLeapFrog( const real t0, const real dt )
   if( false )
   {
     printF("RigidBodyMotion:takeStepLeapFrog: t=%e, current=%i x(next)=(%6.2e,%6.2e,%6.2e), w(current)=(%6.2e,%6.2e,%6.2e)\n",
-	   t,current,x(0,next),x(1,next),x(2,next),w(0,current),w(1,current),w(2,current));
+           t,current,x(0,next),x(1,next),x(2,next),w(0,current),w(1,current),w(2,current));
   }
   if( debug & 2 )
   {
     printF("--RBM--takeStepLeapFrog: integrate: t0=%e, t=%e, current=%i x(next)=(%6.2e,%6.2e,%6.2e)\n",
-	   t0,t,current,x(0,next),x(1,next),x(2,next));
+           t0,t,current,x(0,next),x(1,next),x(2,next));
   }
   
   
@@ -3199,17 +3201,17 @@ takeStepTrapezoid( const real t0, const real dt )
 
       for( int axis=0; axis<3; axis++ )
       {
-	const int axisp1=(axis+1) % 3;
-	const int axisp2=(axis+2) % 3;
-	wDot(axis)=( (mI(axisp1)-mI(axisp2))*w(axisp1,next)*w(axisp2,next) +
-		     gvn(0)*e(0,axis,next)+
-		     gvn(1)*e(1,axis,next)+
-		     gvn(2)*e(2,axis,next) )/mI(axis);
+        const int axisp1=(axis+1) % 3;
+        const int axisp2=(axis+2) % 3;
+        wDot(axis)=( (mI(axisp1)-mI(axisp2))*w(axisp1,next)*w(axisp2,next) +
+                     gvn(0)*e(0,axis,next)+
+                     gvn(1)*e(1,axis,next)+
+                     gvn(2)*e(2,axis,next) )/mI(axis);
     
-	wDotCurrent(axis)=( (mI(axisp1)-mI(axisp2))*w(axisp1,current)*w(axisp2,current)+
-			    gv(0)*e(0,axis,current)+
-			    gv(1)*e(1,axis,current)+ 
-			    gv(2)*e(2,axis,current) )/mI(axis);
+        wDotCurrent(axis)=( (mI(axisp1)-mI(axisp2))*w(axisp1,current)*w(axisp2,current)+
+                            gv(0)*e(0,axis,current)+
+                            gv(1)*e(1,axis,current)+ 
+                            gv(2)*e(2,axis,current) )/mI(axis);
       }
     }
   
@@ -3221,7 +3223,7 @@ takeStepTrapezoid( const real t0, const real dt )
     {
       w(R,next)=w(R,current)+.5*dt*( wDot(R)+wDotCurrent(R) );
     }
-	
+        
 
   }
   else
@@ -3235,9 +3237,9 @@ takeStepTrapezoid( const real t0, const real dt )
     if( debug & 2 )
     {
       printF("--RBM-TRAP-- Provided: t=%9.3e time=%9.3e, vDot=(%9.2e,%9.2e,%9.2e) wDot=(%9.2e,%9.2e,%9.2e)\n",
-	     t,timeProvided(next),
-	     vDotProvided(0,next),vDotProvided(1,next),vDotProvided(2,next),
-	     vDotProvided(3,next),vDotProvided(4,next),vDotProvided(5,next));
+             t,timeProvided(next),
+             vDotProvided(0,next),vDotProvided(1,next),vDotProvided(2,next),
+             vDotProvided(3,next),vDotProvided(4,next),vDotProvided(5,next));
     }
     
     Range Rw=R+3;
@@ -3265,11 +3267,11 @@ takeStepTrapezoid( const real t0, const real dt )
     assert( timeProvided(current)==t0 );
 
     printF("--RBM-TP-- vDot=(%8.2e,%8.2e,%8.2e), wDot=(%8.2e,%8.2e,%8.2e)   (t=%9.3e)\n"
-	   " provided: vDot=(%8.2e,%8.2e,%8.2e), wDot=(%8.2e,%8.2e,%8.2e) \n",        
-	   vDot(0),vDot(1),vDot(2),
-	   wDot(0),wDot(1),wDot(2),  t,
-	   vDotProvided(0,current),vDotProvided(1,current),vDotProvided(2,current),
-	   vDotProvided(3,current),vDotProvided(4,current),vDotProvided(5,current));
+           " provided: vDot=(%8.2e,%8.2e,%8.2e), wDot=(%8.2e,%8.2e,%8.2e) \n",        
+           vDot(0),vDot(1),vDot(2),
+           wDot(0),wDot(1),wDot(2),  t,
+           vDotProvided(0,current),vDotProvided(1,current),vDotProvided(2,current),
+           vDotProvided(3,current),vDotProvided(4,current),vDotProvided(5,current));
   }
 
 
@@ -3316,8 +3318,8 @@ takeStepTrapezoid( const real t0, const real dt )
       // make column "n" orthogonal to all previous columns "m"
       for( int m=0; m<n; m++ )
       {
-	real dot=e(0,m,next)*e(0,n,next)+e(1,m,next)*e(1,n,next)+e(2,m,next)*e(2,n,next);
-	e(R,n,next)-=dot*e(R,m,next);
+        real dot=e(0,m,next)*e(0,n,next)+e(1,m,next)*e(1,n,next)+e(2,m,next)*e(2,n,next);
+        e(R,n,next)-=dot*e(R,m,next);
       }
       // normalized column n
       real normInverse=1./max(REAL_MIN,SQRT( SQR(e(0,n,next))+SQR(e(1,n,next))+SQR(e(2,n,next))));
@@ -3363,8 +3365,8 @@ orthoNormalizeMatrix( RealArray & e, int k /* =0 */ ) const
 // ============================================================================================
 int RigidBodyMotion::
 getMassTimesAcceleration( real t,
-			  RealArray & mvDot,
-			  RealArray & mOmegaDot )
+                          RealArray & mvDot,
+                          RealArray & mOmegaDot )
 {
   mvDot.redim(R);
   mOmegaDot.redim(R);
@@ -3376,19 +3378,19 @@ getMassTimesAcceleration( real t,
     {
       RealArray vDot(3),omegaDot(3);
       getKnownSolution( t, 
-			Overture::nullRealArray(),  // xCM
-			Overture::nullRealArray(),  // vCM
-			vDot,
-			Overture::nullRealArray(), // omega
-			omegaDot );
+                        Overture::nullRealArray(),  // xCM
+                        Overture::nullRealArray(),  // vCM
+                        vDot,
+                        Overture::nullRealArray(), // omega
+                        omegaDot );
 
       mvDot=mass*vDot;
       mOmegaDot=mass*omegaDot;
 
       if( logFile!=NULL )
-	fPrintF(logFile,"--RBM--getMassTimesAcceleration:WARNING: current<0 t=%9.3e : "
-		"Using known solution, vDot=[%g,%g,%g] omegaDot=[%g,%g,%g].\n",t,
-		vDot(0),vDot(1),vDot(2),omegaDot(0),omegaDot(1),omegaDot(2) );
+        fPrintF(logFile,"--RBM--getMassTimesAcceleration:WARNING: current<0 t=%9.3e : "
+                "Using known solution, vDot=[%g,%g,%g] omegaDot=[%g,%g,%g].\n",t,
+                vDot(0),vDot(1),vDot(2),omegaDot(0),omegaDot(1),omegaDot(2) );
 
     }
     else if( dbase.get<bool>("forcesInitialized") )
@@ -3396,9 +3398,9 @@ getMassTimesAcceleration( real t,
       // -- The forces have been initialized by a call to correct at t=0 ---
       if( t<0. )
       {
-	if( logFile!=NULL )
-	  fPrintF(logFile,"--RBM--getMassTimesAcceleration:WARNING: current<0 t=%9.3e : "
-		  "setting mass*acceleration to t=0 value *FIX ME*\n",t);
+        if( logFile!=NULL )
+          fPrintF(logFile,"--RBM--getMassTimesAcceleration:WARNING: current<0 t=%9.3e : "
+                  "setting mass*acceleration to t=0 value *FIX ME*\n",t);
       }
       mvDot = f(R,0);
       mOmegaDot= g(R,0);// not correct if initial angular velocity is not zero : missing omega X (A omega) term ***
@@ -3406,8 +3408,8 @@ getMassTimesAcceleration( real t,
     else
     {
       if( logFile!=NULL )
-	fPrintF(logFile,"--RBM--getMassTimesAcceleration:WARNING: current<0 t=%9.3e : "
-		"setting mass*acceleration=0 *FIX ME*\n",t);
+        fPrintF(logFile,"--RBM--getMassTimesAcceleration:WARNING: current<0 t=%9.3e : "
+                "setting mass*acceleration=0 *FIX ME*\n",t);
 
       mvDot=0.; mOmegaDot=0.;
       // mvDot(0) = (density-1.)*1.; // *FUDGE* GRAVITY TERM
@@ -3757,8 +3759,8 @@ takeStepExtrapolation( const real t0, const real dt )
   if( logFile!=NULL )
   {
     fPrintF(logFile," EXTRAP to t=%9.3e: x(next)=(%11.4e,%11.4e,%11.4e) v(next)=(%11.4e,%11.4e,%11.4e) "
-	    "w(next)=(%11.4e,%11.4e,%11.4e)\n",t,x(0,next),x(1,next),x(2,next), 
-	    v(0,next),v(1,next),v(2,next),w(0,next),w(1,next),w(2,next));
+            "w(next)=(%11.4e,%11.4e,%11.4e)\n",t,x(0,next),x(1,next),x(2,next), 
+            v(0,next),v(1,next),v(2,next),w(0,next),w(1,next),w(2,next));
   }
 
 
@@ -3800,8 +3802,8 @@ takeStepExtrapolation( const real t0, const real dt )
 //   if( logFile!=NULL )
 //   {
 //     fPrintF(logFile," predict (extrap): t=%9.3e, x(next)=(%11.4e,%11.4e,%11.4e), v(next)=(%11.4e,%11.4e,%11.4e), cur=%i, next=%i\n"
-// 	    "     w(next)=(%11.4e,%11.4e,%11.4e) [ orderOfExtrapolationPredictor=%i].\n",
-// 	    t,x(0,next),x(1,next),x(2,next),v(0,next),v(1,next),v(2,next),current,next,
+//          "     w(next)=(%11.4e,%11.4e,%11.4e) [ orderOfExtrapolationPredictor=%i].\n",
+//          t,x(0,next),x(1,next),x(2,next),v(0,next),v(1,next),v(2,next),current,next,
 //             w(0,next),w(1,next),w(2,next),orderOfExtrapPredict);
 //     fflush(logFile);
 //   }
@@ -4037,7 +4039,7 @@ dirkImplicitSolve( const real dt, const real aii, const real tc, const RealArray
 
     // omega: (LEAK found *wdh* 2012/02/19 -- need evaluate
     rk(R+3) = mult(Ak,evaluate(omegavk-omegav0)) - adt*( -mult(Omegak,mult(Ak,omegavk)) 
-							 -mult(A21,vvk) - mult(A22,omegavk) + gvnp1 );
+                                                         -mult(A21,vvk) - mult(A22,omegavk) + gvnp1 );
 
     // E:   
     int mr=6;
@@ -4079,18 +4081,18 @@ dirkImplicitSolve( const real dt, const real aii, const real tc, const RealArray
     {
       // Here is d(fomega)/d(ev(j))
       Jk(R+3,R+mr) = Lambda(j,j)*( dot(eak(R,j),dOmega1)*eye + mult(eak(R,j),trans(dOmega1)) ) 
-	+ (Lambda(j,j)*adt)*mult(Omegak, evaluate(dot(eak(R,j),omegavk)*eye + mult(eak(R,j),trans(omegavk))) );
+        + (Lambda(j,j)*adt)*mult(Omegak, evaluate(dot(eak(R,j),omegavk)*eye + mult(eak(R,j),trans(omegavk))) );
 
       if( twilightZone )
       {
         // add on the correction for gvnp1 depending on A and thus on E. 
-	Jk(R+3,R+mr) +=
-	  (Lambda(j,j)*adt)*mult(OmegaExact, evaluate(dot(eak(R,j),omegavExact)*eye + mult(eak(R,j),trans(omegavExact))) );
+        Jk(R+3,R+mr) +=
+          (Lambda(j,j)*adt)*mult(OmegaExact, evaluate(dot(eak(R,j),omegavExact)*eye + mult(eak(R,j),trans(omegavExact))) );
       }
       
       mr=mr+3; 
     }
-				  
+                                  
     // printF("dot(eak(R,0),dOmega1)=%8.2e\n",dot(eak(R,0),dOmega1));
     // printF("dot(eak(R,1),dOmega1)=%8.2e\n",dot(eak(R,1),dOmega1));
 
@@ -4152,7 +4154,7 @@ dirkImplicitSolve( const real dt, const real aii, const real tc, const RealArray
   if( maxCorrection>rkTol )
   {
     printF("RBM:dirkImplicitSolve:WARNING: No convergence in Newton after %d iterations,. maxCorrection=%8.2e, tol=%8.2e\n",
-	   maxIterations,maxCorrection,rkTol);
+           maxIterations,maxCorrection,rkTol);
   }
   else
   {
@@ -4169,12 +4171,12 @@ dirkImplicitSolve( const real dt, const real aii, const real tc, const RealArray
     rk(R+3) = -mult(A21,vvk) - mult(A22,omegavk) + gvnp1;
     fPrintF(logFile,
             "RBM:DIRK%i: t=%9.3e: its=%i, v =(%12.5e,%12.5e,%12.5e) w =(%12.5e,%12.5e,%12.5e)\n"
-	    "                               v0=(%12.5e,%12.5e,%12.5e) w0=(%12.5e,%12.5e,%12.5e)\n"
-	    "  -A11*v-A12*w+f = (%12.5e,%12.5e,%12.5e) f=(%12.5e,%12.5e,%12.5e) \n"
-	    "  -A21*v-A22*w+g = (%12.5e,%12.5e,%12.5e) g=(%12.5e,%12.5e,%12.5e) \n",
+            "                               v0=(%12.5e,%12.5e,%12.5e) w0=(%12.5e,%12.5e,%12.5e)\n"
+            "  -A11*v-A12*w+f = (%12.5e,%12.5e,%12.5e) f=(%12.5e,%12.5e,%12.5e) \n"
+            "  -A21*v-A22*w+g = (%12.5e,%12.5e,%12.5e) g=(%12.5e,%12.5e,%12.5e) \n",
             orderOfAccuracy,tc,k+1,
             vvk(0),vvk(1),vvk(2), omegavk(0),omegavk(1),omegavk(2),
-	    vv0(0),vv0(1),vv0(2), omegav0(0),omegav0(1),omegav0(2),
+            vv0(0),vv0(1),vv0(2), omegav0(0),omegav0(1),omegav0(2),
             rk(0),rk(1),rk(2), fvnp1(0), fvnp1(1), fvnp1(2), rk(3),rk(4),rk(5), gvnp1(0),gvnp1(1),gvnp1(2));
   }
   
@@ -4267,27 +4269,27 @@ getExactSolution( const int deriv, const real t, RealArray & xe, RealArray & ve 
 
       if( deriv==0 )
       {
-	for( int j=0; j<3; j++ )
-	{
-	  xe(j) = amp(j,0)*( 1. + c1*t + c2*t*t + c3*t*t*t );
-	  ve(j) = amp(j,0)*(      c1   +2.*c2*t + 3.*c3*t*t );
-	  we(j) = amp(j,1)*( 1. + .5*c1*t + .25*c2*t*t +.5*c3*t*t*t );
-	}
-	
+        for( int j=0; j<3; j++ )
+        {
+          xe(j) = amp(j,0)*( 1. + c1*t + c2*t*t + c3*t*t*t );
+          ve(j) = amp(j,0)*(      c1   +2.*c2*t + 3.*c3*t*t );
+          we(j) = amp(j,1)*( 1. + .5*c1*t + .25*c2*t*t +.5*c3*t*t*t );
+        }
+        
       }
       else if( deriv==1 )
       { // time derivative 
-	for( int j=0; j<3; j++ )
-	{
-	  xe(j) = amp(j,0)*( c1 + 2.*c2*t + 3.*c3*t*t );
-	  ve(j) = amp(j,0)*(      2.*c2   + 6.*c3*t );
-	  we(j) = amp(j,1)*( .5*c1 + .5*c2*t + 1.5*c3*t*t );
-	}
+        for( int j=0; j<3; j++ )
+        {
+          xe(j) = amp(j,0)*( c1 + 2.*c2*t + 3.*c3*t*t );
+          ve(j) = amp(j,0)*(      2.*c2   + 6.*c3*t );
+          we(j) = amp(j,1)*( .5*c1 + .5*c2*t + 1.5*c3*t*t );
+        }
       }
       else
       {
-	printF("getExactSolution:ERROR:polynomialTwilightZone: deriv=%d\n",deriv);
-	OV_ABORT("ERROR");
+        printF("getExactSolution:ERROR:polynomialTwilightZone: deriv=%d\n",deriv);
+        OV_ABORT("ERROR");
       }
 
     }
@@ -4300,27 +4302,27 @@ getExactSolution( const int deriv, const real t, RealArray & xe, RealArray & ve 
 
       if( deriv==0 )
       {
-	for( int j=0; j<3; j++ )
-	{
-	  xe(j) = amp(j,0)/freq(j,0)*sin( freq(j,0)*( t-tOffset(j,0) ) );
-	  ve(j) = amp(j,0)*cos( freq(j,0)*( t-tOffset(j,0) ));
-	  we(j) = amp(j,1)*cos( freq(j,1)*( t-tOffset(j,1) ));
-	}
-	
+        for( int j=0; j<3; j++ )
+        {
+          xe(j) = amp(j,0)/freq(j,0)*sin( freq(j,0)*( t-tOffset(j,0) ) );
+          ve(j) = amp(j,0)*cos( freq(j,0)*( t-tOffset(j,0) ));
+          we(j) = amp(j,1)*cos( freq(j,1)*( t-tOffset(j,1) ));
+        }
+        
       }
       else if( deriv==1 )
       {
-	for( int j=0; j<3; j++ )
-	{
-	  xe(j) =  amp(j,0)*cos( freq(j,0)*( t-tOffset(j,0) ) );
-	  ve(j) = -amp(j,0)*freq(j,0)*sin( freq(j,0)*( t-tOffset(j,0) ));
-	  we(j) = -amp(j,1)*freq(j,1)*sin( freq(j,1)*( t-tOffset(j,1) ));
-	}
+        for( int j=0; j<3; j++ )
+        {
+          xe(j) =  amp(j,0)*cos( freq(j,0)*( t-tOffset(j,0) ) );
+          ve(j) = -amp(j,0)*freq(j,0)*sin( freq(j,0)*( t-tOffset(j,0) ));
+          we(j) = -amp(j,1)*freq(j,1)*sin( freq(j,1)*( t-tOffset(j,1) ));
+        }
       }
       else
       {
-	printF("getExactSolution:ERROR:trigonometricTwilightZone: deriv=%d\n",deriv);
-	OV_ABORT("ERROR");
+        printF("getExactSolution:ERROR:trigonometricTwilightZone: deriv=%d\n",deriv);
+        OV_ABORT("ERROR");
       }
     }
     else
@@ -4390,7 +4392,7 @@ getTimeStepEstimate() const
     dtMax=-1.;
 
 //    printf("RigidBodyMotion::getTimeStepEstimate: v(current)=(%8.2e,%8.2e,%8.2e) v(prev)=(%8.2e,%8.2e,%8.2e)\n",
-//  	 v(0,current),v(1,current),v(2,current), v(0,previous),v(1,previous),v(2,previous));
+//       v(0,current),v(1,current),v(2,current), v(0,previous),v(1,previous),v(2,previous));
   
   if( false )
   {
@@ -4532,12 +4534,12 @@ getAxesOfInertia( real t, RealArray & axesOfInertia  ) const
     axesOfInertia.redim(3,3);
 
   return getCoordinates(t,
-			Overture::nullRealArray(), // xCM
-			Overture::nullRealArray(), // vCM
-			Overture::nullRealArray(), // rotation
-			Overture::nullRealArray(), // omega
-			Overture::nullRealArray(), // omegaDot
-			Overture::nullRealArray(),// axesOfInertia
+                        Overture::nullRealArray(), // xCM
+                        Overture::nullRealArray(), // vCM
+                        Overture::nullRealArray(), // rotation
+                        Overture::nullRealArray(), // omega
+                        Overture::nullRealArray(), // omegaDot
+                        Overture::nullRealArray(),// axesOfInertia
                         axesOfInertia); 
 }
 
@@ -4554,12 +4556,12 @@ getMomentOfInertiaTensor( real t, RealArray & momentOfInertiaTensor  ) const
 
   return getCoordinates(t,
                         Overture::nullRealArray(), // xCM
-			Overture::nullRealArray(), // vCM
-			Overture::nullRealArray(), // rotation
-			Overture::nullRealArray(), // omega
-			Overture::nullRealArray(), // omegaDot
-			Overture::nullRealArray(), // aCM
-			Overture::nullRealArray(), // axesOfInertia
+                        Overture::nullRealArray(), // vCM
+                        Overture::nullRealArray(), // rotation
+                        Overture::nullRealArray(), // omega
+                        Overture::nullRealArray(), // omegaDot
+                        Overture::nullRealArray(), // aCM
+                        Overture::nullRealArray(), // axesOfInertia
                         momentOfInertiaTensor); 
 }
 
@@ -4658,8 +4660,8 @@ getAngularVelocities( real t, RealArray & omega  ) const
 int RigidBodyMotion::
 getRotationMatrix( real t, 
                    RealArray & r,                     
-		   RealArray & rDot /* = Overture::nullRealArray() */,
-		   RealArray & rDotDot /* = Overture::nullRealArray()  */) const
+                   RealArray & rDot /* = Overture::nullRealArray() */,
+                   RealArray & rDotDot /* = Overture::nullRealArray()  */) const
 // =======================================================================================
 // /Description:
 //    Return the rotation matrix at time t and optionally the first and second time
@@ -4724,8 +4726,8 @@ getRotationMatrix( real t,
 //\begin{>>RigidBodyMotionInclude.tex}{\subsection{getPointTransformationMatrix}} 
 int RigidBodyMotion::
 getPointTransformationMatrix( real t, 
-			      RealArray & rDotRt /* = Overture::nullRealArray() */,
-			      RealArray & rDotDotRt /* = Overture::nullRealArray()  */) const
+                              RealArray & rDotRt /* = Overture::nullRealArray() */,
+                              RealArray & rDotDotRt /* = Overture::nullRealArray()  */) const
 // =======================================================================================
 // /Description:
 //
@@ -4828,12 +4830,12 @@ getPointAcceleration( real t, const RealArray & p, RealArray & ap) const
 
 int RigidBodyMotion::
 getCoordinates( real t, 
-		RealArray & xCM      /* = Overture::nullRealArray() */, 
-		RealArray & vCM      /* = Overture::nullRealArray() */,
-		RealArray & rotation /* = Overture::nullRealArray() */, 
-		RealArray & omega    /* = Overture::nullRealArray() */, 
-		RealArray & omegaDot /* = Overture::nullRealArray() */, 
-		RealArray & aCM      /* = Overture::nullRealArray() */,
+                RealArray & xCM      /* = Overture::nullRealArray() */, 
+                RealArray & vCM      /* = Overture::nullRealArray() */,
+                RealArray & rotation /* = Overture::nullRealArray() */, 
+                RealArray & omega    /* = Overture::nullRealArray() */, 
+                RealArray & omegaDot /* = Overture::nullRealArray() */, 
+                RealArray & aCM      /* = Overture::nullRealArray() */,
                 RealArray & axesOfInertia /* = Overture::nullRealArray() */,
                 RealArray & momentOfInertiaTensor /* = Overture::nullRealArray() */ ) const
 // =======================================================================================
@@ -4884,9 +4886,9 @@ getCoordinates( real t,
     for( int j=0; j<numberSaved; j++ )
     {
       if( t<time(i) )
-	i=(i-1+maximumNumberToSave) % maximumNumberToSave;
+        i=(i-1+maximumNumberToSave) % maximumNumberToSave;
       else
-	break;
+        break;
     }
     if( t<time(i) )
     {
@@ -4921,7 +4923,7 @@ getCoordinates( real t,
   if( FALSE )
   {
     printF("RigidBodyMotion::getPosition:alpha=%e, t=%e, i=%i, ip1=%i time(i)=%e, time(ip1)=%e \n",
-	   alpha,t,i,ip1,time(i),time(ip1));
+           alpha,t,i,ip1,time(i),time(ip1));
   }
   
   if( xCM.getLength(0)>=3 )
@@ -4954,8 +4956,8 @@ getCoordinates( real t,
     if( t<=0. && useKnownSolution )
     {
       if( logFile!=NULL )
-	fPrintF(logFile,"--RBM-- INFO: using known velocity=[%g,%g,%g] at initial or past time t=%e \n",
-		vInitial(0),vInitial(1),vInitial(2),t);
+        fPrintF(logFile,"--RBM-- INFO: using known velocity=[%g,%g,%g] at initial or past time t=%e \n",
+                vInitial(0),vInitial(1),vInitial(2),t);
 
       vCM(R)=vInitial;
     }
@@ -4969,7 +4971,7 @@ getCoordinates( real t,
   const bool computeAxesOfInertia = axesOfInertia.getLength(0)>=3 && axesOfInertia.getLength(1)>=3;
   const bool computeRotationMatrix = rotation.getLength(0)>=3 && rotation.getLength(1)>=3;
   const bool computeMomentOfInertiaTensor = (momentOfInertiaTensor.getLength(0)>=3 && 
-					     momentOfInertiaTensor.getLength(1)>=3);
+                                             momentOfInertiaTensor.getLength(1)>=3);
   
   RealArray ePast;
   if( t<=0. && useKnownSolution && (computeRotationMatrix || computeAxesOfInertia || computeMomentOfInertiaTensor ) )
@@ -4987,7 +4989,7 @@ getCoordinates( real t,
     RealArray wm(3);
     real tm=0; 
     getKnownSolution( tm, Overture::nullRealArray(), Overture::nullRealArray(), 
-		      Overture::nullRealArray(), wm, Overture::nullRealArray()  );
+                      Overture::nullRealArray(), wm, Overture::nullRealArray()  );
 
     // eDot0 = eDot(t=0) :   eDot =  w X e
     RealArray eDot0(3,3);
@@ -5002,7 +5004,7 @@ getCoordinates( real t,
     // Get omega(dt)
     tm=dt;
     getKnownSolution( tm, Overture::nullRealArray(), Overture::nullRealArray(), 
-		      Overture::nullRealArray(), wm, Overture::nullRealArray()  );
+                      Overture::nullRealArray(), wm, Overture::nullRealArray()  );
 
     // eDot1 = eDot(-dt) 
     RealArray eDot1(3,3);
@@ -5029,13 +5031,13 @@ getCoordinates( real t,
 
       if( false )
       {
-	printF("\n ++++ --RBM-- getCoords: rotation matrix computed at past time t=%9.3e using "
-	       " E + .5*dt*(Edot(0)+Edot(dt))\n\n",t);
-	::display(ePast,"ePast","%12.8f ");
+        printF("\n ++++ --RBM-- getCoords: rotation matrix computed at past time t=%9.3e using "
+               " E + .5*dt*(Edot(0)+Edot(dt))\n\n",t);
+        ::display(ePast,"ePast","%12.8f ");
       }
       
       if( logFile!=NULL )
-	fPrintF(logFile,"--RBM-- INFO: computing rotation matrix at initial or past time t=%e using w0=[%g,%g,%g]\n",
+        fPrintF(logFile,"--RBM-- INFO: computing rotation matrix at initial or past time t=%e using w0=[%g,%g,%g]\n",
                 t,w0(0),w0(1),w0(2));
 
     }
@@ -5072,8 +5074,8 @@ getCoordinates( real t,
     if( t<=0. && useKnownSolution )
     {
       if( logFile!=NULL )
-	fPrintF(logFile,"--RBM-- INFO: using known omega=[%g,%g,%g] at initial or past time t=%e \n",
-		wInitial(0),wInitial(1),wInitial(2),t);
+        fPrintF(logFile,"--RBM-- INFO: using known omega=[%g,%g,%g] at initial or past time t=%e \n",
+                wInitial(0),wInitial(1),wInitial(2),t);
 
       omega(R)=wInitial;
     }
@@ -5114,9 +5116,9 @@ getCoordinates( real t,
     {
       int ipm1 = (ipp1-1 +maximumNumberToSave) % maximumNumberToSave; 
       if( timeProvided(ipm1)>t )
-	ipp1=ipm1;  // decrease ipp1
+        ipp1=ipm1;  // decrease ipp1
       else
-	break;
+        break;
     }
     // ip = ipp1 -1 
     ip=numberProvided<=1 ? ipp1 : (ipp1-1 +maximumNumberToSave) % maximumNumberToSave;     
@@ -5133,8 +5135,8 @@ getCoordinates( real t,
     if( t<=0. && useKnownSolution )
     {
       if( logFile!=NULL )
-	fPrintF(logFile,"--RBM-- INFO: using known acceleration=[%g,%g,%g] at initial or past time t=%e \n",
-		vDotInitial(0),vDotInitial(1),vDotInitial(2),t);
+        fPrintF(logFile,"--RBM-- INFO: using known acceleration=[%g,%g,%g] at initial or past time t=%e \n",
+                vDotInitial(0),vDotInitial(1),vDotInitial(2),t);
 
       aCM(R)=vDotInitial;
     }
@@ -5157,10 +5159,10 @@ getCoordinates( real t,
       // for( int j=0; j<numberProvided-1; j++ )
       // {
       //   int ipm1 = (ipp1-1 +maximumNumberToSave) % maximumNumberToSave; 
-      // 	if( timeProvided(ipm1)>t )
-      // 	  ipp1=ipm1;  // decrease ipp1
-      // 	else
-      // 	  break;
+      //        if( timeProvided(ipm1)>t )
+      //          ipp1=ipm1;  // decrease ipp1
+      //        else
+      //          break;
       // }
       // // ip = ipp1 -1 
       // int ip=numberProvided<=1 ? ipp1 : (ipp1-1 +maximumNumberToSave) % maximumNumberToSave;     
@@ -5173,17 +5175,17 @@ getCoordinates( real t,
       aCM(R)= (1.-beta)*vDotProvided(R,ipp1)+beta*vDotProvided(R,ip);
 
       if( logFile!=NULL )
-	fPrintF(logFile,"getAcceleration: t=%8.2e, mass=%8.2e, a-provided = (%6.2e,%6.2e,%6.2e), "
-		"ip=%i, ipp1=%i, beta=%7.1e times=[%9.3e,%9.3e] a1=[%9.3e,%9.3e] numberProvided=%i\n",
+        fPrintF(logFile,"getAcceleration: t=%8.2e, mass=%8.2e, a-provided = (%6.2e,%6.2e,%6.2e), "
+                "ip=%i, ipp1=%i, beta=%7.1e times=[%9.3e,%9.3e] a1=[%9.3e,%9.3e] numberProvided=%i\n",
                 t,mass,aCM(0),aCM(1),aCM(2),ip,ipp1,beta,
                 timeProvided(ip),timeProvided(ipp1),vDotProvided(0,ip),vDotProvided(0,ipp1),numberProvided );
 
       if( true || debug & 4 )
       {
-	printF("--RBM-- getAcceleration:  t=%8.2e, mass=%8.2e, a-provided = (%6.2e,%6.2e,%6.2e), "
-	       "ip=%i, ipp1=%i, beta=%7.1e times=[%9.3e,%9.3e] a1=[%9.3e,%9.3e] numberProvided=%i \n",
-	       t,mass,aCM(0),aCM(1),aCM(2),ip,ipp1,beta,
-	       timeProvided(ip),timeProvided(ipp1),vDotProvided(0,ip),vDotProvided(0,ipp1),numberProvided );
+        printF("--RBM-- getAcceleration:  t=%8.2e, mass=%8.2e, a-provided = (%6.2e,%6.2e,%6.2e), "
+               "ip=%i, ipp1=%i, beta=%7.1e times=[%9.3e,%9.3e] a1=[%9.3e,%9.3e] numberProvided=%i \n",
+               t,mass,aCM(0),aCM(1),aCM(2),ip,ipp1,beta,
+               timeProvided(ip),timeProvided(ipp1),vDotProvided(0,ip),vDotProvided(0,ipp1),numberProvided );
 
       }
       
@@ -5193,16 +5195,16 @@ getCoordinates( real t,
       // -- The acceleration is computed from the equations of motion --
       if( mass>0 )
       {
-	aCM(R)=((1.-alpha)*f(R,ip1)+alpha*f(R,i))/mass;
+        aCM(R)=((1.-alpha)*f(R,ip1)+alpha*f(R,i))/mass;
       }
       else
       { // mass and force may be zero on first step of AMP scheme: 
-	aCM(R)=((1.-alpha)*f(R,ip1)+alpha*f(R,i))/(mass+REAL_MIN);
+        aCM(R)=((1.-alpha)*f(R,ip1)+alpha*f(R,i))/(mass+REAL_MIN);
 
       }
       
       if( logFile!=NULL )
-	fPrintF(logFile,"getAcceleration: t=%8.2e, mass=%8.2e, a=F/m = (%6.2e,%6.2e,%6.2e), "
+        fPrintF(logFile,"getAcceleration: t=%8.2e, mass=%8.2e, a=F/m = (%6.2e,%6.2e,%6.2e), "
                "i=%i, ip1=%i, alpha=%7.1e \n",t,mass,aCM(0),aCM(1),aCM(2),i,ip1,alpha);
     }
     else
@@ -5236,16 +5238,16 @@ getCoordinates( real t,
       
       if( false )
       {
-	printF("RigidBodyMotion::getAcceleration: t=%8.2e, mass=%8.2e,  a=F/m=(%6.2e,%6.2e,%6.2e), dv/dt=(%6.2e,%6.2e,%6.2e)\n"
-	       " i=%i, ip1=%i, dt=%8.2e, .. .USE dv/dt for addedMass case. \n",
-	       t,mass,aCM(0),aCM(1),aCM(2),dvdt(0),dvdt(1),dvdt(2),i,ip1,dt);
+        printF("RigidBodyMotion::getAcceleration: t=%8.2e, mass=%8.2e,  a=F/m=(%6.2e,%6.2e,%6.2e), dv/dt=(%6.2e,%6.2e,%6.2e)\n"
+               " i=%i, ip1=%i, dt=%8.2e, .. .USE dv/dt for addedMass case. \n",
+               t,mass,aCM(0),aCM(1),aCM(2),dvdt(0),dvdt(1),dvdt(2),i,ip1,dt);
       }
       
       if( logFile!=NULL )
       {
-	fPrintF(logFile,
+        fPrintF(logFile,
                 " getAcceleration: t=%8.2e, a=F/m=(%6.2e,%6.2e,%6.2e), dv/dt=(%6.2e,%6.2e,%6.2e)\n"
-		"              mass=%8.2e, i=%i, ip1=%i, dt=%8.2e, current=%i, .. .USE dv/dt for addedMass case. \n",
+                "              mass=%8.2e, i=%i, ip1=%i, dt=%8.2e, current=%i, .. .USE dv/dt for addedMass case. \n",
                 t,aCM(0),aCM(1),aCM(2),dvdt(0),dvdt(1),dvdt(2),  mass,i,ip1,dt,current);
       }
 
@@ -5254,7 +5256,7 @@ getCoordinates( real t,
       if( maxDvdt>accelerationLimit )
       {
         dvdt=min(accelerationLimit,max(-accelerationLimit,dvdt));
-	printF("RigidBodyMotion::***** limiting the acceleration to %8.2e\n",accelerationLimit);
+        printF("RigidBodyMotion::***** limiting the acceleration to %8.2e\n",accelerationLimit);
       }
       
 
@@ -5279,7 +5281,7 @@ getCoordinates( real t,
     {
       ea=ePast;
       if( logFile!=NULL )
-	fPrintF(logFile,"--RBM-- INFO: setting momentOfInertiaTensor at initial or past time t=%e.\n",t);
+        fPrintF(logFile,"--RBM-- INFO: setting momentOfInertiaTensor at initial or past time t=%e.\n",t);
     }
     else
     {
@@ -5299,8 +5301,8 @@ getCoordinates( real t,
     if( t<=0. && useKnownSolution )
     {
       if( logFile!=NULL )
-	fPrintF(logFile,"--RBM-- INFO: using known omegaDot=[%g,%g,%g] at initial or past time t=%e \n",
-		wDotInitial(0),wDotInitial(1),wDotInitial(2),t);
+        fPrintF(logFile,"--RBM-- INFO: using known omegaDot=[%g,%g,%g] at initial or past time t=%e \n",
+                wDotInitial(0),wDotInitial(1),wDotInitial(2),t);
 
       omegaDot(R)=wDotInitial;
     }
@@ -5323,10 +5325,10 @@ getCoordinates( real t,
       // for( int j=0; j<numberProvided-1; j++ )
       // {
       //   int ipm1 = (ipp1-1 +maximumNumberToSave) % maximumNumberToSave; 
-      // 	if( timeProvided(ipm1)>t )
-      // 	  ipp1=ipm1;  // decrease ipp1
-      // 	else
-      // 	  break;
+      //        if( timeProvided(ipm1)>t )
+      //          ipp1=ipm1;  // decrease ipp1
+      //        else
+      //          break;
       // }
       // // ip = ipp1 -1 
       // int ip=numberProvided<=1 ? ipp1 : (ipp1-1 +maximumNumberToSave) % maximumNumberToSave;     
@@ -5340,16 +5342,16 @@ getCoordinates( real t,
 
       if( logFile!=NULL )
       {
-	fPrintF(logFile,
-		" getOmegaDot: t=%8.2e, use provided: wDot=(%6.2e,%6.2e,%6.2e), mI=(%8.2e,%8.2e,%8.2e) (ipp1,t)=(%i,%8.2e), (ip,t)=(%i,%8.2e) weights=[%g,%g] \n",
-		t,omegaDot(0),omegaDot(1),omegaDot(2),mI(0),mI(1),mI(2),
+        fPrintF(logFile,
+                " getOmegaDot: t=%8.2e, use provided: wDot=(%6.2e,%6.2e,%6.2e), mI=(%8.2e,%8.2e,%8.2e) (ipp1,t)=(%i,%8.2e), (ip,t)=(%i,%8.2e) weights=[%g,%g] \n",
+                t,omegaDot(0),omegaDot(1),omegaDot(2),mI(0),mI(1),mI(2),
                 ipp1,timeProvided(ipp1),ip,timeProvided(ip),1-beta,beta);
       }
       
      if( debug & 3  )
       {
-	printF("--RBM-- getOmegaDot: t=%8.2e, use provided: wDot=(%6.2e,%6.2e,%6.2e), mI=(%8.2e,%8.2e,%8.2e) (ipp1,t)=(%i,%8.2e), (ip,t)=(%i,%8.2e) weights=[%g,%g] \n",
-		t,omegaDot(0),omegaDot(1),omegaDot(2),mI(0),mI(1),mI(2),
+        printF("--RBM-- getOmegaDot: t=%8.2e, use provided: wDot=(%6.2e,%6.2e,%6.2e), mI=(%8.2e,%8.2e,%8.2e) (ipp1,t)=(%i,%8.2e), (ip,t)=(%i,%8.2e) weights=[%g,%g] \n",
+                t,omegaDot(0),omegaDot(1),omegaDot(2),mI(0),mI(1),mI(2),
                 ipp1,timeProvided(ipp1),ip,timeProvided(ip),1-beta,beta);
       }     
     }
@@ -5373,9 +5375,9 @@ getCoordinates( real t,
 
       if( logFile!=NULL )
       {
-	fPrintF(logFile,
-		" getOmegaDot: t=%8.2e, use provided: wDot=(%6.2e,%6.2e,%6.2e), mI=(%8.2e,%8.2e,%8.2e) (i,t)=(%i,%8.2e), (jp1,t)=(%i,%8.2e) beta=%8.2e, ip1=%i stageAccelerationProvided=%i \n",
-		t,omegaDot(0),omegaDot(1),omegaDot(2),mI(0),mI(1),mI(2),i,timeProvided(i),jp1,timeProvided(jp1),beta,
+        fPrintF(logFile,
+                " getOmegaDot: t=%8.2e, use provided: wDot=(%6.2e,%6.2e,%6.2e), mI=(%8.2e,%8.2e,%8.2e) (i,t)=(%i,%8.2e), (jp1,t)=(%i,%8.2e) beta=%8.2e, ip1=%i stageAccelerationProvided=%i \n",
+                t,omegaDot(0),omegaDot(1),omegaDot(2),mI(0),mI(1),mI(2),i,timeProvided(i),jp1,timeProvided(jp1),beta,
                 ip1,stageAccelerationProvided);
       }
 
@@ -5385,113 +5387,113 @@ getCoordinates( real t,
 
       for( int axis=0; axis<3; axis++ )
       {
-	const int axisp1=(axis+1) % 3;
-	const int axisp2=(axis+2) % 3;
-	if( true )
-	{
-	  // *new way* 2012/01/16
+        const int axisp1=(axis+1) % 3;
+        const int axisp2=(axis+2) % 3;
+        if( true )
+        {
+          // *new way* 2012/01/16
 
-	  //  h' = g, h =A*w,  A= E*Lambda*E^T, A^{-1} = E*Lambda^{-1}*E^T
-	  //  A * wDot = - Omega*A*w  + g 
+          //  h' = g, h =A*w,  A= E*Lambda*E^T, A^{-1} = E*Lambda^{-1}*E^T
+          //  A * wDot = - Omega*A*w  + g 
 
-	  RealArray ea(3,3), Lambda(3,3), A(3,3), Ai(3,3), Omega(3,3), wv(3), gv(3);
-	  Lambda=0.;
-	  Lambda(0,0)=mI(0); Lambda(1,1)=mI(1); Lambda(2,2)=mI(2);
+          RealArray ea(3,3), Lambda(3,3), A(3,3), Ai(3,3), Omega(3,3), wv(3), gv(3);
+          Lambda=0.;
+          Lambda(0,0)=mI(0); Lambda(1,1)=mI(1); Lambda(2,2)=mI(2);
 
-	  // Get E, w and g at time t 
-	  ea = (1.-alpha)*e(R,R,ip1)+alpha*e(R,R,i);          // *FIX ME* for higher order accuracy 
-	  wv = (1.-alpha)*w(R,  ip1)+alpha*w(R,  i);
-	  gv = (1.-alpha)*g(R,  ip1)+alpha*g(R,  i);
-	
-	  A  = mult(ea,mult(Lambda,trans(ea)));
+          // Get E, w and g at time t 
+          ea = (1.-alpha)*e(R,R,ip1)+alpha*e(R,R,i);          // *FIX ME* for higher order accuracy 
+          wv = (1.-alpha)*w(R,  ip1)+alpha*w(R,  i);
+          gv = (1.-alpha)*g(R,  ip1)+alpha*g(R,  i);
+        
+          A  = mult(ea,mult(Lambda,trans(ea)));
 
           // LambdaInverse
-	  Lambda(0,0)=1./max(mI(0),REAL_MIN);  // avoid division by zero *wdh* 2016/09/26
+          Lambda(0,0)=1./max(mI(0),REAL_MIN);  // avoid division by zero *wdh* 2016/09/26
           Lambda(1,1)=1./max(mI(1),REAL_MIN); 
           Lambda(2,2)=1./max(mI(2),REAL_MIN); 
 
-	  Ai = mult(ea,mult(Lambda,trans(ea)));  // A^{-1}
+          Ai = mult(ea,mult(Lambda,trans(ea)));  // A^{-1}
 
-	  Omega = getCrossProductMatrix( wv );
+          Omega = getCrossProductMatrix( wv );
 
-	  if( includeAddedMass )
-	  {
-	    // -- include added mass terms --
-	    RealArray A11(R,R), A12(R,R), A21(R,R), A22(R,R);
-	    getAddedMassMatrices( t, A11 , A12 , A21, A22 );
+          if( includeAddedMass )
+          {
+            // -- include added mass terms --
+            RealArray A11(R,R), A12(R,R), A21(R,R), A22(R,R);
+            getAddedMassMatrices( t, A11 , A12 , A21, A22 );
 
-	    RealArray vv(3);
-	    vv = (1.-alpha)*v(R,  ip1)+alpha*v(R,  i);
-	    gv -= mult(A12,vv) + mult(A22,wv);
-	  }
-	
+            RealArray vv(3);
+            vv = (1.-alpha)*v(R,  ip1)+alpha*v(R,  i);
+            gv -= mult(A12,vv) + mult(A22,wv);
+          }
+        
 
-	  omegaDot = mult( Ai, evaluate(- mult(Omega,mult(A,wv)) + gv) );
+          omegaDot = mult( Ai, evaluate(- mult(Omega,mult(A,wv)) + gv) );
 
-	}
-	else
-	{
-	  // *old way*
-	  omegaDot(axis)=( 
-	    (1.-alpha)*( (mI(axisp1)-mI(axisp2))*w(axisp1,ip1)*w(axisp2,ip1)+
-			 g(0,ip1)*e(0,axis,ip1)+
-			 g(1,ip1)*e(1,axis,ip1)+
-			 g(2,ip1)*e(2,axis,ip1))
-	    +alpha *( (mI(axisp1)-mI(axisp2))*w(axisp1,i)*w(axisp2,i)+
-		      g(0,i)*e(0,axis,i)+
-		      g(1,i)*e(1,axis,i)+
-		      g(2,i)*e(2,axis,i))
-	    )/mI(axis);
-	}
+        }
+        else
+        {
+          // *old way*
+          omegaDot(axis)=( 
+            (1.-alpha)*( (mI(axisp1)-mI(axisp2))*w(axisp1,ip1)*w(axisp2,ip1)+
+                         g(0,ip1)*e(0,axis,ip1)+
+                         g(1,ip1)*e(1,axis,ip1)+
+                         g(2,ip1)*e(2,axis,ip1))
+            +alpha *( (mI(axisp1)-mI(axisp2))*w(axisp1,i)*w(axisp2,i)+
+                      g(0,i)*e(0,axis,i)+
+                      g(1,i)*e(1,axis,i)+
+                      g(2,i)*e(2,axis,i))
+            )/mI(axis);
+        }
       }
       if( dbase.get<bool>("accelerationComputedByDifferencingVelocity") )
       {
-	// *NOTE* The torque, gv, is NOT correct in the added mass case since we are missing the z*vb term!
+        // *NOTE* The torque, gv, is NOT correct in the added mass case since we are missing the z*vb term!
 
-	// Compute the angular acceleration from d(omega)/dt (since the moments of inertia may be zero)
-	RealArray dwdt(3);
-	real dt = time(ip1)-time(i);
-	if( dt > 0. )
-	  dwdt=(w(R,ip1)-w(R,i))/dt;
-	else
-	  dwdt=0.;
+        // Compute the angular acceleration from d(omega)/dt (since the moments of inertia may be zero)
+        RealArray dwdt(3);
+        real dt = time(ip1)-time(i);
+        if( dt > 0. )
+          dwdt=(w(R,ip1)-w(R,i))/dt;
+        else
+          dwdt=0.;
       
-	if( false )
-	{
-	  printF("RigidBodyMotion::getOmegaDot: t=%8.2e, mI=(%8.2e,%8.2e,%8.2e), wDot=(%6.2e,%6.2e,%6.2e)," 
-		 " dw/dt=(%6.2e,%6.2e,%6.2e)\n"
-		 " i=%i, ip1=%i, dt=%8.2e, current=%i, .. .USE dw/dt for addedMass case. \n",
-		 t,mI(0),mI(1),mI(2),omegaDot(0),omegaDot(1),omegaDot(2),dwdt(0),dwdt(1),dwdt(2),i,ip1,dt,current);
-	}
+        if( false )
+        {
+          printF("RigidBodyMotion::getOmegaDot: t=%8.2e, mI=(%8.2e,%8.2e,%8.2e), wDot=(%6.2e,%6.2e,%6.2e)," 
+                 " dw/dt=(%6.2e,%6.2e,%6.2e)\n"
+                 " i=%i, ip1=%i, dt=%8.2e, current=%i, .. .USE dw/dt for addedMass case. \n",
+                 t,mI(0),mI(1),mI(2),omegaDot(0),omegaDot(1),omegaDot(2),dwdt(0),dwdt(1),dwdt(2),i,ip1,dt,current);
+        }
       
-	if( logFile!=NULL )
-	{
-	  fPrintF(logFile,
-		  " getOmegaDot: t=%8.2e, wDot=(%6.2e,%6.2e,%6.2e), dw/dt=(%6.2e,%6.2e,%6.2e)\n"
-		  "              mI=(%8.2e,%8.2e,%8.2e), i=%i, ip1=%i, dt=%8.2e, current=%i, .. .USE dw/dt for addedMass case. \n",
-		  t,omegaDot(0),omegaDot(1),omegaDot(2),dwdt(0),dwdt(1),dwdt(2),mI(0),mI(1),mI(2),i,ip1,dt,current);
-	}
+        if( logFile!=NULL )
+        {
+          fPrintF(logFile,
+                  " getOmegaDot: t=%8.2e, wDot=(%6.2e,%6.2e,%6.2e), dw/dt=(%6.2e,%6.2e,%6.2e)\n"
+                  "              mI=(%8.2e,%8.2e,%8.2e), i=%i, ip1=%i, dt=%8.2e, current=%i, .. .USE dw/dt for addedMass case. \n",
+                  t,omegaDot(0),omegaDot(1),omegaDot(2),dwdt(0),dwdt(1),dwdt(2),mI(0),mI(1),mI(2),i,ip1,dt,current);
+        }
       
 
-	real maxDwdt=max(fabs(dwdt));
-	real accelerationLimit=1.e6;  // *************************************** FIX ME ********************
-	if( maxDwdt>accelerationLimit )
-	{
-	  dwdt=min(accelerationLimit,max(-accelerationLimit,dwdt));
-	  printF("RigidBodyMotion::***** limiting the angular acceleration wDot to (%8.2e,%8.2e,%8.2e)\n",dwdt(0),dwdt(1),dwdt(2));
-	}
+        real maxDwdt=max(fabs(dwdt));
+        real accelerationLimit=1.e6;  // *************************************** FIX ME ********************
+        if( maxDwdt>accelerationLimit )
+        {
+          dwdt=min(accelerationLimit,max(-accelerationLimit,dwdt));
+          printF("RigidBodyMotion::***** limiting the angular acceleration wDot to (%8.2e,%8.2e,%8.2e)\n",dwdt(0),dwdt(1),dwdt(2));
+        }
 
-	omegaDot=dwdt;  // ****************
+        omegaDot=dwdt;  // ****************
       
       }
       else
       {
-	if( logFile!=NULL )
-	{
-	  fPrintF(logFile,
-		  " getOmegaDot: t=%8.2e, wDot=(%6.2e,%6.2e,%6.2e), mI=(%8.2e,%8.2e,%8.2e)\n",
-		  t,omegaDot(0),omegaDot(1),omegaDot(2),mI(0),mI(1),mI(2));
-	}
+        if( logFile!=NULL )
+        {
+          fPrintF(logFile,
+                  " getOmegaDot: t=%8.2e, wDot=(%6.2e,%6.2e,%6.2e), mI=(%8.2e,%8.2e,%8.2e)\n",
+                  t,omegaDot(0),omegaDot(1),omegaDot(2),mI(0),mI(1),mI(2));
+        }
       }
 
     } // end angular acceleration
@@ -5887,13 +5889,13 @@ buildBodyForceOptionsDialog(DialogData & dialog )
                     "body torque x time function...",
                     "body torque y time function...",
                     "body torque z time function...",
-		    ""};
+                    ""};
   int numberOfPushButtons=7;  // number of entries in cmds
   int numRows= (numberOfPushButtons+1)/2;
   dialog.setPushButtons( cmds, cmds, numRows ); 
 
 //   aString cmd[] = {"plot and wait first time", "plot with no waiting",
-// 		   "plot and always wait","no plotting","" };
+//                 "plot and always wait","no plotting","" };
 
   aString optionCmd[]={ "time polynomial",
                         "time function",
@@ -5951,7 +5953,7 @@ buildBodyForceOptionsDialog(DialogData & dialog )
 //====================================================================
 int RigidBodyMotion::
 getBodyForceOption(const aString & answer,
-		   DialogData & dialog )
+                   DialogData & dialog )
 {
   // GenericGraphicsInterface & gi = *parameters.dbase.get<GenericGraphicsInterface* >("ps");
 
@@ -5990,7 +5992,7 @@ getBodyForceOption(const aString & answer,
       OV_ABORT("ERROR: this should not happen");
     }
     dialog.setTextLabel(answer(0,len-1),sPrintF("%g, %g, %g, %g (coeffs in time poly)",
-						bf(0,0),bf(0,1),bf(0,2),bf(0,3)));
+                                                bf(0,0),bf(0,1),bf(0,2),bf(0,3)));
   }
   else if( answer=="time polynomial" ||
            answer=="time function" )
@@ -5998,19 +6000,19 @@ getBodyForceOption(const aString & answer,
     bodyForceType= answer=="time polynomial" ? timePolynomialBodyForce : timeFunctionBodyForce;
   }
   else if( answer=="body force x time function..." ||
-	   answer=="body force y time function..." ||
-	   answer=="body force z time function..." ||
-	   answer=="body torque x time function..." ||
-	   answer=="body torque y time function..." ||
-	   answer=="body torque z time function..." )
+           answer=="body force y time function..." ||
+           answer=="body force z time function..." ||
+           answer=="body torque x time function..." ||
+           answer=="body torque y time function..." ||
+           answer=="body torque z time function..." )
   {
     aString timeFunctionName;
     timeFunctionName = ( answer=="body force x time function..." ? "bodyForceX" :
-			 answer=="body force y time function..." ? "bodyForceY" :
-			 answer=="body force z time function..." ? "bodyForceZ" :
-			 answer=="body torque x time function..." ? "bodyTorqueX" :
-			 answer=="body torque y time function..." ? "bodyTorqueY" :
-			 answer=="body torque z time function..." ? "bodyTorqueZ" : "unknown" );
+                         answer=="body force y time function..." ? "bodyForceY" :
+                         answer=="body force z time function..." ? "bodyForceZ" :
+                         answer=="body torque x time function..." ? "bodyTorqueX" :
+                         answer=="body torque y time function..." ? "bodyTorqueY" :
+                         answer=="body torque z time function..." ? "bodyTorqueZ" : "unknown" );
     assert( timeFunctionName!="unknown" );
 
     // Change parameters in the Time function
@@ -6036,7 +6038,7 @@ getBodyForceOption(const aString & answer,
             &theta1,&deltaAngle1,&epsilonAngle1,&theta2,&deltaAngle2,&epsilonAngle2);
         damp1=0.; damp2=0.;
         printF("Body force: restrict angle theta1=%g, delta=%g, epsilon=%g, theta2=%g, delta=%g, epsilon=%g\n",
-	       theta1, deltaAngle1, epsilonAngle1, theta2, deltaAngle2, epsilonAngle2 );
+               theta1, deltaAngle1, epsilonAngle1, theta2, deltaAngle2, epsilonAngle2 );
     }
     else
     {
@@ -6046,7 +6048,7 @@ getBodyForceOption(const aString & answer,
             &theta2,&deltaAngle2,&epsilonAngle2,&damp2);
         printF("Body force: restrict angle theta1=%g, delta=%g, epsilon=%g, damp=%g\n"
                "Body force: restrict angle theta2=%g, delta=%g, epsilon=%g, damp=%g\n",
-	       theta1, deltaAngle1, epsilonAngle1,damp1, 
+               theta1, deltaAngle1, epsilonAngle1,damp1, 
                theta2, deltaAngle2, epsilonAngle2,damp2);
     }
     bodyTorqueCoeff(0,0)=theta1;        bodyTorqueCoeff(0,1)=deltaAngle1; 
@@ -6061,15 +6063,15 @@ getBodyForceOption(const aString & answer,
     if( bodyForceType==timePolynomialBodyForce )
     {
       printF("The body force and body torque can be defined a polynomials in time.\n"
-	     "Here are the current values:\n");
+             "Here are the current values:\n");
       for( int axis=0; axis<3; axis++ )
-	printF(" bodyForce%s  = %g + %g*t + %g*t^2 + %g*t^3\n",(axis==0 ? "X" : axis==1 ? "Y" : "Z"),
-	       bodyForceCoeff(axis,0),bodyForceCoeff(axis,1),
-	       bodyForceCoeff(axis,2),bodyForceCoeff(axis,3));
+        printF(" bodyForce%s  = %g + %g*t + %g*t^2 + %g*t^3\n",(axis==0 ? "X" : axis==1 ? "Y" : "Z"),
+               bodyForceCoeff(axis,0),bodyForceCoeff(axis,1),
+               bodyForceCoeff(axis,2),bodyForceCoeff(axis,3));
       for( int axis=0; axis<3; axis++ )
-	printF(" bodyTorque%s = %g + %g*t + %g*t^2 + %g*t^3\n",(axis==0 ? "X" : axis==1 ? "Y" : "Z"),
-	       bodyTorqueCoeff(axis,0),bodyTorqueCoeff(axis,1),
-	       bodyTorqueCoeff(axis,2),bodyTorqueCoeff(axis,3));
+        printF(" bodyTorque%s = %g + %g*t + %g*t^2 + %g*t^3\n",(axis==0 ? "X" : axis==1 ? "Y" : "Z"),
+               bodyTorqueCoeff(axis,0),bodyTorqueCoeff(axis,1),
+               bodyTorqueCoeff(axis,2),bodyTorqueCoeff(axis,3));
     }
     else
     {
@@ -6157,7 +6159,7 @@ update( GenericGraphicsInterface & gi )
   aString opCommand2[] = {"leapFrogTrapezoidal",
                           "improvedEuler",
                           "implicitRungeKutta",
-			  ""};
+                          ""};
 
 
   dialog.setOptionMenuColumns(1);
@@ -6165,33 +6167,33 @@ update( GenericGraphicsInterface & gi )
 
   aString opCommandTZ[] = {"polynomial",
                           "trigonometric",
-			  ""};
+                          ""};
   dialog.addOptionMenu( "Twilightzone:", opCommandTZ, opCommandTZ, (int)twilightZoneType );
 
 
 //   aString colourBoundaryCommands[] = { "colour by bc",
-// 			               "colour by share",
-// 			               "" };
+//                                     "colour by share",
+//                                     "" };
 //   // dialog.addRadioBox("boundaries:",colourBoundaryCommands, colourBoundaryCommands, 0 );
 //   dialog.addOptionMenu("boundaries:",colourBoundaryCommands, colourBoundaryCommands, 0 );
 
   aString cmds[] = {"body force...",
-		    ""};
+                    ""};
   int numberOfPushButtons=1;  // number of entries in cmds
   int numRows=numberOfPushButtons; // (numberOfPushButtons+1)/2;
   dialog.setPushButtons( cmds, cmds, numRows ); 
 
   aString tbCommands[] = {"relax correction steps",
                           "added mass",
- 			  "use extrapolation in predictor",
-			  "acceleration from differences",
+                          "use extrapolation in predictor",
+                          "acceleration from differences",
                           "direct projection added mass",
                           "use provided acceleration",
                           "use known solution",
                           "use twilight zone",
                           "save check file",
                           "exit on instability",
-			  ""};
+                          ""};
   int tbState[10];
 
   tbState[0] = relaxCorrectionSteps;
@@ -6290,26 +6292,26 @@ update( GenericGraphicsInterface & gi )
     }
     else if( answer=="leapFrogTrapezoidal" ||
              answer=="improvedEuler" ||
-	     answer=="implicitRungeKutta" )
+             answer=="implicitRungeKutta" )
     {
       if( answer=="leapFrogTrapezoidal" )
       {
-	timeSteppingMethod=leapFrogTrapezoidal;
-	printF("RigidBodyMotion: timeSteppingMethod=leapFrogTrapezoidal\n");
+        timeSteppingMethod=leapFrogTrapezoidal;
+        printF("RigidBodyMotion: timeSteppingMethod=leapFrogTrapezoidal\n");
       }
       else if( answer=="improvedEuler" )
       {
-	timeSteppingMethod=improvedEuler;
+        timeSteppingMethod=improvedEuler;
         printF("RigidBodyMotion: timeSteppingMethod=improvedEuler\n");
       }
       else if( answer=="implicitRungeKutta" )
       {
-	timeSteppingMethod=implicitRungeKutta;
-	printF("RigidBodyMotion: timeSteppingMethod=implicitRungeKutta\n");
+        timeSteppingMethod=implicitRungeKutta;
+        printF("RigidBodyMotion: timeSteppingMethod=implicitRungeKutta\n");
       }
       else
       {
-	OV_ABORT("ERROR");
+        OV_ABORT("ERROR");
       }
       dialog.getOptionMenu("Method:").setCurrentChoice(answer);
     }
@@ -6317,7 +6319,7 @@ update( GenericGraphicsInterface & gi )
     {
       gi.inputString(answer2,sPrintF(buff,"Enter the body mass (default=%8.2e)",mass));
       if( answer2!="" )
-	sScanF(answer2,"%e",&mass);
+        sScanF(answer2,"%e",&mass);
 
       setMass(mass);
       
@@ -6328,7 +6330,7 @@ update( GenericGraphicsInterface & gi )
       
       gi.inputString(answer2,sPrintF(buff,"Enter the body density, -1. if not known, (default=%8.2e)",bodyDensity));
       if( answer2!="" )
-	sScanF(answer2,"%e",&bodyDensity);
+        sScanF(answer2,"%e",&bodyDensity);
 
       setDensity( bodyDensity );
       
@@ -6338,16 +6340,16 @@ update( GenericGraphicsInterface & gi )
       real mI1=mI(0), mI2=mI(1) ,mI3=mI(2);
       if( numberOfDimensions==2 )
       {
-	gi.inputString(answer2,sPrintF(buff,"Enter the moment of inertia (default=%8.2e)",mI3));
-	if( answer2!="" )
-	  sScanF(answer2,"%e",&mI3);
+        gi.inputString(answer2,sPrintF(buff,"Enter the moment of inertia (default=%8.2e)",mI3));
+        if( answer2!="" )
+          sScanF(answer2,"%e",&mI3);
       }
       else
       {
-	gi.inputString(answer2,sPrintF(buff,"Enter the moments of inertia (default=%8.2e,%8.2e,%8.2e)",
-				       mI1,mI2,mI3));
-	if( answer2!="" )
-	  sScanF(answer2,"%e %e %e",&mI1,&mI2,&mI3);
+        gi.inputString(answer2,sPrintF(buff,"Enter the moments of inertia (default=%8.2e,%8.2e,%8.2e)",
+                                       mI1,mI2,mI3));
+        if( answer2!="" )
+          sScanF(answer2,"%e %e %e",&mI1,&mI2,&mI3);
       }
 
       setMomentsOfInertia( mI1,mI2,mI3 );
@@ -6357,16 +6359,16 @@ update( GenericGraphicsInterface & gi )
     {
       if( numberOfDimensions==2 )
       {
-	gi.inputString(answer2,sPrintF(buff,"Enter the centre of mass (default=%8.2e,%8.2e)",x0(0),x0(1)));
-	if( answer2!="" )
-	  sScanF(answer2,"%e %e",&x0(0),&x0(1));
+        gi.inputString(answer2,sPrintF(buff,"Enter the centre of mass (default=%8.2e,%8.2e)",x0(0),x0(1)));
+        if( answer2!="" )
+          sScanF(answer2,"%e %e",&x0(0),&x0(1));
       }
       else
       {
-	gi.inputString(answer2,sPrintF(buff,"Enter the centre of mass (default=%8.2e,%8.2e,%8.2e)",
+        gi.inputString(answer2,sPrintF(buff,"Enter the centre of mass (default=%8.2e,%8.2e,%8.2e)",
              x0(0),x0(1),x0(2)));
-	if( answer2!="" )
-	  sScanF(answer2,"%e %e %e",&x0(0),&x0(1),&x0(2));
+        if( answer2!="" )
+          sScanF(answer2,"%e %e %e",&x0(0),&x0(1),&x0(2));
       }
       setInitialCentreOfMass(x0);
       printF("MovingGrids: >>>>  centerOfMassHasBeenInitialized()=%i \n", centerOfMassHasBeenInitialized()); 
@@ -6375,16 +6377,16 @@ update( GenericGraphicsInterface & gi )
     {
       if( numberOfDimensions==2 )
       {
-	gi.inputString(answer2,sPrintF(buff,"Enter the initial velocity (default=%8.2e,%8.2e)",v0(0),v0(1)));
-	if( answer2!="" )
-	  sScanF(answer2,"%e %e",&v0(0),&v0(1));
+        gi.inputString(answer2,sPrintF(buff,"Enter the initial velocity (default=%8.2e,%8.2e)",v0(0),v0(1)));
+        if( answer2!="" )
+          sScanF(answer2,"%e %e",&v0(0),&v0(1));
       }
       else
       {
-	gi.inputString(answer2,sPrintF(buff,"Enter the initial velocity (default=%8.2e,%8.2e,%8.2e)",
+        gi.inputString(answer2,sPrintF(buff,"Enter the initial velocity (default=%8.2e,%8.2e,%8.2e)",
              v0(0),v0(1),v0(2)));
-	if( answer2!="" )
-	  sScanF(answer2,"%e %e %e",&v0(0),&v0(1),&v0(2));
+        if( answer2!="" )
+          sScanF(answer2,"%e %e %e",&v0(0),&v0(1),&v0(2));
       }
       v(R,0)=v0(R);
     }
@@ -6392,16 +6394,16 @@ update( GenericGraphicsInterface & gi )
     {
       if( numberOfDimensions==2 )
       {
-	gi.inputString(answer2,sPrintF(buff,"Enter the initial angular momentum (default=%8.2e)",w0(2)));
-	if( answer2!="" )
-	  sScanF(answer2,"%e",&w0(2));
+        gi.inputString(answer2,sPrintF(buff,"Enter the initial angular momentum (default=%8.2e)",w0(2)));
+        if( answer2!="" )
+          sScanF(answer2,"%e",&w0(2));
       }
       else
       {
-	gi.inputString(answer2,sPrintF(buff,"Enter the initial angular momentum (default=%8.2e,%8.2e,%8.2e)",
+        gi.inputString(answer2,sPrintF(buff,"Enter the initial angular momentum (default=%8.2e,%8.2e,%8.2e)",
              w0(0),w0(1),w0(2)));
-	if( answer2!="" )
-	  sScanF(answer2,"%e %e %e",&w0(0),&w0(1),&w0(2));
+        if( answer2!="" )
+          sScanF(answer2,"%e %e %e",&w0(0),&w0(1),&w0(2));
       }
       w(R,0)=w0(R);
     }
@@ -6411,17 +6413,17 @@ update( GenericGraphicsInterface & gi )
       vDot=0.; wDot=0.;
       
       gi.inputString(answer2,sPrintF(buff,"Enter the initial acceleration (default=%8.2e,%8.2e,%8.2e)",
-				     vDot(0),vDot(1),vDot(2)));
+                                     vDot(0),vDot(1),vDot(2)));
       sScanF(answer2,"%e %e %e",&vDot(0),&vDot(1),&vDot(2));
 
       gi.inputString(answer2,sPrintF(buff,"Enter the initial angular acceleration (default=%8.2e,%8.2e,%8.2e)",
-				     wDot(0),wDot(1),wDot(2)));
+                                     wDot(0),wDot(1),wDot(2)));
       sScanF(answer2,"%e %e %e",&wDot(0),&wDot(1),&wDot(2));
 
       real t=0.;
       printF("--RBM-- Setting vDot=(%g,%g,%g) and wDot=(%g,%g,%g) at t=%g (in 2D only wDot(2) matters)\n",
              vDot(0),vDot(1),vDot(2),
-	     wDot(0),wDot(1),wDot(2),t);
+             wDot(0),wDot(1),wDot(2),t);
 
       setAcceleration( t, vDot, wDot );
 
@@ -6432,33 +6434,33 @@ update( GenericGraphicsInterface & gi )
     {
       if( numberOfDimensions==2 )
       {
-	printF("No need to specify axes of inertia in 2D\n");
+        printF("No need to specify axes of inertia in 2D\n");
       }
       else
       {
-	RealArray axesOfInertia(3,3);
+        RealArray axesOfInertia(3,3);
         for( int axis=0; axis<numberOfDimensions; axis++ )
-	{
-	  gi.inputString(answer2,sPrintF(buff,"Enter axis %i (default=%8.2e,%8.2e,%8.2e)",
-					 axis,axesOfInertia(0,axis),axesOfInertia(1,axis),axesOfInertia(2,axis)));
-	  if( answer2!="" )
-	    sScanF(answer2,"%e %e %e",&axesOfInertia(0,axis),&axesOfInertia(1,axis),&axesOfInertia(2,axis));
+        {
+          gi.inputString(answer2,sPrintF(buff,"Enter axis %i (default=%8.2e,%8.2e,%8.2e)",
+                                         axis,axesOfInertia(0,axis),axesOfInertia(1,axis),axesOfInertia(2,axis)));
+          if( answer2!="" )
+            sScanF(answer2,"%e %e %e",&axesOfInertia(0,axis),&axesOfInertia(1,axis),&axesOfInertia(2,axis));
  
           // // check that axes are orthogonal and unit length.
           // real norm =max(REAL_MIN, SQRT( SQR(e(0,axis))+SQR(e(1,axis))+SQR(e(2,axis)) ));
           // e(R,axis)/=norm;
-	  // for( int dir=0; dir<numberOfDimensions-1; dir++ )
-	  // {
+          // for( int dir=0; dir<numberOfDimensions-1; dir++ )
+          // {
           //   real dot = e(0,axis)*e(0,dir)+e(1,axis)*e(1,dir)+e(2,axis)*e(2,dir);
-	  //   if( fabs(dot)>REAL_EPSILON*10. )
-	  //   {
-	  //     printF("ERROR: axis of inertia %i is not orthogonal to axis %i. dot-product=%e \n",axis,dir,dot);
-	  //   }
-	  // }
-	}
+          //   if( fabs(dot)>REAL_EPSILON*10. )
+          //   {
+          //     printF("ERROR: axis of inertia %i is not orthogonal to axis %i. dot-product=%e \n",axis,dir,dot);
+          //   }
+          // }
+        }
 
         setAxesOfInertial( axesOfInertia );
-	
+        
       }
     }
     else if( answer=="position has no constraint" )
@@ -6470,19 +6472,19 @@ update( GenericGraphicsInterface & gi )
        positionConstraint=positionConstrainedToAPlane;
        for( int k=0; k<=1; k++ )
        {
-	 RealArray v(3); 
-	 v=0;  v(k)=1.;
-	 printF("Enter tangent %i to the constraining plane.\n",k);
-	 gi.inputString(answer2,sPrintF(buff,"Enter tangent %i to the constraining plane (default=%8.2e,%8.2e,%8.2e)",
-					k,v(0),v(1),v(2)));
-	 if( answer2!="" )
-	   sScanF(answer2,"%e %e %e",&v(0),&v(1),&v(2));
+         RealArray v(3); 
+         v=0;  v(k)=1.;
+         printF("Enter tangent %i to the constraining plane.\n",k);
+         gi.inputString(answer2,sPrintF(buff,"Enter tangent %i to the constraining plane (default=%8.2e,%8.2e,%8.2e)",
+                                        k,v(0),v(1),v(2)));
+         if( answer2!="" )
+           sScanF(answer2,"%e %e %e",&v(0),&v(1),&v(2));
 
-	 real norm = sqrt(sum(SQR(v)));
-	 v/=max(REAL_MIN*100.,norm);
-	 constraintValues(Range(3+3*k,5+3*k))=v;
+         real norm = sqrt(sum(SQR(v)));
+         v/=max(REAL_MIN*100.,norm);
+         constraintValues(Range(3+3*k,5+3*k))=v;
       
-	 printF(" Constraining plane: normalized tangent %i is (%7.4f,%7.4,%7.4f)\n",k,v(0),v(1),v(2));
+         printF(" Constraining plane: normalized tangent %i is (%7.4f,%7.4,%7.4f)\n",k,v(0),v(1),v(2));
        }
        
     }
@@ -6494,9 +6496,9 @@ update( GenericGraphicsInterface & gi )
       v=0;  v(0)=1.;
       printF("Enter the tangent to the constraining line.\n");
       gi.inputString(answer2,sPrintF(buff,"Enter the tangent to the constraining line (default=%8.2e,%8.2e,%8.2e)",
-				     v(0),v(1),v(2)));
+                                     v(0),v(1),v(2)));
       if( answer2!="" )
-	sScanF(answer2,"%e %e %e",&v(0),&v(1),&v(2));
+        sScanF(answer2,"%e %e %e",&v(0),&v(1),&v(2));
 
       real norm = sqrt(sum(SQR(v)));
       v/=max(REAL_MIN*100.,norm);
@@ -6517,19 +6519,19 @@ update( GenericGraphicsInterface & gi )
        rotationConstraint=rotationConstrainedToAPlane;
        for( int k=0; k<=1; k++ )
        {
-	 RealArray v(3); 
-	 v=0;  v(k)=1.;
-	 printF("Enter tangent %i to the constraining plane.\n",k);
-	 gi.inputString(answer2,sPrintF(buff,"Enter tangent %i to the constraining plane (default=%8.2e,%8.2e,%8.2e)",
-					k,v(0),v(1),v(2)));
-	 if( answer2!="" )
-	   sScanF(answer2,"%e %e %e",&v(0),&v(1),&v(2));
+         RealArray v(3); 
+         v=0;  v(k)=1.;
+         printF("Enter tangent %i to the constraining plane.\n",k);
+         gi.inputString(answer2,sPrintF(buff,"Enter tangent %i to the constraining plane (default=%8.2e,%8.2e,%8.2e)",
+                                        k,v(0),v(1),v(2)));
+         if( answer2!="" )
+           sScanF(answer2,"%e %e %e",&v(0),&v(1),&v(2));
 
-	 real norm = sqrt(sum(SQR(v)));
-	 v/=max(REAL_MIN*100.,norm);
-	 constraintValues(Range(9+3*k,11+3*k))=v;
+         real norm = sqrt(sum(SQR(v)));
+         v/=max(REAL_MIN*100.,norm);
+         constraintValues(Range(9+3*k,11+3*k))=v;
       
-	 printF(" Constraining plane: normalized tangent %i is (%7.4f,%7.4,%7.4f)\n",k,v(0),v(1),v(2));
+         printF(" Constraining plane: normalized tangent %i is (%7.4f,%7.4,%7.4f)\n",k,v(0),v(1),v(2));
        }
     }
     else if( answer=="rotation is constrained to a line" )
@@ -6539,9 +6541,9 @@ update( GenericGraphicsInterface & gi )
       v=0;  v(0)=1.;
       printF("Enter the tangent to the constraining line.\n");
       gi.inputString(answer2,sPrintF(buff,"Enter the tangent to the constraining line (default=%8.2e,%8.2e,%8.2e)",
-				     v(0),v(1),v(2)));
+                                     v(0),v(1),v(2)));
       if( answer2!="" )
-	sScanF(answer2,"%e %e %e",&v(0),&v(1),&v(2));
+        sScanF(answer2,"%e %e %e",&v(0),&v(1),&v(2));
 
       real norm = sqrt(sum(SQR(v)));
       v/=max(REAL_MIN*100.,norm);
@@ -6563,16 +6565,16 @@ update( GenericGraphicsInterface & gi )
 //               "constrained to move\n");
 //        if( constraintValues.getLength(0)==0 )
 //        {
-//  	constraintValues.redim(3);
+//      constraintValues.redim(3);
 //          constraintValues=0.;
-//  	constraintValues(0)=1.;
+//      constraintValues(0)=1.;
 //        }
 //        if( numberOfDimensions==2 ) constraintValues(2)=0.;
       
 //        gi.inputString(answer2,sPrintF(buff,"Enter the tangent of the constraint line (default=%8.2e,%8.2e,%8.2e)",
-//  				     constraintValues(0),constraintValues(1),constraintValues(2)));
+//                                   constraintValues(0),constraintValues(1),constraintValues(2)));
 //        if( answer2!="" )
-//  	sScanF(answer2,"%e %e %e",&constraintValues(0),&constraintValues(1),&constraintValues(2));
+//      sScanF(answer2,"%e %e %e",&constraintValues(0),&constraintValues(1),&constraintValues(2));
 
 //        // normalize the tangent
 //        Range Rx=numberOfDimensions;
@@ -6596,21 +6598,21 @@ update( GenericGraphicsInterface & gi )
              " The iteration for the force is said to converge when \n"
              "   (fDiff/fNorm)<fRelativeTol or fDiff < fAbsoluteTol , where fDiff=|f(new)-f(old)|\n"
              " A similar expression holds for the torque.\n"
-	);
+        );
     }
     else if( dialog.getToggleValue(answer,"added mass",dbase.get<bool>("includeAddedMass")) )
     {
       if( dbase.get<bool>("includeAddedMass") )
       {
-	printF("added mass:\n"
-	       "  Added mass matrices will be included in the equations. These are used with light bodies\n");
+        printF("added mass:\n"
+               "  Added mass matrices will be included in the equations. These are used with light bodies\n");
         printF("  NOTE: I am also setting 'use extrapolation in predictor' and"
                " 'acceleration from differences' to true. You may turn these off if you want to.\n");
 
-	useExtrapolationInPredictor=true;
+        useExtrapolationInPredictor=true;
         dialog.setToggleState("use extrapolation in predictor",useExtrapolationInPredictor);
 
-	accelerationComputedByDifferencingVelocity=true;
+        accelerationComputedByDifferencingVelocity=true;
         dialog.setToggleState("acceleration from differences",accelerationComputedByDifferencingVelocity);
       }
       
@@ -6618,36 +6620,36 @@ update( GenericGraphicsInterface & gi )
     else if( dialog.getToggleValue(answer,"direct projection added mass",directProjectionAddedMass) )
     {
       printF("directProjectionAddedMass=%i : turn this on when using the direct projection scheme for\n"
-	     " coupling light-rigid bodies and incompressible flows\n",(int)directProjectionAddedMass);
+             " coupling light-rigid bodies and incompressible flows\n",(int)directProjectionAddedMass);
     }
     else if( dialog.getToggleValue(answer,"use provided acceleration",useProvidedAcceleration) )
     {
       printF("useProvidedAcceleration=%i : turn this on to use any provided accelerations (e.g. from AMP schemes)\n",
-	     (int)useProvidedAcceleration);
+             (int)useProvidedAcceleration);
     }
     else if( dialog.getToggleValue(answer,"use twilight zone",twilightZone) )
     {
       if( twilightZone )
-	printF("Using twilight zone forcing (manufactured solutions).\n");
+        printF("Using twilight zone forcing (manufactured solutions).\n");
       else
-	printF("Twilight zone forcing (manufactured solutions) is OFF.\n");
+        printF("Twilight zone forcing (manufactured solutions) is OFF.\n");
     }
     else if( answer=="polynomial" ||
              answer=="trigonometric" )
     {
       if( answer=="polynomial" )
       {
-	twilightZoneType=polynomialTwilightZone;
-	printF("Setting twilightZoneType to polynomial.\n");
+        twilightZoneType=polynomialTwilightZone;
+        printF("Setting twilightZoneType to polynomial.\n");
       }
       else if( answer=="trigonometric" )
       {
-	twilightZoneType=trigonometricTwilightZone;
+        twilightZoneType=trigonometricTwilightZone;
         printF("Setting twilightZoneType to trigonometric.\n");
       }
       else
       {
-	OV_ABORT("ERROR: this should not happen");
+        OV_ABORT("ERROR: this should not happen");
       }
       
     }
@@ -6661,28 +6663,28 @@ update( GenericGraphicsInterface & gi )
     {
       if( useKnownSolution )
       {
-	printF("--RBM-- useKnownSolution=true: use the known solution for initial conditions and past time values\n");
+        printF("--RBM-- useKnownSolution=true: use the known solution for initial conditions and past time values\n");
 
         // THIS CANNOT BE DONE HERE -- known solution may not be set yet
         // // -- should we set the initial center of mass??
         // real t=0.;
-	// RealArray xCM(3), vCM(3), aCM(3), omega(3), omegaDot(3);
+        // RealArray xCM(3), vCM(3), aCM(3), omega(3), omegaDot(3);
         // getKnownSolution( t, xCM, vCM, aCM, omega, omegaDot );
 
-	// printF("  ...setting v=[%g,%g,%g] a=[%g,%g,%g] omega=[%g,%g,%g] omegaDot=[%g,%g,%g]\n",
-	//        vCM(0),vCM(1),vCM(2),
-	//        aCM(0),aCM(1),aCM(2),
-	//        omega(0),omega(1),omega(2),
-	//        omegaDot(0),omegaDot(1),omegaDot(2) );
+        // printF("  ...setting v=[%g,%g,%g] a=[%g,%g,%g] omega=[%g,%g,%g] omegaDot=[%g,%g,%g]\n",
+        //        vCM(0),vCM(1),vCM(2),
+        //        aCM(0),aCM(1),aCM(2),
+        //        omega(0),omega(1),omega(2),
+        //        omegaDot(0),omegaDot(1),omegaDot(2) );
 
         // v(R,0)=vCM;
-	// w(R,0)=omega;
+        // w(R,0)=omega;
         // setAcceleration( t, aCM, omegaDot );        
 
       }
       else
       {
-	printF("useKnownSolution=false.\n");
+        printF("useKnownSolution=false.\n");
       }
     }
     else if( dialog.getToggleValue(answer,"use extrapolation in predictor",useExtrapolationInPredictor) )
@@ -6694,7 +6696,7 @@ update( GenericGraphicsInterface & gi )
     else if( dialog.getToggleValue(answer,"acceleration from differences",accelerationComputedByDifferencingVelocity) )
     {
       printF("acceleration from differences:\n"
-	     "  For added mass cases we may want to return the acceleration (and angular acceleration) not computed\n"
+             "  For added mass cases we may want to return the acceleration (and angular acceleration) not computed\n"
              "  using the equations of motion but rather finite differences of the velocity (or angular velocity\n");
     }
 
@@ -6703,9 +6705,9 @@ update( GenericGraphicsInterface & gi )
     else if( dialog.getToggleValue(answer,"exit on instability",exitOnInstablity) )
     {
       if( exitOnInstablity )
-	printF("exitOnInstablity=true: Exit code if an instability is detected.\n");
+        printF("exitOnInstablity=true: Exit code if an instability is detected.\n");
       else
-	printF("exitOnInstablity=false: do not monitor solution for an instability\n");
+        printF("exitOnInstablity=false: do not monitor solution for an instability\n");
     }
 
     else if( dialog.getTextValue(answer,"instability error tol:","%e",exitOnInstabilityErrorTol) ){} //
@@ -6732,7 +6734,7 @@ update( GenericGraphicsInterface & gi )
     {
       if( logFile!=NULL )
       {
-	fclose(logFile);
+        fclose(logFile);
       }
       printF("Opening the rigid body log file = [%s]\n",(const char*)logFileName);
       logFile=fopen((const char*)logFileName,"w");
@@ -6756,10 +6758,10 @@ update( GenericGraphicsInterface & gi )
     else if( answer=="body force" ) // ** old way  **
     {
       printF("Specify a const body force to be applied to the rigid body at the center of mass.\n");
-	gi.inputString(answer2,sPrintF(buff,"Enter const body force (default=%8.2e,%8.2e,%8.2e)",
-				       bodyForceCoeff(0,0),bodyForceCoeff(1,0),bodyForceCoeff(2,0)));
-	if( answer2!="" )
-	  sScanF(answer2,"%e %e %e",&bodyForceCoeff(0,0),&bodyForceCoeff(1,0),&bodyForceCoeff(2,0));
+        gi.inputString(answer2,sPrintF(buff,"Enter const body force (default=%8.2e,%8.2e,%8.2e)",
+                                       bodyForceCoeff(0,0),bodyForceCoeff(1,0),bodyForceCoeff(2,0)));
+        if( answer2!="" )
+          sScanF(answer2,"%e %e %e",&bodyForceCoeff(0,0),&bodyForceCoeff(1,0),&bodyForceCoeff(2,0));
 
     }
 

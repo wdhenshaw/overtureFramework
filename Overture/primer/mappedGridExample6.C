@@ -151,11 +151,11 @@ main(int argc, char *argv[])
     for( int axis=0; axis<mg.numberOfDimensions(); axis++ )
       for( int side=Start; side<=End; side++ )
       { // only assign BC's on sides with a positive boundary condition:
-	if( mg.boundaryCondition()(side,axis) > 0 )
-	{ // fill in boundary values
-	  getBoundaryIndex(mg.gridIndexRange(),side,axis,Ib1,Ib2,Ib3);
-	  u(Ib1,Ib2,Ib3)=UTRUE(x(Ib1,Ib2,Ib3,0),x(Ib1,Ib2,Ib3,1),t);
-	}
+        if( mg.boundaryCondition()(side,axis) > 0 )
+        { // fill in boundary values
+          getBoundaryIndex(mg.gridIndexRange(),side,axis,Ib1,Ib2,Ib3);
+          u(Ib1,Ib2,Ib3)=UTRUE(x(Ib1,Ib2,Ib3,0),x(Ib1,Ib2,Ib3,1),t);
+        }
       }
     u.periodicUpdate();  // swap periodic edges
 

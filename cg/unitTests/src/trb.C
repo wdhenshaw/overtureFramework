@@ -667,6 +667,8 @@ output( TestProblemEnum testProblem, const int step )
     
   }
 
+  return 0;
+
 }
 
 
@@ -824,6 +826,7 @@ getExactSolution( const real t, RealArray & xe, RealArray & ve, RealArray & we )
     OV_ABORT("finish me");
   }
   
+  return 0;
 }
 
 
@@ -896,6 +899,7 @@ getErrors( int & numErr, aString *& errorNames, RealArray & err )
     err(2)=max(fabs(wHat-we));
   }
   
+  return 0;
 }
 
 

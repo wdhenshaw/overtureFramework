@@ -24,8 +24,8 @@ namespace {
   int iuOld=0, iuNew=1;
 
   void diagonalScaling(Oges &solver, 
-		       RealCompositeGridFunction &coeff,
-		       RealCompositeGridFunction &rhs_cg)
+                       RealCompositeGridFunction &coeff,
+                       RealCompositeGridFunction &rhs_cg)
   {
     CompositeGrid &cg = *coeff.getCompositeGrid();
     const int stencilLength = coeff[0].sparse->stencilSize;
@@ -36,70 +36,70 @@ namespace {
     
     for ( int grid=0; grid<cg.numberOfComponentGrids(); grid++ )
       {
-	realMappedGridFunction &rhs = rhs_cg[grid];
-	realMappedGridFunction &cf   = coeff[grid];
-	real *rhsp = rhs.Array_Descriptor.Array_View_Pointer3;
-	int rhsd[] = { rhs.getRawDataSize(0), rhs.getRawDataSize(1), rhs.getRawDataSize(2) };
+        realMappedGridFunction &rhs = rhs_cg[grid];
+        realMappedGridFunction &cf   = coeff[grid];
+        real *rhsp = rhs.Array_Descriptor.Array_View_Pointer3;
+        int rhsd[] = { rhs.getRawDataSize(0), rhs.getRawDataSize(1), rhs.getRawDataSize(2) };
 #define RHS(i1,i2,i3,e) rhsp[i1 + rhsd[0]*(i2 + rhsd[1]*( i3 + rhsd[2]*e ) ) ]
-	real *cfp = coeff[grid].Array_Descriptor.Array_View_Pointer3;
-	int cfd[] = { cf.getRawDataSize(0), cf.getRawDataSize(1), cf.getRawDataSize(2) };
+        real *cfp = coeff[grid].Array_Descriptor.Array_View_Pointer3;
+        int cfd[] = { cf.getRawDataSize(0), cf.getRawDataSize(1), cf.getRawDataSize(2) };
 #define CF(i1,i2,i3,i4) cfp[i1 + cfd[0]*(i2 + cfd[1]*( i3 + cfd[2]*i4 ) ) ]
-	    
-	// we need to do a full matrix-vector multiply (not just the disc. points) because we need to get
-	//    the boundary conditions evaluated as well.  Otherwise we could just loop over the interior points
-	//    and use indexing that is more simple.
-	// Most of the code to do this comes directly from residual.C (thanks Bill!!)
-	// // //  BEGIN (mostly) COPIED CODE
-	const IntegerDistributedArray & equationNumber = coeff[grid].sparse->equationNumber;
-	const IntegerDistributedArray & classify = coeff[grid].sparse->classify;
-	
-	const int ndra=cg[grid].dimension(Start,axis1), ndrb=cg[grid].dimension(End,axis1);
-	const int ndsa=cg[grid].dimension(Start,axis2), ndsb=cg[grid].dimension(End,axis2);
-	const int ndta=cg[grid].dimension(Start,axis3), ndtb=cg[grid].dimension(End,axis3);
-	
-	const realArray & coeffG = coeff[grid];
-	
-	// // XXX THE FOLLOWING SECTION NEEDS TO CHANGE IF scalarSystemForImplicitTimeStepping==TRUE
-	
-	// ------- general case ------
-	int i1,i2,i3,n;
-	for( i3=ndta; i3<=ndtb; i3++ )
-	  {
-	    for( i2=ndsa; i2<=ndsb; i2++ )
-	      {
-		for( i1=ndra; i1<=ndrb; i1++ )
-		  {
-		    // printf(" i1,i2=%i,%i \n",i1,i2);
-		    for( n=0; n<numberOfComponents; n++)
-		      {
-			if( classify(i1,i2,i3,n)!=SparseRepForMGF::unused )
-			  {
-			    real scale=0;
-			    for( int s=0; s<stencilDim; s++)
-			      scale=max(scale,fabs(CF(s+stencilDim*n,i1,i2,i3)));
-			    if ( scale>10*REAL_MIN )
-			      {
-				scale = 1./scale;
-				
-				RHS(i1,i2,i3,n) *= scale;
-				for( int s=0; s<stencilDim; s++)
-				  CF(s+stencilDim*n,i1,i2,i3) *= scale;
-			      }
-			  } // is used point
-		      } // end number of components
-		  } // end i1
-	      } // end i2 
-	  } // end i3
-	
+            
+        // we need to do a full matrix-vector multiply (not just the disc. points) because we need to get
+        //    the boundary conditions evaluated as well.  Otherwise we could just loop over the interior points
+        //    and use indexing that is more simple.
+        // Most of the code to do this comes directly from residual.C (thanks Bill!!)
+        // // //  BEGIN (mostly) COPIED CODE
+        const IntegerDistributedArray & equationNumber = coeff[grid].sparse->equationNumber;
+        const IntegerDistributedArray & classify = coeff[grid].sparse->classify;
+        
+        const int ndra=cg[grid].dimension(Start,axis1), ndrb=cg[grid].dimension(End,axis1);
+        const int ndsa=cg[grid].dimension(Start,axis2), ndsb=cg[grid].dimension(End,axis2);
+        const int ndta=cg[grid].dimension(Start,axis3), ndtb=cg[grid].dimension(End,axis3);
+        
+        const realArray & coeffG = coeff[grid];
+        
+        // // XXX THE FOLLOWING SECTION NEEDS TO CHANGE IF scalarSystemForImplicitTimeStepping==TRUE
+        
+        // ------- general case ------
+        int i1,i2,i3,n;
+        for( i3=ndta; i3<=ndtb; i3++ )
+          {
+            for( i2=ndsa; i2<=ndsb; i2++ )
+              {
+                for( i1=ndra; i1<=ndrb; i1++ )
+                  {
+                    // printf(" i1,i2=%i,%i \n",i1,i2);
+                    for( n=0; n<numberOfComponents; n++)
+                      {
+                        if( classify(i1,i2,i3,n)!=SparseRepForMGF::unused )
+                          {
+                            real scale=0;
+                            for( int s=0; s<stencilDim; s++)
+                              scale=max(scale,fabs(CF(s+stencilDim*n,i1,i2,i3)));
+                            if ( scale>10*REAL_MIN )
+                              {
+                                scale = 1./scale;
+                                
+                                RHS(i1,i2,i3,n) *= scale;
+                                for( int s=0; s<stencilDim; s++)
+                                  CF(s+stencilDim*n,i1,i2,i3) *= scale;
+                              }
+                          } // is used point
+                      } // end number of components
+                  } // end i1
+              } // end i2 
+          } // end i3
+        
       } // end for grid 
   }
 
   int 
   residualWithConstraint(Oges &solver,
-			 const RealGridCollectionFunction & coeff,
-			 const RealGridCollectionFunction & u,
-			 const RealGridCollectionFunction & f,
-			 RealGridCollectionFunction & r )
+                         const RealGridCollectionFunction & coeff,
+                         const RealGridCollectionFunction & u,
+                         const RealGridCollectionFunction & f,
+                         RealGridCollectionFunction & r )
   {
     
     // compute the residual just using the coefficient grid function
@@ -116,24 +116,24 @@ namespace {
     const GridCollection & cg = *coeff.getGridCollection();
     for ( int grid=0; grid<cg.numberOfGrids(); grid++ )
       {
-	const MappedGrid &mg = cg[grid];
-	Index I1,I2,I3,C;
-	getIndex(mg.gridIndexRange(),I1,I2,I3);
-	const realMappedGridFunction &cc_mg = constraintCoeff[grid];
-	const realMappedGridFunction &u_mg = u[grid];
-	realMappedGridFunction &r_mg = r[grid];
+        const MappedGrid &mg = cg[grid];
+        Index I1,I2,I3,C;
+        getIndex(mg.gridIndexRange(),I1,I2,I3);
+        const realMappedGridFunction &cc_mg = constraintCoeff[grid];
+        const realMappedGridFunction &u_mg = u[grid];
+        realMappedGridFunction &r_mg = r[grid];
 
-	for ( int e=0; e<solver.numberOfExtraEquations; e++ ) // !! assumes e corresponds to  component in coeff, ne should probably reflect this ??
-	  {
-	    int ne,i1e,i2e,i3e,gride;
-	    solver.equationToIndex( solver.extraEquationNumber(0),ne,i1e,i2e,i3e,gride);
-	    real ue = u[gride](i1e,i2e,i3e,ne);
-	    r_mg(I1,I2,I3,e) -= cc_mg(I1,I2,I3,e)*ue; // - sign because ::residual computes r=f-coeff*u
-	  }
+        for ( int e=0; e<solver.numberOfExtraEquations; e++ ) // !! assumes e corresponds to  component in coeff, ne should probably reflect this ??
+          {
+            int ne,i1e,i2e,i3e,gride;
+            solver.equationToIndex( solver.extraEquationNumber(0),ne,i1e,i2e,i3e,gride);
+            real ue = u[gride](i1e,i2e,i3e,ne);
+            r_mg(I1,I2,I3,e) -= cc_mg(I1,I2,I3,e)*ue; // - sign because ::residual computes r=f-coeff*u
+          }
       }
 
+    return 0;
   }
-
 
 }
 
@@ -179,8 +179,8 @@ advanceNewton( real & t0, real & dt0, int & numberOfSubSteps, int & init, int in
     }
 
   assert(parameters.dbase.get<Parameters::ImplicitMethod >("implicitMethod")==Parameters::trapezoidal   ||
-	 parameters.dbase.get<Parameters::ImplicitMethod >("implicitMethod")==Parameters::backwardEuler ||
-	 parameters.dbase.get<Parameters::ImplicitMethod >("implicitMethod")==Parameters::crankNicolson  );
+         parameters.dbase.get<Parameters::ImplicitMethod >("implicitMethod")==Parameters::backwardEuler ||
+         parameters.dbase.get<Parameters::ImplicitMethod >("implicitMethod")==Parameters::crankNicolson  );
   
   assert(!parameters.dbase.get<int >("scalarSystemForImplicitTimeStepping")); // see below for a hint about what to change to make this work
 
@@ -225,36 +225,36 @@ advanceNewton( real & t0, real & dt0, int & numberOfSubSteps, int & init, int in
 
     for ( int grid=0; grid<uOld.cg.numberOfComponentGrids(); grid++ )
       {
-	uNew.u[grid] = 0.0;
+        uNew.u[grid] = 0.0;
       }
 
     bool recomputeMatrix = (initialStep+subStep)%parameters.dbase.get<int >("refactorFrequency")==0;
     if ( recomputeMatrix ) 
       { // build the matrix here because the constraint value in the rhs is written here too
 
-	//	cout<<"rebuilding matrix, step = "<<initialStep + subStep<<endl;
-	parameters.dbase.get<int >("initializeImplicitTimeStepping") = true;
-	formMatrixForImplicitSolve(dt0,uNew,uOld); // this call will build the DomainSolver::coeff which is - L
-	parameters.dbase.get<int >("initializeImplicitTimeStepping") = false;
+        //      cout<<"rebuilding matrix, step = "<<initialStep + subStep<<endl;
+        parameters.dbase.get<int >("initializeImplicitTimeStepping") = true;
+        formMatrixForImplicitSolve(dt0,uNew,uOld); // this call will build the DomainSolver::coeff which is - L
+        parameters.dbase.get<int >("initializeImplicitTimeStepping") = false;
       }
     else if ( implicitSolver[0].rightNullVector.numberOfComponentGrids() )
       {
-	Oges &solver = implicitSolver[0];
-	realCompositeGridFunction &constraintCoeff = solver.rightNullVector;
-	CompositeGrid &cg = uOld.cg;
-	real cval = 0.0;
-	for ( int grid=0; grid<cg.numberOfGrids(); grid++ )
-	  {
-	    MappedGrid &mg = cg[grid];
-	    Index I1,I2,I3;
-	    getIndex(mg.gridIndexRange(),I1,I2,I3);
-	    realMappedGridFunction &cc_mg = constraintCoeff[grid];
-	    cval += sum(uOld.u[grid](I1,I2,I3,parameters.dbase.get<int >("rc"))*cc_mg(I1,I2,I3,parameters.dbase.get<int >("rc")));
-	  } 
-	int ne,i1e,i2e,i3e,gride;
-	solver.equationToIndex( solver.extraEquationNumber(0),ne,i1e,i2e,i3e,gride);
-	//	cout<<"RHS = "<<cval<<endl;
-	uNew.u[gride](i1e,i2e,i3e,ne)=cval;
+        Oges &solver = implicitSolver[0];
+        realCompositeGridFunction &constraintCoeff = solver.rightNullVector;
+        CompositeGrid &cg = uOld.cg;
+        real cval = 0.0;
+        for ( int grid=0; grid<cg.numberOfGrids(); grid++ )
+          {
+            MappedGrid &mg = cg[grid];
+            Index I1,I2,I3;
+            getIndex(mg.gridIndexRange(),I1,I2,I3);
+            realMappedGridFunction &cc_mg = constraintCoeff[grid];
+            cval += sum(uOld.u[grid](I1,I2,I3,parameters.dbase.get<int >("rc"))*cc_mg(I1,I2,I3,parameters.dbase.get<int >("rc")));
+          } 
+        int ne,i1e,i2e,i3e,gride;
+        solver.equationToIndex( solver.extraEquationNumber(0),ne,i1e,i2e,i3e,gride);
+        //      cout<<"RHS = "<<cval<<endl;
+        uNew.u[gride](i1e,i2e,i3e,ne)=cval;
       }
 
 
@@ -277,11 +277,11 @@ advanceNewton( real & t0, real & dt0, int & numberOfSubSteps, int & init, int in
     arrayDims=0;
     for( int grid=0; grid<numberOfGrids; grid++ )
       {
-	for( int axis=0; axis<cg.numberOfDimensions(); axis++ )
-	  {
-	    arraySize(grid,axis)=cg[grid].dimension(End,axis)-cg[grid].dimension(Start,axis)+1;
-	    arrayDims(grid,axis)=cg[grid].dimension(Start,axis);
-	  }
+        for( int axis=0; axis<cg.numberOfDimensions(); axis++ )
+          {
+            arraySize(grid,axis)=cg[grid].dimension(End,axis)-cg[grid].dimension(Start,axis)+1;
+            arrayDims(grid,axis)=cg[grid].dimension(Start,axis);
+          }
       }
     
     IntegerArray gridEquationBase(numberOfGrids+1);
@@ -289,9 +289,9 @@ advanceNewton( real & t0, real & dt0, int & numberOfSubSteps, int & init, int in
     gridEquationBase(0)=0;
     for( int grid=1; grid<=numberOfGrids; grid++ )
       gridEquationBase(grid)=gridEquationBase(grid-1)+
-	numberOfComponents*((cg[grid-1].dimension(End,axis1)-cg[grid-1].dimension(Start,axis1)+1)*
-			    (cg[grid-1].dimension(End,axis2)-cg[grid-1].dimension(Start,axis2)+1)*
-			    (cg[grid-1].dimension(End,axis3)-cg[grid-1].dimension(Start,axis3)+1));
+        numberOfComponents*((cg[grid-1].dimension(End,axis1)-cg[grid-1].dimension(Start,axis1)+1)*
+                            (cg[grid-1].dimension(End,axis2)-cg[grid-1].dimension(Start,axis2)+1)*
+                            (cg[grid-1].dimension(End,axis3)-cg[grid-1].dimension(Start,axis3)+1));
     
     // // // //
 
@@ -302,31 +302,31 @@ advanceNewton( real & t0, real & dt0, int & numberOfSubSteps, int & init, int in
     fn[0] = 0.;
     for ( int grid=0; grid<uOld.cg.numberOfComponentGrids(); grid++ )
       {
-	rparam[0]=uOld.t;
-	rparam[1]=uOld.t+dt0*.5; // tforce
-	rparam[2]=uOld.t+dt0; // tImplicit
-	iparam[0]=grid;
-	iparam[1]=uOld.cg.refinementLevelNumber(grid);
-	iparam[2]=numberOfStepsTaken;
-	if( debug() & 4 ) 
-	  gf[iuNew].u.display("advanceNewton : RHS before getUt ",parameters.dbase.get<FILE* >("debugFile"),"%6.3f ");
+        rparam[0]=uOld.t;
+        rparam[1]=uOld.t+dt0*.5; // tforce
+        rparam[2]=uOld.t+dt0; // tImplicit
+        iparam[0]=grid;
+        iparam[1]=uOld.cg.refinementLevelNumber(grid);
+        iparam[2]=numberOfStepsTaken;
+        if( debug() & 4 ) 
+          gf[iuNew].u.display("advanceNewton : RHS before getUt ",parameters.dbase.get<FILE* >("debugFile"),"%6.3f ");
 
-// 	mappedGridSolver[grid]->getUt(uOld.u[grid],uOld.getGridVelocity(grid),
-// 				      uNew.u[grid],iparam.ptr(),rparam.ptr(),fn[0][grid],&uNew.cg[grid]);
-	getUt(uOld.u[grid],uOld.getGridVelocity(grid),
-	      uNew.u[grid],iparam.ptr(),rparam.ptr(),fn[0][grid],&uNew.cg[grid]);
+//      mappedGridSolver[grid]->getUt(uOld.u[grid],uOld.getGridVelocity(grid),
+//                                    uNew.u[grid],iparam.ptr(),rparam.ptr(),fn[0][grid],&uNew.cg[grid]);
+        getUt(uOld.u[grid],uOld.getGridVelocity(grid),
+              uNew.u[grid],iparam.ptr(),rparam.ptr(),fn[0][grid],&uNew.cg[grid]);
 
-	if( debug() & 4 ) 
-	  gf[iuNew].u.display("advanceNewton : RHS after getUt ",parameters.dbase.get<FILE* >("debugFile"),"%6.3f ");
+        if( debug() & 4 ) 
+          gf[iuNew].u.display("advanceNewton : RHS after getUt ",parameters.dbase.get<FILE* >("debugFile"),"%6.3f ");
 
-	Index I1,I2,I3,all;
-	//XXX	getIndex(uNew.cg[grid].indexRange(),I1,I2,I3);
-	getIndex(uNew.cg[grid].dimension(),I1,I2,I3);
-	uNew.u[grid](I1,I2,I3,all) += fn[0][grid](I1,I2,I3,all);
-	//	uNew.u[grid](I1,I2,I3,all) += uOld.u[grid](I1,I2,I3,all);
+        Index I1,I2,I3,all;
+        //XXX   getIndex(uNew.cg[grid].indexRange(),I1,I2,I3);
+        getIndex(uNew.cg[grid].dimension(),I1,I2,I3);
+        uNew.u[grid](I1,I2,I3,all) += fn[0][grid](I1,I2,I3,all);
+        //      uNew.u[grid](I1,I2,I3,all) += uOld.u[grid](I1,I2,I3,all);
 
-	if( debug() & 4 ) 
-	  gf[iuNew].u.display("advanceNewton : RHS after adding f^n ",parameters.dbase.get<FILE* >("debugFile"),"%6.3f ");
+        if( debug() & 4 ) 
+          gf[iuNew].u.display("advanceNewton : RHS after adding f^n ",parameters.dbase.get<FILE* >("debugFile"),"%6.3f ");
       }
 
     gf[iuNew].t = t0 + dt0;
@@ -346,13 +346,13 @@ advanceNewton( real & t0, real & dt0, int & numberOfSubSteps, int & init, int in
 
     if ( implicitSolver[0].isSolverIterative() )
       {
-	//	int precond_freq = implicitSolver[0].getNumberOfIterations() < 10 ? 1000 : parameters.dbase.get<int>("preconditionerFrequency");
-	int precond_freq = parameters.dbase.get<int>("preconditionerFrequency");
-	int maxIts = 0;
-	implicitSolver[0].get(OgesParameters::THEmaximumNumberOfIterations,maxIts);
-	bool usedMaxIterations = implicitSolver[0].getNumberOfIterations()>=maxIts;
-	implicitSolver[0].recomputePreconditioner = implicitSolver[0].getNumberOfIterations() < 10 ? false : (usedMaxIterations || (globalStepNumber%precond_freq)==0);
-	
+        //      int precond_freq = implicitSolver[0].getNumberOfIterations() < 10 ? 1000 : parameters.dbase.get<int>("preconditionerFrequency");
+        int precond_freq = parameters.dbase.get<int>("preconditionerFrequency");
+        int maxIts = 0;
+        implicitSolver[0].get(OgesParameters::THEmaximumNumberOfIterations,maxIts);
+        bool usedMaxIterations = implicitSolver[0].getNumberOfIterations()>=maxIts;
+        implicitSolver[0].recomputePreconditioner = implicitSolver[0].getNumberOfIterations() < 10 ? false : (usedMaxIterations || (globalStepNumber%precond_freq)==0);
+        
       }
 
     real ff = parameters.dbase.get<real >("implicitFactor");
@@ -377,10 +377,10 @@ advanceNewton( real & t0, real & dt0, int & numberOfSubSteps, int & init, int in
     real maxL_2 = 0;
     for( int n=N.getBase(); n<=N.getBound(); n++ )
       {
-	maxRes(n)=maxNorm(residual.u,n,maskOption,extra);
-	l2Res(n) =l2Norm(residual.u,n,maskOption,extra);
-	maxL_inf = max(maxRes(n),maxL_inf);
-	maxL_2 = max(l2Res(n),maxL_2);
+        maxRes(n)=maxNorm(residual.u,n,maskOption,extra);
+        l2Res(n) =l2Norm(residual.u,n,maskOption,extra);
+        maxL_inf = max(maxRes(n),maxL_inf);
+        maxL_2 = max(l2Res(n),maxL_2);
       }
 
     real maxL_inf_tmp = 0;
@@ -391,11 +391,11 @@ advanceNewton( real & t0, real & dt0, int & numberOfSubSteps, int & init, int in
 
     if ( !hasInitialResidual )
       {
-	pPar.setParameter("initial_newton_residual", maxL);
-	initialResidual = maxL;
-	saveSequenceInfo(t0,residual.u);
+        pPar.setParameter("initial_newton_residual", maxL);
+        initialResidual = maxL;
+        saveSequenceInfo(t0,residual.u);
 
-	//	PlotIt::contour(*Overture::getGraphicsInterface(),residual.u);
+        //      PlotIt::contour(*Overture::getGraphicsInterface(),residual.u);
       }
 
     real nonLin_tol = max(newtonAbsoluteTolerance, initialResidual*newtonRelativeTolerance);
@@ -425,92 +425,92 @@ advanceNewton( real & t0, real & dt0, int & numberOfSubSteps, int & init, int in
     ok = false;
     while ( !ok && /*ff>1e-4 &&*/ ii<maxSearchIterations )
       {
-	parameters.dbase.get<int >("initializeImplicitTimeStepping") = true;
-	formMatrixForImplicitSolve(dt0,rhs,uNew); // this call will build the DomainSolver::coeff which is - L
-	parameters.dbase.get<int >("initializeImplicitTimeStepping") = false;
+        parameters.dbase.get<int >("initializeImplicitTimeStepping") = true;
+        formMatrixForImplicitSolve(dt0,rhs,uNew); // this call will build the DomainSolver::coeff which is - L
+        parameters.dbase.get<int >("initializeImplicitTimeStepping") = false;
 
-	fn[0] = 0.;
-	for ( int grid=0; grid<uOld.cg.numberOfComponentGrids(); grid++ )
-	  {
-	    rhs.u[grid]=0.;
-	    rparam[0]=uOld.t;
-	    rparam[1]=uOld.t+dt0*.5; // tforce
-	    rparam[2]=uOld.t+dt0; // tImplicit
-	    iparam[0]=grid;
-	    iparam[1]=uOld.cg.refinementLevelNumber(grid);
-	    iparam[2]=numberOfStepsTaken;
+        fn[0] = 0.;
+        for ( int grid=0; grid<uOld.cg.numberOfComponentGrids(); grid++ )
+          {
+            rhs.u[grid]=0.;
+            rparam[0]=uOld.t;
+            rparam[1]=uOld.t+dt0*.5; // tforce
+            rparam[2]=uOld.t+dt0; // tImplicit
+            iparam[0]=grid;
+            iparam[1]=uOld.cg.refinementLevelNumber(grid);
+            iparam[2]=numberOfStepsTaken;
 
-	    getUt(uNew.u[grid],uNew.getGridVelocity(grid),
-		  rhs.u[grid],iparam.ptr(),rparam.ptr(),fn[0][grid],&uNew.cg[grid]);
-	    
-	    Index I1,I2,I3,all;
-	    //XXXX	    getIndex(uNew.cg[grid].indexRange(),I1,I2,I3);
-	    getIndex(uNew.cg[grid].dimension(),I1,I2,I3);
-	    rhs.u[grid](I1,I2,I3,all) += fn[0][grid](I1,I2,I3,all);
-	    //	uNew.u[grid](I1,I2,I3,all) += uOld.u[grid](I1,I2,I3,all);
-	  }
-	int old_current = current;
-	current = iuNew;
-	applyBoundaryConditionsForImplicitTimeStepping( rhs,gf[iuOld] );  // *wdh* Dec 20, 2017 -- added gf[iuOld]
-	current = old_current;
+            getUt(uNew.u[grid],uNew.getGridVelocity(grid),
+                  rhs.u[grid],iparam.ptr(),rparam.ptr(),fn[0][grid],&uNew.cg[grid]);
+            
+            Index I1,I2,I3,all;
+            //XXXX          getIndex(uNew.cg[grid].indexRange(),I1,I2,I3);
+            getIndex(uNew.cg[grid].dimension(),I1,I2,I3);
+            rhs.u[grid](I1,I2,I3,all) += fn[0][grid](I1,I2,I3,all);
+            //  uNew.u[grid](I1,I2,I3,all) += uOld.u[grid](I1,I2,I3,all);
+          }
+        int old_current = current;
+        current = iuNew;
+        applyBoundaryConditionsForImplicitTimeStepping( rhs,gf[iuOld] );  // *wdh* Dec 20, 2017 -- added gf[iuOld]
+        current = old_current;
 
-	//	::residual(coeff, uNew.u, rhs.u, residual.u);
-	::residualWithConstraint(implicitSolver[0],coeff, uNew.u, rhs.u, residual.u);
+        //      ::residual(coeff, uNew.u, rhs.u, residual.u);
+        ::residualWithConstraint(implicitSolver[0],coeff, uNew.u, rhs.u, residual.u);
 
-	maxL_inf_tmp = 0;
-	maxL_2_tmp = 0;
-	for( int n=N.getBase(); n<=N.getBound(); n++ )
-	  {
-	    maxRes_tmp(n)=maxNorm(residual.u,n,maskOption,extra);
-	    l2Res_tmp(n) =l2Norm(residual.u,n,maskOption,extra);
-	    maxL_inf_tmp = max(maxRes_tmp(n),maxL_inf_tmp);
-	    maxL_2_tmp = max(l2Res_tmp(n),maxL_2_tmp);
-	  }
-	real tfac = 1e-4;
-	//	cout<<"ff = "<<ff<<", maxL_inf = "<<maxL_inf<<", maxL_inf_tmp = "<<maxL_inf_tmp<<", maxLtol = "<<(1.-tfac*(1.-eta_old))*maxL_inf<<", tol = "<<nonLin_tol<<endl;
-	//	cout<<"      maxL_2 = "<<maxL_2<<", maxL_2_tmp = "<<maxL_2_tmp<<endl;
-	//	if ( maxL_inf_tmp>((1.-tfac*(1.-eta_old))*maxL_inf) ) 
-	real maxL_inf_tmp_rel = maxL_inf_tmp/initialResidual;
-	real maxL_inf_rel = maxL_inf/initialResidual;
-	real maxL_tmp_rel = maxL_tmp/initialResidual;
-	real maxL_rel = maxL/initialResidual;
-	cout<<"step = "<<ff<<", "<< (useL2Norm ? "(l2) : current = " : "(max) : current = ")<<maxL<<", tmp = "<<maxL_tmp<<", step tol = "<<((1.-tfac*(1.-eta_old))*maxL)<<", tol = "<<nonLin_tol<<endl;
-	//	if ( maxL_inf_tmp_rel>((1.-tfac*(1.-eta_old))*maxL_inf_rel) ) 
-	if ( maxL_tmp_rel>((1.-tfac*(1.-eta_old))*maxL_rel) ) 
-	  {
-	    real ff_old = ff;
-	    if ( false && ii>1 )
-	      {
-		phi[(ii+1)%2 + 1] = maxL_inf_tmp;
-		l[(ii+1)%2 + 1] = ff_old;
+        maxL_inf_tmp = 0;
+        maxL_2_tmp = 0;
+        for( int n=N.getBase(); n<=N.getBound(); n++ )
+          {
+            maxRes_tmp(n)=maxNorm(residual.u,n,maskOption,extra);
+            l2Res_tmp(n) =l2Norm(residual.u,n,maskOption,extra);
+            maxL_inf_tmp = max(maxRes_tmp(n),maxL_inf_tmp);
+            maxL_2_tmp = max(l2Res_tmp(n),maxL_2_tmp);
+          }
+        real tfac = 1e-4;
+        //      cout<<"ff = "<<ff<<", maxL_inf = "<<maxL_inf<<", maxL_inf_tmp = "<<maxL_inf_tmp<<", maxLtol = "<<(1.-tfac*(1.-eta_old))*maxL_inf<<", tol = "<<nonLin_tol<<endl;
+        //      cout<<"      maxL_2 = "<<maxL_2<<", maxL_2_tmp = "<<maxL_2_tmp<<endl;
+        //      if ( maxL_inf_tmp>((1.-tfac*(1.-eta_old))*maxL_inf) ) 
+        real maxL_inf_tmp_rel = maxL_inf_tmp/initialResidual;
+        real maxL_inf_rel = maxL_inf/initialResidual;
+        real maxL_tmp_rel = maxL_tmp/initialResidual;
+        real maxL_rel = maxL/initialResidual;
+        cout<<"step = "<<ff<<", "<< (useL2Norm ? "(l2) : current = " : "(max) : current = ")<<maxL<<", tmp = "<<maxL_tmp<<", step tol = "<<((1.-tfac*(1.-eta_old))*maxL)<<", tol = "<<nonLin_tol<<endl;
+        //      if ( maxL_inf_tmp_rel>((1.-tfac*(1.-eta_old))*maxL_inf_rel) ) 
+        if ( maxL_tmp_rel>((1.-tfac*(1.-eta_old))*maxL_rel) ) 
+          {
+            real ff_old = ff;
+            if ( false && ii>1 )
+              {
+                phi[(ii+1)%2 + 1] = maxL_inf_tmp;
+                l[(ii+1)%2 + 1] = ff_old;
 
-		real p2 = -(-l[0] * phi[2] + phi[1] * l[0] + l[2] * phi[0] + phi[2] * l[1] - l[2] * phi[1] - phi[0] * l[1]) / (-l[0] * l[2] + l[1] * l[0] + pow(l[2], 0.2e1) - l[2] * l[1]) / (l[0] - l[1]);
-		if ( p2<REAL_MIN ) 
-		  {
-		    ff/=2.;
-		    cout<<"P'' is negative = "<<p2<<endl;
-		  }
-		else
-		  {
-		    real fft= .5*( (l[0]*l[0]*(phi[1]-phi[2])+l[1]*l[1]*(phi[2]-phi[0])+l[2]*l[2]*(phi[0]-phi[1]))/
-				(l[0]*(phi[1]-phi[2]) + l[1]*(phi[2]-phi[0]) + l[2]*(phi[0]-phi[1])) );
+                real p2 = -(-l[0] * phi[2] + phi[1] * l[0] + l[2] * phi[0] + phi[2] * l[1] - l[2] * phi[1] - phi[0] * l[1]) / (-l[0] * l[2] + l[1] * l[0] + pow(l[2], 0.2e1) - l[2] * l[1]) / (l[0] - l[1]);
+                if ( p2<REAL_MIN ) 
+                  {
+                    ff/=2.;
+                    cout<<"P'' is negative = "<<p2<<endl;
+                  }
+                else
+                  {
+                    real fft= .5*( (l[0]*l[0]*(phi[1]-phi[2])+l[1]*l[1]*(phi[2]-phi[0])+l[2]*l[2]*(phi[0]-phi[1]))/
+                                (l[0]*(phi[1]-phi[2]) + l[1]*(phi[2]-phi[0]) + l[2]*(phi[0]-phi[1])) );
 
-		    cout<<"QUADRATIC ff = "<<fft<<", p'' = "<<p2<<endl;
-		    ff = fft<REAL_MIN ? ff/2. : max(1e-4,min(fft,.9));
-		  }
-	      }
-	    else
-	      {
-		//phi[ii] = maxL_inf_tmp;
-		//l[ii] = ff_old;
-		ff/=2.;
-	      }
+                    cout<<"QUADRATIC ff = "<<fft<<", p'' = "<<p2<<endl;
+                    ff = fft<REAL_MIN ? ff/2. : max(1e-4,min(fft,.9));
+                  }
+              }
+            else
+              {
+                //phi[ii] = maxL_inf_tmp;
+                //l[ii] = ff_old;
+                ff/=2.;
+              }
 
-	    gf[iuNew].u = (1.-ff)*gf[iuOld].u + ff*fullStep.u;
-	  }
-	else 
-	  ok = true;
-	ii++;
+            gf[iuNew].u = (1.-ff)*gf[iuOld].u + ff*fullStep.u;
+          }
+        else 
+          ok = true;
+        ii++;
       }
 
     if (!ok) 
@@ -552,21 +552,21 @@ advanceNewton( real & t0, real & dt0, int & numberOfSubSteps, int & init, int in
     current = iuOld;  // new way *wdh* 060919 // kkc 070202 this is apparently needed here for some reason
     if (maxL_tmp<=nonLin_tol)
       {
-	maxL = maxL_tmp;
-	real maxL_rel = maxL/initialResidual;
-	printF("NEWTON ITERATION CONVERGED TO %g (%g relative)\n",maxL,maxL_rel);
-	numberOfSubSteps = subStep;
-	parameters.dbase.get<int >("maxIterations") = 0;
-	break;
+        maxL = maxL_tmp;
+        real maxL_rel = maxL/initialResidual;
+        printF("NEWTON ITERATION CONVERGED TO %g (%g relative)\n",maxL,maxL_rel);
+        numberOfSubSteps = subStep;
+        parameters.dbase.get<int >("maxIterations") = 0;
+        break;
       }
     else if ( numberOfFailedSteps>=maxNumberOfFailedNewtonSteps )
       {
-	maxL = maxL_tmp;
-	real maxL_rel = maxL/initialResidual;
-	printF("NEWTON ITERATION FAILURE, RESIDUAL IS %g (%g relative)\n",maxL,maxL_rel);
-	numberOfSubSteps = subStep;
-	parameters.dbase.get<int >("maxIterations") = 0;
-	break;
+        maxL = maxL_tmp;
+        real maxL_rel = maxL/initialResidual;
+        printF("NEWTON ITERATION FAILURE, RESIDUAL IS %g (%g relative)\n",maxL,maxL_rel);
+        numberOfSubSteps = subStep;
+        parameters.dbase.get<int >("maxIterations") = 0;
+        break;
       }
 
 

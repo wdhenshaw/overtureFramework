@@ -1,7 +1,9 @@
 #
 # Create an overlapping grid for a 2D valve
 #
-#  time to make: old:27s (ultra) new: 4.4s
+#  time to make: 
+#               27.s (ultra) (LANL)
+#                4.4s (LANL, optimized version)
 #                .34 (tux50)
 #                .27 tux50
 #                .12 tux231
@@ -9,6 +11,7 @@
 #                .047 (ansel)
 #                .033 (cg6)
 #                .022 (cg66, 2022)
+#                .0114 (cgpc, 2025)
 #
 create mappings
  #

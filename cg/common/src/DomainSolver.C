@@ -1155,6 +1155,7 @@ initializeInterfaces(GridFunction & cgf)
 {
 //   printF("DomainSolver::initializeInterfaces:WARNING: base class function called!\n");
 //  Overture::abort("error");
+  return 0;
 }
 
 //============================================================================================
@@ -1170,6 +1171,8 @@ assignInterfaceBoundaryConditions(GridFunction & cgf,
 {
 //  printF("DomainSolver::assignInterfaceBoundaryConditions:WARNING: base class function called!\n");
 //  Overture::abort("error");
+
+  return 0;
 }
 
 

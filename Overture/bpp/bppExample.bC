@@ -1,0 +1,113 @@
+// =====================================================================
+//
+//  C++ example using bpp macros 
+//    
+// =====================================================================
+
+#include <stdio.h>
+#include <math.h>
+
+typedef double Real;
+
+// Inline bpp macro:
+#defineMacro Dxx2(u,i) ( u(i+1)-2.*u(i)+u(i-1) )
+
+// Shows one inline macro using another:
+#defineMacro Dxx4(v,i) ( Dxx2(v,i-1)-2.*Dxx2(v,i)+Dxx2(v,i+1) )
+
+// ---------------------------------------------------
+// Macro takeStep: 
+//   ORDER  : order of accuracy, 2,4
+//   OPTION : STENCIL,FAME 
+// ---------------------------------------------------
+#beginMacro takeStep(ORDER,OPTION)
+
+	printf("Run order=ORDER, option=OPTION\n");
+  for( int i=n1a; i<=n1b; i++ )// start loop i 
+  {
+	  #If OPTION eq STENCIL
+		  #If ORDER eq 2
+		    un(i) = 2.*uc(i) - up(i) + cdtdxSq*Dxx2(uc,i);
+		  #Elif ORDER eq 4 
+		    un(i) = 2.*uc(i) - up(i) + cdtdxSq*Dxx4(uc,i);
+		  #Else
+		    printf("Unknown order=ORDER\n");
+		    abort("error");
+		  #End
+		#Elif OPTION eq FAME
+		  #If ORDER eq 2
+		    un(i) = 2.*uc(i) - up(i) + cdtdxSq*( uc(i-1) -2.*uc(i) + uc(i+1) );
+		  #Elif ORDER eq 4 
+		    un(i) = 2.*uc(i) - up(i) + cdtdxSq*( -uc(i-2) + 4.*uc(i-1) -6.*uc(i) + 4.*uc(i+1) -uc(i+2) );
+		  #Else
+		    printf("Unknown order=ORDER\n");
+		    abort("error");
+		  #End
+
+    #Else
+		  printf("Unknown option=OPTION\n");
+		  abort("error");
+		#End
+  } // end loop i 
+#endMacro
+
+///Example showing how to save output to a file 
+// Macro to build separate files 
+#beginMacro buildFile(NAME,ORDER,OPTION)
+#beginFile NAME.C
+ takeStep(ORDER,OPTION) 
+#endFile
+#endMacro
+
+// create two files 
+buildFile(takeStepOrder2Stencil,2,STENCIL)
+buildFile(takeStepOrder4Fame,4,FAME)
+
+
+int 
+main(int argc, char *argv[])
+{
+
+  int nx=100;
+
+  const int numGhost=2;
+
+  int n1a=0, n1b=nx;
+  int nd1a=n1a-numGhost;
+  int nd1b=n1b+numGhost;
+  int nd1= nd1b-nd1a+1;
+
+  Real *up_p = new Real[nd1];  // preivous
+  Real *uc_p = new Real[nd1];  // current
+  Real *un_p = new Real[nd1];  // next 
+
+  #define up(i) up_p[i-nd1a]
+  #define uc(i) uc_p[i-nd1a]
+  #define un(i) un_p[i-nd1a]
+
+  for( int i=nd1a; i<=nd1b; i++ )
+  {
+  	up(i) = 0.;
+  	uc(i) = 1.;
+  }
+
+  Real c=1.;
+  Real dx = 1./nx;
+  Real dt = dx/c;
+  Real cdtdxSq = c*c*dt*dt/(dx*dx);
+
+  takeStep(2,STENCIL) 
+  takeStep(4,STENCIL) 
+  
+  takeStep(2,FAME) 
+  takeStep(4,FAME) 
+  
+
+  delete [] up_p;
+  delete [] uc_p;
+  delete [] un_p;
+
+  printf("bppExample: done.\n");
+  return 0;
+}
+

@@ -107,17 +107,17 @@ getInitialConditions( InitialConditionOptionEnum option, realCompositeGridFuncti
       {
         // for a rectangular grid we avoid building the array of verticies.
         // we assign the initial conditions with C-style loops
-	real dx[3]={0.,0.,0.}, xab[2][3]={0.,0.,0.,0.,0.,0.};
-	if( cg[grid].isRectangular() )
-	  cg[grid].getRectangularGridParameters( dx, xab );
+        real dx[3]={0.,0.,0.}, xab[2][3]={0.,0.,0.,0.,0.,0.};
+        if( cg[grid].isRectangular() )
+          cg[grid].getRectangularGridParameters( dx, xab );
 
-	const real xa=xab[0][0], dx0=dx[0];
-	const real ya=xab[0][1], dy0=dx[1];
-	const real za=xab[0][2], dz0=dx[2];
+        const real xa=xab[0][0], dx0=dx[0];
+        const real ya=xab[0][1], dy0=dx[1];
+        const real za=xab[0][2], dz0=dx[2];
 
-	const int i0a=cg[grid].gridIndexRange(0,0);
-	const int i1a=cg[grid].gridIndexRange(0,1);
-	const int i2a=cg[grid].gridIndexRange(0,2);
+        const int i0a=cg[grid].gridIndexRange(0,0);
+        const int i1a=cg[grid].gridIndexRange(0,1);
+        const int i2a=cg[grid].gridIndexRange(0,2);
 
 #define VERTEX0(i0,i1,i2) xa+dx0*(i0-i0a)
 #define VERTEX1(i0,i1,i2) ya+dy0*(i1-i1a)
@@ -134,12 +134,12 @@ getInitialConditions( InitialConditionOptionEnum option, realCompositeGridFuncti
 #define UM(i0,i1,i2) upm[(i0)+(i1)*d1+(i2)*d2]
 
         int i1,i2,i3;
-	FOR_3(i1,i2,i3,I1,I2,I3) // loop over all points
-	{
+        FOR_3(i1,i2,i3,I1,I2,I3) // loop over all points
+        {
           UM(i1,i2,i3)=U0(VERTEX0(i1,i2,i3),VERTEX1(i1,i2,i3),-dt);
           U(i1,i2,i3) =U0(VERTEX0(i1,i2,i3),VERTEX1(i1,i2,i3),0.);
-	}
-	
+        }
+        
 #undef VERTEX0
 #undef VERTEX1
 #undef VERTEX2
@@ -148,10 +148,10 @@ getInitialConditions( InitialConditionOptionEnum option, realCompositeGridFuncti
       }
       else
       {
-	cg[grid].update(MappedGrid::THEvertex);  // build the array of vertices
-	const realArray & vertex = cg[grid].vertex();
-	u[1][grid]=U0(vertex(I1,I2,I3,0),vertex(I1,I2,I3,1),-dt);
-	u[0][grid]=U0(vertex(I1,I2,I3,0),vertex(I1,I2,I3,1),0.);
+        cg[grid].update(MappedGrid::THEvertex);  // build the array of vertices
+        const realArray & vertex = cg[grid].vertex();
+        u[1][grid]=U0(vertex(I1,I2,I3,0),vertex(I1,I2,I3,1),-dt);
+        u[0][grid]=U0(vertex(I1,I2,I3,0),vertex(I1,I2,I3,1),0.);
       }
     }
     else
@@ -163,12 +163,12 @@ getInitialConditions( InitialConditionOptionEnum option, realCompositeGridFuncti
       u[1][grid]=0.;
       where( fabs(vertex(I1,I2,I3,0)-(xPulse-c*dt))<.2 )
       {
-	u[1][grid]=1.;
+        u[1][grid]=1.;
       }
       u[0][grid]=0.;
       where( fabs(vertex(I1,I2,I3,0)-xPulse)<.2 )
       {
-	u[0][grid]=1.;
+        u[0][grid]=1.;
       }
     }
     cg[grid].destroy(MappedGrid::THEvertex);  // vertices are no nolonger needed.
@@ -200,7 +200,7 @@ main(int argc, char *argv[])
       if( line=="noplot" )
         plotOption=FALSE; 
       else
-	commandFileName=line;
+        commandFileName=line;
     }
   }
   
@@ -306,7 +306,7 @@ main(int argc, char *argv[])
                         "contour",
                         "grid",
                         "exit",
-			""};
+                        ""};
   int numRows=2;
   dialog.setPushButtons( pbLabels, pbLabels, numRows ); 
 
@@ -461,129 +461,129 @@ main(int argc, char *argv[])
       real time0=getCPU();
       for( int i=0; i<numberOfTimeSteps; i++ )                    // take some time steps
       {
-	realCompositeGridFunction & u1 = u[i %2];
-	realCompositeGridFunction & u2 = u[(i+1) %2];
+        realCompositeGridFunction & u1 = u[i %2];
+        realCompositeGridFunction & u2 = u[(i+1) %2];
     
-	if( (i % plotSteps) == 0 )  // plot solution every 'plotSteps' steps
-	{
+        if( (i % plotSteps) == 0 )  // plot solution every 'plotSteps' steps
+        {
           printf("completed step %i, t=%8.2e (cpu =%8.2e)\n",i,t,getCPU()-time0);
-	  // psp.set(GI_PLOT_THE_OBJECT_AND_EXIT,false);
-	  psp.set(GI_TOP_LABEL,sPrintF(buff,"Wave equation, t=%5.3f (order=%i)",t,orderOfAccuracy));
-	  ps.erase();
-	  PlotIt::contour(ps,u1,psp);
-	  ps.redraw(TRUE);
-	  psp.set(GI_PLOT_THE_OBJECT_AND_EXIT,TRUE);
+          // psp.set(GI_PLOT_THE_OBJECT_AND_EXIT,false);
+          psp.set(GI_TOP_LABEL,sPrintF(buff,"Wave equation, t=%5.3f (order=%i)",t,orderOfAccuracy));
+          ps.erase();
+          PlotIt::contour(ps,u1,psp);
+          ps.redraw(TRUE);
+          psp.set(GI_PLOT_THE_OBJECT_AND_EXIT,TRUE);
 
-	}
-	if( saveShowFile && (i % showSteps == 0) )  // save solution every 'showSteps' steps
-	{
-	  show.startFrame();                                         // start a new frame
-	  show.saveComment(0,sPrintF(buff,"Wave equation"));
-	  show.saveComment(1,sPrintF(buff,"t=%5.2f c=%3.1f ad4=%3.1f",t,c,ad4));
-	  show.saveSolution( u1 );                                        // save the current grid function
-	}
+        }
+        if( saveShowFile && (i % showSteps == 0) )  // save solution every 'showSteps' steps
+        {
+          show.startFrame();                                         // start a new frame
+          show.saveComment(0,sPrintF(buff,"Wave equation"));
+          show.saveComment(1,sPrintF(buff,"t=%5.2f c=%3.1f ad4=%3.1f",t,c,ad4));
+          show.saveSolution( u1 );                                        // save the current grid function
+        }
 
 
-	// advance the solution   u_tt = c^2 laplacian(u) + artificial dissipation
-	// This next line could be used instead for part of the loop below (high level but slower)
-	// u2=2.*u1-u2  + (dtSquared*cSquared)*u1.laplacian(); 
+        // advance the solution   u_tt = c^2 laplacian(u) + artificial dissipation
+        // This next line could be used instead for part of the loop below (high level but slower)
+        // u2=2.*u1-u2  + (dtSquared*cSquared)*u1.laplacian(); 
     
-	// Here is a more efficient method
-	for( grid=0; grid<cg.numberOfComponentGrids(); grid++ )
-	{
-	  realArray & u1g = u1[grid];
-	  realArray & u2g = u2[grid];
-	  realArray & lap = laplacian[grid];
+        // Here is a more efficient method
+        for( grid=0; grid<cg.numberOfComponentGrids(); grid++ )
+        {
+          realArray & u1g = u1[grid];
+          realArray & u2g = u2[grid];
+          realArray & lap = laplacian[grid];
           // evaluate laplacian(u1) and save in lap
-	  operators[grid].derivative(MappedGridOperators::laplacianOperator,u1g,lap);
+          operators[grid].derivative(MappedGridOperators::laplacianOperator,u1g,lap);
       
           // The next line could also be used for part of the loop below but is slightly
           // less efficient and uses a temporary array the size of 1 grid function.
-	  // u2g=2.*u1g-u2g  + (dtSquared*cSquared)*lap; // this version uses A++ statements
+          // u2g=2.*u1g-u2g  + (dtSquared*cSquared)*lap; // this version uses A++ statements
 
           // Here we grab a pointer to the data of the array so we can index it as a C-array
           // (this would not work in parallel)
-	  real *u1gp= u1g.Array_Descriptor.Array_View_Pointer3;
-	  real       *u2gp= u2g.Array_Descriptor.Array_View_Pointer3;
-	  real *lapp= lap.Array_Descriptor.Array_View_Pointer3;
-	  const int uDim0=u[0][grid].getRawDataSize(0);
-	  const int uDim1=u[0][grid].getRawDataSize(1);
-	  const int d1=uDim0, d2=d1*uDim1; 
+          real *u1gp= u1g.Array_Descriptor.Array_View_Pointer3;
+          real       *u2gp= u2g.Array_Descriptor.Array_View_Pointer3;
+          real *lapp= lap.Array_Descriptor.Array_View_Pointer3;
+          const int uDim0=u[0][grid].getRawDataSize(0);
+          const int uDim1=u[0][grid].getRawDataSize(1);
+          const int d1=uDim0, d2=d1*uDim1; 
 #define U1G(i1,i2,i3) u1gp[(i1)+(i2)*d1+(i3)*d2]
 #define U2G(i1,i2,i3) u2gp[(i1)+(i2)*d1+(i3)*d2]
 
 #define LAP(i1,i2,i3) lapp[(i1)+(i2)*d1+(i3)*d2]
 
           real cdtsq=dtSquared*cSquared;
-	  int i1,i2,i3;
-	  real ad4dt=ad4*dt;
+          int i1,i2,i3;
+          real ad4dt=ad4*dt;
           getIndex(cg[grid].gridIndexRange(),I1,I2,I3);
           if( cg.numberOfDimensions()==2 )
-	  {
-	    FOR_3(i1,i2,i3,I1,I2,I3) // loop over all points
-	    {
-	      // add a 'fourth' order dissipation  ad4 h^4 dt (u.xxxx).t to (c*dt)^2*laplacian(u)
-	      LAP(i1,i2,i3)=cdtsq*LAP(i1,i2,i3)+ad4dt*( FD4_2D(U1G,i1,i2,i3)-FD4_2D(U2G,i1,i2,i3) );
-	    }
-	  }
-	  else
-	  {
-	    FOR_3(i1,i2,i3,I1,I2,I3) // loop over all points
-	    {
-	      // add a 'fourth' order dissipation  ad4 h^4 dt (u.xxxx).t to (c*dt)^2*laplacian(u)
-	      LAP(i1,i2,i3)=cdtsq*LAP(i1,i2,i3)+ad4dt*( FD4_3D(U1G,i1,i2,i3)-FD4_3D(U2G,i1,i2,i3) );
-	    }
-	  }
-	  
-	  FOR_3(i1,i2,i3,I1,I2,I3) 
-	  {
-	    U2G(i1,i2,i3)=2.*U1G(i1,i2,i3)-U2G(i1,i2,i3)  + LAP(i1,i2,i3);
+          {
+            FOR_3(i1,i2,i3,I1,I2,I3) // loop over all points
+            {
+              // add a 'fourth' order dissipation  ad4 h^4 dt (u.xxxx).t to (c*dt)^2*laplacian(u)
+              LAP(i1,i2,i3)=cdtsq*LAP(i1,i2,i3)+ad4dt*( FD4_2D(U1G,i1,i2,i3)-FD4_2D(U2G,i1,i2,i3) );
+            }
+          }
+          else
+          {
+            FOR_3(i1,i2,i3,I1,I2,I3) // loop over all points
+            {
+              // add a 'fourth' order dissipation  ad4 h^4 dt (u.xxxx).t to (c*dt)^2*laplacian(u)
+              LAP(i1,i2,i3)=cdtsq*LAP(i1,i2,i3)+ad4dt*( FD4_3D(U1G,i1,i2,i3)-FD4_3D(U2G,i1,i2,i3) );
+            }
+          }
+          
+          FOR_3(i1,i2,i3,I1,I2,I3) 
+          {
+            U2G(i1,i2,i3)=2.*U1G(i1,i2,i3)-U2G(i1,i2,i3)  + LAP(i1,i2,i3);
             
-	  }
-	}
+          }
+        }
     
 
-	t+=dt;
-	u2.interpolate();                                           // interpolate
+        t+=dt;
+        u2.interpolate();                                           // interpolate
 
-	BCTypes::BCNames boundaryCondition=BCTypes::evenSymmetry; 
+        BCTypes::BCNames boundaryCondition=BCTypes::evenSymmetry; 
 
-	if( boundaryCondition==BCTypes::evenSymmetry )  
-	{
+        if( boundaryCondition==BCTypes::evenSymmetry )  
+        {
           // apply a symmetry BC
-	  u2.applyBoundaryCondition(0,BCTypes::evenSymmetry,BCTypes::allBoundaries,0.);
+          u2.applyBoundaryCondition(0,BCTypes::evenSymmetry,BCTypes::allBoundaries,0.);
           if( orderOfAccuracy==4 || ad4!=0. )
           {
-	    bcParams.ghostLineToAssign=2;
+            bcParams.ghostLineToAssign=2;
             u2.applyBoundaryCondition(0,BCTypes::evenSymmetry,BCTypes::allBoundaries,0.,t,bcParams);
-	  }
-	}
-	else if( boundaryCondition==BCTypes::dirichlet )
-	{
-	  u2.applyBoundaryCondition(0,BCTypes::dirichlet,BCTypes::allBoundaries,0.);
-	  if( orderOfAccuracy==4 || ad4!=0. )
-	    u2.applyBoundaryCondition(0,BCTypes::extrapolate,BCTypes::allBoundaries,0.); // for 4th order
-	}
-	else if( boundaryCondition==BCTypes::neumann )     
-	{
-	  assert( orderOfAccuracy==2 );
-	  u2.applyBoundaryCondition(0,BCTypes::neumann,BCTypes::allBoundaries,0.);  // not implemented for 4th order
-	}
+          }
+        }
+        else if( boundaryCondition==BCTypes::dirichlet )
+        {
+          u2.applyBoundaryCondition(0,BCTypes::dirichlet,BCTypes::allBoundaries,0.);
+          if( orderOfAccuracy==4 || ad4!=0. )
+            u2.applyBoundaryCondition(0,BCTypes::extrapolate,BCTypes::allBoundaries,0.); // for 4th order
+        }
+        else if( boundaryCondition==BCTypes::neumann )     
+        {
+          assert( orderOfAccuracy==2 );
+          u2.applyBoundaryCondition(0,BCTypes::neumann,BCTypes::allBoundaries,0.);  // not implemented for 4th order
+        }
 
-	if( boundaryCondition!=BCTypes::evenSymmetry && (orderOfAccuracy==4 || ad4!=0.) )
-	{ // extrapolate 2nd ghostline for 4th order when the grid only supports second order
-	  bcParams.ghostLineToAssign=2;
-	  bcParams.orderOfExtrapolation=4;
-	  u2.applyBoundaryCondition(0,BCTypes::extrapolate,BCTypes::allBoundaries,0.,t,bcParams);
+        if( boundaryCondition!=BCTypes::evenSymmetry && (orderOfAccuracy==4 || ad4!=0.) )
+        { // extrapolate 2nd ghostline for 4th order when the grid only supports second order
+          bcParams.ghostLineToAssign=2;
+          bcParams.orderOfExtrapolation=4;
+          u2.applyBoundaryCondition(0,BCTypes::extrapolate,BCTypes::allBoundaries,0.,t,bcParams);
           if( secondOrderGrid )
-	  {
-	    // also extrapolate unused points next to interpolation points -- this allows us to
-	    // avoid making a grid with 2 lines of interpolation.
-	    u2.applyBoundaryCondition(0,BCTypes::extrapolateInterpolationNeighbours);
-	  }
-	}
+          {
+            // also extrapolate unused points next to interpolation points -- this allows us to
+            // avoid making a grid with 2 lines of interpolation.
+            u2.applyBoundaryCondition(0,BCTypes::extrapolateInterpolationNeighbours);
+          }
+        }
     
-	u2.finishBoundaryConditions();
+        u2.finishBoundaryConditions();
       }
       current=(numberOfTimeSteps-1)%2;
 

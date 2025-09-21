@@ -234,6 +234,8 @@ getOriginalBoundaryConditions(CompositeGrid & cg, IntegerArray & originalBoundar
       }
     }
   }
+
+  return 0;
 }
 
 // ===================================================================================================================
@@ -648,6 +650,8 @@ buildGeneralOptionsDialog(DialogData & dialog )
   // null strings terminal list
   textCommands[nt]="";   textLabels[nt]="";   textStrings[nt]="";  assert( nt<numberOfTextStrings );
   dialog.setTextBoxes(textCommands, textCommands, textStrings);
+
+  return 0;
 }
 
 //================================================================================
@@ -825,6 +829,8 @@ buildAdaptiveGridOptionsDialog(DialogData & dialog )
   // null strings terminal list
   textCommands[nt]="";   textLabels[nt]="";   textStrings[nt]="";  assert( nt<numberOfTextStrings );
   dialog.setTextBoxes(textCommands, textCommands, textStrings);
+
+  return 0;
 }
 
 //================================================================================
@@ -1042,6 +1048,8 @@ buildMovingGridOptionsDialog(DialogData & dialog )
   // null strings terminal list
   textCommands[nt]="";   textLabels[nt]="";   textStrings[nt]="";  assert( nt<numberOfTextStrings );
   dialog.setTextBoxes(textCommands, textCommands, textStrings);
+
+  return 0;
 }
 
 //================================================================================

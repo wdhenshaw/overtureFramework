@@ -279,6 +279,8 @@ outputProbes( GridFunction & gf0, int stepNumber )
 
   for( int b=0; b<numberOfDeformingBodies; b++ )
     deformingBodyList[b]->outputProbes( gf0,stepNumber );
+
+  return 0;
 }
 
 
@@ -517,6 +519,7 @@ getBodies( std::vector<BodyForce*> & movingBodies )
     }
   }
 
+  return 0;
 }
 
 
@@ -2022,7 +2025,7 @@ correctGrids(const real t1,
     getGridVelocity( cgf2,cgf2.t );
   }
   
-  
+  return 0;
 }
 
 //=================================================================================

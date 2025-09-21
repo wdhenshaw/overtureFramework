@@ -3117,7 +3117,7 @@ buildReactions()
     // alpha and beta
     dbase.get<int >("numberOfSpecies")+=2;
   }
- 
+  return 0;
 }
 
 int
@@ -3146,7 +3146,8 @@ updateToMatchGrid(CompositeGrid & cg, IntegerArray & sharedBoundaryCondition )
     (* dbase.get<realCompositeGridFunction* >("truncationError"))=0.;
     
   }
-
+  
+  return 0;
 }
 
 bool

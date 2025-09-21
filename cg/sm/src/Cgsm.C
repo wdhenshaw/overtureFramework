@@ -1254,6 +1254,8 @@ buildGeneralOptionsDialog(DialogData & dialog )
   // null strings terminal list
   textCommands[nt]="";   textLabels[nt]="";   textStrings[nt]="";  assert( nt<numberOfTextStrings );
   dialog.setTextBoxes(textCommands, textCommands, textStrings);
+
+  return 0;
 }
 
 //================================================================================

@@ -9,20 +9,20 @@
 #include "RigidBodyMotion.h" 
 
 
-#define  FOR_3(i1,i2,i3,I1,I2,I3)					\
-  I1Base=I1.getBase(); I2Base=I2.getBase(); I3Base=I3.getBase();	\
-  I1Bound=I1.getBound(); I2Bound=I2.getBound(); I3Bound=I3.getBound();	\
-  for( i3=I3Base; i3<=I3Bound; i3++ )					\
-    for( i2=I2Base; i2<=I2Bound; i2++ )					\
+#define  FOR_3(i1,i2,i3,I1,I2,I3)                                       \
+  I1Base=I1.getBase(); I2Base=I2.getBase(); I3Base=I3.getBase();        \
+  I1Bound=I1.getBound(); I2Bound=I2.getBound(); I3Bound=I3.getBound();  \
+  for( i3=I3Base; i3<=I3Bound; i3++ )                                   \
+    for( i2=I2Base; i2<=I2Bound; i2++ )                                 \
       for( i1=I1Base; i1<=I1Bound; i1++ )
 
-#define  FOR_3D(i1,i2,i3,I1,I2,I3)					\
-  int I1Base,I2Base,I3Base;						\
-  int I1Bound,I2Bound,I3Bound;						\
-  I1Base=I1.getBase(); I2Base=I2.getBase(); I3Base=I3.getBase();	\
-  I1Bound=I1.getBound(); I2Bound=I2.getBound(); I3Bound=I3.getBound();	\
-  for( i3=I3Base; i3<=I3Bound; i3++ )					\
-    for( i2=I2Base; i2<=I2Bound; i2++ )					\
+#define  FOR_3D(i1,i2,i3,I1,I2,I3)                                      \
+  int I1Base,I2Base,I3Base;                                             \
+  int I1Bound,I2Bound,I3Bound;                                          \
+  I1Base=I1.getBase(); I2Base=I2.getBase(); I3Base=I3.getBase();        \
+  I1Bound=I1.getBound(); I2Bound=I2.getBound(); I3Bound=I3.getBound();  \
+  for( i3=I3Base; i3<=I3Bound; i3++ )                                   \
+    for( i2=I2Base; i2<=I2Bound; i2++ )                                 \
       for( i1=I1Base; i1<=I1Bound; i1++ )
 
 
@@ -99,7 +99,7 @@ FEMBeamModel::
 // =================================================================================================
 // void FEMBeamModel::
 // addForce(const real & tf, const RealArray & x0, const RealArray & traction, const RealArray & normal,  
-// 	 const Index & Ib1, const Index & Ib2,  const Index & Ib3 )
+//       const Index & Ib1, const Index & Ib2,  const Index & Ib3 )
 // {
 
 //   const int & current = dbase.get<int>("current"); 
@@ -159,7 +159,7 @@ FEMBeamModel::
 //   // FOR_3D(i1,i2,i3,Ib1,Ib2,Ib3)
 //   // {
 //   //   fDotN(iv[axis])= (traction(i1,i2,i3,0)*normal(i1,i2,i3,0)+
-//   // 	              traction(i1,i2,i3,1)*normal(i1,i2,i3,1) );
+//   //                       traction(i1,i2,i3,1)*normal(i1,i2,i3,1) );
 //   // }
 //   // // extrapolate ghost
 //   // if( orderOfAccuracyForDerivative==4 && igb > iga+5 )
@@ -206,7 +206,7 @@ FEMBeamModel::
 //   //       f1x = ( -(25./12.)*fDotN(i) + 4.*fDotN(i+1) -3.*fDotN(i+2) + (4./3.)*fDotN(i+3) -.25*fDotN(i+4) )/dx;
 //   //     }
 //   //     else
-//   // 	f1x = (fDotN(i+1)-fDotN(i-1))/(2.*dx);
+//   //         f1x = (fDotN(i+1)-fDotN(i-1))/(2.*dx);
       
 //   //     i=iv[axis]+1;
 //   //     if( i-2 >= iga && i+2 <= igb )
@@ -216,20 +216,20 @@ FEMBeamModel::
 //   //       f2x = -( -(25./12.)*fDotN(i) + 4.*fDotN(i-1) -3.*fDotN(i-2) + (4./3.)*fDotN(i-3) -.25*fDotN(i-4) )/dx;
 //   //     }
 //   //     else
-//   // 	f2x = (fDotN(i+1)-fDotN(i-1))/(2.*dx);
+//   //         f2x = (fDotN(i+1)-fDotN(i-1))/(2.*dx);
 //   //   }
     
 //   //   printF("--BM-- addForce: x0=[%8.2e,%8.2e] f1=%8.2e f1x=%8.2e, x0=[%8.2e,%8.2e] f2=%8.2e f2x=%8.2e\n",
-//   // 	   x0(i1,i2,i3,0),x0(i1,i2,i3,1),  fDotN(iv[axis]), f1x, 
+//   //            x0(i1,i2,i3,0),x0(i1,i2,i3,1),  fDotN(iv[axis]), f1x, 
 //   //          x0(i1p,i2p,i3p,0),x0(i1p,i2p,i3p,1), fDotN(iv[axis]+1), f2x );    
 
 //   //   addForce(tf,
-//   // 	     x0(i1,i2,i3,0), 
-//   // 	     x0(i1,i2,i3,1),  fDotN(iv[axis]), f1x,
-//   // 	     normal(i1,i2,i3,0), normal(i1,i2,i3,1),
-//   // 	     x0(i1p,i2p,i3p,0), 
-//   // 	     x0(i1p,i2p,i3p,1), fDotN(iv[axis]+1), f2x, 
-//   // 	     normal(i1p,i2p,i3p,0), normal(i1p,i2p,i3p,1));
+//   //              x0(i1,i2,i3,0), 
+//   //              x0(i1,i2,i3,1),  fDotN(iv[axis]), f1x,
+//   //              normal(i1,i2,i3,0), normal(i1,i2,i3,1),
+//   //              x0(i1p,i2p,i3p,0), 
+//   //              x0(i1p,i2p,i3p,1), fDotN(iv[axis]+1), f2x, 
+//   //              normal(i1p,i2p,i3p,0), normal(i1p,i2p,i3p,1));
 //   // }
   
 //   // if( false )
@@ -290,10 +290,10 @@ addForce( )
 // ======================================================================================
 // void FEMBeamModel::
 // addForce( const real & tf,
-// 	  const real& x0_1, const real& y0_1,
-// 	  real p1, real p1x, const real& nx_1,const real& ny_1,
-// 	  const real& x0_2, const real& y0_2,
-// 	  real p2, real p2x, const real& nx_2,const real& ny_2)
+//        const real& x0_1, const real& y0_1,
+//        real p1, real p1x, const real& nx_1,const real& ny_1,
+//        const real& x0_2, const real& y0_2,
+//        real p2, real p2x, const real& nx_2,const real& ny_2)
 // {
 
 
@@ -423,12 +423,12 @@ addForce( )
 //   //        real N2 = .125*dx12*(1.-xi)*(1.-xi)*(1.+xi);
 //   //        real N3 = .25*(1.+xi)*(1.+xi)*(2.-xi);
 //   //        real N4 = .125*dx12*(1.+xi)*(1.+xi)*(xi-1.);
-	
+        
 //   //        real N1x = ( .5*(xi-1.)*(2.+xi)  + .25*(1.-xi)*(1.-xi) )*(2./dx12);
 //   //        real N2x = ( .25*(xi-1.)*(1.+xi) + .125*(1.-xi)*(1.-xi) )*2.;
 //   //        real N3x = ( .5*(1.+xi)*(2.-xi)  - .25*(1.+xi)*(1.+xi) )*(2./dx12) ;
 //   //        real N4x = ( .25*(1.+xi)*(xi-1.) + .125*(1.+xi)*(1.+xi) )*2.;
-	
+        
 //   //        pa = p11*N1 + p11x*N2 + p22*N3 + p22x*N4; 
 //   //        pax = p11*N1x + p11x*N2x + p22*N3x + p22x*N4x; 
 
@@ -453,7 +453,7 @@ addForce( )
 //   //        real N2 = .125*dx12*(1.-xi)*(1.-xi)*(1.+xi);
 //   //        real N3 = .25*(1.+xi)*(1.+xi)*(2.-xi);
 //   //        real N4 = .125*dx12*(1.+xi)*(1.+xi)*(xi-1.);
-	
+        
 //   //        real N1x = ( .5*(xi-1.)*(2.+xi)  + .25*(1.-xi)*(1.-xi) )*(2./dx12);
 //   //        real N2x = ( .25*(xi-1.)*(1.+xi) + .125*(1.-xi)*(1.-xi) )*2.;
 //   //        real N3x = ( .5*(1.+xi)*(2.-xi)  - .25*(1.+xi)*(1.+xi) )*(2./dx12) ;
@@ -652,11 +652,11 @@ computeInternalForce(const RealArray& u, const RealArray& v, RealArray& f)
     {
       // elementU = [ u_i, ux_i, u_{i+1} ux_{i+1} ]
       for (int k = 0; k < 4; ++k)
-	elementU(k) = u(i*2+k);
+        elementU(k) = u(i*2+k);
     
       elementForce = RigidBodyMotion::mult(elementK, elementU);
       for( int k = 0; k < 4; ++k )
-	f(i*2+k) -= elementForce(k);
+        f(i*2+k) -= elementForce(k);
     }
 
   const real & Kt = dbase.get<real>("Kt");
@@ -666,15 +666,15 @@ computeInternalForce(const RealArray& u, const RealArray& v, RealArray& f)
       // add damping terms to internal force
       RealArray & elementV = elementU; // reuse space
       for( int i = 0; i < numElem; ++ i)
-	{
-	  // elementV = [ v_i, vx_i, v_{i+1} vx_{i+1} ]
-	  for (int k = 0; k < 4; ++k )
-	    elementV(k) = v(i*2+k);
+        {
+          // elementV = [ v_i, vx_i, v_{i+1} vx_{i+1} ]
+          for (int k = 0; k < 4; ++k )
+            elementV(k) = v(i*2+k);
     
-	  elementForce = RigidBodyMotion::mult(elementB, elementV);
-	  for( int k = 0; k < 4; ++k )
-	    f(i*2+k) -= elementForce(k);
-	}
+          elementForce = RigidBodyMotion::mult(elementB, elementV);
+          for( int k = 0; k < 4; ++k )
+            f(i*2+k) -= elementForce(k);
+        }
 
     }
   
@@ -714,12 +714,12 @@ multiplyByMassMatrix(const RealArray& w, RealArray& Mw)
     {
       // elementu = [ w_i wx_i w_{i+1} wx_{i+1} ]  
       for (int k = 0; k < 4; ++k)
-	elementU(k) = w(i*2+k);
+        elementU(k) = w(i*2+k);
     
       tmpv = RigidBodyMotion::mult(elementM, elementU);
 
       for (int k = 0; k < 4; ++k)
-	Mw(i*2+k) += tmpv(k);
+        Mw(i*2+k) += tmpv(k);
     }
 
   
@@ -750,13 +750,13 @@ multiplyByMassMatrix(const RealArray& w, RealArray& Mw)
 //================================================================================================
 // void FEMBeamModel::
 // computeAcceleration(const real t,
-// 		    const RealArray& u, const RealArray& v, 
-// 		    const RealArray& f,
-// 		    const RealArray& A,
-// 		    RealArray& a,
-// 		    real linAcceleration[2],
-// 		    real& omegadd,
-// 		    real dt,
+//                  const RealArray& u, const RealArray& v, 
+//                  const RealArray& f,
+//                  const RealArray& A,
+//                  RealArray& a,
+//                  real linAcceleration[2],
+//                  real& omegadd,
+//                  real dt,
 //                     const real alpha, const real alphaB,
 //                     const aString & tridiagonalSolverName )
 // {
@@ -827,144 +827,144 @@ multiplyByMassMatrix(const RealArray& w, RealArray& Mw)
 
 //       real accelerationScaleFactor=1.;
 //       if( tridiagonalSolverName=="rhsSolver" )
-// 	{
-// 	  // when we compute the RHS directly we are solving for rho*hs*b utt (not utt )
-// 	  accelerationScaleFactor=density*thickness*breadth;
-// 	}
+//      {
+//        // when we compute the RHS directly we are solving for rho*hs*b utt (not utt )
+//        accelerationScaleFactor=density*thickness*breadth;
+//      }
     
 //       for( int side=0; side<=1; side++ )
-// 	{
-// 	  BoundaryConditionEnum bc = side==0 ? bcLeft : bcRight;
-// 	  const int ia = side==0 ? 0 : numElem*2;
-// 	  const int ib = side==0 ? ia+2 : ia-2;
-// 	  const int is = 1-2*side;
+//      {
+//        BoundaryConditionEnum bc = side==0 ? bcLeft : bcRight;
+//        const int ia = side==0 ? 0 : numElem*2;
+//        const int ib = side==0 ? ia+2 : ia-2;
+//        const int is = 1-2*side;
       
-// 	  // Special case when EI=0 : (we only have 1 BC for clamped instead of 2)
-// 	  if( bc==clamped && EI==0. ) bc=pinned;
+//        // Special case when EI=0 : (we only have 1 BC for clamped instead of 2)
+//        if( bc==clamped && EI==0. ) bc=pinned;
 
-// 	  // real x = side==0 ? 0 : L;
-// 	  if( bc == clamped ) 
-// 	    {
-// 	      // First two equations in the matrix are
-// 	      //       w_tt = given
-// 	      //       wx_tt = given 
-// 	      if( false )
-// 		{
-// 		  printF("--BM-- side=%i set clamped BC gtt=%e, gttx=%e, accelerationScaleFactor=%8.2e\n",
-// 			 gtt(0,side),gtt(1,side),accelerationScaleFactor);
-// 		}
-	
-// 	      rhs(ia  )=gtt(0,side)*accelerationScaleFactor;   // w_tt is given
-// 	      rhs(ia+1)=gtt(1,side)*accelerationScaleFactor;   // wxtt is given 
-// 	    }
-// 	  else if( bc==pinned )
-// 	    {
-// 	      rhs(ia)=gtt(0,side)*accelerationScaleFactor;   // w_tt is given
+//        // real x = side==0 ? 0 : L;
+//        if( bc == clamped ) 
+//          {
+//            // First two equations in the matrix are
+//            //       w_tt = given
+//            //       wx_tt = given 
+//            if( false )
+//              {
+//                printF("--BM-- side=%i set clamped BC gtt=%e, gttx=%e, accelerationScaleFactor=%8.2e\n",
+//                       gtt(0,side),gtt(1,side),accelerationScaleFactor);
+//              }
+        
+//            rhs(ia  )=gtt(0,side)*accelerationScaleFactor;   // w_tt is given
+//            rhs(ia+1)=gtt(1,side)*accelerationScaleFactor;   // wxtt is given 
+//          }
+//        else if( bc==pinned )
+//          {
+//            rhs(ia)=gtt(0,side)*accelerationScaleFactor;   // w_tt is given
 
-// 	      if( bc == pinned && EI != 0.) 
-// 		{
-// 		  // Boundary term is of the form:  -EI* v_x*w_xx
-// 		  // -- correct for natural BC:  E*I*w_xx = +/- g(2,side)
-// 		  if( debug & 1 )	printF("-- BM -- set rhs for pinned BC wxx = g(2,side)=%8.2e, EI=%g\n",g(2,side),EI);
-// 		  rhs(ia+1) += -(is)*EI*g(2,side);   // add : -E*I*wxx(0,t) * Np_x(0)
-// 		}
-// 	    }
-// 	  else if( bc==slideBC )
-// 	    {
-// 	      // ---- slide BC ---
-// 	      // Equation 2 in matrix:    wx_tt = given 
-// 	      rhs(ia+1)=gtt(1,side)*accelerationScaleFactor;   // wxtt is given 
+//            if( bc == pinned && EI != 0.) 
+//              {
+//                // Boundary term is of the form:  -EI* v_x*w_xx
+//                // -- correct for natural BC:  E*I*w_xx = +/- g(2,side)
+//                if( debug & 1 )       printF("-- BM -- set rhs for pinned BC wxx = g(2,side)=%8.2e, EI=%g\n",g(2,side),EI);
+//                rhs(ia+1) += -(is)*EI*g(2,side);   // add : -E*I*wxx(0,t) * Np_x(0)
+//              }
+//          }
+//        else if( bc==slideBC )
+//          {
+//            // ---- slide BC ---
+//            // Equation 2 in matrix:    wx_tt = given 
+//            rhs(ia+1)=gtt(1,side)*accelerationScaleFactor;   // wxtt is given 
 
-// 	      // Equation 1 is adjusted:
-// 	      rhs(ia  ) +=  (is)*EI*g(3,side);                 // add : -E*I*wxxx(0,t) * N(0)
-// 	      rhs(ia  ) += -(is)*T *g(1,side);                 // add :  T wx(0,t)*N(0) 
-// 	      rhs(ia  ) += -(is)*Kxxt*g(2,side);               // add :  Kxxt*wxt(0,t)
-// 	    }
-// 	  else if( bc==freeBC )
-// 	    {
-// 	      // Boundary terms are of the form:  T*v*w_x  -EI* v*w_xxx - EI* v_x*w_xx
-// 	      // Free BC: wxx=EI* g(2,side), w_xxx= EI*g(3,side)
+//            // Equation 1 is adjusted:
+//            rhs(ia  ) +=  (is)*EI*g(3,side);                 // add : -E*I*wxxx(0,t) * N(0)
+//            rhs(ia  ) += -(is)*T *g(1,side);                 // add :  T wx(0,t)*N(0) 
+//            rhs(ia  ) += -(is)*Kxxt*g(2,side);               // add :  Kxxt*wxt(0,t)
+//          }
+//        else if( bc==freeBC )
+//          {
+//            // Boundary terms are of the form:  T*v*w_x  -EI* v*w_xxx - EI* v_x*w_xx
+//            // Free BC: wxx=EI* g(2,side), w_xxx= EI*g(3,side)
 
-// 	      // printF("-- BM -- set rhs for free BC, g(2)=%e, g(3)=%e, T*u(ia+1)=%8.2e \n",g(2,side),g(3,side),T*u(ia+1));
+//            // printF("-- BM -- set rhs for free BC, g(2)=%e, g(3)=%e, T*u(ia+1)=%8.2e \n",g(2,side),g(3,side),T*u(ia+1));
 
-// 	      rhs(ia  ) +=  (is)*EI*g(3,side);   // add : -E*I*wxxx(0,t) * N(0)
-// 	      rhs(ia+1) += -(is)*EI*g(2,side);   // add : -E*I*wxx(0,t) * Np_x(0)
+//            rhs(ia  ) +=  (is)*EI*g(3,side);   // add : -E*I*wxxx(0,t) * N(0)
+//            rhs(ia+1) += -(is)*EI*g(2,side);   // add : -E*I*wxx(0,t) * Np_x(0)
 
-// 	      // The boundary term T*v*w_x is only non-zero for v=N_1, and w_x = Np_1_x
-// 	      // ***CHECK ME*** IS THIS RIGHT?
-// 	      rhs(ia  ) += -(is)*T*u(ia+1);         // add : T*N1(0)*Np_1_x(0)*w'_1
-// 	      rhs(ia  ) += -(is)*Kxxt*v(ia+1);      // add : T*N1(0)*Np_1_x(0)*wxt_1
+//            // The boundary term T*v*w_x is only non-zero for v=N_1, and w_x = Np_1_x
+//            // ***CHECK ME*** IS THIS RIGHT?
+//            rhs(ia  ) += -(is)*T*u(ia+1);         // add : T*N1(0)*Np_1_x(0)*w'_1
+//            rhs(ia  ) += -(is)*Kxxt*v(ia+1);      // add : T*N1(0)*Np_1_x(0)*wxt_1
 
-// 	    }
-// 	  else if( bc==internalForceBC )
-// 	    { // BC used when computing the "internal force"  F = L(u,v) + f , given (u,v)
-// 	      rhs(ia  ) += -(is)*T*u(ia+1);      // add : T*N1(0)*Np_1_x(0)*w'_1
-// 	      rhs(ia  ) += -(is)*Kxxt*v(ia+1);      // add : T*N1(0)*Np_1_x(0)*w'_1
+//          }
+//        else if( bc==internalForceBC )
+//          { // BC used when computing the "internal force"  F = L(u,v) + f , given (u,v)
+//            rhs(ia  ) += -(is)*T*u(ia+1);      // add : T*N1(0)*Np_1_x(0)*w'_1
+//            rhs(ia  ) += -(is)*Kxxt*v(ia+1);      // add : T*N1(0)*Np_1_x(0)*w'_1
 
-// 	      // evaluate wxx and wxxx on the boundary
+//            // evaluate wxx and wxxx on the boundary
 
-// 	      real wxxx, wxx;
-// 	      if( FALSE )  
-// 		{
-// 		  const real dxidx = 2./dx;  // d(xi)/dx
-// 		  // find the 2nd and third derivatives of the basis functions at the ends
-// 		  real phijxx = -1.5*dxidx*dxidx, phijxxx=1.5*dxidx*dxidx*dxidx;
-// 		  real psijxx = -dx*dxidx*dxidx,  psijxxx=.75*dx*dxidx*dxidx*dxidx;
-	
-// 		  // Here is wxx to 2nd-order and wxxx to first order accuracy
-// 		  // This formula is the same as found from Taylor series
-// 		  wxx  = (u(ia)- u(ib))*phijxx  + (is)*( u(ia+1) +.5*u(ib+1) )*psijxx;
-// 		  wxxx = (is)*(u(ia)- u(ib) )*phijxxx + (u(ia+1)+u(ib+1))*psijxxx;
+//            real wxxx, wxx;
+//            if( FALSE )  
+//              {
+//                const real dxidx = 2./dx;  // d(xi)/dx
+//                // find the 2nd and third derivatives of the basis functions at the ends
+//                real phijxx = -1.5*dxidx*dxidx, phijxxx=1.5*dxidx*dxidx*dxidx;
+//                real psijxx = -dx*dxidx*dxidx,  psijxxx=.75*dx*dxidx*dxidx*dxidx;
+        
+//                // Here is wxx to 2nd-order and wxxx to first order accuracy
+//                // This formula is the same as found from Taylor series
+//                wxx  = (u(ia)- u(ib))*phijxx  + (is)*( u(ia+1) +.5*u(ib+1) )*psijxx;
+//                wxxx = (is)*(u(ia)- u(ib) )*phijxxx + (u(ia+1)+u(ib+1))*psijxxx;
 
-// 		  if( false )
-// 		    {
-// 		      printF(" side=%i: phijxx=%9.3e, phijxxx=%9.3e  dx=%8.2e, 1/dx=%8.2e\n",side,phijxx,phijxxx,dx,1/dx);
-// 		      printF(" side=%i: psijxx=%9.3e, psijxxx=%9.3e\n",side,psijxx,psijxxx);
-// 		      printF(" side=%i: (u,u')(ia)=(%e,%e) (u,u')(ib)=%e,%e)\n",u(ia),u(ia+1),u(ib),u(ib+1));
-// 		      printF(" side=%i: wxx=%9.3e, wxxx=%9.3e\n",side,wxx,wxxx);
-// 		    }
-// 		}
-// 	      else
-// 		{
-// 		  // **NEW** 
-// 		  // From cgDoc/moving/codes/beam/interp.maple
-// 		  // 4-order in upp, 2nd-order in uppp: 
-// 		  const int ic = ib+2*is; // 2nd point inside
-// 		  real h = is*dx, h2=h*h, h3=h2*h;
-// 		  real u0=u(ia),     u1=u(ib),    u2=u(ic);
-// 		  real up0=u(ia+1), up1=u(ib+1), up2=u(ic+1);
-// 		  // wxx =-1/50.*(244*h*up0+176*h*up1-6*h*up2+407*u0-400*u1-7*u2)/h2;
-// 		  // wxxx=3/50.*(189*h*up0+256*h*up1-11*h*up2+417*u0-400*u1-17*u2)/h3;
-// 		  wxx =-1/2.*(12*h*up0+16*h*up1+2*h*up2+23*u0-16*u1-7*u2)/h2;
-// 		  wxxx=3/2.*(13*h*up0+32*h*up1+5*h*up2+33*u0-16*u1-17*u2)/h3;
-	
-// 		  if( FALSE ) 
-// 		    {
-// 		      // *** THIS DOES NOT WORK: WHY???
-// 		      printF("--BM-- internalForceBC:  side=%i: OLD: wxx=%9.2e, wxxx=%9.2e",side,wxx,wxxx);	
-// 		      // these formulas assume u=ux=0 and uxxxx=uxxxxx=0 
-// 		      // wxx = -1./2.*(7.*u0-8.*u1+u2)/h2;
-// 		      // wxxx = 3./2.*(3.*u0-4.*u1+u2)/h3;
+//                if( false )
+//                  {
+//                    printF(" side=%i: phijxx=%9.3e, phijxxx=%9.3e  dx=%8.2e, 1/dx=%8.2e\n",side,phijxx,phijxxx,dx,1/dx);
+//                    printF(" side=%i: psijxx=%9.3e, psijxxx=%9.3e\n",side,psijxx,psijxxx);
+//                    printF(" side=%i: (u,u')(ia)=(%e,%e) (u,u')(ib)=%e,%e)\n",u(ia),u(ia+1),u(ib),u(ib+1));
+//                    printF(" side=%i: wxx=%9.3e, wxxx=%9.3e\n",side,wxx,wxxx);
+//                  }
+//              }
+//            else
+//              {
+//                // **NEW** 
+//                // From cgDoc/moving/codes/beam/interp.maple
+//                // 4-order in upp, 2nd-order in uppp: 
+//                const int ic = ib+2*is; // 2nd point inside
+//                real h = is*dx, h2=h*h, h3=h2*h;
+//                real u0=u(ia),     u1=u(ib),    u2=u(ic);
+//                real up0=u(ia+1), up1=u(ib+1), up2=u(ic+1);
+//                // wxx =-1/50.*(244*h*up0+176*h*up1-6*h*up2+407*u0-400*u1-7*u2)/h2;
+//                // wxxx=3/50.*(189*h*up0+256*h*up1-11*h*up2+417*u0-400*u1-17*u2)/h3;
+//                wxx =-1/2.*(12*h*up0+16*h*up1+2*h*up2+23*u0-16*u1-7*u2)/h2;
+//                wxxx=3/2.*(13*h*up0+32*h*up1+5*h*up2+33*u0-16*u1-17*u2)/h3;
+        
+//                if( FALSE ) 
+//                  {
+//                    // *** THIS DOES NOT WORK: WHY???
+//                    printF("--BM-- internalForceBC:  side=%i: OLD: wxx=%9.2e, wxxx=%9.2e",side,wxx,wxxx);     
+//                    // these formulas assume u=ux=0 and uxxxx=uxxxxx=0 
+//                    // wxx = -1./2.*(7.*u0-8.*u1+u2)/h2;
+//                    // wxxx = 3./2.*(3.*u0-4.*u1+u2)/h3;
 
-// 		      wxx = -1./194*(704*h*up1+34*h*up2+1491*u0-1344*u1-147*u2)/h2;
-// 		      wxxx = 3./194*(832*h*up1+49*h*up2+1233*u0-1024*u1-209*u2)/h3;
-	    
+//                    wxx = -1./194*(704*h*up1+34*h*up2+1491*u0-1344*u1-147*u2)/h2;
+//                    wxxx = 3./194*(832*h*up1+49*h*up2+1233*u0-1024*u1-209*u2)/h3;
+            
 
-// 		      printF(", new: wxx=%9.2e, wxxx=%9.2e (u0=%8.2e, up0=%8.2e)\n",wxx,wxxx,u0,up0);	
+//                    printF(", new: wxx=%9.2e, wxxx=%9.2e (u0=%8.2e, up0=%8.2e)\n",wxx,wxxx,u0,up0);   
 
-// 		      // wxx=0.; wxxx=0.;
-// 		    }
-// 		}
-	
+//                    // wxx=0.; wxxx=0.;
+//                  }
+//              }
+        
 
-// 	      rhs(ia  ) +=  (is)*EI*wxxx;   // add : -E*I*wxxx(0,t) * N(0)
-// 	      rhs(ia+1) += -(is)*EI*wxx;    // add : -E*I*wxx(0,t) * Np_x(0)
-	
-// 	    }
+//            rhs(ia  ) +=  (is)*EI*wxxx;   // add : -E*I*wxxx(0,t) * N(0)
+//            rhs(ia+1) += -(is)*EI*wxx;    // add : -E*I*wxx(0,t) * Np_x(0)
+        
+//          }
       
 
       
-// 	}
+//      }
 
 //     }
 
@@ -981,88 +981,88 @@ multiplyByMassMatrix(const RealArray& w, RealArray& Mw)
 //       omegadd = totalPressureMoment / totalInertia;
 
 //       if (bcLeft == BeamModel::pinned ||
-// 	  bcLeft == BeamModel::clamped) {
+//        bcLeft == BeamModel::clamped) {
 
-// 	real wend,wendslope;
-// 	int elem = 0;
-// 	real eta = -1.0;
-// 	interpolateSolution(uc, elem,eta, wend, wendslope);
+//      real wend,wendslope;
+//      int elem = 0;
+//      real eta = -1.0;
+//      interpolateSolution(uc, elem,eta, wend, wendslope);
       
       
-// 	real end[2] = {centerOfMass[0] + normal[0]*wend - tangent[0]*L*0.5,
-// 		       centerOfMass[1] + normal[1]*wend - tangent[1]*L*0.5};
+//      real end[2] = {centerOfMass[0] + normal[0]*wend - tangent[0]*L*0.5,
+//                     centerOfMass[1] + normal[1]*wend - tangent[1]*L*0.5};
       
-// 	linAcceleration[0] -= penalty*(end[0]-initialEndLeft[0])/totalMass;
-// 	linAcceleration[1] -= penalty*(end[1]-initialEndLeft[1])/totalMass;
+//      linAcceleration[0] -= penalty*(end[0]-initialEndLeft[0])/totalMass;
+//      linAcceleration[1] -= penalty*(end[1]-initialEndLeft[1])/totalMass;
       
-// 	real mom = penalty*((end[0]-initialEndLeft[0])*(/*-wend*tangent[0]*/-normal[0]*L*0.5)+
-// 			    (end[1]-initialEndLeft[1])*(/*-wend*tangent[1]*/-normal[1]*L*0.5));
-// 	omegadd -= mom / totalInertia;
+//      real mom = penalty*((end[0]-initialEndLeft[0])*(/*-wend*tangent[0]*/-normal[0]*L*0.5)+
+//                          (end[1]-initialEndLeft[1])*(/*-wend*tangent[1]*/-normal[1]*L*0.5));
+//      omegadd -= mom / totalInertia;
 
-// 	real shear = penalty*((end[0]-initialEndLeft[0])*(-normal[0])+
-// 			      (end[1]-initialEndLeft[1])*(-normal[1]));
+//      real shear = penalty*((end[0]-initialEndLeft[0])*(-normal[0])+
+//                            (end[1]-initialEndLeft[1])*(-normal[1]));
       
-// 	rhs(0) += shear;
+//      rhs(0) += shear;
 //       }
     
 //       if (bcRight == BeamModel::pinned ||
-// 	  bcRight == BeamModel::clamped) {
+//        bcRight == BeamModel::clamped) {
 
-// 	real wend,wendslope;
-// 	int elem = numElem-1;
-// 	real eta = 1.0;
-// 	interpolateSolution(uc, elem,eta, wend, wendslope);
+//      real wend,wendslope;
+//      int elem = numElem-1;
+//      real eta = 1.0;
+//      interpolateSolution(uc, elem,eta, wend, wendslope);
       
       
-// 	real end[2] = {centerOfMass[0] + normal[0]*wend - tangent[0]*L*0.5,
-// 		       centerOfMass[1] + normal[1]*wend - tangent[1]*L*0.5};
+//      real end[2] = {centerOfMass[0] + normal[0]*wend - tangent[0]*L*0.5,
+//                     centerOfMass[1] + normal[1]*wend - tangent[1]*L*0.5};
       
-// 	linAcceleration[0] -= penalty*(end[0]-initialEndRight[0])/totalMass;
-// 	linAcceleration[1] -= penalty*(end[1]-initialEndRight[1])/totalMass;
+//      linAcceleration[0] -= penalty*(end[0]-initialEndRight[0])/totalMass;
+//      linAcceleration[1] -= penalty*(end[1]-initialEndRight[1])/totalMass;
       
-// 	real mom = penalty*((end[0]-initialEndLeft[0])*(/*-wend*tangent[0]*/normal[0]*L*0.5)+
-// 			    (end[1]-initialEndLeft[1])*(/*-wend*tangent[1]*/normal[1]*L*0.5));
-// 	omegadd -= mom / totalInertia;
+//      real mom = penalty*((end[0]-initialEndLeft[0])*(/*-wend*tangent[0]*/normal[0]*L*0.5)+
+//                          (end[1]-initialEndLeft[1])*(/*-wend*tangent[1]*/normal[1]*L*0.5));
+//      omegadd -= mom / totalInertia;
 
-// 	real shear = penalty*((end[0]-initialEndRight[0])*(normal[0])+
-// 			      (end[1]-initialEndRight[1])*(normal[1]));
+//      real shear = penalty*((end[0]-initialEndRight[0])*(normal[0])+
+//                            (end[1]-initialEndRight[1])*(normal[1]));
       
-// 	rhs(numElem*2) += shear;
+//      rhs(numElem*2) += shear;
 //       }
 
 //       if (bcLeft == BeamModel::clamped) {
 
-// 	real wend,wendslope;
-// 	int elem = 0;
-// 	real eta = -1.0;
-// 	interpolateSolution(uc, elem,eta, wend, wendslope);
+//      real wend,wendslope;
+//      int elem = 0;
+//      real eta = -1.0;
+//      interpolateSolution(uc, elem,eta, wend, wendslope);
       
       
-// 	real slopeend[2] = {normal[0]*wendslope+tangent[0],
-// 			    normal[1]*wendslope+tangent[1]};
+//      real slopeend[2] = {normal[0]*wendslope+tangent[0],
+//                          normal[1]*wendslope+tangent[1]};
       
-// 	real proj = (-tangent[0]*wendslope+initialBeamNormal[0])*normal[0] + 
-// 	  (-tangent[1]*wendslope+initialBeamNormal[1])*normal[1] ;
+//      real proj = (-tangent[0]*wendslope+initialBeamNormal[0])*normal[0] + 
+//        (-tangent[1]*wendslope+initialBeamNormal[1])*normal[1] ;
 
-// 	real err = slopeend[0]*initialBeamNormal[0] + 
-// 	  slopeend[1]*initialBeamNormal[1] ;
+//      real err = slopeend[0]*initialBeamNormal[0] + 
+//        slopeend[1]*initialBeamNormal[1] ;
 
-// 	real mom = 0.1*penalty*err*proj;
+//      real mom = 0.1*penalty*err*proj;
       
-// 	real rf = 1.0;
-// 	real & leftCantileverMoment = dbase.get<real>("leftCantileverMoment");
-// 	leftCantileverMoment = mom*rf + (1.0-rf)*leftCantileverMoment;
-// 	omegadd -= leftCantileverMoment / totalInertia;
+//      real rf = 1.0;
+//      real & leftCantileverMoment = dbase.get<real>("leftCantileverMoment");
+//      leftCantileverMoment = mom*rf + (1.0-rf)*leftCantileverMoment;
+//      omegadd -= leftCantileverMoment / totalInertia;
 
-// 	std::cout << "End slope error = " << err << std::endl;
+//      std::cout << "End slope error = " << err << std::endl;
       
-// 	//rhs(1) += mom; 
+//      //rhs(1) += mom; 
 //       }
 
 //       RealArray ones = f,res;
 //       ones = 0.0;
 //       for (int i = 0; i < numElem*2+2; i+=2)
-// 	ones(i) = linAcceleration[0]*normal[0]+linAcceleration[1]*normal[1];
+//      ones(i) = linAcceleration[0]*normal[0]+linAcceleration[1]*normal[1];
 
 //       //printArray(ones,0,1000,0,1000,0,1000,0,1000,0,1000,0,1000);
     
@@ -1074,10 +1074,10 @@ multiplyByMassMatrix(const RealArray& w, RealArray& Mw)
 //       rhs += angularVelocityTilde*angularVelocityTilde*res;
 
 //       for (int i = 0; i < numElem*2+2; i+=2) 
-// 	{
-// 	  ones(i) = -0.5*L+dx*(i/2); //Longfei 20160121: replace le with dx.
-// 	  ones(i+1) = 1.0;
-// 	}
+//      {
+//        ones(i) = -0.5*L+dx*(i/2); //Longfei 20160121: replace le with dx.
+//        ones(i+1) = 1.0;
+//      }
     
 //       //printArray(ones,0,1000,0,1000,0,1000,0,1000,0,1000,0,1000);
     
@@ -1135,12 +1135,12 @@ multiplyByMassMatrix(const RealArray& w, RealArray& Mw)
 //================================================================================================
 void FEMBeamModel::
 computeAcceleration(const real t,
-		    const RealArray& u, const RealArray& v, 
-		    const RealArray& f,
-		    RealArray& a,
-		    real linAcceleration[2],
-		    real& omegadd,
-		    real dt,
+                    const RealArray& u, const RealArray& v, 
+                    const RealArray& f,
+                    RealArray& a,
+                    real linAcceleration[2],
+                    real& omegadd,
+                    real dt,
                     const aString & solverName )
 {
   
@@ -1219,147 +1219,147 @@ computeAcceleration(const real t,
       // Longfei 20160208: no longer need this
       // real accelerationScaleFactor=1.;
       // if( tridiagonalSolverName=="rhsSolver" )
-      // 	{
-      // 	  // when we compute the RHS directly we are solving for rho*hs*b utt (not utt )
-      // 	  accelerationScaleFactor=density*thickness*breadth;
-      // 	}
+      //        {
+      //          // when we compute the RHS directly we are solving for rho*hs*b utt (not utt )
+      //          accelerationScaleFactor=density*thickness*breadth;
+      //        }
 
     
       for( int side=0; side<=1; side++ )
-	{
-	  BoundaryConditionEnum bc = side==0 ? bcLeft : bcRight;
-	  const int ia = side==0 ? 0 : numElem*2;
-	  const int ib = side==0 ? ia+2 : ia-2;
-	  const int is = 1-2*side;
+        {
+          BoundaryConditionEnum bc = side==0 ? bcLeft : bcRight;
+          const int ia = side==0 ? 0 : numElem*2;
+          const int ib = side==0 ? ia+2 : ia-2;
+          const int is = 1-2*side;
       
-	  // Special case when EI=0 : (we only have 1 BC for clamped instead of 2)
-	  if( bc==clamped && EI==0. ) bc=pinned;
+          // Special case when EI=0 : (we only have 1 BC for clamped instead of 2)
+          if( bc==clamped && EI==0. ) bc=pinned;
 
-	  // real x = side==0 ? 0 : L;
-	  if( bc == clamped ) 
-	    {
-	      // First two equations in the matrix are
-	      //       w_tt = given
-	      //       wx_tt = given 
-	      if( false )
-		{
-		  printF("-- BM%i -- side=%i set clamped BC gtt=%e, gttx=%e, accelerationScaleFactor=%8.2e\n",
-			 getBeamID(),gtt(0,side),gtt(1,side),accelerationScaleFactor);
-		}
-	
-	      rhs(ia  )=gtt(0,side)*accelerationScaleFactor;   // w_tt is given
-	      rhs(ia+1)=gtt(1,side)*accelerationScaleFactor;   // wxtt is given 
-	    }
-	  else if( bc==pinned )
-	    {
-	      rhs(ia)=gtt(0,side)*accelerationScaleFactor;   // w_tt is given
+          // real x = side==0 ? 0 : L;
+          if( bc == clamped ) 
+            {
+              // First two equations in the matrix are
+              //       w_tt = given
+              //       wx_tt = given 
+              if( false )
+                {
+                  printF("-- BM%i -- side=%i set clamped BC gtt=%e, gttx=%e, accelerationScaleFactor=%8.2e\n",
+                         getBeamID(),gtt(0,side),gtt(1,side),accelerationScaleFactor);
+                }
+        
+              rhs(ia  )=gtt(0,side)*accelerationScaleFactor;   // w_tt is given
+              rhs(ia+1)=gtt(1,side)*accelerationScaleFactor;   // wxtt is given 
+            }
+          else if( bc==pinned )
+            {
+              rhs(ia)=gtt(0,side)*accelerationScaleFactor;   // w_tt is given
 
-	      if( bc == pinned && EI != 0.) 
-		{
-		  // Boundary term is of the form:  -EI* v_x*w_xx
-		  // -- correct for natural BC:  E*I*w_xx = +/- g(2,side)
-		  if( debug() & 1 )	printF("-- BM%i -- set rhs for pinned BC wxx = g(2,side)=%8.2e, EI=%g\n",getBeamID(),g(2,side),EI);
-		  rhs(ia+1) += -(is)*EI*g(2,side);   // add : -E*I*wxx(0,t) * Np_x(0)
-		}
-	    }
-	  else if( bc==slideBC )
-	    {
-	      // ---- slide BC ---
-	      // Equation 2 in matrix:    wx_tt = given 
-	      rhs(ia+1)=gtt(1,side)*accelerationScaleFactor;   // wxtt is given 
+              if( bc == pinned && EI != 0.) 
+                {
+                  // Boundary term is of the form:  -EI* v_x*w_xx
+                  // -- correct for natural BC:  E*I*w_xx = +/- g(2,side)
+                  if( debug() & 1 )     printF("-- BM%i -- set rhs for pinned BC wxx = g(2,side)=%8.2e, EI=%g\n",getBeamID(),g(2,side),EI);
+                  rhs(ia+1) += -(is)*EI*g(2,side);   // add : -E*I*wxx(0,t) * Np_x(0)
+                }
+            }
+          else if( bc==slideBC )
+            {
+              // ---- slide BC ---
+              // Equation 2 in matrix:    wx_tt = given 
+              rhs(ia+1)=gtt(1,side)*accelerationScaleFactor;   // wxtt is given 
 
-	      // Equation 1 is adjusted:
-	      rhs(ia  ) +=  (is)*EI*g(3,side);                 // add : -E*I*wxxx(0,t) * N(0)
-	      rhs(ia  ) += -(is)*T *g(1,side);                 // add :  T wx(0,t)*N(0) 
-	      rhs(ia  ) += -(is)*Kxxt*gt(1,side);               // add :  Kxxt*wxt(0,t)
-	    }
-	  else if( bc==freeBC )
-	    {
-	      // Boundary terms are of the form:  T*v*w_x  -EI* v*w_xxx - EI* v_x*w_xx
-	      // Free BC: wxx=EI* g(2,side), w_xxx= EI*g(3,side)
+              // Equation 1 is adjusted:
+              rhs(ia  ) +=  (is)*EI*g(3,side);                 // add : -E*I*wxxx(0,t) * N(0)
+              rhs(ia  ) += -(is)*T *g(1,side);                 // add :  T wx(0,t)*N(0) 
+              rhs(ia  ) += -(is)*Kxxt*gt(1,side);               // add :  Kxxt*wxt(0,t)
+            }
+          else if( bc==freeBC )
+            {
+              // Boundary terms are of the form:  T*v*w_x  -EI* v*w_xxx - EI* v_x*w_xx
+              // Free BC: wxx=EI* g(2,side), w_xxx= EI*g(3,side)
 
-	      // printF("-- BM -- set rhs for free BC, g(2)=%e, g(3)=%e, T*u(ia+1)=%8.2e \n",g(2,side),g(3,side),T*u(ia+1));
+              // printF("-- BM -- set rhs for free BC, g(2)=%e, g(3)=%e, T*u(ia+1)=%8.2e \n",g(2,side),g(3,side),T*u(ia+1));
 
-	      rhs(ia  ) +=  (is)*EI*g(3,side);   // add : -E*I*wxxx(0,t) * N(0)
-	      rhs(ia+1) += -(is)*EI*g(2,side);   // add : -E*I*wxx(0,t) * Np_x(0)
+              rhs(ia  ) +=  (is)*EI*g(3,side);   // add : -E*I*wxxx(0,t) * N(0)
+              rhs(ia+1) += -(is)*EI*g(2,side);   // add : -E*I*wxx(0,t) * Np_x(0)
 
-	      // The boundary term T*v*w_x is only non-zero for v=N_1, and w_x = Np_1_x
-	      // ***CHECK ME*** IS THIS RIGHT?
-	      rhs(ia  ) += -(is)*T*u(ia+1);         // add : T*N1(0)*Np_1_x(0)*w'_1
-	      rhs(ia  ) += -(is)*Kxxt*v(ia+1);      // add : T*N1(0)*Np_1_x(0)*wxt_1
+              // The boundary term T*v*w_x is only non-zero for v=N_1, and w_x = Np_1_x
+              // ***CHECK ME*** IS THIS RIGHT?
+              rhs(ia  ) += -(is)*T*u(ia+1);         // add : T*N1(0)*Np_1_x(0)*w'_1
+              rhs(ia  ) += -(is)*Kxxt*v(ia+1);      // add : T*N1(0)*Np_1_x(0)*wxt_1
 
-	    }
-	  else if( bc==internalForceBC )
-	    { // BC used when computing the "internal force"  F = L(u,v) + f , given (u,v)
-	      rhs(ia  ) += -(is)*T*u(ia+1);      // add : T*N1(0)*Np_1_x(0)*w'_1
-	      rhs(ia  ) += -(is)*Kxxt*v(ia+1);      // add : T*N1(0)*Np_1_x(0)*w'_1
+            }
+          else if( bc==internalForceBC )
+            { // BC used when computing the "internal force"  F = L(u,v) + f , given (u,v)
+              rhs(ia  ) += -(is)*T*u(ia+1);      // add : T*N1(0)*Np_1_x(0)*w'_1
+              rhs(ia  ) += -(is)*Kxxt*v(ia+1);      // add : T*N1(0)*Np_1_x(0)*w'_1
 
-	      // evaluate wxx and wxxx on the boundary
-	      // Longfei 20160210: dx is already avaible.
-	      // const real beamLength=L;
-	      // const real dx = beamLength/numElem;  
-	      real wxxx, wxx;
-	      if( FALSE )  
-		{
-		  const real dxidx = 2./dx;  // d(xi)/dx
-		  // find the 2nd and third derivatives of the basis functions at the ends
-		  real phijxx = -1.5*dxidx*dxidx, phijxxx=1.5*dxidx*dxidx*dxidx;
-		  real psijxx = -dx*dxidx*dxidx,  psijxxx=.75*dx*dxidx*dxidx*dxidx;
-	
-		  // Here is wxx to 2nd-order and wxxx to first order accuracy
-		  // This formula is the same as found from Taylor series
-		  wxx  = (u(ia)- u(ib))*phijxx  + (is)*( u(ia+1) +.5*u(ib+1) )*psijxx;
-		  wxxx = (is)*(u(ia)- u(ib) )*phijxxx + (u(ia+1)+u(ib+1))*psijxxx;
+              // evaluate wxx and wxxx on the boundary
+              // Longfei 20160210: dx is already avaible.
+              // const real beamLength=L;
+              // const real dx = beamLength/numElem;  
+              real wxxx, wxx;
+              if( FALSE )  
+                {
+                  const real dxidx = 2./dx;  // d(xi)/dx
+                  // find the 2nd and third derivatives of the basis functions at the ends
+                  real phijxx = -1.5*dxidx*dxidx, phijxxx=1.5*dxidx*dxidx*dxidx;
+                  real psijxx = -dx*dxidx*dxidx,  psijxxx=.75*dx*dxidx*dxidx*dxidx;
+        
+                  // Here is wxx to 2nd-order and wxxx to first order accuracy
+                  // This formula is the same as found from Taylor series
+                  wxx  = (u(ia)- u(ib))*phijxx  + (is)*( u(ia+1) +.5*u(ib+1) )*psijxx;
+                  wxxx = (is)*(u(ia)- u(ib) )*phijxxx + (u(ia+1)+u(ib+1))*psijxxx;
 
-		  if( false )
-		    {
-		      printF(" side=%i: phijxx=%9.3e, phijxxx=%9.3e  dx=%8.2e, 1/dx=%8.2e\n",side,phijxx,phijxxx,dx,1/dx);
-		      printF(" side=%i: psijxx=%9.3e, psijxxx=%9.3e\n",side,psijxx,psijxxx);
-		      printF(" side=%i: (u,u')(ia)=(%e,%e) (u,u')(ib)=%e,%e)\n",u(ia),u(ia+1),u(ib),u(ib+1));
-		      printF(" side=%i: wxx=%9.3e, wxxx=%9.3e\n",side,wxx,wxxx);
-		    }
-		}
-	      else
-		{
-		  // **NEW** 
-		  // From cgDoc/moving/codes/beam/interp.maple
-		  // 4-order in upp, 2nd-order in uppp: 
-		  const int ic = ib+2*is; // 2nd point inside
-		  real h = is*dx, h2=h*h, h3=h2*h;
-		  real u0=u(ia),     u1=u(ib),    u2=u(ic);
-		  real up0=u(ia+1), up1=u(ib+1), up2=u(ic+1);
-		  // wxx =-1/50.*(244*h*up0+176*h*up1-6*h*up2+407*u0-400*u1-7*u2)/h2;
-		  // wxxx=3/50.*(189*h*up0+256*h*up1-11*h*up2+417*u0-400*u1-17*u2)/h3;
-		  wxx =-1/2.*(12*h*up0+16*h*up1+2*h*up2+23*u0-16*u1-7*u2)/h2;
-		  wxxx=3/2.*(13*h*up0+32*h*up1+5*h*up2+33*u0-16*u1-17*u2)/h3;
-	
-		  if( FALSE ) 
-		    {
-		      // *** THIS DOES NOT WORK: WHY???
-		      printF("-- BM%i -- internalForceBC:  side=%i: OLD: wxx=%9.2e, wxxx=%9.2e",getBeamID(),side,wxx,wxxx);	
-		      // these formulas assume u=ux=0 and uxxxx=uxxxxx=0 
-		      // wxx = -1./2.*(7.*u0-8.*u1+u2)/h2;
-		      // wxxx = 3./2.*(3.*u0-4.*u1+u2)/h3;
+                  if( false )
+                    {
+                      printF(" side=%i: phijxx=%9.3e, phijxxx=%9.3e  dx=%8.2e, 1/dx=%8.2e\n",side,phijxx,phijxxx,dx,1/dx);
+                      printF(" side=%i: psijxx=%9.3e, psijxxx=%9.3e\n",side,psijxx,psijxxx);
+                      printF(" side=%i: (u,u')(ia)=(%e,%e) (u,u')(ib)=%e,%e)\n",u(ia),u(ia+1),u(ib),u(ib+1));
+                      printF(" side=%i: wxx=%9.3e, wxxx=%9.3e\n",side,wxx,wxxx);
+                    }
+                }
+              else
+                {
+                  // **NEW** 
+                  // From cgDoc/moving/codes/beam/interp.maple
+                  // 4-order in upp, 2nd-order in uppp: 
+                  const int ic = ib+2*is; // 2nd point inside
+                  real h = is*dx, h2=h*h, h3=h2*h;
+                  real u0=u(ia),     u1=u(ib),    u2=u(ic);
+                  real up0=u(ia+1), up1=u(ib+1), up2=u(ic+1);
+                  // wxx =-1/50.*(244*h*up0+176*h*up1-6*h*up2+407*u0-400*u1-7*u2)/h2;
+                  // wxxx=3/50.*(189*h*up0+256*h*up1-11*h*up2+417*u0-400*u1-17*u2)/h3;
+                  wxx =-1/2.*(12*h*up0+16*h*up1+2*h*up2+23*u0-16*u1-7*u2)/h2;
+                  wxxx=3/2.*(13*h*up0+32*h*up1+5*h*up2+33*u0-16*u1-17*u2)/h3;
+        
+                  if( FALSE ) 
+                    {
+                      // *** THIS DOES NOT WORK: WHY???
+                      printF("-- BM%i -- internalForceBC:  side=%i: OLD: wxx=%9.2e, wxxx=%9.2e",getBeamID(),side,wxx,wxxx);     
+                      // these formulas assume u=ux=0 and uxxxx=uxxxxx=0 
+                      // wxx = -1./2.*(7.*u0-8.*u1+u2)/h2;
+                      // wxxx = 3./2.*(3.*u0-4.*u1+u2)/h3;
 
-		      wxx = -1./194*(704*h*up1+34*h*up2+1491*u0-1344*u1-147*u2)/h2;
-		      wxxx = 3./194*(832*h*up1+49*h*up2+1233*u0-1024*u1-209*u2)/h3;
-	    
+                      wxx = -1./194*(704*h*up1+34*h*up2+1491*u0-1344*u1-147*u2)/h2;
+                      wxxx = 3./194*(832*h*up1+49*h*up2+1233*u0-1024*u1-209*u2)/h3;
+            
 
-		      printF(", new: wxx=%9.2e, wxxx=%9.2e (u0=%8.2e, up0=%8.2e)\n",wxx,wxxx,u0,up0);	
+                      printF(", new: wxx=%9.2e, wxxx=%9.2e (u0=%8.2e, up0=%8.2e)\n",wxx,wxxx,u0,up0);   
 
-		      // wxx=0.; wxxx=0.;
-		    }
-		}
-	
+                      // wxx=0.; wxxx=0.;
+                    }
+                }
+        
 
-	      rhs(ia  ) +=  (is)*EI*wxxx;   // add : -E*I*wxxx(0,t) * N(0)
-	      rhs(ia+1) += -(is)*EI*wxx;    // add : -E*I*wxx(0,t) * Np_x(0)
-	
-	    }
+              rhs(ia  ) +=  (is)*EI*wxxx;   // add : -E*I*wxxx(0,t) * N(0)
+              rhs(ia+1) += -(is)*EI*wxx;    // add : -E*I*wxx(0,t) * Np_x(0)
+        
+            }
       
 
       
-	}
+        }
 
     }
 
@@ -1380,88 +1380,88 @@ computeAcceleration(const real t,
       omegadd = totalPressureMoment / totalInertia;
 
       if (bcLeft == BeamModel::pinned ||
-	  bcLeft == BeamModel::clamped) {
+          bcLeft == BeamModel::clamped) {
 
-	real wend,wendslope;
-	int elem = 0;
-	real eta = -1.0;
-	interpolateSolution(uc, elem,eta, wend, wendslope);
+        real wend,wendslope;
+        int elem = 0;
+        real eta = -1.0;
+        interpolateSolution(uc, elem,eta, wend, wendslope);
       
       
-	real end[2] = {centerOfMass[0] + normal[0]*wend - tangent[0]*L*0.5,
-		       centerOfMass[1] + normal[1]*wend - tangent[1]*L*0.5};
+        real end[2] = {centerOfMass[0] + normal[0]*wend - tangent[0]*L*0.5,
+                       centerOfMass[1] + normal[1]*wend - tangent[1]*L*0.5};
       
-	linAcceleration[0] -= penalty*(end[0]-initialEndLeft[0])/totalMass;
-	linAcceleration[1] -= penalty*(end[1]-initialEndLeft[1])/totalMass;
+        linAcceleration[0] -= penalty*(end[0]-initialEndLeft[0])/totalMass;
+        linAcceleration[1] -= penalty*(end[1]-initialEndLeft[1])/totalMass;
       
-	real mom = penalty*((end[0]-initialEndLeft[0])*(/*-wend*tangent[0]*/-normal[0]*L*0.5)+
-			    (end[1]-initialEndLeft[1])*(/*-wend*tangent[1]*/-normal[1]*L*0.5));
-	omegadd -= mom / totalInertia;
+        real mom = penalty*((end[0]-initialEndLeft[0])*(/*-wend*tangent[0]*/-normal[0]*L*0.5)+
+                            (end[1]-initialEndLeft[1])*(/*-wend*tangent[1]*/-normal[1]*L*0.5));
+        omegadd -= mom / totalInertia;
 
-	real shear = penalty*((end[0]-initialEndLeft[0])*(-normal[0])+
-			      (end[1]-initialEndLeft[1])*(-normal[1]));
+        real shear = penalty*((end[0]-initialEndLeft[0])*(-normal[0])+
+                              (end[1]-initialEndLeft[1])*(-normal[1]));
       
-	rhs(0) += shear;
+        rhs(0) += shear;
       }
     
       if (bcRight == BeamModel::pinned ||
-	  bcRight == BeamModel::clamped) {
+          bcRight == BeamModel::clamped) {
 
-	real wend,wendslope;
-	int elem = numElem-1;
-	real eta = 1.0;
-	interpolateSolution(uc, elem,eta, wend, wendslope);
+        real wend,wendslope;
+        int elem = numElem-1;
+        real eta = 1.0;
+        interpolateSolution(uc, elem,eta, wend, wendslope);
       
       
-	real end[2] = {centerOfMass[0] + normal[0]*wend - tangent[0]*L*0.5,
-		       centerOfMass[1] + normal[1]*wend - tangent[1]*L*0.5};
+        real end[2] = {centerOfMass[0] + normal[0]*wend - tangent[0]*L*0.5,
+                       centerOfMass[1] + normal[1]*wend - tangent[1]*L*0.5};
       
-	linAcceleration[0] -= penalty*(end[0]-initialEndRight[0])/totalMass;
-	linAcceleration[1] -= penalty*(end[1]-initialEndRight[1])/totalMass;
+        linAcceleration[0] -= penalty*(end[0]-initialEndRight[0])/totalMass;
+        linAcceleration[1] -= penalty*(end[1]-initialEndRight[1])/totalMass;
       
-	real mom = penalty*((end[0]-initialEndLeft[0])*(/*-wend*tangent[0]*/normal[0]*L*0.5)+
-			    (end[1]-initialEndLeft[1])*(/*-wend*tangent[1]*/normal[1]*L*0.5));
-	omegadd -= mom / totalInertia;
+        real mom = penalty*((end[0]-initialEndLeft[0])*(/*-wend*tangent[0]*/normal[0]*L*0.5)+
+                            (end[1]-initialEndLeft[1])*(/*-wend*tangent[1]*/normal[1]*L*0.5));
+        omegadd -= mom / totalInertia;
 
-	real shear = penalty*((end[0]-initialEndRight[0])*(normal[0])+
-			      (end[1]-initialEndRight[1])*(normal[1]));
+        real shear = penalty*((end[0]-initialEndRight[0])*(normal[0])+
+                              (end[1]-initialEndRight[1])*(normal[1]));
       
-	rhs(numElem*2) += shear;
+        rhs(numElem*2) += shear;
       }
 
       if (bcLeft == BeamModel::clamped) {
 
-	real wend,wendslope;
-	int elem = 0;
-	real eta = -1.0;
-	interpolateSolution(uc, elem,eta, wend, wendslope);
+        real wend,wendslope;
+        int elem = 0;
+        real eta = -1.0;
+        interpolateSolution(uc, elem,eta, wend, wendslope);
       
       
-	real slopeend[2] = {normal[0]*wendslope+tangent[0],
-			    normal[1]*wendslope+tangent[1]};
+        real slopeend[2] = {normal[0]*wendslope+tangent[0],
+                            normal[1]*wendslope+tangent[1]};
       
-	real proj = (-tangent[0]*wendslope+initialBeamNormal[0])*normal[0] + 
-	  (-tangent[1]*wendslope+initialBeamNormal[1])*normal[1] ;
+        real proj = (-tangent[0]*wendslope+initialBeamNormal[0])*normal[0] + 
+          (-tangent[1]*wendslope+initialBeamNormal[1])*normal[1] ;
 
-	real err = slopeend[0]*initialBeamNormal[0] + 
-	  slopeend[1]*initialBeamNormal[1] ;
+        real err = slopeend[0]*initialBeamNormal[0] + 
+          slopeend[1]*initialBeamNormal[1] ;
 
-	real mom = 0.1*penalty*err*proj;
+        real mom = 0.1*penalty*err*proj;
       
-	real rf = 1.0;
-	real & leftCantileverMoment = dbase.get<real>("leftCantileverMoment");
-	leftCantileverMoment = mom*rf + (1.0-rf)*leftCantileverMoment;
-	omegadd -= leftCantileverMoment / totalInertia;
+        real rf = 1.0;
+        real & leftCantileverMoment = dbase.get<real>("leftCantileverMoment");
+        leftCantileverMoment = mom*rf + (1.0-rf)*leftCantileverMoment;
+        omegadd -= leftCantileverMoment / totalInertia;
 
-	std::cout << "End slope error = " << err << std::endl;
+        std::cout << "End slope error = " << err << std::endl;
       
-	//rhs(1) += mom; 
+        //rhs(1) += mom; 
       }
 
       RealArray ones = f,res;
       ones = 0.0;
       for (int i = 0; i < numElem*2+2; i+=2)
-	ones(i) = linAcceleration[0]*normal[0]+linAcceleration[1]*normal[1];
+        ones(i) = linAcceleration[0]*normal[0]+linAcceleration[1]*normal[1];
 
       //printArray(ones,0,1000,0,1000,0,1000,0,1000,0,1000,0,1000);
     
@@ -1473,10 +1473,10 @@ computeAcceleration(const real t,
       rhs += angularVelocityTilde*angularVelocityTilde*res;
 
       for (int i = 0; i < numElem*2+2; i+=2) 
-	{
-	  ones(i) = -0.5*L+dx*(i/2); //Longfei 20160121: replace le with dx.
-	  ones(i+1) = 1.0;
-	}
+        {
+          ones(i) = -0.5*L+dx*(i/2); //Longfei 20160121: replace le with dx.
+          ones(i+1) = 1.0;
+        }
     
       //printArray(ones,0,1000,0,1000,0,1000,0,1000,0,1000,0,1000);
     
@@ -1556,7 +1556,7 @@ getForceOnBeam( const real t, RealArray & force )
   if( fabs(time(current)-t) > 1.e-10*(1.+t) )
     {
       printF("-- BM%i -- BeamModel::getForceOnBeam:ERROR: t=%10.3e is not equal to time(current)=%10.3e, current=%i\n",
-	     getBeamID(),t,time(current),current);
+             getBeamID(),t,time(current),current);
       OV_ABORT("ERROR");
     }
 
@@ -1727,10 +1727,10 @@ getForceOnBeam( const real t, RealArray & force )
 //       // TridiagonalSolver *& pTri = dbase.get<TridiagonalSolver*>("tridiagonalSolver");
 //       TridiagonalSolver *& pTri = dbase.get<TridiagonalSolver*>(tridiagonalSolverName);
 //       if( pTri==NULL )
-// 	{
-// 	  pTri = new TridiagonalSolver();
-// 	  refactor=true;
-// 	}
+//      {
+//        pTri = new TridiagonalSolver();
+//        refactor=true;
+//      }
     
 //       assert( pTri!=NULL );
 
@@ -1738,173 +1738,173 @@ getForceOnBeam( const real t, RealArray & force )
 
 //       RealArray at0(ndof,ndof,I1,I2), bt0(ndof,ndof,I1,I2), ct0(ndof,ndof,I1,I2); // save for checking
 //       if( refactor )
-// 	{
-// 	  if( true || debug & 1 )
-// 	    printF("-- BM -- solveBlockTridiagonal : name=[%s] form block tridiagonal system and factor, isPeriodic=%i\n",
-// 		   (const char*)tridiagonalSolverName, (int)isPeriodic);
+//      {
+//        if( true || debug & 1 )
+//          printF("-- BM -- solveBlockTridiagonal : name=[%s] form block tridiagonal system and factor, isPeriodic=%i\n",
+//                 (const char*)tridiagonalSolverName, (int)isPeriodic);
       
-// 	  RealArray at(ndof,ndof,I1,I2), bt(ndof,ndof,I1,I2), ct(ndof,ndof,I1,I2);
+//        RealArray at(ndof,ndof,I1,I2), bt(ndof,ndof,I1,I2), ct(ndof,ndof,I1,I2);
 
-// 	  Index D=Range(0,1); // =ndof;
-// 	  for( int i=0; i<=nTri; i++ ) 
-// 	    {
-// 	      if( i>0 || isPeriodic )
-// 		at(D,D,i,0) = lower;  // lower diagonal 
-// 	      else 
-// 		at(D,D,i,0)=0.;   
+//        Index D=Range(0,1); // =ndof;
+//        for( int i=0; i<=nTri; i++ ) 
+//          {
+//            if( i>0 || isPeriodic )
+//              at(D,D,i,0) = lower;  // lower diagonal 
+//            else 
+//              at(D,D,i,0)=0.;   
 
-// 	      // diagonal :
-// 	      if( i==0 && !isPeriodic )
-// 		{
-// 		  bt(D,D,i,0) = diag1;
-// 		}
-// 	      else if( i==nTri && !isPeriodic )
-// 		{
-// 		  bt(D,D,i,0) = diag2;
-// 		}
-// 	      else
-// 		{
-// 		  bt(D,D,i,0) = dd;      
-// 		}
-	
-// 	      if( i<nTri || isPeriodic )
-// 		ct(D,D,i,0) = upper;   // upper diagonal 
-// 	      else 
-// 		ct(D,D,i,0) = 0.;     
+//            // diagonal :
+//            if( i==0 && !isPeriodic )
+//              {
+//                bt(D,D,i,0) = diag1;
+//              }
+//            else if( i==nTri && !isPeriodic )
+//              {
+//                bt(D,D,i,0) = diag2;
+//              }
+//            else
+//              {
+//                bt(D,D,i,0) = dd;      
+//              }
+        
+//            if( i<nTri || isPeriodic )
+//              ct(D,D,i,0) = upper;   // upper diagonal 
+//            else 
+//              ct(D,D,i,0) = 0.;     
 
 
-// 	    }  // end for i 
+//          }  // end for i 
       
-// 	  // -- Boundary fixup ---
-// 	  if( !allowsFreeMotion )
-// 	    {
-// 	      // --- Boundary conditions ---
-// 	      // Adjust the matrix for essential BC's -- these will set the DOF's at boundaries
-// 	      for( int side=0; side<=1; side++ )
-// 		{
-// 		  BoundaryConditionEnum bc = side==0 ? bcLeft : bcRight;
-// 		  int ia = side==0 ? 0 : numElem;
+//        // -- Boundary fixup ---
+//        if( !allowsFreeMotion )
+//          {
+//            // --- Boundary conditions ---
+//            // Adjust the matrix for essential BC's -- these will set the DOF's at boundaries
+//            for( int side=0; side<=1; side++ )
+//              {
+//                BoundaryConditionEnum bc = side==0 ? bcLeft : bcRight;
+//                int ia = side==0 ? 0 : numElem;
 
-// 		  // Special case when EI=0 : (we only have 1 BC for clamped instead of 2)
-// 		  // const real EI = elasticModulus*areaMomentOfInertia;
-// 		  if( bc==clamped && EI==0. ) bc=pinned;
-	  
-// 		  if( bc == clamped ) 
-// 		    {
-// 		      // Replace first block of equations by the identity
-// 		      bt(0,0,ia,0)=1.; bt(0,1,ia,0)=0.;
-// 		      bt(1,0,ia,0)=0.; bt(1,1,ia,0)=1.; 
-// 		      if( side==0 )
-// 			ct(D,D,ia,0)=0.;
-// 		      else
-// 			at(D,D,ia,0)=0.;
-// 		    }
-// 		  else if( bc == pinned ) 
-// 		    {
-// 		      // replace first equation in first 2x2 block by the identity
-// 		      if( side==0 )
-// 			ct(0,D,ia,0)=0.; 
-// 		      else
-// 			at(0,D,ia,0)=0.;
-	    
-// 		      bt(0,0,ia,0)=1.; bt(0,1,ia,0)=0.; 
-// 		    }
-// 		  else if( bc == slideBC ) 
-// 		    {
-// 		      // replace second equation in first 2x2 block by the identity
-// 		      if( side==0 )
-// 			ct(1,D,ia,0)=0.; 
-// 		      else
-// 			at(1,D,ia,0)=0.;
-	    
-// 		      bt(1,0,ia,0)=0.; bt(1,1,ia,0)=1.; 
-// 		    }
-// 		  else if( bc == freeBC )
-// 		    {
-// 		      // --- correct the stiffnes matrix for a free BC
-// 		      // The boundary term T*v*w_x is only non-zero for v=N_1, and w_x = Np_1_x
-// 		      //  T*N1(0)*Np_1_x(0)*w'_1
+//                // Special case when EI=0 : (we only have 1 BC for clamped instead of 2)
+//                // const real EI = elasticModulus*areaMomentOfInertia;
+//                if( bc==clamped && EI==0. ) bc=pinned;
+          
+//                if( bc == clamped ) 
+//                  {
+//                    // Replace first block of equations by the identity
+//                    bt(0,0,ia,0)=1.; bt(0,1,ia,0)=0.;
+//                    bt(1,0,ia,0)=0.; bt(1,1,ia,0)=1.; 
+//                    if( side==0 )
+//                      ct(D,D,ia,0)=0.;
+//                    else
+//                      at(D,D,ia,0)=0.;
+//                  }
+//                else if( bc == pinned ) 
+//                  {
+//                    // replace first equation in first 2x2 block by the identity
+//                    if( side==0 )
+//                      ct(0,D,ia,0)=0.; 
+//                    else
+//                      at(0,D,ia,0)=0.;
             
-// 		      // -- freeBC is not allowed with string model ---
-// 		      if(  EI==0. )
-// 			{
-// 			  printF("-- BM -- ERROR: A `free' BC is not allowed with the string model for a beam, EI=0\n");
-// 			  OV_ABORT("ERROR");
-// 			}
-	    
-// 		      bt(0,1,ia,0) +=  (1-2*side)*T*alpha;
+//                    bt(0,0,ia,0)=1.; bt(0,1,ia,0)=0.; 
+//                  }
+//                else if( bc == slideBC ) 
+//                  {
+//                    // replace second equation in first 2x2 block by the identity
+//                    if( side==0 )
+//                      ct(1,D,ia,0)=0.; 
+//                    else
+//                      at(1,D,ia,0)=0.;
+            
+//                    bt(1,0,ia,0)=0.; bt(1,1,ia,0)=1.; 
+//                  }
+//                else if( bc == freeBC )
+//                  {
+//                    // --- correct the stiffnes matrix for a free BC
+//                    // The boundary term T*v*w_x is only non-zero for v=N_1, and w_x = Np_1_x
+//                    //  T*N1(0)*Np_1_x(0)*w'_1
+            
+//                    // -- freeBC is not allowed with string model ---
+//                    if(  EI==0. )
+//                      {
+//                        printF("-- BM -- ERROR: A `free' BC is not allowed with the string model for a beam, EI=0\n");
+//                        OV_ABORT("ERROR");
+//                      }
+            
+//                    bt(0,1,ia,0) +=  (1-2*side)*T*alpha;
 
-// 		      // The boundary term K_xxt*v*w_xt also contributes
-// 		      bt(0,1,ia,0) +=  (1-2*side)*Kxxt*alphaB;
+//                    // The boundary term K_xxt*v*w_xt also contributes
+//                    bt(0,1,ia,0) +=  (1-2*side)*Kxxt*alphaB;
 
-// 		    }
-	  
+//                  }
+          
 
-// 		}
-// 	    }
+//              }
+//          }
 
-// 	  at0=at; bt0=bt; ct0=ct;
+//        at0=at; bt0=bt; ct0=ct;
       
-// 	  // Factor the block tridiagonal system:
-// 	  tri.factor(at,bt,ct,systemType,axis1,ndof);
+//        // Factor the block tridiagonal system:
+//        tri.factor(at,bt,ct,systemType,axis1,ndof);
 
-// 	} // end factor
+//      } // end factor
     
 //       // -- rhs --
 
 //       RealArray xTri(ndof,I1,I2);
 //       for( int i=0; i<=nTri; i++ ) 
-// 	{
-// 	  xTri(0,i,0)=f(i*2);
-// 	  xTri(1,i,0)=f(i*2+1);
-// 	}
+//      {
+//        xTri(0,i,0)=f(i*2);
+//        xTri(1,i,0)=f(i*2+1);
+//      }
       
 //       // solve the block tridiagonal system: 
 //       tri.solve(xTri);
 
 //       // assign the solution 
 //       for( int i = 0; i<=nTri; i++ ) 
-// 	{
-// 	  u(i*2) = xTri(0,i,0);
-// 	  u(i*2+1)=xTri(1,i,0);
-// 	}
+//      {
+//        u(i*2) = xTri(0,i,0);
+//        u(i*2+1)=xTri(1,i,0);
+//      }
 //       if( isPeriodic )
-// 	{ // -- assign values on last node
-// 	  int i=numElem;
-// 	  u(i*2) = u(0); u(i*2+1) = u(1);
-// 	}
+//      { // -- assign values on last node
+//        int i=numElem;
+//        u(i*2) = u(0); u(i*2+1) = u(1);
+//      }
     
 
 //       if( useBoth )
-// 	uNew=u;
+//      uNew=u;
     
 //       if( refactor && checkResidual )
-// 	{
-// 	  // double check solution:
-// 	  real resid=0.;
-// 	  for( int i = 0; i<=nTri; i++ ) 
-// 	    {
-// 	      // resid = at*u[i-1] + bt*u[i] + ct*u[i+1];
-// 	      int im1=max(0,i-1), ip1=min(i+1,numElem);
-// 	      if( i==0       && isPeriodic ){ im1=numElem-1; } // perioidic case : i=0 <-> i=numElem
-// 	      if( i==numElem && isPeriodic ){ ip1=1; }         // perioidic case : i=0 <-> i=numElem
+//      {
+//        // double check solution:
+//        real resid=0.;
+//        for( int i = 0; i<=nTri; i++ ) 
+//          {
+//            // resid = at*u[i-1] + bt*u[i] + ct*u[i+1];
+//            int im1=max(0,i-1), ip1=min(i+1,numElem);
+//            if( i==0       && isPeriodic ){ im1=numElem-1; } // perioidic case : i=0 <-> i=numElem
+//            if( i==numElem && isPeriodic ){ ip1=1; }         // perioidic case : i=0 <-> i=numElem
 
-// 	      real r=0.;
-// 	      r += at0(0,0,i)*u(2*im1) + at0(0,1,i)*u(2*im1+1) + bt0(0,0,i)*u(2*i) + bt0(0,1,i)*u(2*i+1) + ct0(0,0,i)*u(2*ip1) + ct0(0,1,i)*u(2*ip1+1) -f(2*i);
-// 	      r += at0(1,0,i)*u(2*im1) + at0(1,1,i)*u(2*im1+1) + bt0(1,0,i)*u(2*i) + bt0(1,1,i)*u(2*i+1) + ct0(1,0,i)*u(2*ip1) + ct0(1,1,i)*u(2*ip1+1) -f(2*i+1);
+//            real r=0.;
+//            r += at0(0,0,i)*u(2*im1) + at0(0,1,i)*u(2*im1+1) + bt0(0,0,i)*u(2*i) + bt0(0,1,i)*u(2*i+1) + ct0(0,0,i)*u(2*ip1) + ct0(0,1,i)*u(2*ip1+1) -f(2*i);
+//            r += at0(1,0,i)*u(2*im1) + at0(1,1,i)*u(2*im1+1) + bt0(1,0,i)*u(2*i) + bt0(1,1,i)*u(2*i+1) + ct0(1,0,i)*u(2*ip1) + ct0(1,1,i)*u(2*ip1+1) -f(2*i+1);
 
-// 	      // printF("BT: i=%i resid=%e\n",i,r);
-	
-// 	      resid=max(resid,r);
-// 	    }
-// 	  printF("--BM-- BLOCK-TRI : max-residual =%8.2e\n",resid);
-// 	  if( resid > REAL_EPSILON*1000.*SQR(numElem) )
-// 	    {
-// 	      OV_ABORT("error");
-// 	    }
+//            // printF("BT: i=%i resid=%e\n",i,r);
+        
+//            resid=max(resid,r);
+//          }
+//        printF("--BM-- BLOCK-TRI : max-residual =%8.2e\n",resid);
+//        if( resid > REAL_EPSILON*1000.*SQR(numElem) )
+//          {
+//            OV_ABORT("error");
+//          }
       
 
-// 	}
+//      }
     
 //       refactor=false;
 
@@ -1917,77 +1917,77 @@ getForceOnBeam( const real t, RealArray & force )
 //       u = f;
 
 //       std::vector< RealArray > diagonal(numElem+1,dd),
-// 	superdiagonal(numElem,upper),subdiagonal(numElem, lower);
+//      superdiagonal(numElem,upper),subdiagonal(numElem, lower);
   
 //       diagonal[0] = diag1;
 //       diagonal[numElem] = diag2;
 
 //       if( !allowsFreeMotion )
-// 	{
-// 	  // --- Boundary conditions ---
-// 	  //const real EI = elasticModulus*areaMomentOfInertia;
-// 	  BoundaryConditionEnum bc = bcLeft;
-// 	  if( bc==clamped && EI==0. ) bc=pinned;
+//      {
+//        // --- Boundary conditions ---
+//        //const real EI = elasticModulus*areaMomentOfInertia;
+//        BoundaryConditionEnum bc = bcLeft;
+//        if( bc==clamped && EI==0. ) bc=pinned;
 
-// 	  if( bc == BeamModel::clamped )
-// 	    {
-// 	      diagonal[0](0,0) = diagonal[0](1,1) = 1.0;
-// 	      diagonal[0](0,1) = diagonal[0](1,0) = 0.0;
-// 	      superdiagonal[0](0,0) = superdiagonal[0](0,1) = 0.0;
-// 	      superdiagonal[0](1,1) = superdiagonal[0](1,0) = 0.0;
+//        if( bc == BeamModel::clamped )
+//          {
+//            diagonal[0](0,0) = diagonal[0](1,1) = 1.0;
+//            diagonal[0](0,1) = diagonal[0](1,0) = 0.0;
+//            superdiagonal[0](0,0) = superdiagonal[0](0,1) = 0.0;
+//            superdiagonal[0](1,1) = superdiagonal[0](1,0) = 0.0;
 
-// 	    }
-// 	  else if ( bc == BeamModel::pinned ) 
-// 	    {
-// 	      // replace first equation in first 2x2 block by the identity
-// 	      diagonal[0](0,0) = 1.0;
-// 	      diagonal[0](0,1) = 0.0;
-// 	      superdiagonal[0](0,0) = 0.0;
-// 	      superdiagonal[0](0,1) = 0.0;
-// 	    }
-// 	  if( bc == freeBC )
-// 	    {
-// 	      // --- correct the stiffnes matrix for a free BC
-// 	      // The boundary term T*v*w_x is only non-zero for v=N_1, and w_x = Np_1_x
-// 	      //  T*N1(0)*Np_1_x(0)*w'_1
+//          }
+//        else if ( bc == BeamModel::pinned ) 
+//          {
+//            // replace first equation in first 2x2 block by the identity
+//            diagonal[0](0,0) = 1.0;
+//            diagonal[0](0,1) = 0.0;
+//            superdiagonal[0](0,0) = 0.0;
+//            superdiagonal[0](0,1) = 0.0;
+//          }
+//        if( bc == freeBC )
+//          {
+//            // --- correct the stiffnes matrix for a free BC
+//            // The boundary term T*v*w_x is only non-zero for v=N_1, and w_x = Np_1_x
+//            //  T*N1(0)*Np_1_x(0)*w'_1
             
-// 	      diagonal[0](0,1) +=  T*alpha;
-// 	      diagonal[0](0,1) +=  Kxxt*alphaB;
-// 	    }
+//            diagonal[0](0,1) +=  T*alpha;
+//            diagonal[0](0,1) +=  Kxxt*alphaB;
+//          }
  
-// 	  bc = bcRight;
-// 	  if( bc==clamped && EI==0. ) bc=pinned;
+//        bc = bcRight;
+//        if( bc==clamped && EI==0. ) bc=pinned;
 
-// 	  if (bc == BeamModel::clamped ) 
-// 	    {
-// 	      diagonal[numElem](0,0) = diagonal[numElem](1,1) = 1.0;
-// 	      diagonal[numElem](0,1) = diagonal[numElem](1,0) = 0.0;
-// 	      subdiagonal[numElem-1](0,0) = subdiagonal[numElem-1](0,1) = 0.0;
-// 	      subdiagonal[numElem-1](1,1) = subdiagonal[numElem-1](1,0) = 0.0;
+//        if (bc == BeamModel::clamped ) 
+//          {
+//            diagonal[numElem](0,0) = diagonal[numElem](1,1) = 1.0;
+//            diagonal[numElem](0,1) = diagonal[numElem](1,0) = 0.0;
+//            subdiagonal[numElem-1](0,0) = subdiagonal[numElem-1](0,1) = 0.0;
+//            subdiagonal[numElem-1](1,1) = subdiagonal[numElem-1](1,0) = 0.0;
 
-// 	    }
-// 	  if (bc == pinned ) 
-// 	    {
-// 	      // replace "first" equation in last 2x2 block by the identity
-// 	      diagonal[numElem](0,0) = 1.0;
-// 	      diagonal[numElem](0,1) = 0.0;
-// 	      subdiagonal[numElem-1](0,0) = 0.0;
-// 	      subdiagonal[numElem-1](0,1) = 0.0;
-// 	    }
-// 	  if( bc == freeBC )
-// 	    {
-// 	      // --- correct the stiffnes matrix for a free BC
-// 	      // The boundary term T*v*w_x is only non-zero for v=N_1, and w_x = Np_1_x
-// 	      //  T*N1(0)*Np_1_x(0)*w'_1
+//          }
+//        if (bc == pinned ) 
+//          {
+//            // replace "first" equation in last 2x2 block by the identity
+//            diagonal[numElem](0,0) = 1.0;
+//            diagonal[numElem](0,1) = 0.0;
+//            subdiagonal[numElem-1](0,0) = 0.0;
+//            subdiagonal[numElem-1](0,1) = 0.0;
+//          }
+//        if( bc == freeBC )
+//          {
+//            // --- correct the stiffnes matrix for a free BC
+//            // The boundary term T*v*w_x is only non-zero for v=N_1, and w_x = Np_1_x
+//            //  T*N1(0)*Np_1_x(0)*w'_1
 
-// 	      // printF("-- BM -- solveBlock : add correction term, alpha=%g,  T*alpha = %8.2e\n",alpha, -T*alpha);
-	
-// 	      diagonal[numElem](0,1) +=  -T*alpha;
-// 	      diagonal[numElem](0,1) +=  -Kxxt*alphaB;
-// 	    }
+//            // printF("-- BM -- solveBlock : add correction term, alpha=%g,  T*alpha = %8.2e\n",alpha, -T*alpha);
+        
+//            diagonal[numElem](0,1) +=  -T*alpha;
+//            diagonal[numElem](0,1) +=  -Kxxt*alphaB;
+//          }
 
 
-// 	}
+//      }
   
 
 //       RealArray inv;
@@ -1995,33 +1995,33 @@ getForceOnBeam( const real t, RealArray & force )
 //       Index i2x2(0,2);
   
 //       for (int i = 0; i < numElem; ++i) 
-// 	{
+//      {
 
-// 	  inverse2x2(diagonal[i], inv);
-// 	  superdiagonal[i] = mult(inv, superdiagonal[i]);
-// 	  u(i2x2) = mult(inv, u(i2x2) );
-// 	  u(i2x2+2) -= mult(subdiagonal[i],u(i2x2));
-// 	  diagonal[i+1] -= mult(subdiagonal[i],superdiagonal[i]);   
+//        inverse2x2(diagonal[i], inv);
+//        superdiagonal[i] = mult(inv, superdiagonal[i]);
+//        u(i2x2) = mult(inv, u(i2x2) );
+//        u(i2x2+2) -= mult(subdiagonal[i],u(i2x2));
+//        diagonal[i+1] -= mult(subdiagonal[i],superdiagonal[i]);   
 
-// 	  //   if (augmented) {
+//        //   if (augmented) {
 
-// 	  // 	(*augmentedCol)(i2x2) = mult(inv , (*augmentedCol)(i2x2));
-// 	  // 	(*augmentedCol)(i2x2+2) -= mult(subdiagonal[i], (*augmentedCol)(i2x2));
+//        //    (*augmentedCol)(i2x2) = mult(inv , (*augmentedCol)(i2x2));
+//        //    (*augmentedCol)(i2x2+2) -= mult(subdiagonal[i], (*augmentedCol)(i2x2));
 
-// 	  // 	(*augmentedRow)(i2x2+2) -= mult((*augmentedRow)(i2x2),superdiagonal[i]);
+//        //    (*augmentedRow)(i2x2+2) -= mult((*augmentedRow)(i2x2),superdiagonal[i]);
 
-// 	  // 	*augmentedDiagonal -= mult( (*augmentedRow)(i2x2), (*augmentedCol)(i2x2) )(0);
-// 	  // 	*augmentedRHS -= mult( (*augmentedRow)(i2x2), u(i2x2))(0);
-// 	  // }
+//        //    *augmentedDiagonal -= mult( (*augmentedRow)(i2x2), (*augmentedCol)(i2x2) )(0);
+//        //    *augmentedRHS -= mult( (*augmentedRow)(i2x2), u(i2x2))(0);
+//        // }
 
-// 	  i2x2 += 2;
-// 	}
+//        i2x2 += 2;
+//      }
 //       // if (augmented) {
 //       //   *augmentedSolution = *augmentedRHS / *augmentedDiagonal;
 
 //       //   for (int i = numElem*2+1; i >= 0; --i) {
 
-//       // 	u(i) -= (*augmentedCol)(i)*(*augmentedSolution);
+//       //     u(i) -= (*augmentedCol)(i)*(*augmentedSolution);
 //       //   }
 //       //  }
 
@@ -2032,9 +2032,9 @@ getForceOnBeam( const real t, RealArray & force )
 
 //       for (int i = numElem-1; i >= 0; --i) {
 
-// 	u(i2x2) -= mult(superdiagonal[i], u(i2x2+2));
+//      u(i2x2) -= mult(superdiagonal[i], u(i2x2+2));
 
-// 	i2x2 -= 2;
+//      i2x2 -= 2;
 //       }
 //     }
 
@@ -2044,12 +2044,12 @@ getForceOnBeam( const real t, RealArray & force )
 //       printF("--BM-- Block tridiagonal |new - old|=%8.2e\n",err);
     
 //       if( err >  REAL_EPSILON*1000.*SQR(numElem) )
-// 	{
-// 	  printF("*********** ERROR: old and new are different! ***************\n");
-// 	  printF(" NOTE: this difference could be due to the boundary conditions not being\n"
-// 		 "       fully implemented in the old scheme\n");
-// 	  OV_ABORT("error");
-// 	}
+//      {
+//        printF("*********** ERROR: old and new are different! ***************\n");
+//        printF(" NOTE: this difference could be due to the boundary conditions not being\n"
+//               "       fully implemented in the old scheme\n");
+//        OV_ABORT("error");
+//      }
 //     }
   
 
@@ -2090,9 +2090,9 @@ addInternalForces( const real t, RealArray & f )
       // computeProjectedForce( ftz(i),ftz(i+1), -1.0,1.0, lt);
       
       if( orderOfGalerkinProjection==2  || exactSolutionOption=="travelingWaveFSI")
-	computeProjectedForce( fNodal(2*i),fNodal(2*(i+1)), -1.0,1.0, lt);
+        computeProjectedForce( fNodal(2*i),fNodal(2*(i+1)), -1.0,1.0, lt);
       else
-	computeGalerkinProjection( fNodal(2*i),fNodal(2*i+1), fNodal(2*(i+1)),fNodal(2*(i+1)+1),   -1.0,1.0, lt);
+        computeGalerkinProjection( fNodal(2*i),fNodal(2*i+1), fNodal(2*(i+1)),fNodal(2*(i+1)+1),   -1.0,1.0, lt);
       
       Index idx(i*2,4);
       f(idx) += lt;
@@ -2143,10 +2143,10 @@ addInternalForces( const real t, RealArray & f )
     
   //     real heightFluidRegion=1.;
   //     for( int i1 = I1.getBase(); i1<=I1.getBound(); i1++ )
-  // 	{
-  // 	  x(i1,0,0,0) = i1*dx; 
-  // 	  x(i1,0,0,1) = heightFluidRegion;    // should match value in travelingWaveFsi
-  // 	}
+  //    {
+  //      x(i1,0,0,0) = i1*dx; 
+  //      x(i1,0,0,1) = heightFluidRegion;    // should match value in travelingWaveFsi
+  //    }
 
   //     assert( dbase.get<TravelingWaveFsi*>("travelingWaveFsi")!=NULL );
   //     TravelingWaveFsi & travelingWaveFsi = *dbase.get<TravelingWaveFsi*>("travelingWaveFsi");
@@ -2161,12 +2161,12 @@ addInternalForces( const real t, RealArray & f )
   //     RealArray lt(4); // local traction
   //     const int pc=0;
   //     for ( int i = 0; i<numElem; i++ )
-  // 	{
-  // 	  real p0=ufe(i,0,0,pc), p1=ufe(i+1,0,0,pc);
-  // 	  computeProjectedForce( p0,p1, -1.0,1.0, lt);
-  // 	  Index idx(i*2,4);
-  // 	  f(idx) += lt;
-  // 	}
+  //    {
+  //      real p0=ufe(i,0,0,pc), p1=ufe(i+1,0,0,pc);
+  //      computeProjectedForce( p0,p1, -1.0,1.0, lt);
+  //      Index idx(i*2,4);
+  //      f(idx) += lt;
+  //    }
 
   //   }
   
@@ -2182,10 +2182,10 @@ addInternalForces( const real t, RealArray & f )
   //     RealArray x(I1,I2,I3,2);  // beam axis (undeformed)
   //     //const real dx=beamLength/numElem; // Longfei 20160120: dx  already defined in this function
   //     for( int i1 = I1.getBase(); i1<=I1.getBound(); i1++ )
-  // 	{
-  // 	  x(i1,0,0,0) = i1*dx; 
-  // 	  x(i1,0,0,1) = 0.;    // should this be y0 ?
-  // 	}
+  //    {
+  //      x(i1,0,0,0) = i1*dx; 
+  //      x(i1,0,0,1) = 0.;    // should this be y0 ?
+  //    }
 
 
 
@@ -2210,41 +2210,41 @@ addInternalForces( const real t, RealArray & f )
 
   //     const int & orderOfGalerkinProjection = dbase.get<int>("orderOfGalerkinProjection");
   //     if( orderOfGalerkinProjection==4 )
-  // 	{
-  // 	  RealArray uxe(I1,I2,I3,1), uttxe(I1,I2,I3,1), uxxxe(I1,I2,I3,1), uxxxxxe(I1,I2,I3,1);
-  // 	  exact.gd( uxe     ,x,domainDimension,isRectangular,0,1,0,0,I1,I2,I3,wc,t );
-  // 	  exact.gd( uttxe   ,x,domainDimension,isRectangular,2,1,0,0,I1,I2,I3,wc,t );
-  // 	  exact.gd( uxxxe   ,x,domainDimension,isRectangular,0,3,0,0,I1,I2,I3,wc,t );
-  // 	  exact.gd( uxxxxxe ,x,domainDimension,isRectangular,0,5,0,0,I1,I2,I3,wc,t );
+  //    {
+  //      RealArray uxe(I1,I2,I3,1), uttxe(I1,I2,I3,1), uxxxe(I1,I2,I3,1), uxxxxxe(I1,I2,I3,1);
+  //      exact.gd( uxe     ,x,domainDimension,isRectangular,0,1,0,0,I1,I2,I3,wc,t );
+  //      exact.gd( uttxe   ,x,domainDimension,isRectangular,2,1,0,0,I1,I2,I3,wc,t );
+  //      exact.gd( uxxxe   ,x,domainDimension,isRectangular,0,3,0,0,I1,I2,I3,wc,t );
+  //      exact.gd( uxxxxxe ,x,domainDimension,isRectangular,0,5,0,0,I1,I2,I3,wc,t );
 
-  // 	  ftzx = (density*thickness)*uttxe + K0*uxe - (T)*uxxxe + (EI)*uxxxxxe;  // x-derivative of the TZ force
-  // 	}
+  //      ftzx = (density*thickness)*uttxe + K0*uxe - (T)*uxxxe + (EI)*uxxxxxe;  // x-derivative of the TZ force
+  //    }
     
   //     if( Kt!=0. )
-  // 	{
-  // 	  RealArray & ute = uxxe;  // re-use space
-  // 	  exact.gd( ute, x,domainDimension,isRectangular,1,0,0,0,I1,I2,I3,wc,t );
-  // 	  ftz += Kt*ute;
-  // 	  if( orderOfGalerkinProjection==4 )
-  // 	    {
-  // 	      RealArray & utxe = uxxe;  // re-use space
-  // 	      exact.gd( utxe, x,domainDimension,isRectangular,1,1,0,0,I1,I2,I3,wc,t );
-  // 	      ftzx += Kt*utxe;
-  // 	    }
-  // 	}
+  //    {
+  //      RealArray & ute = uxxe;  // re-use space
+  //      exact.gd( ute, x,domainDimension,isRectangular,1,0,0,0,I1,I2,I3,wc,t );
+  //      ftz += Kt*ute;
+  //      if( orderOfGalerkinProjection==4 )
+  //        {
+  //          RealArray & utxe = uxxe;  // re-use space
+  //          exact.gd( utxe, x,domainDimension,isRectangular,1,1,0,0,I1,I2,I3,wc,t );
+  //          ftzx += Kt*utxe;
+  //        }
+  //    }
   //     if( Kxxt!=0. )
-  // 	{
-  // 	  RealArray & utxxe = uxxe;  // re-use space
-  // 	  exact.gd( utxxe, x,domainDimension,isRectangular,1,2,0,0,I1,I2,I3,wc,t );
-  // 	  ftz += (-Kxxt)*utxxe;
-  // 	  if( orderOfGalerkinProjection==4 )
-  // 	    {
-  // 	      RealArray & utxxxe = uxxe;  // re-use space
-  // 	      exact.gd( utxxxe, x,domainDimension,isRectangular,1,3,0,0,I1,I2,I3,wc,t );
-  // 	      ftzx += (-Kxxt)*utxxxe;
-  // 	    }
+  //    {
+  //      RealArray & utxxe = uxxe;  // re-use space
+  //      exact.gd( utxxe, x,domainDimension,isRectangular,1,2,0,0,I1,I2,I3,wc,t );
+  //      ftz += (-Kxxt)*utxxe;
+  //      if( orderOfGalerkinProjection==4 )
+  //        {
+  //          RealArray & utxxxe = uxxe;  // re-use space
+  //          exact.gd( utxxxe, x,domainDimension,isRectangular,1,3,0,0,I1,I2,I3,wc,t );
+  //          ftzx += (-Kxxt)*utxxxe;
+  //        }
       
-  // 	}
+  //    }
     
   //     // ::display(utte,"utte","%8.2e ");
   //     // ::display(uxxe,"uxxe","%8.2e ");
@@ -2252,17 +2252,17 @@ addInternalForces( const real t, RealArray & f )
     
   //     RealArray lt(4); // local traction
   //     for ( int i = 0; i<numElem; i++ )
-  // 	{
-  // 	  // computeProjectedForce( ftz(i),ftz(i+1), -1.0,1.0, lt);
+  //    {
+  //      // computeProjectedForce( ftz(i),ftz(i+1), -1.0,1.0, lt);
 
-  // 	  if( orderOfGalerkinProjection==2 )
-  // 	    computeProjectedForce( ftz(i),ftz(i+1), -1.0,1.0, lt);
-  // 	  else
-  // 	    computeGalerkinProjection( ftz(i),ftzx(i), ftz(i+1),ftzx(i+1),   -1.0,1.0, lt);
+  //      if( orderOfGalerkinProjection==2 )
+  //        computeProjectedForce( ftz(i),ftz(i+1), -1.0,1.0, lt);
+  //      else
+  //        computeGalerkinProjection( ftz(i),ftzx(i), ftz(i+1),ftzx(i+1),   -1.0,1.0, lt);
 
-  // 	  Index idx(i*2,4);
-  // 	  f(idx) += lt;
-  // 	}
+  //      Index idx(i*2,4);
+  //      f(idx) += lt;
+  //    }
    
   //   }
 
@@ -2271,13 +2271,13 @@ addInternalForces( const real t, RealArray & f )
   //     // --- add buyouncy force
   //     RealArray lt(4);
   //     for (int i = 0; i < numElem; ++i) 
-  // 	{
-  // 	  // -- compute (N_i, . )
-  // 	  computeProjectedForce(projectedBodyForce*buoyantMassPerUnitLength,projectedBodyForce*buoyantMassPerUnitLength,
-  // 				-1.0,1.0, lt);
-  // 	  Index idx(i*2,4);
-  // 	  f(idx) += lt;
-  // 	}
+  //    {
+  //      // -- compute (N_i, . )
+  //      computeProjectedForce(projectedBodyForce*buoyantMassPerUnitLength,projectedBodyForce*buoyantMassPerUnitLength,
+  //                            -1.0,1.0, lt);
+  //      Index idx(i*2,4);
+  //      f(idx) += lt;
+  //    }
   //   }
   
   // const bool isPeriodic = bcLeft==periodic;
@@ -2348,8 +2348,8 @@ smooth( const real t, RealArray & w, const aString & label )
   if( t < 3.*dt )
   {
     printF("--BM-- smooth %s, numberOfSmooths=%i (%ith order filter), omega=%9.3e isPeriodic=%i t=%8.2e.\n",
-	   (const char*)label,numberOfSmooths,smoothOrder,omega,(int)isPeriodic,t );
-	  
+           (const char*)label,numberOfSmooths,smoothOrder,omega,(int)isPeriodic,t );
+          
   }
 
 
@@ -2395,9 +2395,9 @@ smooth( const real t, RealArray & w, const aString & label )
       // 1 5 10 10 5 1
       // 1 6 15 20 15 6 1 
       w1(I,0)= w1(I,0) + (omega/64.)*(w1(I-3,0) - 6.*w1(I-2,0) +15.*w1(I-1,0) -20.*w1(I,0)
-				      + 15.*w1(I+1,0) -6.*w1(I+2,0) + w1(I+3,0) );
+                                      + 15.*w1(I+1,0) -6.*w1(I+2,0) + w1(I+3,0) );
       w1(J,1)= w1(J,1) + (omega/64.)*(w1(J-3,1) - 6.*w1(J-2,1) +15.*w1(J-1,1) -20.*w1(J,1)
-				      + 15.*w1(J+1,1) -6.*w1(J+2,1) + w1(J+3,1) );
+                                      + 15.*w1(J+1,1) -6.*w1(J+2,1) + w1(J+3,1) );
     }
     else
     {
@@ -2457,82 +2457,82 @@ smoothBoundaryConditions( RealArray & w1, int base, int bound,
       {
         // results from cgDoc/moving/codes/beam/beambc.maple
 
-	// expansion for u when uxx=uxxx=0  u^(6)=0 u^(7)=0 
+        // expansion for u when uxx=uxxx=0  u^(6)=0 u^(7)=0 
         //   u := x -> u0 + x*ux + x^4/(4!)*ux4 + x^5/(5!)*ux5;
 
-	assert( numberOfGhost==2 || numberOfGhost==3 );
+        assert( numberOfGhost==2 || numberOfGhost==3 );
 
-	real u0  = w1(ib     ,0);
-	real up1 = w1(ib+  is,0);
-	real up2 = w1(ib+2*is,0);
-	real up3 = w1(ib+3*is,0);
-	real up4 = w1(ib+4*is,0);
-	  
+        real u0  = w1(ib     ,0);
+        real up1 = w1(ib+  is,0);
+        real up2 = w1(ib+2*is,0);
+        real up3 = w1(ib+3*is,0);
+        real up4 = w1(ib+4*is,0);
+          
         // N.B. : set boundary value too:
-	w1(ib     ,0)=368./145*up1-318./145*up2+112./145*up3-17./145*up4;
-	w1(ib-  is,0)=122./29*up1-136./29*up2+51./29*up3-8./29*up4;
-	w1(ib-2*is,0)=208./29*up1-297./29*up2+144./29*up3-26./29*up4;
+        w1(ib     ,0)=368./145*up1-318./145*up2+112./145*up3-17./145*up4;
+        w1(ib-  is,0)=122./29*up1-136./29*up2+51./29*up3-8./29*up4;
+        w1(ib-2*is,0)=208./29*up1-297./29*up2+144./29*up3-26./29*up4;
         if( numberOfGhost>=3 )
-	  w1(ib-3*is,0)=455./29*up1-840./29*up2+518./29*up3-104./29*up4;
-	
-	// w1(ib-  is,0)=40./17.*u0-30./17.*up1+8./17.*up2-1./17.*up3;
-	// w1(ib-2*is,0)=130./17.*u0-208./17.*up1+111./17.*up2-16./17.*up3;
-	// if( numberOfGhost>=3 )
-	//   w1(ib-3*is,0)=520./17.*u0-1053./17.*up1+648./17.*up2-98./17.*up3;
-	
+          w1(ib-3*is,0)=455./29*up1-840./29*up2+518./29*up3-104./29*up4;
+        
+        // w1(ib-  is,0)=40./17.*u0-30./17.*up1+8./17.*up2-1./17.*up3;
+        // w1(ib-2*is,0)=130./17.*u0-208./17.*up1+111./17.*up2-16./17.*up3;
+        // if( numberOfGhost>=3 )
+        //   w1(ib-3*is,0)=520./17.*u0-1053./17.*up1+648./17.*up2-98./17.*up3;
+        
         // // w1(ib-  is,0)=2.*u0-up1;
         // w1(ib-  is,0)=3.*u0-3.*up1+up2;
         // w1(ib-2*is,0)=2.*u0-up2;
-	
-	// w=ux: 
+        
+        // w=ux: 
         // expansion for w=ux when wx=0 wxx=0 w^(5)=0 w^(6)=0 
         //  w := x -> w0 + x^3/(3!)*wx3 + x^4/(4!)*wx4 + x^7/(7!)*wx7;
-	real w0  = w1(ib     ,1);
-	real wp1 = w1(ib+  is,1);
-	real wp2 = w1(ib+2*is,1);
-	real wp3 = w1(ib+3*is,1);
-	real wp4 = w1(ib+4*is,1);
+        real w0  = w1(ib     ,1);
+        real wp1 = w1(ib+  is,1);
+        real wp2 = w1(ib+2*is,1);
+        real wp3 = w1(ib+3*is,1);
+        real wp4 = w1(ib+4*is,1);
 
         // set boundary value too:
-	w1(ib     ,1)=6336./4795*wp1-1944./4795*wp2+64./685*wp3-9./959*wp4;
-	w1(ib-  is,1)=1898./959*wp1-1258./959*wp2+51./137*wp3-38./959*wp4;
-	w1(ib-2*is,1)=7696./959*wp1-9423./959*wp2+432./137*wp3-338./959*wp4;
+        w1(ib     ,1)=6336./4795*wp1-1944./4795*wp2+64./685*wp3-9./959*wp4;
+        w1(ib-  is,1)=1898./959*wp1-1258./959*wp2+51./137*wp3-38./959*wp4;
+        w1(ib-2*is,1)=7696./959*wp1-9423./959*wp2+432./137*wp3-338./959*wp4;
         if( numberOfGhost>=3 )
-  	  w1(ib-3*is,1)=4095./137*wp1-5670./137*wp2+1946./137*wp3-234./137*wp4;
+          w1(ib-3*is,1)=4095./137*wp1-5670./137*wp2+1946./137*wp3-234./137*wp4;
 
-	// w1(ib-  is,1)=38./9.*w0-18./5.*wp1+2./5.*wp2-1./45.*wp3;
-	// w1(ib-2*is,1)=338./9.*w0-208./5.*wp1+27./5.*wp2-16./45.*wp3;
-	// if( numberOfGhost>=3 )
-	//   w1(ib-3*is,1)=182.*w0-1053./5.*wp1+162./5.*wp2-14./5.*wp3;
-	
-	// // TEST: 
+        // w1(ib-  is,1)=38./9.*w0-18./5.*wp1+2./5.*wp2-1./45.*wp3;
+        // w1(ib-2*is,1)=338./9.*w0-208./5.*wp1+27./5.*wp2-16./45.*wp3;
+        // if( numberOfGhost>=3 )
+        //   w1(ib-3*is,1)=182.*w0-1053./5.*wp1+162./5.*wp2-14./5.*wp3;
+        
+        // // TEST: 
         // // w1(ib-  is,1)=wp1;
         // // w1(ib-2*is,1)=2.*w0-wp2;
         // w1(ib-  is,1)=2.*w0-wp1;
         // w1(ib-2*is,1)=2.*w0-wp2;
 
-	// // Free BC: w_xx = 0    -> D_+^2 w_{-1} =0  IS THIS ACCURATE ENOUGH ??
-	// //          w_xxx = 0   -> D_+^3 w_{-2} =0 
-	// assert( numberOfGhost==2 );
-	
-	// int ig = ib - is; // 1st ghost point 
-	// w1(ig,0) = 2.*w1(ig+is,0) -w1(ig+2*is,0);
-	// w1(ig,1) = 3.*w1(ig+is,1) - 3.*w1(ig+2*is,1) + w1(ig+3*is,1);
-	// ig = ib - 2*is;  // 2nd ghost point 
-	// w1(ig,0) = 3.*w1(ig+is,0) - 3.*w1(ig+2*is,0) + w1(ig+3*is,0);
-	// w1(ig,1) = 4.*w1(ig+is,1) -6.*w1(ig+2*is,1) + 4.*w1(ig+3*is,1) - w1(ig+4*is,1);  
+        // // Free BC: w_xx = 0    -> D_+^2 w_{-1} =0  IS THIS ACCURATE ENOUGH ??
+        // //          w_xxx = 0   -> D_+^3 w_{-2} =0 
+        // assert( numberOfGhost==2 );
+        
+        // int ig = ib - is; // 1st ghost point 
+        // w1(ig,0) = 2.*w1(ig+is,0) -w1(ig+2*is,0);
+        // w1(ig,1) = 3.*w1(ig+is,1) - 3.*w1(ig+2*is,1) + w1(ig+3*is,1);
+        // ig = ib - 2*is;  // 2nd ghost point 
+        // w1(ig,0) = 3.*w1(ig+is,0) - 3.*w1(ig+2*is,0) + w1(ig+3*is,0);
+        // w1(ig,1) = 4.*w1(ig+is,1) -6.*w1(ig+2*is,1) + 4.*w1(ig+3*is,1) - w1(ig+4*is,1);  
       }
       else if( bc[side]==pinned )
       {
         //  Pinned: u=u_xx=0  -> u_xxxx=u_xxxxxx = 0  etc.
         //  u is an odd function 
         //  u_x is an even function 
-	for( int g=1; g<=numberOfGhost; g++ )
-	{
-	  int ig = ib - g*is; // ghost point 
-   	  w1(ig,0)=2.*w1(ib,0) - w1(ib+g*is,0);  // u (or v) is odd
-   	  w1(ig,1)=   w1(ib+g*is,1);             // u_x or v_x is even
-	}
+        for( int g=1; g<=numberOfGhost; g++ )
+        {
+          int ig = ib - g*is; // ghost point 
+          w1(ig,0)=2.*w1(ib,0) - w1(ib+g*is,0);  // u (or v) is odd
+          w1(ig,1)=   w1(ib+g*is,1);             // u_x or v_x is even
+        }
 
       }
       else if( bc[side]==slideBC )
@@ -2540,12 +2540,12 @@ smoothBoundaryConditions( RealArray & w1, int base, int bound,
         //  Slide: u_x=u_xxx=0  -> all odd derivatives are zero
         //  u is an even function 
         //  u_x is an odd function 
-	for( int g=1; g<=numberOfGhost; g++ )
-	{
-	  int ig = ib - g*is; // ghost point 
-   	  w1(ig,0)= w1(ib+g*is,0) ;               // u (or v) is even
-   	  w1(ig,1)=2.*w1(ib,1) - w1(ib+g*is,1);   // u_x or v_x is odd
-	}
+        for( int g=1; g<=numberOfGhost; g++ )
+        {
+          int ig = ib - g*is; // ghost point 
+          w1(ig,0)= w1(ib+g*is,0) ;               // u (or v) is even
+          w1(ig,1)=2.*w1(ib,1) - w1(ib+g*is,1);   // u_x or v_x is odd
+        }
 
       }
       else if( bc[side]==clamped )
@@ -2554,38 +2554,38 @@ smoothBoundaryConditions( RealArray & w1, int base, int bound,
 
         // results from cgDoc/moving/codes/beam/beambc.maple
 
-	// expansion for u when u=0, ux=0, uxxxx=0, uxxxxx=0, ...
+        // expansion for u when u=0, ux=0, uxxxx=0, uxxxxx=0, ...
         // u := x -> u0 + x^2/2*uxx + x^3/6*uxxx + x^6/(6!)*ux6 + x^7/(7!)*ux7 
         
-	assert( numberOfGhost==2 || numberOfGhost==3 );
+        assert( numberOfGhost==2 || numberOfGhost==3 );
 
-	real u0  = w1(ib     ,0);
-	real up1 = w1(ib+  is,0);
-	real up2 = w1(ib+2*is,0);
-	real up3 = w1(ib+3*is,0);
-	real up4 = w1(ib+4*is,0);
-	  
+        real u0  = w1(ib     ,0);
+        real up1 = w1(ib+  is,0);
+        real up2 = w1(ib+2*is,0);
+        real up3 = w1(ib+3*is,0);
+        real up4 = w1(ib+4*is,0);
+          
         w1(ib     ,0)=0.;
-	w1(ib-  is,0)=-385./174.*u0+122./29.*up1-34./29.*up2+17./87.*up3-1./58.*up4;
-	w1(ib-2*is,0)=-1127./58.*u0+832./29.*up1-297./29.*up2+64./29.*up3-13./58.*up4;
-	if( numberOfGhost>=3 )
-    	  w1(ib-3*is,0)=-5271./58.*u0+4095./29.*up1-1890./29.*up2+518./29.*up3-117./58.*up4;
-	  
-	// w=ux: 
+        w1(ib-  is,0)=-385./174.*u0+122./29.*up1-34./29.*up2+17./87.*up3-1./58.*up4;
+        w1(ib-2*is,0)=-1127./58.*u0+832./29.*up1-297./29.*up2+64./29.*up3-13./58.*up4;
+        if( numberOfGhost>=3 )
+          w1(ib-3*is,0)=-5271./58.*u0+4095./29.*up1-1890./29.*up2+518./29.*up3-117./58.*up4;
+          
+        // w=ux: 
         //  expansion for w=ux when wxxx=0 wxxxx=0 w^(7)=0 w^(8)=0 
         // w := x -> w0 + x*wx + x^2/2*wxx + x^5/(5!)*wx5 + x^6/(6!)*wx6;
 
-	real w0  = w1(ib     ,1);
-	real wp1 = w1(ib+  is,1);
-	real wp2 = w1(ib+2*is,1);
-	real wp3 = w1(ib+3*is,1);
-	real wp4 = w1(ib+4*is,1);
+        real w0  = w1(ib     ,1);
+        real wp1 = w1(ib+  is,1);
+        real wp2 = w1(ib+2*is,1);
+        real wp3 = w1(ib+3*is,1);
+        real wp4 = w1(ib+4*is,1);
 
         w1(ib     ,1)=0.;
-	w1(ib-  is,1)=98./29.*w0-122./29.*wp1+68./29.*wp2-17./29.*wp3+2./29.*wp4;
-	w1(ib-2*is,1)=231./29.*w0-416./29.*wp1+297./29.*wp2-96./29.*wp3+13./29.*wp4;
-	if( numberOfGhost>=3 )
-  	  w1(ib-3*is,1)=574./29.*w0-1365./29.*wp1+1260./29.*wp2-518./29.*wp3+78./29.*wp4;
+        w1(ib-  is,1)=98./29.*w0-122./29.*wp1+68./29.*wp2-17./29.*wp3+2./29.*wp4;
+        w1(ib-2*is,1)=231./29.*w0-416./29.*wp1+297./29.*wp2-96./29.*wp3+13./29.*wp4;
+        if( numberOfGhost>=3 )
+          w1(ib-3*is,1)=574./29.*w0-1365./29.*wp1+1260./29.*wp2-518./29.*wp3+78./29.*wp4;
 
 
         // 4th-order filter: Obtain 2 ghost from
@@ -2608,53 +2608,55 @@ smoothBoundaryConditions( RealArray & w1, int base, int bound,
 
         // results from cgDoc/moving/codes/beam/beambc.maple
         // if( numberOfGhost==2 )
-	// {
+        // {
         //   // // Clamped: u:
         //   // // u(i-2) = 16*u(i+1)-3*u(i+2)-12*u(i)
         //   // // u(i-1) = 3*u(i+1)-1/2*u(i+2)-3/2*u(i)
-	//   // w1(ib-2*is,0) = 16.*w1(ib+is,0)-3.*w1(ib+2*is,0)-12.*w1(ib,0);
-	//   // w1(ib-  is,0) =  3.*w1(ib+is,0)-.5*w1(ib+2*is,0)-1.5*w1(ib,0);
+        //   // w1(ib-2*is,0) = 16.*w1(ib+is,0)-3.*w1(ib+2*is,0)-12.*w1(ib,0);
+        //   // w1(ib-  is,0) =  3.*w1(ib+is,0)-.5*w1(ib+2*is,0)-1.5*w1(ib,0);
 
         //   // // Clamped: u_x:
         //   // // u(i-2) = -8*u(i+1)+3*u(i+2)+6*u(i)
         //   // // u(i-1) = -3*u(i+1)+u(i+2)+3*u(i)
-	//   // w1(ib-2*is,1) = -8.*w1(ib+is,1)+3.*w1(ib+2*is,1)+6.*w1(ib,1);
+        //   // w1(ib-2*is,1) = -8.*w1(ib+is,1)+3.*w1(ib+2*is,1)+6.*w1(ib,1);
         //   // w1(ib-1*is,1) = -3.*w1(ib+is,1)+   w1(ib+2*is,1)+3.*w1(ib,1);
 
-	//   OV_ABORT("finish me");
-	// }
-	// // for( int g=1; g<=numberOfGhost; g++ )
-	// {
-	//   int ig = ib - g*is; // ghost point 
-   	//   w1(ig,0)=2.*w1(ib,0) - w1(ib+g*is,0);  // u (or v) is odd
-   	//   w1(ig,1)=   w1(ib+g*is,1);             // u_x or v_x is even
-	// }
+        //   OV_ABORT("finish me");
+        // }
+        // // for( int g=1; g<=numberOfGhost; g++ )
+        // {
+        //   int ig = ib - g*is; // ghost point 
+        //   w1(ig,0)=2.*w1(ib,0) - w1(ib+g*is,0);  // u (or v) is odd
+        //   w1(ig,1)=   w1(ib+g*is,1);             // u_x or v_x is even
+        // }
 
       }
       else
       {
-	// -- just extrapolate for now *FIX ME*
-	for( int g=1; g<=numberOfGhost; g++ )
-	{
-	  int ig = ib - g*is; // ghost point 
-	  if( orderOfExtrapolation==5 )
-	    w1(ig,R2) = 5.*w1(ig+is,R2) -10.*w1(ig+2*is,R2) + 10.*w1(ig+3*is,R2) - 5.*w1(ig+4*is,R2) + w1(ig+5*is,R2);  
-	  else if( orderOfExtrapolation==4 )
-	    w1(ig,R2) = 4.*w1(ig+is,R2) -6.*w1(ig+2*is,R2) + 4.*w1(ig+3*is,R2) - w1(ig+4*is,R2);  
-	  else if( orderOfExtrapolation==3 )
-	    w1(ig,R2) = 3.*w1(ig+is,R2) - 3.*w1(ig+2*is,R2) + w1(ig+3*is,R2);
-	  else if( orderOfExtrapolation==2 )
-	    w1(ig,R2) = 2.*w1(ig+is,R2) -w1(ig+2*is,R2);
-	  else
-	  {
-	    OV_ABORT("error: finish me");
-	  }
-	    
-	}
+        // -- just extrapolate for now *FIX ME*
+        for( int g=1; g<=numberOfGhost; g++ )
+        {
+          int ig = ib - g*is; // ghost point 
+          if( orderOfExtrapolation==5 )
+            w1(ig,R2) = 5.*w1(ig+is,R2) -10.*w1(ig+2*is,R2) + 10.*w1(ig+3*is,R2) - 5.*w1(ig+4*is,R2) + w1(ig+5*is,R2);  
+          else if( orderOfExtrapolation==4 )
+            w1(ig,R2) = 4.*w1(ig+is,R2) -6.*w1(ig+2*is,R2) + 4.*w1(ig+3*is,R2) - w1(ig+4*is,R2);  
+          else if( orderOfExtrapolation==3 )
+            w1(ig,R2) = 3.*w1(ig+is,R2) - 3.*w1(ig+2*is,R2) + w1(ig+3*is,R2);
+          else if( orderOfExtrapolation==2 )
+            w1(ig,R2) = 2.*w1(ig+is,R2) -w1(ig+2*is,R2);
+          else
+          {
+            OV_ABORT("error: finish me");
+          }
+            
+        }
       }
-	
+        
     }
   }
+
+  return 0;
 }
 
 

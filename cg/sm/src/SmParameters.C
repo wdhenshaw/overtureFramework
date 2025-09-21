@@ -2485,5 +2485,7 @@ updateToMatchGrid(CompositeGrid & cg, IntegerArray & sharedBoundaryCondition )
     
 //   }
 
+  return 0;
+
 }
 

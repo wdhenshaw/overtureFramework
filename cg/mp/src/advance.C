@@ -17,6 +17,8 @@ cycleZero()
 {
   // parameters.dbase.get<Parameters::TimeSteppingMethod >("timeSteppingMethod")=Parameters::forwardEuler;  // ***** do this for now ***
   setupAdvance();
+
+  return 0;
 }
 
 // ===================================================================================================================

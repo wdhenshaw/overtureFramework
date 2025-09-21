@@ -35,15 +35,15 @@ main(int argc, char *argv[])
   aString menu[] = { 
                     "!gridQuery",      
                     "plot",                  // Make some menu items
-		    "index ranges",
-		    "boundary conditions",
-		    "interpolation information",
+                    "index ranges",
+                    "boundary conditions",
+                    "interpolation information",
                     "verticies",
                     "plot xr",
                     "plot skewness",
                     "mask",
-		    "erase",
-		    "exit",
+                    "erase",
+                    "exit",
                     "" };                       // empty string denotes the end of the menu
   char buff[100];
 
@@ -65,15 +65,15 @@ main(int argc, char *argv[])
         const IntegerArray & eir = c.extendedIndexRange();
         const IntegerArray & egir = extendedGridIndexRange(c); // *note*
         const IntegerArray & er = c.extendedRange();
-	
-	printf(" grid %i, name=%s, \n"
+        
+        printf(" grid %i, name=%s, \n"
                "                   gridIndexRange(0:1,0:2) = [%2i,%i][%2i,%i][%2i,%i] (grid bounds)\n"
                "                       indexRange(0:1,0:2) = [%2i,%i][%2i,%i][%2i,%i] (1 less on periodic and CC)\n" 
                "                        dimension(0:1,0:2) = [%2i,%i][%2i,%i][%2i,%i] (array dimensions)\n" 
                "               extendedIndexRange(0:1,0:2) = [%2i,%i][%2i,%i][%2i,%i] (indexRange + interp)\n" 
                "           extendedGridIndexRange(0:1,0:2) = [%2i,%i][%2i,%i][%2i,%i] (gridIndexRange + interp)\n" 
                "                    extendedRange(0:1,0:2) = [%2i,%i][%2i,%i][%2i,%i] (includes interp on mixed BC)\n",
-	       grid,(const char*)c.getName(),
+               grid,(const char*)c.getName(),
                gir(0,0),gir(1,0),gir(0,1),gir(1,1),gir(0,2),gir(1,2),
                ir(0,0),ir(1,0),ir(0,1),ir(1,1),ir(0,2),ir(1,2),
                d(0,0),d(1,0),d(0,1),d(1,1),d(0,2),d(1,2),
@@ -88,12 +88,12 @@ main(int argc, char *argv[])
       {
         MappedGrid & c = cg[grid];
         const IntegerArray & bc  = c.boundaryCondition();
-	printf(" grid %i, name=%s, \n"
+        printf(" grid %i, name=%s, \n"
                "                   boundaryCondition(0:1,0:2) = [%i,%i][%i,%i][%i,%i] (0=interp, <0=periodic)\n"
                "                   isPeriodic(0:2) = [%i,%i,%i] (2=function periodic, 1=f' periodic)\n",
-	       grid,(const char*)c.getName(),
-	       bc(0,0),bc(1,0),bc(0,1),bc(1,1),bc(0,2),bc(1,2),
-	       c.isPeriodic(0),c.isPeriodic(1),c.isPeriodic(2) );
+               grid,(const char*)c.getName(),
+               bc(0,0),bc(1,0),bc(0,1),bc(1,1),bc(0,2),bc(1,2),
+               c.isPeriodic(0),c.isPeriodic(1),c.isPeriodic(2) );
       }
     }
     else if( answer=="interpolation information" )
@@ -101,7 +101,7 @@ main(int argc, char *argv[])
       for( int grid=0; grid<cg.numberOfComponentGrids(); grid++ )
       {
         MappedGrid & c = cg[grid];
-	
+        
         const IntegerArray & ni = cg.numberOfInterpolationPoints;
         const IntegerArray & ip = cg.interpolationPoint[grid];
         const IntegerArray & il = cg.interpoleeLocation[grid];
@@ -120,8 +120,8 @@ main(int argc, char *argv[])
       for( int grid=0; grid<cg.numberOfComponentGrids(); grid++ )
       {
         MappedGrid & c = cg[grid];
-	const intArray & mask = c.mask();
-	displayMask(mask,sPrintF(buff,"mask on grid %i, name=%s", grid,(const char*)c.getName()));
+        const intArray & mask = c.mask();
+        displayMask(mask,sPrintF(buff,"mask on grid %i, name=%s", grid,(const char*)c.getName()));
         display(mask,sPrintF(buff,"mask on grid %i, name=%s", grid,(const char*)c.getName()));
       }
     }
@@ -130,7 +130,7 @@ main(int argc, char *argv[])
       for( int grid=0; grid<cg.numberOfComponentGrids(); grid++ )
       {
         MappedGrid & c = cg[grid];
-	display(c.vertex(),sPrintF(buff,"vertex on grid %i, name=%s", grid,(const char*)c.getName()),"%9.2e");
+        display(c.vertex(),sPrintF(buff,"vertex on grid %i, name=%s", grid,(const char*)c.getName()),"%9.2e");
       }
     }
     else if( answer=="plot xr" )
@@ -143,7 +143,7 @@ main(int argc, char *argv[])
       {
         xr.setName("yr",1);
         xr.setName("xs",2);
-	xr.setName("ys",3);
+        xr.setName("ys",3);
       }
       for( int grid=0; grid<cg.numberOfComponentGrids(); grid++ )
         xr[grid]=cg[grid].vertexDerivative();

@@ -267,6 +267,8 @@ plot(real t, GenericGraphicsInterface & gi, GraphicsParameters & psp )
   
   gi.redraw(true);
   usleep(100000);  // sleep in mirco-seconds
+
+  return 0;
 }
 
 
