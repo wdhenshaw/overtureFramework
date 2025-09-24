@@ -2476,20 +2476,22 @@ convertLocalInterpolationData()
 
     // Define the MPI DataType corresponding to the above struct
     MPI_Datatype InterpolateDataType, oldTypes[2];
-    MPI_Aint offsets[2], extent;
+    MPI_Aint offsets[2], lb, extent;
     int blockCounts[2];
   
     offsets[0]    = 0;
     oldTypes[0]   = MPI_Real;  // NOTE: Use MPI_Real  (not MPI_REAL == MPI_FLOAT)
     blockCounts[0]= 3;  // there are 3 reals
 
-    MPI_Type_extent(oldTypes[0], &extent);
+    // $wdh$ MPI_Type_extent(oldTypes[0], &extent);
+    MPI_Type_get_extent(oldTypes[0], &lb, &extent);
 
     offsets[1]    = blockCounts[0]*extent;
     oldTypes[1]   = MPI_INT;
     blockCounts[1]= 10;      // there are 10 int's in InterpolateData
 
-    MPI_Type_struct(2, blockCounts, offsets, oldTypes, &InterpolateDataType);
+    // $wdh$ MPI_Type_struct(2, blockCounts, offsets, oldTypes, &InterpolateDataType);
+    MPI_Type_create_struct(2, blockCounts, offsets, oldTypes, &InterpolateDataType);
     MPI_Type_commit(&InterpolateDataType);
 
 

@@ -1123,7 +1123,7 @@ broadCastArgsCleanup(int & argc, char **&argv, int sourceProcessor /* = 0 */ )
         argc=0;
         delete [] argv; argv=NULL;
     }
-    
+    return 0;
 }
 
 

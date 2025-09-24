@@ -371,20 +371,22 @@ canInterpolate( CompositeGrid & cg,
   //   int donor;  // donor grid
   // };
     MPI_Datatype CanInterpolateQueryDataType, CanInterpolateResultDataType, oldTypes[2];
-    MPI_Aint offsets[2], extent;
+    MPI_Aint offsets[2], lb, extent;
     int blockCounts[2];
     
     offsets[0]    = 0;
     oldTypes[0]   = MPI_Real;  // NOTE: Use MPI_Real  (not MPI_REAL == MPI_FLOAT)
     blockCounts[0]= 3;  // there are 3 reals
 
-    MPI_Type_extent(oldTypes[0], &extent);  // extent = number of bytes in MPI_Real
+  // $wdh$ MPI_Type_extent(oldTypes[0], &extent);  // extent = number of bytes in MPI_Real
+    MPI_Type_get_extent(oldTypes[0], &lb, &extent);  // extent = number of bytes in MPI_Real
 
     offsets[1]    = blockCounts[0]*extent;
     oldTypes[1]   = MPI_INT;
     blockCounts[1]= 4;      // there are 4 int's in CanInterpolateQueryData
 
-    MPI_Type_struct(2, blockCounts, offsets, oldTypes, &CanInterpolateQueryDataType);
+  // $wdh$ MPI_Type_struct(2, blockCounts, offsets, oldTypes, &CanInterpolateQueryDataType);
+    MPI_Type_create_struct(2, blockCounts, offsets, oldTypes, &CanInterpolateQueryDataType);
     MPI_Type_commit(&CanInterpolateQueryDataType);
 
 
@@ -1134,20 +1136,22 @@ canInterpolateOld( CompositeGrid & cg,
   // define the derived datatype --NOTE: put doubles first in struct to align in memory
 
     MPI_Datatype CanInterpolateQueryDataType, CanInterpolateResultDataType, oldTypes[2];
-    MPI_Aint offsets[2], extent;
+    MPI_Aint offsets[2], lb, extent;
     int blockCounts[2];
     
     offsets[0]    = 0;
     oldTypes[0]   = MPI_Real;  // NOTE: Use MPI_Real  (not MPI_REAL == MPI_FLOAT)
     blockCounts[0]= 3;  // there are 3 reals
 
-    MPI_Type_extent(oldTypes[0], &extent);  // extent = number of bytes in MPI_Real
+  // $wdh$ MPI_Type_extent(oldTypes[0], &extent);  // extent = number of bytes in MPI_Real
+    MPI_Type_get_extent(oldTypes[0], &lb, &extent);  // extent = number of bytes in MPI_Real
 
     offsets[1]    = blockCounts[0]*extent;
     oldTypes[1]   = MPI_INT;
     blockCounts[1]= 4;      // there are 4 int's in CanInterpolateQueryData
 
-    MPI_Type_struct(2, blockCounts, offsets, oldTypes, &CanInterpolateQueryDataType);
+  // $wdh$ MPI_Type_struct(2, blockCounts, offsets, oldTypes, &CanInterpolateQueryDataType);
+    MPI_Type_create_struct(2, blockCounts, offsets, oldTypes, &CanInterpolateQueryDataType);
     MPI_Type_commit(&CanInterpolateQueryDataType);
 
 
@@ -1743,20 +1747,22 @@ transferInterpDataForAMR(CompositeGrid & cg,
     MPI_Request *sendRequest = new MPI_Request[np];
 
     MPI_Datatype InterpDataType, oldTypes[2];
-    MPI_Aint offsets[2], extent;
+    MPI_Aint offsets[2], lb, extent;
     int blockCounts[2];
 
     offsets[0]    = 0;
     oldTypes[0]   = MPI_Real;  // NOTE: MPI_REAL == MPI_FLOAT
     blockCounts[0]= 3;         // there are 3 reals
 
-    MPI_Type_extent(oldTypes[0], &extent);
+  // $wdh$ MPI_Type_extent(oldTypes[0], &extent);
+    MPI_Type_get_extent(oldTypes[0], &lb, &extent);
 
     offsets[1]    = blockCounts[0]*extent;
     oldTypes[1]   = MPI_INT;   
     blockCounts[1]= 5;         // there are 5 int's to InterpData
 
-    MPI_Type_struct(2, blockCounts, offsets, oldTypes, &InterpDataType);
+  // $wdh$ MPI_Type_struct(2, blockCounts, offsets, oldTypes, &InterpDataType);
+    MPI_Type_create_struct(2, blockCounts, offsets, oldTypes, &InterpDataType);
     MPI_Type_commit(&InterpDataType);
   // post receives
     const int tag1=991528;

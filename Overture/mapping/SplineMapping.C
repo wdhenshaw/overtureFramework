@@ -47,7 +47,7 @@ extern "C"
 
   void TSVAL3 (const int & N, const real & T, const real & X, const real & Y, const real & Z, const real & XP, 
                const real & YP, const real & ZP, const real & SIGMA, const int & IFLAG, const int & NE,
-	       const real & TE,  real & VX, real & VY, real & VZ, int & IER);
+               const real & TE,  real & VX, real & VY, real & VZ, int & IER);
 
   void ARCL2D (const int & N, const real & X, const real & Y, real &  T, int & IER);
   void ARCL3D (const int & N, const real & X, const real & Y, const real & Z,  real & T, int & IER);
@@ -483,7 +483,7 @@ setDomainInterval(const real & rStart_ /* =0. */,
   
   rStart=rStart_;
   rEnd=rEnd_;
-	
+        
   const real rMin = splineIsPeriodic ? -1. : 0.;
   if( rStart<rMin )
   {
@@ -590,7 +590,7 @@ initialize()
     if( s.getLength(0) != numberOfSplinePoints )
     {
       printF("SplineMapping::initialize:ERROR: parameterization type is userDefined but the parameter array \n"
-	     " is not of the correct size. Maybe you forgot to call setParameterization\n");
+             " is not of the correct size. Maybe you forgot to call setParameterization\n");
       OV_ABORT("error");
     }
   }
@@ -605,14 +605,14 @@ initialize()
       // compute the arclength and normalize
       s(0)=0.;
       if( rangeDimension==1 )
-	for( int i=1; i<numberOfSplinePoints; i++ )
-	  s(i)=s(i-1)+fabs(knots(i,0)-knots(i-1,0));
+        for( int i=1; i<numberOfSplinePoints; i++ )
+          s(i)=s(i-1)+fabs(knots(i,0)-knots(i-1,0));
       else if( rangeDimension==2 )
-	for( int i=1; i<numberOfSplinePoints; i++ )
-	  s(i)=s(i-1)+SQRT( SQR(knots(i,0)-knots(i-1,0))+SQR(knots(i,1)-knots(i-1,1)) );
+        for( int i=1; i<numberOfSplinePoints; i++ )
+          s(i)=s(i-1)+SQRT( SQR(knots(i,0)-knots(i-1,0))+SQR(knots(i,1)-knots(i-1,1)) );
       else
-	for( int i=1; i<numberOfSplinePoints; i++ )
-	  s(i)=s(i-1)+SQRT( SQR(knots(i,0)-knots(i-1,0))+SQR(knots(i,1)-knots(i-1,1))+SQR(knots(i,2)-knots(i-1,2)) );
+        for( int i=1; i<numberOfSplinePoints; i++ )
+          s(i)=s(i-1)+SQRT( SQR(knots(i,0)-knots(i-1,0))+SQR(knots(i,1)-knots(i-1,1))+SQR(knots(i,2)-knots(i-1,2)) );
       real totalLength=s(numberOfSplinePoints-1);
       s/=totalLength;
     }
@@ -651,8 +651,8 @@ initialize()
     {
       for( int axis=0; axis<rangeDimension; axis++ )
       {
-	xp(0,axis)=bcValue(0,axis);
-	xp(numberOfSplinePoints-1,axis)=bcValue(1,axis);
+        xp(0,axis)=bcValue(0,axis);
+        xp(numberOfSplinePoints-1,axis)=bcValue(1,axis);
       }
     }
     
@@ -667,15 +667,15 @@ initialize()
         s.seqAdd(0.,1./max(1.,(numberOfSplinePoints-1))); 
       
       if( ncd==1 )
-	lwk=1;
+        lwk=1;
       else 
       {
-	if( !per && unifrm )
-	  lwk=numberOfSplinePoints-1;
-	else if( (per && unifrm) || (!per && !unifrm) )
-	  lwk=2*numberOfSplinePoints-2;
-	else
-	  lwk=3*numberOfSplinePoints-3;
+        if( !per && unifrm )
+          lwk=numberOfSplinePoints-1;
+        else if( (per && unifrm) || (!per && !unifrm) )
+          lwk=2*numberOfSplinePoints-2;
+        else
+          lwk=3*numberOfSplinePoints-3;
       }
       RealArray wk(lwk);
 
@@ -686,8 +686,8 @@ initialize()
              wk(0), xp(0,0),sigma(0), ier);
       if( ier<0 )
       {
-	printf("SplineMapping::ERROR return from tspsi: ier=%i \n",ier);
-	throw "error";
+        printf("SplineMapping::ERROR return from tspsi: ier=%i \n",ier);
+        throw "error";
       }
       if( splineIsPeriodic==derivativePeriodic )
       {
@@ -698,17 +698,17 @@ initialize()
     else
     {
       if( ncd==1 )
-	lwk=1;
+        lwk=1;
       else 
       {
-	if( !per && unifrm )
-	  lwk=numberOfSplinePoints-1;
-	else if( per && unifrm )
-	  lwk=2*numberOfSplinePoints-2;
-	else if( !per && !unifrm )
-	  lwk=(rangeDimension+1)*(numberOfSplinePoints-1);
-	else
-	  lwk=(rangeDimension+2)*(numberOfSplinePoints-1);
+        if( !per && unifrm )
+          lwk=numberOfSplinePoints-1;
+        else if( per && unifrm )
+          lwk=2*numberOfSplinePoints-2;
+        else if( !per && !unifrm )
+          lwk=(rangeDimension+1)*(numberOfSplinePoints-1);
+        else
+          lwk=(rangeDimension+2)*(numberOfSplinePoints-1);
       }
 
         // compute the arclength
@@ -716,10 +716,10 @@ initialize()
         s.seqAdd(0.,1./(numberOfSplinePoints-1)); 
       else if( parameterizationType==arcLength )
       {
-	if( rangeDimension==2 )
-	  ARCL2D(numberOfSplinePoints,knots(0,0),knots(0,1), s(0), ier);
-	else
-	  ARCL3D(numberOfSplinePoints,knots(0,0),knots(0,1),knots(0,2), s(0), ier);
+        if( rangeDimension==2 )
+          ARCL2D(numberOfSplinePoints,knots(0,0),knots(0,1), s(0), ier);
+        else
+          ARCL3D(numberOfSplinePoints,knots(0,0),knots(0,1),knots(0,2), s(0), ier);
       }
       
       // normalize
@@ -735,90 +735,90 @@ initialize()
 
         weight(R)=s(R+1)-s(R-1);  // 2 times the delta arclength
 
-	if( splineIsPeriodic==functionPeriodic )
-	{
-	  weight(0)=s(1)-s(0)+s(n)-s(n-1);
-	  weight(n)=weight(0);
-	}
-	else
-	{ // use one sided approx.
-	  weight(0)=s(2)-s(0);
-	  weight(n)=s(n)-s(n-2);
-	}
+        if( splineIsPeriodic==functionPeriodic )
+        {
+          weight(0)=s(1)-s(0)+s(n)-s(n-1);
+          weight(n)=weight(0);
+        }
+        else
+        { // use one sided approx.
+          weight(0)=s(2)-s(0);
+          weight(n)=s(n)-s(n-2);
+        }
 
-	if( rangeDimension==2 )
-	{
-	  curvature(R)=(fabs(knots(R+1,0)-2.*knots(R,0)+knots(R-1,0))+
-			fabs(knots(R+1,1)-2.*knots(R,1)+knots(R-1,1)))/SQR(weight(R));
+        if( rangeDimension==2 )
+        {
+          curvature(R)=(fabs(knots(R+1,0)-2.*knots(R,0)+knots(R-1,0))+
+                        fabs(knots(R+1,1)-2.*knots(R,1)+knots(R-1,1)))/SQR(weight(R));
           if( splineIsPeriodic==functionPeriodic )
-	  {
-	    curvature(0)=(fabs(knots(1,0)-2.*knots(0,0)+knots(n-1,0))+
-			  fabs(knots(1,1)-2.*knots(0,1)+knots(n-1,1)))/SQR(weight(0));
-	    curvature(n)=curvature(0);
-	  }
-	  else
-	  { // use one sided approx.
-	    curvature(0)=curvature(1);
-	    curvature(n)=curvature(n-1);
-	  }
-	}
-	else
-	{
-	  curvature(R)=(fabs(knots(R+1,0)-2.*knots(R,0)+knots(R-1,0))+
-			fabs(knots(R+1,1)-2.*knots(R,1)+knots(R-1,1))+
-			fabs(knots(R+1,2)-2.*knots(R,2)+knots(R-1,2)))/SQR(weight(R));
+          {
+            curvature(0)=(fabs(knots(1,0)-2.*knots(0,0)+knots(n-1,0))+
+                          fabs(knots(1,1)-2.*knots(0,1)+knots(n-1,1)))/SQR(weight(0));
+            curvature(n)=curvature(0);
+          }
+          else
+          { // use one sided approx.
+            curvature(0)=curvature(1);
+            curvature(n)=curvature(n-1);
+          }
+        }
+        else
+        {
+          curvature(R)=(fabs(knots(R+1,0)-2.*knots(R,0)+knots(R-1,0))+
+                        fabs(knots(R+1,1)-2.*knots(R,1)+knots(R-1,1))+
+                        fabs(knots(R+1,2)-2.*knots(R,2)+knots(R-1,2)))/SQR(weight(R));
           if( splineIsPeriodic==functionPeriodic )
-	  {
-	    curvature(0)=(fabs(knots(1,0)-2.*knots(0,0)+knots(n-1,0))+
-			  fabs(knots(1,1)-2.*knots(0,1)+knots(n-1,1))+
-			  fabs(knots(1,2)-2.*knots(0,2)+knots(n-1,2)))/SQR(weight(0));
-	    curvature(n)=curvature(0);
-	  }
-	  else
-	  { // use one sided approx.
-	    curvature(0)=curvature(1);
-	    curvature(n)=curvature(n-1);
-	  }
-	}
+          {
+            curvature(0)=(fabs(knots(1,0)-2.*knots(0,0)+knots(n-1,0))+
+                          fabs(knots(1,1)-2.*knots(0,1)+knots(n-1,1))+
+                          fabs(knots(1,2)-2.*knots(0,2)+knots(n-1,2)))/SQR(weight(0));
+            curvature(n)=curvature(0);
+          }
+          else
+          { // use one sided approx.
+            curvature(0)=curvature(1);
+            curvature(n)=curvature(n-1);
+          }
+        }
         real sMax=max(weight);
-	real cMax=max(curvature);
+        real cMax=max(curvature);
         cMax=max(sMax*REAL_EPSILON,cMax);
-	weight=1.+weight*(arcLengthWeight/sMax)+curvature*(curvatureWeight/cMax);
+        weight=1.+weight*(arcLengthWeight/sMax)+curvature*(curvatureWeight/cMax);
         // smooth the weight function
         const real omega=.5;
         for( int it=0; it<4; it++ )
-	{
+        {
           weight(R)=(1.-omega)*weight(R) + omega*.5*(weight(R+1)+weight(R-1));
-	  if( splineIsPeriodic )
-	  {
-	    weight(0)=(1.-omega)*weight(0) + omega*.5*(weight(1)+weight(n-1));
-	    weight(n)=weight(0);
-	  }
-	}
-	
-	equidistribute(weight,s);
-	if( debug & 4 )::display(weight,"Here is the weight function");
-	if( debug & 4 )::display(s,"Here is the equidistributed parameter");
+          if( splineIsPeriodic )
+          {
+            weight(0)=(1.-omega)*weight(0) + omega*.5*(weight(1)+weight(n-1));
+            weight(n)=weight(0);
+          }
+        }
+        
+        equidistribute(weight,s);
+        if( debug & 4 )::display(weight,"Here is the weight function");
+        if( debug & 4 )::display(s,"Here is the equidistributed parameter");
         SplineMapping equiSpline;
-	equiSpline.setPoints(s);
+        equiSpline.setPoints(s);
         RealArray r(numberOfSplinePoints);
-	r.seqAdd(0.,1./(numberOfSplinePoints-1));
-	equiSpline.inverseMapS(r,s);
-	if( debug & 4 )::display(s,"Here is s after inverting the equidistributed parameter");
+        r.seqAdd(0.,1./(numberOfSplinePoints-1));
+        equiSpline.inverseMapS(r,s);
+        if( debug & 4 )::display(s,"Here is s after inverting the equidistributed parameter");
       }
 
       RealArray wk(lwk);
       RealArray slope(1,rangeDimension); 
       if( splineIsPeriodic==derivativePeriodic )
       {
-	
+        
         slope(0,Rx)=knots(numberOfSplinePoints-1,Rx)-knots(0,Rx);
         for( int axis=0; axis<rangeDimension; axis++ )
           knots(R,axis)-=s(R)*slope(0,axis);
       }
       // call Bill's altered version that takes s as input      
       TSPSPT(numberOfSplinePoints,rangeDimension,knots(0,0),knots(0,1),knots(0,rangeDimension-1),ncd,iendc,per,unifrm,
-	    lwk, wk(0),s(0),xp(0,0),xp(0,1),xp(0,rangeDimension-1),sigma(0),ier);
+            lwk, wk(0),s(0),xp(0,0),xp(0,1),xp(0,rangeDimension-1),sigma(0),ier);
 
 /* ----
       // scale the arclength to the interval [0,1]
@@ -829,18 +829,18 @@ initialize()
       if( splineIsPeriodic==derivativePeriodic )
       {
         for( int axis=0; axis<rangeDimension; axis++ )
-	{
+        {
           knots(R,axis)+=s(R)*slope(0,axis);
-	  xp(R,axis)+=slope(0,axis);
-	}
+          xp(R,axis)+=slope(0,axis);
+        }
       }
       // ::display(s,"Here is s");
       // ::display(xp,"Here is xp");
       
       if( ier<0 )
       {
-	printf("SplineMapping::ERROR return from tspsp: ier=%i \n",ier);
-	throw "error";
+        printf("SplineMapping::ERROR return from tspsp: ier=%i \n",ier);
+        throw "error";
       }
 
     }
@@ -857,6 +857,7 @@ const realArray& SplineMapping::getKnots() const
     return getKnotsS();
   #else
    Overture::abort("SplineMapping::This function is obsolete.");
+   return Overture::nullRealDistributedArray();
   #endif
 }
 const realArray & SplineMapping::getParameterization() const
@@ -865,6 +866,7 @@ const realArray & SplineMapping::getParameterization() const
     return getParameterizationS();
   #else
    Overture::abort("SplineMapping::This function is obsolete.");
+   return Overture::nullRealDistributedArray();
   #endif
 }
 
@@ -872,18 +874,22 @@ const realArray & SplineMapping::getParameterization() const
 int SplineMapping::setParameterization(const realArray & s )
 {
   Overture::abort("SplineMapping::This function is obsolete.");
+  return 1;
 }
 int SplineMapping::setPoints( const realArray & x )
 {
   Overture::abort("SplineMapping::This function is obsolete.");
+  return 1;
 }
 int SplineMapping::setPoints( const realArray & x, const realArray & y )
 {
   Overture::abort("SplineMapping::This function is obsolete.");
+  return 1;
 }
 int SplineMapping::setPoints( const realArray & x, const realArray & y, const realArray & z )
 {
   Overture::abort("SplineMapping::This function is obsolete.");
+  return 1;
 }
 #endif
 
@@ -943,17 +949,17 @@ mapS( const RealArray & r, RealArray & x, RealArray & xr, MappingParameters & pa
       RealArray sx(I,Rx),sxp(I,Rx);
       int i;
       for( i=base; i<=bound; i++ )
-	CSEVAL(numberOfSplinePoints,s(0),knots(0,axis1),bcd(0,0,axis1),rr(i),sx(i,axis1),sxp(i,axis1));
+        CSEVAL(numberOfSplinePoints,s(0),knots(0,axis1),bcd(0,0,axis1),rr(i),sx(i,axis1),sxp(i,axis1));
       if( rangeDimension>1 )
-	for( i=base; i<=bound; i++ )
-	  CSEVAL(numberOfSplinePoints,s(0),knots(0,axis2),bcd(0,0,axis2),rr(i),sx(i,axis2),sxp(i,axis2));
+        for( i=base; i<=bound; i++ )
+          CSEVAL(numberOfSplinePoints,s(0),knots(0,axis2),bcd(0,0,axis2),rr(i),sx(i,axis2),sxp(i,axis2));
       if( rangeDimension>2 )
-	for( i=base; i<=bound; i++ )
-	  CSEVAL(numberOfSplinePoints,s(0),knots(0,axis3),bcd(0,0,axis3),rr(i),sx(i,axis3),sxp(i,axis3));
+        for( i=base; i<=bound; i++ )
+          CSEVAL(numberOfSplinePoints,s(0),knots(0,axis3),bcd(0,0,axis3),rr(i),sx(i,axis3),sxp(i,axis3));
       if( computeMap )
-	x(I,Rx)=sx;
+        x(I,Rx)=sx;
       if( computeMapDerivative )
-	xr(I,Rx,0)=sxp;
+        xr(I,Rx,0)=sxp;
     }
   }
   else
@@ -966,15 +972,15 @@ mapS( const RealArray & r, RealArray & x, RealArray & xr, MappingParameters & pa
       if( rangeDimension==1 )
         TSVAL1(numberOfSplinePoints,s(0),knots(0,0),xp(0),sigma(0),iflag,numToEvaluate,rr(base), x(base,0), ier);
       else if( rangeDimension==2 )
-	TSVAL2(numberOfSplinePoints,s(0),knots(0,0),knots(0,1),xp(0,0),xp(0,1),sigma(0),iflag,numToEvaluate,
-	       rr(base), x(base,0),x(base,1),ier);
+        TSVAL2(numberOfSplinePoints,s(0),knots(0,0),knots(0,1),xp(0,0),xp(0,1),sigma(0),iflag,numToEvaluate,
+               rr(base), x(base,0),x(base,1),ier);
       else 
         TSVAL3(numberOfSplinePoints,s(0),knots(0,0),knots(0,1),knots(0,2),xp(0,0),xp(0,1),xp(0,2),
                sigma(0),iflag,numToEvaluate, rr(base), x(base,0),x(base,1),x(base,2),ier);
       if( ier<0 )
       {
-	printf("SplineMapping:ERROR return from tsval1: ier=%i \n",ier);
-	throw "error";
+        printf("SplineMapping:ERROR return from tsval1: ier=%i \n",ier);
+        throw "error";
       }
     }
     if( computeMapDerivative )
@@ -984,15 +990,15 @@ mapS( const RealArray & r, RealArray & x, RealArray & xr, MappingParameters & pa
         TSVAL1(numberOfSplinePoints,s(0),knots(0,0),xp(0),sigma(0),iflag,numToEvaluate,rr(base),xr(base,0,0),ier);
       else if( rangeDimension==2 )
         TSVAL2(numberOfSplinePoints,s(0),knots(0,0),knots(0,1),xp(0,0),xp(0,1),sigma(0),iflag,numToEvaluate,
-	       rr(base), xr(base,0,0),xr(base,1,0),ier);
+               rr(base), xr(base,0,0),xr(base,1,0),ier);
       else 
         TSVAL3(numberOfSplinePoints,s(0),knots(0,0),knots(0,1),knots(0,2),xp(0,0),xp(0,1),xp(0,2),sigma(0),
                iflag,numToEvaluate, rr(base), xr(base,0,0),xr(base,1,0),xr(base,2,0),ier);
 
       if( ier<0 )
       {
-	printf("SplineMapping:ERROR return from tsval%i: ier=%i \n",rangeDimension,ier);
-	throw "error";
+        printf("SplineMapping:ERROR return from tsval%i: ier=%i \n",rangeDimension,ier);
+        throw "error";
       }
 
 
@@ -1231,7 +1237,7 @@ update( MappingInformation & mapInfo )
     {
       if( rangeDimension!=2 )
       {
-	printf("Sorry, one can only pick points with the mouse in 2D\n");
+        printf("Sorry, one can only pick points with the mouse in 2D\n");
         continue;
       }
       RealArray xBound(2,3);
@@ -1256,10 +1262,10 @@ update( MappingInformation & mapInfo )
 #endif
       if( numberOfSplinePoints>0 )
       {
-	knots.resize(numberOfSplinePoints,rangeDimension);
-	initialized=false;
-	plotObject=true;
-	mappingHasChanged(); 
+        knots.resize(numberOfSplinePoints,rangeDimension);
+        initialized=false;
+        plotObject=true;
+        mappingHasChanged(); 
       }
       
     }
@@ -1296,16 +1302,16 @@ update( MappingInformation & mapInfo )
       {
         sScanF(line,"%e",&tension);
         if( tension<0. || tension>85. )
-	{
-	  printf("ERROR: input tension=%e is invalid \n",tension);
-	  tension=max(0.,min(85.,tension));
-	}
+        {
+          printf("ERROR: input tension=%e is invalid \n",tension);
+          tension=max(0.,min(85.,tension));
+        }
         printf("SplineMapping:INFO Setting the tension to be %6.2e \n",tension);
         if( shapePreserving )
-	{
-	  shapePreserving=false;
-	  printf("SplineMapping:INFO: shape preserving turned off since the tension is specified\n");
-	}
+        {
+          shapePreserving=false;
+          printf("SplineMapping:INFO: shape preserving turned off since the tension is specified\n");
+        }
         initialized=false;
         mappingHasChanged();
       }
@@ -1326,9 +1332,9 @@ update( MappingInformation & mapInfo )
       if( line!="" )
       {
         sScanF(line,"%e",&arcLengthWeight);
-	printf("New arcLengthWeight=%e  \n",arcLengthWeight);
-	initialized=false;
-	mappingHasChanged();
+        printf("New arcLengthWeight=%e  \n",arcLengthWeight);
+        initialized=false;
+        mappingHasChanged();
       }
     }
     else if( answer=="curvature weight" )
@@ -1337,9 +1343,9 @@ update( MappingInformation & mapInfo )
       if( line!="" )
       {
         sScanF(line,"%e",&curvatureWeight);
-	printf("New curvatureWeight=%e  \n",curvatureWeight);
-	initialized=false;
-	mappingHasChanged();
+        printf("New curvatureWeight=%e  \n",curvatureWeight);
+        initialized=false;
+        mappingHasChanged();
       }
     }
     else if( answer=="default boundary condition" )
@@ -1370,30 +1376,30 @@ update( MappingInformation & mapInfo )
 
       if( rangeDimension==1 )
       {
-	printf(" Current derivatives at ends: x'(0)=%9.3e x'(1)=%9.3e \n",
-	       xr(0,0,0),xr(1,0,0));
+        printf(" Current derivatives at ends: x'(0)=%9.3e x'(1)=%9.3e \n",
+               xr(0,0,0),xr(1,0,0));
 
         gi.inputString(line,sPrintF(buff,"Enter x'(0), x'(1)"));
         if( line!="" )
-	  sScanF(line,"%e %e",&bcValue(0,0),&bcValue(1,0));
+          sScanF(line,"%e %e",&bcValue(0,0),&bcValue(1,0));
       }
       else if( rangeDimension==2 )
       {
-	printf(" Current derivatives at ends: (x'(0),y'(0))=(%9.3e,%9.3e) (x'(1),y'(1))=(%9.3e,%9.3e) \n",
-	       xr(0,0,0),xr(0,1,0),xr(1,0,0),xr(1,1,0));
+        printf(" Current derivatives at ends: (x'(0),y'(0))=(%9.3e,%9.3e) (x'(1),y'(1))=(%9.3e,%9.3e) \n",
+               xr(0,0,0),xr(0,1,0),xr(1,0,0),xr(1,1,0));
 
         gi.inputString(line,sPrintF(buff,"Enter x'(0),y'(0),  x'(1),y'(1)"));
         if( line!="" )
-	  sScanF(line,"%e %e %e %e",&bcValue(0,0),&bcValue(0,1),&bcValue(1,0),&bcValue(1,1));
+          sScanF(line,"%e %e %e %e",&bcValue(0,0),&bcValue(0,1),&bcValue(1,0),&bcValue(1,1));
       }
       else 
       {
-	printf(" Current derivatives at ends: (x'(0),y'(0),z'(0))=(%9.3e,%9.3e,%9.3e) (x'(1),y'(1),z'(1))=(%9.3e,%9.3e,%9.3e) \n",
-	       xr(0,0,0),xr(0,1,0),xr(0,2,0),xr(1,0,0),xr(1,1,0),xr(1,2,0));
-	
+        printf(" Current derivatives at ends: (x'(0),y'(0),z'(0))=(%9.3e,%9.3e,%9.3e) (x'(1),y'(1),z'(1))=(%9.3e,%9.3e,%9.3e) \n",
+               xr(0,0,0),xr(0,1,0),xr(0,2,0),xr(1,0,0),xr(1,1,0),xr(1,2,0));
+        
         gi.inputString(line,sPrintF(buff,"Enter x'(0),y'(0),z'(0),  x'(1),y'(1),z'(1)"));
         if( line!="" )
-	  sScanF(line,"%e %e %e %e %e %e",&bcValue(0,0),&bcValue(0,1),&bcValue(0,2),&bcValue(1,0),&bcValue(1,1),&bcValue(1,2));
+          sScanF(line,"%e %e %e %e %e %e",&bcValue(0,0),&bcValue(0,1),&bcValue(0,2),&bcValue(1,0),&bcValue(1,1),&bcValue(1,2));
       }
       initialized=false;
       mappingHasChanged();
@@ -1405,19 +1411,19 @@ update( MappingInformation & mapInfo )
       {
         gi.inputString(line,sPrintF(buff,"Enter x''(0), x''(1)"));
         if( line!="" )
-	  sScanF(line,"%e %e",&bcValue(0,0),&bcValue(1,0));
+          sScanF(line,"%e %e",&bcValue(0,0),&bcValue(1,0));
       }
       else if( rangeDimension==2 )
       {
         gi.inputString(line,sPrintF(buff,"Enter x''(0),y''(0),  x''(1),y''(1)"));
         if( line!="" )
-	  sScanF(line,"%e %e",&bcValue(0,0),&bcValue(1,0),&bcValue(0,1),&bcValue(1,1));
+          sScanF(line,"%e %e",&bcValue(0,0),&bcValue(1,0),&bcValue(0,1),&bcValue(1,1));
       }
       else 
       {
         gi.inputString(line,sPrintF(buff,"Enter x''(0),y''(0),z''(0),  x''(1),y''(1),z''(1)"));
         if( line!="" )
-	  sScanF(line,"%e %e",&bcValue(0,0),&bcValue(1,0),&bcValue(0,1),&bcValue(1,1),&bcValue(0,2),&bcValue(1,2));
+          sScanF(line,"%e %e",&bcValue(0,0),&bcValue(1,0),&bcValue(0,1),&bcValue(1,1),&bcValue(0,2),&bcValue(1,2));
       }
       initialized=false;
       mappingHasChanged();
@@ -1460,15 +1466,15 @@ update( MappingInformation & mapInfo )
       real xShift=0., yShift=0., zShift=0.;
       if( rangeDimension==2 )
       {
-	gi.inputString(line,sPrintF(buff,"Enter xShift, yShift (default=(%e,%e)): ",
-				    xShift,yShift));
-	if( line!="" ) sScanF(line,"%e %e",&xShift,&yShift);
+        gi.inputString(line,sPrintF(buff,"Enter xShift, yShift (default=(%e,%e)): ",
+                                    xShift,yShift));
+        if( line!="" ) sScanF(line,"%e %e",&xShift,&yShift);
       }
       else
       {
-	gi.inputString(line,sPrintF(buff,"Enter xShift, yShift, zShift (default=(%e,%e,%e)): ",
-				    xShift,yShift,zShift));
-	if( line!="" ) sScanF(line,"%e %e %e",&xShift,&yShift,&zShift);
+        gi.inputString(line,sPrintF(buff,"Enter xShift, yShift, zShift (default=(%e,%e,%e)): ",
+                                    xShift,yShift,zShift));
+        if( line!="" ) sScanF(line,"%e %e %e",&xShift,&yShift,&zShift);
       }
       shift(xShift,yShift,zShift);
       mappingHasChanged();
@@ -1489,15 +1495,15 @@ update( MappingInformation & mapInfo )
       else
       {
         gi.inputString(line,sPrintF(buff,"Enter rotation angle(degrees) and axis to rotate about(0,1, or 2)"
-				    "(default=(%e,%i)): ",rotationAngle,rotationAxis));
+                                    "(default=(%e,%i)): ",rotationAngle,rotationAxis));
         if( line!="" ) sScanF(line,"%e %i",&rotationAngle,&rotationAxis);
-	if( rotationAxis<0 || rotationAxis>2 )
-	{
-	  cout << "Invalid rotation axis = " << rotationAxis << endl;
-	  continue;
-	}
+        if( rotationAxis<0 || rotationAxis>2 )
+        {
+          cout << "Invalid rotation axis = " << rotationAxis << endl;
+          continue;
+        }
         gi.inputString(line,sPrintF(buff,"Enter the point to rotate around (default=%e,%e,%e): ",
-				    centerOfRotation[0],centerOfRotation[1],centerOfRotation[2]));
+                                    centerOfRotation[0],centerOfRotation[1],centerOfRotation[2]));
         if( line!="" ) sScanF(line,"%e %e %e",&centerOfRotation[0],&centerOfRotation[1],
                               &centerOfRotation[2]);
       }
@@ -1514,18 +1520,18 @@ update( MappingInformation & mapInfo )
         real nv[3]={0.,0.,1.};
 
         gi.inputString(line,sPrintF(buff,"Enter a point on the plane, x,y,z"));
-	if( line!="" ) sScanF(line,"%e %e %e",&x0,&y0,&z0);
+        if( line!="" ) sScanF(line,"%e %e %e",&x0,&y0,&z0);
         gi.inputString(line,sPrintF(buff,"Enter the normal to the plane, nx,ny,nz"));
-	if( line!="" ) sScanF(line,"%e %e %e",&nv[0],&nv[1],&nv[2]);
+        if( line!="" ) sScanF(line,"%e %e %e",&nv[0],&nv[1],&nv[2]);
         real norm = SQRT( SQR(nv[0])+SQR(nv[1])+SQR(nv[2]) );
         if( norm==0. )
           norm=1.;
         Range I(0,numberOfSplinePoints-1);
         const RealArray & dot = evaluate( (knots(I,0)-x0)*nv[0]+(knots(I,1)-y0)*nv[1]+(knots(I,2)-z0)*nv[2] );
-       	for( int axis=0; axis<rangeDimension; axis++ )
+        for( int axis=0; axis<rangeDimension; axis++ )
           knots(I,axis)-=dot(I)*(nv[axis]/(norm*norm));
-	
-	initialized=false;
+        
+        initialized=false;
         mappingHasChanged();
       }
     }
@@ -1583,15 +1589,15 @@ update( MappingInformation & mapInfo )
       else
       {
         Index I = Range(n);
-	for(  int axis=0; axis<rangeDimension; axis++ )
-	{
+        for(  int axis=0; axis<rangeDimension; axis++ )
+        {
           #ifndef USE_PPP
-	  secondOrderDerivative(I,r,xr,axis,0);
+          secondOrderDerivative(I,r,xr,axis,0);
           #else
-	  printF("Finish secondOrderDerivative for parallel\n");
+          printF("Finish secondOrderDerivative for parallel\n");
           #endif
-	}
-	
+        }
+        
       }
     
       real xrMax=max(fabs(xr));
@@ -1602,28 +1608,28 @@ update( MappingInformation & mapInfo )
       Range R=n;
       for( int axis=0; axis<rangeDimension; axis++ )
       {
-	xrd(R,0,0,0)=r(R,0);
-	xrd(R,0,0,1)=xr(R,axis);
+        xrd(R,0,0,0)=r(R,0);
+        xrd(R,0,0,1)=xr(R,axis);
       
-	DataPointMapping xrMap;
+        DataPointMapping xrMap;
         #ifndef USE_PPP
-	xrMap.setDataPoints(xrd,3,1);
+        xrMap.setDataPoints(xrd,3,1);
         #else
          printF("Finish xrMap.setDataPoints for parallel\n");
         #endif
 
-	xrMap.setIsPeriodic(axis1,getIsPeriodic(axis1));
+        xrMap.setIsPeriodic(axis1,getIsPeriodic(axis1));
 
-	if( axis==0 )
-	  parameters.set(GI_MAPPING_COLOUR,"green");
-	else if( axis==1 )
-	  parameters.set(GI_MAPPING_COLOUR,"red");
-	else 
-	  parameters.set(GI_MAPPING_COLOUR,"yellow");
+        if( axis==0 )
+          parameters.set(GI_MAPPING_COLOUR,"green");
+        else if( axis==1 )
+          parameters.set(GI_MAPPING_COLOUR,"red");
+        else 
+          parameters.set(GI_MAPPING_COLOUR,"yellow");
 
         if( axis==rangeDimension-1 )
           parameters.set(GI_PLOT_THE_OBJECT_AND_EXIT,false);
-	PlotIt::plot(gi,xrMap,parameters);  
+        PlotIt::plot(gi,xrMap,parameters);  
       }
       parameters.set(GI_PLOT_THE_OBJECT_AND_EXIT,true);
     }
@@ -1651,19 +1657,19 @@ update( MappingInformation & mapInfo )
       ss=0.;
       for(;;)
       {
-	gi.inputString(answer,"Evaluate the spline at which point r? (hit return to continue)");
+        gi.inputString(answer,"Evaluate the spline at which point r? (hit return to continue)");
         if( answer!="" )
-	{
-	  sScanF(answer,"%e",&r(0,0));
+        {
+          sScanF(answer,"%e",&r(0,0));
           mapS(r,x,xr);
-	  inverseMapS(x,ss);
-	  printf(" r=%e, x=(%6.2e,%6.2e) xr=(%6.2e,%6.2e) inverse=%e\n",r(0,0),x(0,0),x(0,1),
+          inverseMapS(x,ss);
+          printf(" r=%e, x=(%6.2e,%6.2e) xr=(%6.2e,%6.2e) inverse=%e\n",r(0,0),x(0,0),x(0,1),
                  xr(0,0,0),xr(0,1,0),ss(0,0));
-	}
-	else
-	{
-	  break;
-	}
+        }
+        else
+        {
+          break;
+        }
       }
     }
     else if( answer=="lines"  ||
@@ -1680,7 +1686,7 @@ update( MappingInformation & mapInfo )
       if( answer=="periodicity" )
       {
         splineIsPeriodic=getIsPeriodic(axis1);
-	initialized=false;
+        initialized=false;
       }
     }
     else if( answer=="show spline outside boundaries" )
@@ -1713,40 +1719,40 @@ update( MappingInformation & mapInfo )
       {
         parameters.set(GI_POINT_COLOUR,"blue");
 
-	if( initialized && rangeDimension==1 )
-	{
-	  Range R(0,numberOfSplinePoints-1);
-	  RealArray points(numberOfSplinePoints,2);
-	  points(R,0)=s(R);
-	  points(R,1)=knots(R,0);
+        if( initialized && rangeDimension==1 )
+        {
+          Range R(0,numberOfSplinePoints-1);
+          RealArray points(numberOfSplinePoints,2);
+          points(R,0)=s(R);
+          points(R,1)=knots(R,0);
           #ifndef USE_PPP
-	  gi.plotPoints(points,parameters);
+          gi.plotPoints(points,parameters);
           #endif
-	}
-	else
-	{
+        }
+        else
+        {
           #ifndef USE_PPP
-	  gi.plotPoints(knots,parameters);
+          gi.plotPoints(knots,parameters);
           #endif
-	}
-	
+        }
+        
       }
       
 
       if( showSplineOutsideBoundaries )
       {
-	int n = max(101,getGridDimensions(0));
-	real dr = 1./max(1,n-1);
-	const real a=-.05, b=1.05;
-	n=int( (b-a)/dr+.5);
-	Range R(0,n);
-	RealArray r(R,1),x(R,3); // rangeDimension);
+        int n = max(101,getGridDimensions(0));
+        real dr = 1./max(1,n-1);
+        const real a=-.05, b=1.05;
+        n=int( (b-a)/dr+.5);
+        Range R(0,n);
+        RealArray r(R,1),x(R,3); // rangeDimension);
       
-	r.seqAdd(a,dr);
-	mapS(r,x);
+        r.seqAdd(a,dr);
+        mapS(r,x);
         
         #ifndef USE_PPP
-	gi.plotPoints(x,parameters);
+        gi.plotPoints(x,parameters);
         #endif
       }
 

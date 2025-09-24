@@ -115,6 +115,7 @@ getIntSerialArray(const IntegerArrayName & name)
   return *integerArrayParameter[name];
  #else
   OV_ABORT("finish me");
+  return Overture::nullIntArray();
  #endif
 }
 
@@ -127,6 +128,7 @@ getRealSerialArray(const RealArrayName & name)
   return *realArrayParameter[name];
  #else
   OV_ABORT("finish me");
+  return Overture::nullRealArray();
  #endif
 }
 

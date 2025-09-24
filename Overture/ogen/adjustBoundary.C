@@ -251,7 +251,7 @@ adjustBoundary(CompositeGrid & cg,
       // --NOTE: put doubles first in struct to align in memory
 
       MPI_Datatype ABQueryDataType, ABResultDataType, oldTypes[2];
-      MPI_Aint offsets[2], extent;
+      MPI_Aint offsets[2], lb, extent;
       int blockCounts[2];
 
       // --- define the mpi QUERY data type ---
@@ -259,13 +259,15 @@ adjustBoundary(CompositeGrid & cg,
       oldTypes[0]   = MPI_Real;            // NOTE: Use MPI_Real  (not MPI_REAL == MPI_FLOAT)
       blockCounts[0]= 3;                   // number of real's
 
-      MPI_Type_extent(oldTypes[0], &extent);
+      // $wdh$ MPI_Type_extent(oldTypes[0], &extent);
+      MPI_Type_get_extent(oldTypes[0], &lb, &extent);
 
       offsets[1]    = blockCounts[0]*extent;
       oldTypes[1]   = MPI_INT;
       blockCounts[1]= 4;      // number of int's in ABQueryData
 
-      MPI_Type_struct(2, blockCounts, offsets, oldTypes, &ABQueryDataType);
+      // $wdh$ MPI_Type_struct(2, blockCounts, offsets, oldTypes, &ABQueryDataType);
+      MPI_Type_create_struct(2, blockCounts, offsets, oldTypes, &ABQueryDataType);
       MPI_Type_commit(&ABQueryDataType);
 
       // --- define the mpi RESULT data type ---
@@ -273,13 +275,15 @@ adjustBoundary(CompositeGrid & cg,
       oldTypes[0]   = MPI_Real;            // NOTE: Use MPI_Real  (not MPI_REAL == MPI_FLOAT)
       blockCounts[0]= 3;                   // number of real's
 
-      MPI_Type_extent(oldTypes[0], &extent);
+      // $wdh$ MPI_Type_extent(oldTypes[0], &extent);
+      MPI_Type_get_extent(oldTypes[0], &lb, &extent);
 
       offsets[1]    = blockCounts[0]*extent;
       oldTypes[1]   = MPI_INT;
       blockCounts[1]= 1;     
 
-      MPI_Type_struct(2, blockCounts, offsets, oldTypes, &ABResultDataType);
+      // $wdh$ MPI_Type_struct(2, blockCounts, offsets, oldTypes, &ABResultDataType);
+      MPI_Type_create_struct(2, blockCounts, offsets, oldTypes, &ABResultDataType);
       MPI_Type_commit(&ABResultDataType);
 
 

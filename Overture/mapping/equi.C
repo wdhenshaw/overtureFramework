@@ -7,6 +7,7 @@ int
 equidistribute( const realArray & w, realArray & r )
 {
   Overture::abort("equidistribute: finish me for parallel.");
+  return 0;
 }
 #endif
 

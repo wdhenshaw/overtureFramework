@@ -76,6 +76,7 @@ GhostBoundaryUpdate::~GhostBoundaryUpdate()
 int GhostBoundaryUpdate::setDebug( int debug )
 {
     dbase.get<int>("debug")=debug;
+    return 0;
 }
 
 // =====================================================================================================
@@ -109,20 +110,20 @@ int GhostBoundaryUpdate::setDebugFileName( const aString & fileName )
 //   {
 //     printf(" myid=%i: dim=%i: internal-ghost-cells=%i, total-size=%i, left,central,right-size=[%i,%i,%i] \n"
 //            "                  global=[%i,%i] local-size=%i\n",myid,
-// 	   i,uDArray->ghostCells[i],uDArray->dimVecG[i],
+//         i,uDArray->ghostCells[i],uDArray->dimVecG[i],
 //            uDArray->dimVecL_L[i],uDArray->dimVecL[i],uDArray->dimVecL_R[i],
 //            uDArray->g_index_low[i],uDArray->g_index_hi[i],uDArray->local_size[i]);
 //   }
 
 //   printf(" *************** u: DECOMP p=%i *******************\n"
 //          "  nDims=%i, nProcs=%i, baseProc=%i \n",
-// 	 myid,uDecomp->nDims,uDecomp->nProcs,uDecomp->baseProc);
+//       myid,uDecomp->nDims,uDecomp->nProcs,uDecomp->baseProc);
 
 //   for( int i=0; i<uDecomp->nDims; i++ )
 //   {
 //     printf(" myid=%i: dim=%i: dimVec=%i (size of decomposition) \n"
 //            "                  dimProc=%i (number of processors allocated to this dimension) \n",
-// 	   myid,i,uDecomp->dimVec[i],uDecomp->dimProc[i]);
+//         myid,i,uDecomp->dimVec[i],uDecomp->dimProc[i]);
 //   }
 // }
 
@@ -204,12 +205,12 @@ int GhostBoundaryUpdate::setDebugFileName( const aString & fileName )
 // =========================================================================
 // Macro: Create a tag to uniquely identify the Box
 // Input: d0,d1,d2,d3 : each dn takes values -1,0,1 for left, center, right 
-// Output : tag	      
+// Output : tag       
 // ========================================================================
 
 // ========================================================================
 // Macro: Decode the tag used to uniquely identify the Box
-// Input : tag	      
+// Input : tag        
 // Output: d0,d1,d2,d3
 // =======================================================================
 
@@ -257,10 +258,10 @@ int GhostBoundaryUpdate::initialize( realMappedGridFunction & u, int fside, int 
 // =================================================================================================
 int GhostBoundaryUpdate::
 initialize( realArray & u,
-          	    const int numberOfGridDimensions,
-          	    const IntegerArray & gid, const IntegerArray & dim,
-          	    const IntegerArray & indexRange, const IntegerArray & isPeriodic,
-          	    int fside /* = -1 */ , int faxis /* = -1 */ )
+                        const int numberOfGridDimensions,
+                        const IntegerArray & gid, const IntegerArray & dim,
+                        const IntegerArray & indexRange, const IntegerArray & isPeriodic,
+                        int fside /* = -1 */ , int faxis /* = -1 */ )
 {
 
     const int myid = max(0,Communication_Manager::My_Process_Number);
@@ -270,7 +271,7 @@ initialize( realArray & u,
     if( isInitialized )
     {
         printF("GhostBoundaryUpdate::initialize: ERROR: initialize has already been called! \n"
-         	   "  Currently this routine cannot be called again -- fix me Bill!\n");
+                      "  Currently this routine cannot be called again -- fix me Bill!\n");
         OV_ABORT("ERROR");
     }
     isInitialized=1;
@@ -303,16 +304,16 @@ initialize( realArray & u,
     if( debug !=0 )
     {
         fprintf(debugFile,"++++ GhostBoundaryUpdate::initialize updateGhostAndPeriodic np=%d, myid=%i copyOnProcessor=%d"
-          	    " numberOfGridDimensions=%d +++++\n",
-          	    np,myid,(int)copyOnProcessor,numberOfGridDimensions);
+                        " numberOfGridDimensions=%d +++++\n",
+                        np,myid,(int)copyOnProcessor,numberOfGridDimensions);
 
     // fprintf(debugFile,"++++ updateGhostAndPeriodic np=%d, myid=%i numberOfDimensions=%d, numGhost=[%d,%d] "
-    // 	    "numParallelGhost=%d ndp=%d +++++\n",
-    // 	    np,myid,numberOfDimensions,numGhostLeft,numGhostRight,numParallelGhost,ndp);
+    //      "numParallelGhost=%d ndp=%d +++++\n",
+    //      np,myid,numberOfDimensions,numGhostLeft,numGhostRight,numParallelGhost,ndp);
 
 
         fprintf(debugFile,"++++ isPeriodic=[%d,%d,%d] [fside,faxis]=[%d,%d] \n",
-                	    isPeriodic(0),isPeriodic(1),isPeriodic(2),fside,faxis);
+                        isPeriodic(0),isPeriodic(1),isPeriodic(2),fside,faxis);
         fflush(debugFile);
     }
 
@@ -348,11 +349,11 @@ initialize( realArray & u,
     if( debug & 1 )
     {
         fprintf(debugFile," myid=%i uLocal bounds=[%2i,%2i][%2i,%2i][%2i,%2i][%2i,%2i] (no parallel ghost)\n",
-          	    myid,
-          	    uBox.base(0),uBox.bound(0),
-          	    uBox.base(1),uBox.bound(1),
-          	    uBox.base(2),uBox.bound(2),
-          	    uBox.base(3),uBox.bound(3));
+                        myid,
+                        uBox.base(0),uBox.bound(0),
+                        uBox.base(1),uBox.bound(1),
+                        uBox.base(2),uBox.bound(2),
+                        uBox.base(3),uBox.bound(3));
     }
     
     IndexBox uBoxGhost;
@@ -361,11 +362,11 @@ initialize( realArray & u,
     if( debug & 1 )
     {
         fprintf(debugFile," myid=%i uLocal bounds=[%2i,%2i][%2i,%2i][%2i,%2i][%2i,%2i] (with parallel ghost)\n",
-          	    myid,
-          	    uBoxGhost.base(0),uBoxGhost.bound(0),
-          	    uBoxGhost.base(1),uBoxGhost.bound(1),
-          	    uBoxGhost.base(2),uBoxGhost.bound(2),
-          	    uBoxGhost.base(3),uBoxGhost.bound(3));
+                        myid,
+                        uBoxGhost.base(0),uBoxGhost.bound(0),
+                        uBoxGhost.base(1),uBoxGhost.bound(1),
+                        uBoxGhost.base(2),uBoxGhost.bound(2),
+                        uBoxGhost.base(3),uBoxGhost.bound(3));
     }
     
     int & isEmpty = dbase.get<int>("isEmpty");       // true if there are no points on this processor
@@ -439,12 +440,12 @@ initialize( realArray & u,
             int numPeriodicGhost = dim(1,dir)-gid(1,dir)+1;      // number of periodic points on "right" side
             if(  numPeriodicGhost > numPoints )
             {
-      	printF("GhostBoundaryUpdate::initialize: ERROR: There are not enough interior points to fill periodic images.\n"
-             	       "   dir=%d, numPeriodicGhost=%d > numPoints=%d\n",dir,numPeriodicGhost,numPoints);
-      	::display(dim,"dimension");
-      	::display(gid,"gridIndexRange");
-      	printF(" Increase the number of points in direction dir=%, or decrease the number of true ghost points\n",dir);
-      	OV_ABORT("ERROR");
+                printF("GhostBoundaryUpdate::initialize: ERROR: There are not enough interior points to fill periodic images.\n"
+                              "   dir=%d, numPeriodicGhost=%d > numPoints=%d\n",dir,numPeriodicGhost,numPoints);
+                ::display(dim,"dimension");
+                ::display(gid,"gridIndexRange");
+                printF(" Increase the number of points in direction dir=%, or decrease the number of true ghost points\n",dir);
+                OV_ABORT("ERROR");
             }
         }
     }
@@ -453,8 +454,8 @@ initialize( realArray & u,
     if( debug & 2  )
     {
         fprintf(debugFile," ubb=[%i,%i][%i,%i][%i,%i][%i,%i] u=[%i,%i][%i,%i][%i,%i][%i,%i]\n",
-          	    ubb(0,0),ubb(1,0),ubb(0,1),ubb(1,1),ubb(0,2),ubb(1,2),ubb(0,3),ubb(1,3),
-          	    u.getBase(0),u.getBound(0),u.getBase(1),u.getBound(1),u.getBase(2),u.getBound(2),u.getBase(3),u.getBound(3));
+                        ubb(0,0),ubb(1,0),ubb(0,1),ubb(1,1),ubb(0,2),ubb(1,2),ubb(0,3),ubb(1,3),
+                        u.getBase(0),u.getBound(0),u.getBase(1),u.getBound(1),u.getBase(2),u.getBound(2),u.getBase(3),u.getBound(3));
     }
     
   // Receive bounding box 
@@ -725,132 +726,20 @@ initialize( realArray & u,
 
             for( int d1=-isGhost1; d1<=isGhost1; d1++ )   // loop -1:1, or 0:0 if no parallel ghost 
             {
-      	int dir=1;
-      // 	setReceiveBoxBounds(bbr,d1,dir,centerBox1,leftMostBox1,rightMostBox1,isPeriodicBox1);
-        // leftMostBox1  = true if we are on the far left of the array
-        // rightMostBox1 = true if we are on the far right of the array
-                bool centerBox1     = d1==0;
-                bool leftMostBox1   = d1==-1 && ( ubb(0,dir) == u.getBase(dir) );
-                bool rightMostBox1  = d1==1  && ( ubb(1,dir) == u.getBound(dir) );
-                bool isPeriodicBox1 = false;
-                if( d1==-1 )
-                {
-          // parallel ghost points on left 
-                    bbr(0,dir)=ubb(0,dir)-ng(dir); bbr(1,dir)=ubb(0,dir)-1;
-                }
-                else if( d1==0 )
-                {
-          // center section 
-                    bbr(0,dir)=ubb(0,dir); bbr(1,dir)=ubb(1,dir);
-                }
-                else 
-                {
-          // parallel ghost points on right 
-                    bbr(0,dir)=ubb(1,dir)+1; bbr(1,dir)=ubb(1,dir)+ng(dir);
-                }
-                if( leftMostBox1 || rightMostBox1 )
-                {
-          // No parallel ghost on far left or right 
-                    bbr(0,dir)=0;  bbr(1,dir)=-1;  // empty box
-                }
-                if( dir<numberOfDimensions && leftMostBox1 && isPeriodic(dir)  )
-                {
-          // receive periodic points on left (could be empty )
-                    bbr(0,dir)=dim(0,dir);
-                    bbr(1,dir)=gid(0,dir)-1;
-                    isPeriodicBox1=true; //  bbr(1,dir)>= bbr(0,dir);
-                }
-                if( dir<numberOfDimensions && rightMostBox1 && isPeriodic(dir) )
-                {
-          // receive periodic points on right
-                    bbr(0,dir)=gid(1,dir);
-                    bbr(1,dir)=dim(1,dir);
-                    if( bbr(0,dir)>bbr(1,dir) )
-                    {
-                        ::display(dim,"dim","%3i");
-                        ::display(gid,"gid","%3i");
-                        OV_ABORT("error bbr(0,dir)>bbr(1,dir) ")
-                    }
-                    isPeriodicBox1=true;
-                }
-                if( dir<numberOfDimensions && isPeriodic(dir) && d1==0 )
-                {
-          // --- middle of a periodic box ---
-          // adjust box size to remove ghost
-          //     |  |                           |  |
-          //     +--+------------------------+--+--+
-          //     |  |                           |  |
-          //     +--+------------------------+--+--+
-          //        |<--                  -->
-          //
-                    if( ubb(0,dir) == u.getBase(dir) )
-                        bbr(0,dir) = gid(0,dir);
-                    if( ubb(1,dir) == u.getBound(dir) )
-                        bbr(1,dir) = gid(1,dir)-1;
-                }
-      // 	setSendBoxBounds(bbs,d1,dir,centerBox1,leftMostBox1,rightMostBox1,isPeriodicBox1);
-                if( d1==-1 )
-                {
-                    bbs(0,dir)=ubb(0,dir); bbs(1,dir)=ubb(0,dir)+ng(dir)-1;
-                }
-                else if( d1==0 )
-                {
-                    bbs(0,dir)=ubb(0,dir); bbs(1,dir)=ubb(1,dir);
-                }
-                else 
-                {
-                    bbs(0,dir)=ubb(1,dir)-ng(dir)+1; bbs(1,dir)=ubb(1,dir);
-                }
-                if( leftMostBox1 || rightMostBox1 )
-                {
-                    bbs(0,dir)=0;  bbs(1,dir)=-1;  // empty box
-                }
-                if( dir<numberOfDimensions && leftMostBox1 && isPeriodic(dir) )
-                {
-          // send periodic points on left
-                    bbs(0,dir)=gid(0,dir);
-                    bbs(1,dir)=gid(0,dir) + ( dim(1,dir)-gid(1,dir) );
-                    isPeriodicBox1=true;
-                }
-                if( dir<numberOfDimensions && rightMostBox1 && isPeriodic(dir) )
-                {
-          // send periodic points on right (could be empty )
-                    bbs(0,dir)=gid(1,dir)-1 - ( gid(0,dir)-dim(0,dir)-1 );
-                    bbs(1,dir)=gid(1,dir)-1;
-                    isPeriodicBox1=true; // bbs(1,dir)>= bbs(0,dir);
-                }
-                if( dir<numberOfDimensions && isPeriodic(dir) && d1==0 )
-                {
-          // --- middle of a periodic box ---
-          // adjust box size to remove ghost
-          //     |  |                           |  |
-          //     +--+------------------------+--+--+
-          //     |  |                           |  |
-          //     +--+------------------------+--+--+
-          //        |<--                  -->
-          //
-                    if( ubb(0,dir) == u.getBase(dir) )
-                        bbs(0,dir) = gid(0,dir);
-                    if( ubb(1,dir) == u.getBound(dir) )
-                        bbs(1,dir) = gid(1,dir)-1;
-                }
-        
-      	for( int d0=-isGhost0; d0<=isGhost0; d0++ )  // loop -1:1, or 0:0 if no parallel ghost 
-      	{
-        	  int dir=0;
-        // 	  setReceiveBoxBounds(bbr,d0,dir,centerBox0,leftMostBox0,rightMostBox0,isPeriodicBox0);
-          // leftMostBox0  = true if we are on the far left of the array
-          // rightMostBox0 = true if we are on the far right of the array
-                    bool centerBox0     = d0==0;
-                    bool leftMostBox0   = d0==-1 && ( ubb(0,dir) == u.getBase(dir) );
-                    bool rightMostBox0  = d0==1  && ( ubb(1,dir) == u.getBound(dir) );
-                    bool isPeriodicBox0 = false;
-                    if( d0==-1 )
+                int dir=1;
+        // setReceiveBoxBounds(bbr,d1,dir,centerBox1,leftMostBox1,rightMostBox1,isPeriodicBox1);
+          // leftMostBox1  = true if we are on the far left of the array
+          // rightMostBox1 = true if we are on the far right of the array
+                    bool centerBox1     = d1==0;
+                    bool leftMostBox1   = d1==-1 && ( ubb(0,dir) == u.getBase(dir) );
+                    bool rightMostBox1  = d1==1  && ( ubb(1,dir) == u.getBound(dir) );
+                    bool isPeriodicBox1 = false;
+                    if( d1==-1 )
                     {
             // parallel ghost points on left 
                         bbr(0,dir)=ubb(0,dir)-ng(dir); bbr(1,dir)=ubb(0,dir)-1;
                     }
-                    else if( d0==0 )
+                    else if( d1==0 )
                     {
             // center section 
                         bbr(0,dir)=ubb(0,dir); bbr(1,dir)=ubb(1,dir);
@@ -860,19 +749,19 @@ initialize( realArray & u,
             // parallel ghost points on right 
                         bbr(0,dir)=ubb(1,dir)+1; bbr(1,dir)=ubb(1,dir)+ng(dir);
                     }
-                    if( leftMostBox0 || rightMostBox0 )
+                    if( leftMostBox1 || rightMostBox1 )
                     {
             // No parallel ghost on far left or right 
                         bbr(0,dir)=0;  bbr(1,dir)=-1;  // empty box
                     }
-                    if( dir<numberOfDimensions && leftMostBox0 && isPeriodic(dir)  )
+                    if( dir<numberOfDimensions && leftMostBox1 && isPeriodic(dir)  )
                     {
             // receive periodic points on left (could be empty )
                         bbr(0,dir)=dim(0,dir);
                         bbr(1,dir)=gid(0,dir)-1;
-                        isPeriodicBox0=true; //  bbr(1,dir)>= bbr(0,dir);
+                        isPeriodicBox1=true; //  bbr(1,dir)>= bbr(0,dir);
                     }
-                    if( dir<numberOfDimensions && rightMostBox0 && isPeriodic(dir) )
+                    if( dir<numberOfDimensions && rightMostBox1 && isPeriodic(dir) )
                     {
             // receive periodic points on right
                         bbr(0,dir)=gid(1,dir);
@@ -883,9 +772,9 @@ initialize( realArray & u,
                             ::display(gid,"gid","%3i");
                             OV_ABORT("error bbr(0,dir)>bbr(1,dir) ")
                         }
-                        isPeriodicBox0=true;
+                        isPeriodicBox1=true;
                     }
-                    if( dir<numberOfDimensions && isPeriodic(dir) && d0==0 )
+                    if( dir<numberOfDimensions && isPeriodic(dir) && d1==0 )
                     {
             // --- middle of a periodic box ---
             // adjust box size to remove ghost
@@ -900,12 +789,12 @@ initialize( realArray & u,
                         if( ubb(1,dir) == u.getBound(dir) )
                             bbr(1,dir) = gid(1,dir)-1;
                     }
-        // 	  setSendBoxBounds(bbs,d0,dir,centerBox0,leftMostBox0,rightMostBox0,isPeriodicBox0);
-                    if( d0==-1 )
+        // setSendBoxBounds(bbs,d1,dir,centerBox1,leftMostBox1,rightMostBox1,isPeriodicBox1);
+                    if( d1==-1 )
                     {
                         bbs(0,dir)=ubb(0,dir); bbs(1,dir)=ubb(0,dir)+ng(dir)-1;
                     }
-                    else if( d0==0 )
+                    else if( d1==0 )
                     {
                         bbs(0,dir)=ubb(0,dir); bbs(1,dir)=ubb(1,dir);
                     }
@@ -913,25 +802,25 @@ initialize( realArray & u,
                     {
                         bbs(0,dir)=ubb(1,dir)-ng(dir)+1; bbs(1,dir)=ubb(1,dir);
                     }
-                    if( leftMostBox0 || rightMostBox0 )
+                    if( leftMostBox1 || rightMostBox1 )
                     {
                         bbs(0,dir)=0;  bbs(1,dir)=-1;  // empty box
                     }
-                    if( dir<numberOfDimensions && leftMostBox0 && isPeriodic(dir) )
+                    if( dir<numberOfDimensions && leftMostBox1 && isPeriodic(dir) )
                     {
             // send periodic points on left
                         bbs(0,dir)=gid(0,dir);
                         bbs(1,dir)=gid(0,dir) + ( dim(1,dir)-gid(1,dir) );
-                        isPeriodicBox0=true;
+                        isPeriodicBox1=true;
                     }
-                    if( dir<numberOfDimensions && rightMostBox0 && isPeriodic(dir) )
+                    if( dir<numberOfDimensions && rightMostBox1 && isPeriodic(dir) )
                     {
             // send periodic points on right (could be empty )
                         bbs(0,dir)=gid(1,dir)-1 - ( gid(0,dir)-dim(0,dir)-1 );
                         bbs(1,dir)=gid(1,dir)-1;
-                        isPeriodicBox0=true; // bbs(1,dir)>= bbs(0,dir);
+                        isPeriodicBox1=true; // bbs(1,dir)>= bbs(0,dir);
                     }
-                    if( dir<numberOfDimensions && isPeriodic(dir) && d0==0 )
+                    if( dir<numberOfDimensions && isPeriodic(dir) && d1==0 )
                     {
             // --- middle of a periodic box ---
             // adjust box size to remove ghost
@@ -946,126 +835,238 @@ initialize( realArray & u,
                         if( ubb(1,dir) == u.getBound(dir) )
                             bbs(1,dir) = gid(1,dir)-1;
                     }
+        
+                for( int d0=-isGhost0; d0<=isGhost0; d0++ )  // loop -1:1, or 0:0 if no parallel ghost 
+                {
+                    int dir=0;
+          // setReceiveBoxBounds(bbr,d0,dir,centerBox0,leftMostBox0,rightMostBox0,isPeriodicBox0);
+            // leftMostBox0  = true if we are on the far left of the array
+            // rightMostBox0 = true if we are on the far right of the array
+                        bool centerBox0     = d0==0;
+                        bool leftMostBox0   = d0==-1 && ( ubb(0,dir) == u.getBase(dir) );
+                        bool rightMostBox0  = d0==1  && ( ubb(1,dir) == u.getBound(dir) );
+                        bool isPeriodicBox0 = false;
+                        if( d0==-1 )
+                        {
+              // parallel ghost points on left 
+                            bbr(0,dir)=ubb(0,dir)-ng(dir); bbr(1,dir)=ubb(0,dir)-1;
+                        }
+                        else if( d0==0 )
+                        {
+              // center section 
+                            bbr(0,dir)=ubb(0,dir); bbr(1,dir)=ubb(1,dir);
+                        }
+                        else 
+                        {
+              // parallel ghost points on right 
+                            bbr(0,dir)=ubb(1,dir)+1; bbr(1,dir)=ubb(1,dir)+ng(dir);
+                        }
+                        if( leftMostBox0 || rightMostBox0 )
+                        {
+              // No parallel ghost on far left or right 
+                            bbr(0,dir)=0;  bbr(1,dir)=-1;  // empty box
+                        }
+                        if( dir<numberOfDimensions && leftMostBox0 && isPeriodic(dir)  )
+                        {
+              // receive periodic points on left (could be empty )
+                            bbr(0,dir)=dim(0,dir);
+                            bbr(1,dir)=gid(0,dir)-1;
+                            isPeriodicBox0=true; //  bbr(1,dir)>= bbr(0,dir);
+                        }
+                        if( dir<numberOfDimensions && rightMostBox0 && isPeriodic(dir) )
+                        {
+              // receive periodic points on right
+                            bbr(0,dir)=gid(1,dir);
+                            bbr(1,dir)=dim(1,dir);
+                            if( bbr(0,dir)>bbr(1,dir) )
+                            {
+                                ::display(dim,"dim","%3i");
+                                ::display(gid,"gid","%3i");
+                                OV_ABORT("error bbr(0,dir)>bbr(1,dir) ")
+                            }
+                            isPeriodicBox0=true;
+                        }
+                        if( dir<numberOfDimensions && isPeriodic(dir) && d0==0 )
+                        {
+              // --- middle of a periodic box ---
+              // adjust box size to remove ghost
+              //     |  |                           |  |
+              //     +--+------------------------+--+--+
+              //     |  |                           |  |
+              //     +--+------------------------+--+--+
+              //        |<--                  -->
+              //
+                            if( ubb(0,dir) == u.getBase(dir) )
+                                bbr(0,dir) = gid(0,dir);
+                            if( ubb(1,dir) == u.getBound(dir) )
+                                bbr(1,dir) = gid(1,dir)-1;
+                        }
+          // setSendBoxBounds(bbs,d0,dir,centerBox0,leftMostBox0,rightMostBox0,isPeriodicBox0);
+                        if( d0==-1 )
+                        {
+                            bbs(0,dir)=ubb(0,dir); bbs(1,dir)=ubb(0,dir)+ng(dir)-1;
+                        }
+                        else if( d0==0 )
+                        {
+                            bbs(0,dir)=ubb(0,dir); bbs(1,dir)=ubb(1,dir);
+                        }
+                        else 
+                        {
+                            bbs(0,dir)=ubb(1,dir)-ng(dir)+1; bbs(1,dir)=ubb(1,dir);
+                        }
+                        if( leftMostBox0 || rightMostBox0 )
+                        {
+                            bbs(0,dir)=0;  bbs(1,dir)=-1;  // empty box
+                        }
+                        if( dir<numberOfDimensions && leftMostBox0 && isPeriodic(dir) )
+                        {
+              // send periodic points on left
+                            bbs(0,dir)=gid(0,dir);
+                            bbs(1,dir)=gid(0,dir) + ( dim(1,dir)-gid(1,dir) );
+                            isPeriodicBox0=true;
+                        }
+                        if( dir<numberOfDimensions && rightMostBox0 && isPeriodic(dir) )
+                        {
+              // send periodic points on right (could be empty )
+                            bbs(0,dir)=gid(1,dir)-1 - ( gid(0,dir)-dim(0,dir)-1 );
+                            bbs(1,dir)=gid(1,dir)-1;
+                            isPeriodicBox0=true; // bbs(1,dir)>= bbs(0,dir);
+                        }
+                        if( dir<numberOfDimensions && isPeriodic(dir) && d0==0 )
+                        {
+              // --- middle of a periodic box ---
+              // adjust box size to remove ghost
+              //     |  |                           |  |
+              //     +--+------------------------+--+--+
+              //     |  |                           |  |
+              //     +--+------------------------+--+--+
+              //        |<--                  -->
+              //
+                            if( ubb(0,dir) == u.getBase(dir) )
+                                bbs(0,dir) = gid(0,dir);
+                            if( ubb(1,dir) == u.getBound(dir) )
+                                bbs(1,dir) = gid(1,dir)-1;
+                        }
 
-        	  bool centerBox     = centerBox0     && centerBox1     && centerBox2;
-        	  bool leftMostBox   = leftMostBox0   || leftMostBox1   || leftMostBox2;
-        	  bool rightMostBox  = rightMostBox0  || rightMostBox1  || rightMostBox2;
+                    bool centerBox     = centerBox0     && centerBox1     && centerBox2;
+                    bool leftMostBox   = leftMostBox0   || leftMostBox1   || leftMostBox2;
+                    bool rightMostBox  = rightMostBox0  || rightMostBox1  || rightMostBox2;
                     bool isPeriodicBox = isPeriodicBox0 || isPeriodicBox1 ||  isPeriodicBox2;
-	  // fprintf(debugFile,"d0=%d d1=%d leftMostBox0=%i rightMostBox0=%i\n",d0,d1,leftMostBox0,rightMostBox0);
-        	  
-        	  if( debug & 2 )
-        	  {
-          	    IndexBox rBox(bbr(0,0),bbr(1,0), bbr(0,1),bbr(1,1), bbr(0,2),bbr(1,2), bbr(0,3),bbr(1,3) );
+          // fprintf(debugFile,"d0=%d d1=%d leftMostBox0=%i rightMostBox0=%i\n",d0,d1,leftMostBox0,rightMostBox0);
+                    
+                    if( debug & 2 )
+                    {
+                        IndexBox rBox(bbr(0,0),bbr(1,0), bbr(0,1),bbr(1,1), bbr(0,2),bbr(1,2), bbr(0,3),bbr(1,3) );
                         fprintf(debugFile,"d0=%2d d1=%2d rBox=[%d,%d][%d,%d][%d,%d][%d,%d], isPeriodicBox=%d isEmpty=%d\n",
-                		    d0,d1, bbr(0,0),bbr(1,0),bbr(0,1),bbr(1,1),bbr(0,2),bbr(1,2),bbr(0,3),bbr(1,3),(int)isPeriodicBox,
-                		    (int)rBox.isEmpty());
-          	    IndexBox sBox(bbs(0,0),bbs(1,0), bbs(0,1),bbs(1,1), bbs(0,2),bbs(1,2), bbs(0,3),bbs(1,3) );
-          	    fprintf(debugFile,"d0=%2d d1=%2d sBox=[%d,%d][%d,%d][%d,%d][%d,%d], isPeriodicBox=%d isEmpty=%d\n",
-                		    d0,d1,bbs(0,0),bbs(1,0),bbs(0,1),bbs(1,1),bbs(0,2),bbs(1,2),bbs(0,3),bbs(1,3),(int)isPeriodicBox,
-                		    (int)sBox.isEmpty());
+                                        d0,d1, bbr(0,0),bbr(1,0),bbr(0,1),bbr(1,1),bbr(0,2),bbr(1,2),bbr(0,3),bbr(1,3),(int)isPeriodicBox,
+                                        (int)rBox.isEmpty());
+                        IndexBox sBox(bbs(0,0),bbs(1,0), bbs(0,1),bbs(1,1), bbs(0,2),bbs(1,2), bbs(0,3),bbs(1,3) );
+                        fprintf(debugFile,"d0=%2d d1=%2d sBox=[%d,%d][%d,%d][%d,%d][%d,%d], isPeriodicBox=%d isEmpty=%d\n",
+                                        d0,d1,bbs(0,0),bbs(1,0),bbs(0,1),bbs(1,1),bbs(0,2),bbs(1,2),bbs(0,3),bbs(1,3),(int)isPeriodicBox,
+                                        (int)sBox.isEmpty());
 
-        	  }
+                    }
 
-        	  bool boxIsOnProcessor=false;
-        	  if( ( !centerBox && !leftMostBox && !rightMostBox) || isPeriodicBox )
-        	  {
-	    // Create a receive box
-          	    IndexBox rBox(bbr(0,0),bbr(1,0), bbr(0,1),bbr(1,1), bbr(0,2),bbr(1,2), bbr(0,3),bbr(1,3) );
-          	    
-          	    if( !rBox.isEmpty() )
-          	    {
-            	      if( debug & 2 )
-            		fprintf(debugFile,"    Add receive box=[%3i,%3i][%3i,%3i][%3i,%3i][%3i,%3i], isPeriodicBox=%d\n",
-                  			bbr(0,0),bbr(1,0),bbr(0,1),bbr(1,1),bbr(0,2),bbr(1,2),bbr(0,3),bbr(1,3),(int)isPeriodicBox);
+                    bool boxIsOnProcessor=false;
+                    if( ( !centerBox && !leftMostBox && !rightMostBox) || isPeriodicBox )
+                    {
+            // Create a receive box
+                        IndexBox rBox(bbr(0,0),bbr(1,0), bbr(0,1),bbr(1,1), bbr(0,2),bbr(1,2), bbr(0,3),bbr(1,3) );
+                        
+                        if( !rBox.isEmpty() )
+                        {
+                            if( debug & 2 )
+                                fprintf(debugFile,"    Add receive box=[%3i,%3i][%3i,%3i][%3i,%3i][%3i,%3i], isPeriodicBox=%d\n",
+                                                bbr(0,0),bbr(1,0),bbr(0,1),bbr(1,1),bbr(0,2),bbr(1,2),bbr(0,3),bbr(1,3),(int)isPeriodicBox);
 
               // Find which processor holds the data we need to receive: 
-            	      for( int axis=0; axis<4; axis++ )
-            	      {
+                            for( int axis=0; axis<4; axis++ )
+                            {
                 // choose a point near the middle of the box: 
-            		index[axis]=(bbr(0,axis)+bbr(1,axis))/2;  
+                                index[axis]=(bbr(0,axis)+bbr(1,axis))/2;  
 
                 // Adjust point for periodic grids 
-            		if( isPeriodicBox && axis<numberOfDimensions && isPeriodic(axis) )
-            		{
-              		  if( (axis==0 && leftMostBox0) || (axis==1 && leftMostBox1) || (axis==2 && leftMostBox2) )
-                		    index[axis] += gid(1,axis) - gid(0,axis);  // periodic image
-              		  else if( (axis==0 && rightMostBox0) || (axis==1 && rightMostBox1) || (axis==2 && rightMostBox2) )
-                		    index[axis] -= gid(1,axis) - gid(0,axis);  // periodic image
-            		}
-            		
-            	      }  // 
+                                if( isPeriodicBox && axis<numberOfDimensions && isPeriodic(axis) )
+                                {
+                                    if( (axis==0 && leftMostBox0) || (axis==1 && leftMostBox1) || (axis==2 && leftMostBox2) )
+                                        index[axis] += gid(1,axis) - gid(0,axis);  // periodic image
+                                    else if( (axis==0 && rightMostBox0) || (axis==1 && rightMostBox1) || (axis==2 && rightMostBox2) )
+                                        index[axis] -= gid(1,axis) - gid(0,axis);  // periodic image
+                                }
+                                
+                            }  // 
                             #ifdef USE_PPP
-                  	        rBox.processor= u.Array_Descriptor.findProcNum( index );  // processor for this point 
+                                rBox.processor= u.Array_Descriptor.findProcNum( index );  // processor for this point 
                             #else
-            		rBox.processor=0;
-            	      #endif 
+                                rBox.processor=0;
+                            #endif 
                             int tag;
               // encodeTag( tag,d0,d1,d2,d3);
                                   tag = (d0+1)+3*( (d1+1)+ 3*( (d2+1) + 3*(d3+1) ) );
-            	      rBox.tag=tag;
+                            rBox.tag=tag;
 
-            	      if( rBox.processor != myid || !copyOnProcessor )
-            	      {
+                            if( rBox.processor != myid || !copyOnProcessor )
+                            {
                                 receiveMap[tag]= receiveBoxes.size();
-            		receiveBoxes.push_back(rBox);        // remote send
-            	      }
-            	      else
-            	      {
-            		boxIsOnProcessor=true;
+                                receiveBoxes.push_back(rBox);        // remote send
+                            }
+                            else
+                            {
+                                boxIsOnProcessor=true;
                                 copyReceiveMap[tag]= copyReceiveBoxes.size();
-              	        copyReceiveBoxes.push_back(rBox);      // on processor 
-            	      }
-            	      
-          	    }
-          	    
-	    // Create a send box
-          	    IndexBox sBox(bbs(0,0),bbs(1,0), bbs(0,1),bbs(1,1), bbs(0,2),bbs(1,2), bbs(0,3),bbs(1,3) );
+                                copyReceiveBoxes.push_back(rBox);      // on processor 
+                            }
+                            
+                        }
+                        
+            // Create a send box
+                        IndexBox sBox(bbs(0,0),bbs(1,0), bbs(0,1),bbs(1,1), bbs(0,2),bbs(1,2), bbs(0,3),bbs(1,3) );
 
             // -- check if the all the periodic images are on the source processor ---
                         if( !uBox.contains(sBox) )
-          	    {
-	      // We need to split the boxes and get data from the next processor.
-	      // As a work-around one could call the update function twice since the
-	      // parallel ghost will be filled in during the first call.
-            	      printf("GhostBoundaryUpdate::initialize: ERROR!\n");
-            	      printf("The local data box is too small for a periodic update.\n"
-                 		     "There are likely too few points on this processor.\n");
-            	      printf("FIX ME BILL !\n");
-            	      OV_ABORT("ERROR");
-          	    }
-          	    
+                        {
+              // We need to split the boxes and get data from the next processor.
+              // As a work-around one could call the update function twice since the
+              // parallel ghost will be filled in during the first call.
+                            printf("GhostBoundaryUpdate::initialize: ERROR!\n");
+                            printf("The local data box is too small for a periodic update.\n"
+                                          "There are likely too few points on this processor.\n");
+                            printf("FIX ME BILL !\n");
+                            OV_ABORT("ERROR");
+                        }
+                        
 
-          	    if( !sBox.isEmpty() )
-          	    {
-            	      if( debug & 2 )
-            		fprintf(debugFile,"    Add    send box=[%3i,%3i][%3i,%3i][%3i,%3i][%3i,%3i], isPeriodicBox=%d\n",
-                  			bbs(0,0),bbs(1,0),bbs(0,1),bbs(1,1),bbs(0,2),bbs(1,2),bbs(0,3),bbs(1,3),(int)isPeriodicBox);
+                        if( !sBox.isEmpty() )
+                        {
+                            if( debug & 2 )
+                                fprintf(debugFile,"    Add    send box=[%3i,%3i][%3i,%3i][%3i,%3i][%3i,%3i], isPeriodicBox=%d\n",
+                                                bbs(0,0),bbs(1,0),bbs(0,1),bbs(1,1),bbs(0,2),bbs(1,2),bbs(0,3),bbs(1,3),(int)isPeriodicBox);
 
 
-	      // for( int axis=0; axis<4; axis++ ){ index[axis]=bbs(0,axis); }  // 
-	      // sBox.processor= u.Array_Descriptor.findProcNum( index );  // processor for this point 
+              // for( int axis=0; axis<4; axis++ ){ index[axis]=bbs(0,axis); }  // 
+              // sBox.processor= u.Array_Descriptor.findProcNum( index );  // processor for this point 
 
               // we send data to the same proc that we receive the ghost point from: 
-            	      sBox.processor= rBox.processor; 
+                            sBox.processor= rBox.processor; 
 
                             int tag;
               // encodeTag( tag,d0,d1,d2,d3);
                                   tag = (d0+1)+3*( (d1+1)+ 3*( (d2+1) + 3*(d3+1) ) );
-            	      sBox.tag=tag;
+                            sBox.tag=tag;
 
-            	      if( sBox.processor != myid || !copyOnProcessor)
-                  	        sendBoxes.push_back(sBox);         // remote receive
-            	      else
-            	      {
-            		assert( boxIsOnProcessor );         // receive box must also be on processor 
-                  	        copySendBoxes.push_back(sBox);      // on processor  
-            	      }
-            	      
-          	    }
-          	    
-        	  }
+                            if( sBox.processor != myid || !copyOnProcessor)
+                                sendBoxes.push_back(sBox);         // remote receive
+                            else
+                            {
+                                assert( boxIsOnProcessor );         // receive box must also be on processor 
+                                copySendBoxes.push_back(sBox);      // on processor  
+                            }
+                            
+                        }
+                        
+                    }
 
-      	} // end for d0
+                } // end for d0
             } // end for d1
         } // end for d2 
     } // end for d3
@@ -1111,13 +1112,13 @@ initialize( realArray & u,
             }
             
             fprintf(debugFile,
-            	      ">>> receive box %2i =[%3i,%3i][%3i,%3i][%3i,%3i][%3i,%3i], [rTag=%d, map=%d] from processor p=%i sTag=%d\n",
+                            ">>> receive box %2i =[%3i,%3i][%3i,%3i][%3i,%3i][%3i,%3i], [rTag=%d, map=%d] from processor p=%i sTag=%d\n",
                             ireceive,
-            	      box.base(0),box.bound(0),
-            	      box.base(1),box.bound(1),
-            	      box.base(2),box.bound(2),
-            	      box.base(3),box.bound(3),
-            	      box.tag, receiveMap.at(box.tag),box.processor,destTag );
+                            box.base(0),box.bound(0),
+                            box.base(1),box.bound(1),
+                            box.base(2),box.bound(2),
+                            box.base(3),box.bound(3),
+                            box.tag, receiveMap.at(box.tag),box.processor,destTag );
             ireceive++;
             
         }
@@ -1158,13 +1159,13 @@ initialize( realArray & u,
             }
 
             fprintf(debugFile,
-            	      ">>>    send box %2i =[%3i,%3i][%3i,%3i][%3i,%3i][%3i,%3i] sTag=%d, to processor p=%i for rTag=%d\n",
+                            ">>>    send box %2i =[%3i,%3i][%3i,%3i][%3i,%3i][%3i,%3i] sTag=%d, to processor p=%i for rTag=%d\n",
                             isend,
-            	      box.base(0),box.bound(0),
-            	      box.base(1),box.bound(1),
-            	      box.base(2),box.bound(2),
-            	      box.base(3),box.bound(3),
-            	      box.tag,box.processor,destTag);
+                            box.base(0),box.bound(0),
+                            box.base(1),box.bound(1),
+                            box.base(2),box.bound(2),
+                            box.base(3),box.bound(3),
+                            box.tag,box.processor,destTag);
             isend++;
         }
             
@@ -1202,14 +1203,14 @@ initialize( realArray & u,
             }
             
             fprintf(debugFile,
-            	      ">>> receive box %2i =[%3i,%3i][%3i,%3i][%3i,%3i][%3i,%3i], [rTag=%d, map=%d] from processor p=%i sTag=%d"
-                	          " [ON PROCESSOR]\n",
+                            ">>> receive box %2i =[%3i,%3i][%3i,%3i][%3i,%3i][%3i,%3i], [rTag=%d, map=%d] from processor p=%i sTag=%d"
+                                    " [ON PROCESSOR]\n",
                             ireceive,
-            	      box.base(0),box.bound(0),
-            	      box.base(1),box.bound(1),
-            	      box.base(2),box.bound(2),
-            	      box.base(3),box.bound(3),
-            	      box.tag, copyReceiveMap.at(box.tag),box.processor,destTag );
+                            box.base(0),box.bound(0),
+                            box.base(1),box.bound(1),
+                            box.base(2),box.bound(2),
+                            box.base(3),box.bound(3),
+                            box.tag, copyReceiveMap.at(box.tag),box.processor,destTag );
             ireceive++;
             
         }
@@ -1250,14 +1251,14 @@ initialize( realArray & u,
             }
 
             fprintf(debugFile,
-            	      ">>>    send box %2i =[%3i,%3i][%3i,%3i][%3i,%3i][%3i,%3i] sTag=%d, to processor p=%i for rTag=%d"
-            	      " [ON PROCESSOR]\n",
+                            ">>>    send box %2i =[%3i,%3i][%3i,%3i][%3i,%3i][%3i,%3i] sTag=%d, to processor p=%i for rTag=%d"
+                            " [ON PROCESSOR]\n",
                             isend,
-            	      box.base(0),box.bound(0),
-            	      box.base(1),box.bound(1),
-            	      box.base(2),box.bound(2),
-            	      box.base(3),box.bound(3),
-            	      box.tag,box.processor,destTag);
+                            box.base(0),box.bound(0),
+                            box.base(1),box.bound(1),
+                            box.base(2),box.bound(2),
+                            box.base(3),box.bound(3),
+                            box.tag,box.processor,destTag);
             isend++;
         }
         fprintf(debugFile,"\n =============== END INITIALIZE ======\n");
@@ -1312,7 +1313,7 @@ updateGhostBoundaries( RealArray & uLocal, const Range & Components /* = nullRan
         if( !isInitialized )
         {
             printF("GhostBoundaryUpdate::updateGhostBoundaries:ERROR: You should call initialize before "
-           	     "calling updateGhostBoundaries!\n");
+                          "calling updateGhostBoundaries!\n");
             OV_ABORT("ERROR");
         }
 
@@ -1326,11 +1327,11 @@ updateGhostBoundaries( RealArray & uLocal, const Range & Components /* = nullRan
         const Range C = Components==nullRange ? uLocal.dimension(component) : Components;
         const int numberOfComponents = C.getLength();
     // printF("UGB: component=%d C=[%d,%d] Components=[%d,%d]\n",component,C.getBase(),C.getBound(),
-    // 	      Components.getBase(),Components.getBound());
+    //        Components.getBase(),Components.getBound());
         if( debug & 2 )
         {
             fprintf(debugFile,"UGB: component=%d C=[%d,%d] Components=[%d,%d]\n",component,C.getBase(),C.getBound(),
-                    	      Components.getBase(),Components.getBound());
+                            Components.getBase(),Components.getBound());
         }
         
 
@@ -1371,27 +1372,27 @@ updateGhostBoundaries( RealArray & uLocal, const Range & Components /* = nullRan
         
             for(int m=0; m<numReceive; m++ )
             {
-      	IndexBox & pReceiveBox = receiveBoxes[m];
+                IndexBox & pReceiveBox = receiveBoxes[m];
                 pReceiveBox.setBaseBound( component,C.getBase(),C.getBound());  // set component range 
 
-	// sendingProc[m]=pReceiveBox.processor;  // this processor will be sending the data
-      	int bufSize=pReceiveBox.size();
-      	rBuff[m]= new real [bufSize];
+        // sendingProc[m]=pReceiveBox.processor;  // this processor will be sending the data
+                int bufSize=pReceiveBox.size();
+                rBuff[m]= new real [bufSize];
             
-      	assert( pReceiveBox.processor>=0 && pReceiveBox.processor<np );
+                assert( pReceiveBox.processor>=0 && pReceiveBox.processor<np );
             
-      	receiveBoxIndex[pReceiveBox.processor]=m;  // maps processor number to index in receiveBoxes
-      	if( debug!=0 )
-      	{
-        	  fprintf(debugFile,">>> myid=%i: post a receive for buffer of size %5i from p=%i (m=%i,numReceive=%i) \n",
-              		  myid,bufSize,pReceiveBox.processor,m,numReceive);
-      	}
+                receiveBoxIndex[pReceiveBox.processor]=m;  // maps processor number to index in receiveBoxes
+                if( debug!=0 )
+                {
+                    fprintf(debugFile,">>> myid=%i: post a receive for buffer of size %5i from p=%i (m=%i,numReceive=%i) \n",
+                                    myid,bufSize,pReceiveBox.processor,m,numReceive);
+                }
 
         // --- Convert the tag associated with the receive box to the expected tag from the sender ---
 
 
-      	
-      	int tag = pReceiveBox.tag, rtag;  
+                
+                int tag = pReceiveBox.tag, rtag;  
         // convertTag(tag,rtag);
                 {
                     int d0,d1,d2,d3;
@@ -1423,17 +1424,17 @@ updateGhostBoundaries( RealArray & uLocal, const Range & Components /* = nullRan
         // int d0,d1,d2,d3;
         // decodeTag(tag,d0,d1,d2,d3);
         // if( debug & 2 ) 
-  	//   fprintf(debugFile,"Decode tag=%d : [d0,d1,d2,d3]=[%2i,%2i,%2i,%2i]\n",tag,d0,d1,d2,d3);
+        //   fprintf(debugFile,"Decode tag=%d : [d0,d1,d2,d3]=[%2i,%2i,%2i,%2i]\n",tag,d0,d1,d2,d3);
         // // The received tag specifies the location [d0,d1,d2,d3] of the box in the sender's domain
-	// // The corresponding location in my domain has negative values : [-d0,-d1,-d2,-d3]
-	// encodeTag(rtag,-d0,-d1,-d2,-d3);
+        // // The corresponding location in my domain has negative values : [-d0,-d1,-d2,-d3]
+        // encodeTag(rtag,-d0,-d1,-d2,-d3);
                 if( debug  & 2 ) 
-            	  fprintf(debugFile,"Encode tag=%d --> rtag=%d \n",tag,rtag);
+                    fprintf(debugFile,"Encode tag=%d --> rtag=%d \n",tag,rtag);
 
-	// int MPI_Irecv(void *buf, int count, MPI_Datatype datatype, int source,
-	//               int tag, MPI_Comm comm, MPI_Request *request)
-	// MPI_Irecv(rBuff[m],bufSize,MPI_Real,pReceiveBox.processor,MPI_ANY_TAG,MPI_COMM_WORLD,&receiveRequest[m] );
-      	MPI_Irecv(rBuff[m],bufSize,MPI_Real,pReceiveBox.processor,rtag,MPI_COMM_WORLD,&receiveRequest[m] );
+        // int MPI_Irecv(void *buf, int count, MPI_Datatype datatype, int source,
+        //               int tag, MPI_Comm comm, MPI_Request *request)
+        // MPI_Irecv(rBuff[m],bufSize,MPI_Real,pReceiveBox.processor,MPI_ANY_TAG,MPI_COMM_WORLD,&receiveRequest[m] );
+                MPI_Irecv(rBuff[m],bufSize,MPI_Real,pReceiveBox.processor,rtag,MPI_COMM_WORLD,&receiveRequest[m] );
             
             }
         }
@@ -1451,47 +1452,47 @@ updateGhostBoundaries( RealArray & uLocal, const Range & Components /* = nullRan
         
             for(int m=0; m<numSend; m++ )
             {
-      	IndexBox & pSendBox = sendBoxes[m]; 
+                IndexBox & pSendBox = sendBoxes[m]; 
                 pSendBox.setBaseBound( component,C.getBase(),C.getBound() );  // set component range 
 
-      	int bufSize=pSendBox.size();
-      	sBuff[m]= new real [bufSize];
+                int bufSize=pSendBox.size();
+                sBuff[m]= new real [bufSize];
 //       for( int i=0; i<bufSize; i++ )
 //       {
-// 	sBuff[m][i]=i;
+//      sBuff[m][i]=i;
 //       }
 
-      	real *buff=sBuff[m];
-      	int i=0;
-      	FOR_BOX(i0,i1,i2,i3,pSendBox)
-      	{
-        	  buff[i]=uLocal(i0,i1,i2,i3);  
-        	  i++;
-      	}
+                real *buff=sBuff[m];
+                int i=0;
+                FOR_BOX(i0,i1,i2,i3,pSendBox)
+                {
+                    buff[i]=uLocal(i0,i1,i2,i3);  
+                    i++;
+                }
 
 
-      	if( debug!=0 )
-      	{
-        	  fprintf(debugFile,"<<< myid=%i: send buffer of size %5i (tag=%d) to p=%i\n",
-              		  myid,bufSize,pSendBox.tag,pSendBox.processor);
+                if( debug!=0 )
+                {
+                    fprintf(debugFile,"<<< myid=%i: send buffer of size %5i (tag=%d) to p=%i\n",
+                                    myid,bufSize,pSendBox.tag,pSendBox.processor);
 
-        	  fprintf(debugFile,
-              		  "pSendBox=[%3i,%3i][%3i,%3i][%3i,%3i][%3i,%3i]\n",
-              		  pSendBox.base(0),pSendBox.bound(0),
-              		  pSendBox.base(1),pSendBox.bound(1),
-              		  pSendBox.base(2),pSendBox.bound(2),
-              		  pSendBox.base(3),pSendBox.bound(3));
+                    fprintf(debugFile,
+                                    "pSendBox=[%3i,%3i][%3i,%3i][%3i,%3i][%3i,%3i]\n",
+                                    pSendBox.base(0),pSendBox.bound(0),
+                                    pSendBox.base(1),pSendBox.bound(1),
+                                    pSendBox.base(2),pSendBox.bound(2),
+                                    pSendBox.base(3),pSendBox.bound(3));
 
-        	  fprintf(debugFile,">>> myid=%i: SEND data: (component=%d)\n",myid,component);
-        	  for( int j=0; j<bufSize; j++ ) fprintf(debugFile,"%5.2f ",buff[j]);
-        	  fprintf(debugFile,"\n");
-        	  
-      	}
+                    fprintf(debugFile,">>> myid=%i: SEND data: (component=%d)\n",myid,component);
+                    for( int j=0; j<bufSize; j++ ) fprintf(debugFile,"%5.2f ",buff[j]);
+                    fprintf(debugFile,"\n");
+                    
+                }
             
-	// int MPI_Isend(const void *buf, int count, MPI_Datatype datatype, int dest, int tag,
-	//               MPI_Comm comm, MPI_Request * request)
-	// MPI_Isend(sBuff[m],bufSize,MPI_Real,pSendBox.processor,bufSize,MPI_COMM_WORLD,&sendRequest[m] );
-      	MPI_Isend(sBuff[m],bufSize,MPI_Real,pSendBox.processor,pSendBox.tag,MPI_COMM_WORLD,&sendRequest[m] );
+        // int MPI_Isend(const void *buf, int count, MPI_Datatype datatype, int dest, int tag,
+        //               MPI_Comm comm, MPI_Request * request)
+        // MPI_Isend(sBuff[m],bufSize,MPI_Real,pSendBox.processor,bufSize,MPI_COMM_WORLD,&sendRequest[m] );
+                MPI_Isend(sBuff[m],bufSize,MPI_Real,pSendBox.processor,pSendBox.tag,MPI_COMM_WORLD,&sendRequest[m] );
             }
         }
 
@@ -1508,60 +1509,60 @@ updateGhostBoundaries( RealArray & uLocal, const Range & Components /* = nullRan
             assert( copySendBoxes.size() == copyReceiveBoxes.size() );
             for( int m=0; m<copySendBoxes.size(); m++ )
             {
-      	IndexBox & sourceBox = copySendBoxes[m];
+                IndexBox & sourceBox = copySendBoxes[m];
                 sourceBox.setBaseBound( component,C.getBase(),C.getBound() );  // set component range 
 
-      	int stag=sourceBox.tag, rtag;  
-      // 	convertTag(stag,rtag);
-            {
-                int d0,d1,d2,d3;
-        // decodeTag(stag,d0,d1,d2,d3);
-                  {
-                      int mytag=stag;
-                      d0 = (mytag %3) -1;
-                      mytag /=3; 
-                      d1 = (mytag %3) -1;
-                      mytag /=3; 
-                      d2 = (mytag %3) -1;
-                      mytag /=3; 
-                      d3 = (mytag %3) -1;
-           // check: 
-           // encodeTag( mytag,d0,d1,d2,d3);
-                            mytag = (d0+1)+3*( (d1+1)+ 3*( (d2+1) + 3*(d3+1) ) );
-                      if( mytag != stag )
+                int stag=sourceBox.tag, rtag;  
+        // convertTag(stag,rtag);
+                {
+                    int d0,d1,d2,d3;
+          // decodeTag(stag,d0,d1,d2,d3);
                       {
-                          printF("ERROR: decoding stag failed! FIX ME\n");
-                          OV_ABORT("ERROR");
+                          int mytag=stag;
+                          d0 = (mytag %3) -1;
+                          mytag /=3; 
+                          d1 = (mytag %3) -1;
+                          mytag /=3; 
+                          d2 = (mytag %3) -1;
+                          mytag /=3; 
+                          d3 = (mytag %3) -1;
+             // check: 
+             // encodeTag( mytag,d0,d1,d2,d3);
+                                mytag = (d0+1)+3*( (d1+1)+ 3*( (d2+1) + 3*(d3+1) ) );
+                          if( mytag != stag )
+                          {
+                              printF("ERROR: decoding stag failed! FIX ME\n");
+                              OV_ABORT("ERROR");
+                          }
                       }
-                  }
-        // The sourced tag specifies the location [d0,d1,d2,d3] of the box in the source domain
-        // The corresponding location in the target omain has negative values : [-d0,-d1,-d2,-d3]
-        // encodeTag(rtag,-d0,-d1,-d2,-d3);
-                      rtag = (-d0+1)+3*( (-d1+1)+ 3*( (-d2+1) + 3*(-d3+1) ) );
-            }
-      	int myBox = copyReceiveMap.at(rtag);  // copyReceiveBoxes[myBox] corresponds to copySendBox[m]
+          // The sourced tag specifies the location [d0,d1,d2,d3] of the box in the source domain
+          // The corresponding location in the target omain has negative values : [-d0,-d1,-d2,-d3]
+          // encodeTag(rtag,-d0,-d1,-d2,-d3);
+                          rtag = (-d0+1)+3*( (-d1+1)+ 3*( (-d2+1) + 3*(-d3+1) ) );
+                }
+                int myBox = copyReceiveMap.at(rtag);  // copyReceiveBoxes[myBox] corresponds to copySendBox[m]
 
-      	if( debug & 2 )
-      	{
-        	  fprintf(debugFile,"copyOnProc: sourceBox.tag=%d --> rtag=%d: m=%d (source) ->  myBox=%d (target)\n",stag,rtag,m,myBox);
-        	  fprintf(debugFile,
-                	  	  "copyOnProc:  sourceBox =[%3i,%3i][%3i,%3i][%3i,%3i][%3i,%3i]\n",
-                	  	  sourceBox.base(0),sourceBox.bound(0),
-                	  	  sourceBox.base(1),sourceBox.bound(1),
-                	  	  sourceBox.base(2),sourceBox.bound(2),
-                	  	  sourceBox.base(3),sourceBox.bound(3));
-      	}
+                if( debug & 2 )
+                {
+                    fprintf(debugFile,"copyOnProc: sourceBox.tag=%d --> rtag=%d: m=%d (source) ->  myBox=%d (target)\n",stag,rtag,m,myBox);
+                    fprintf(debugFile,
+                                    "copyOnProc:  sourceBox =[%3i,%3i][%3i,%3i][%3i,%3i][%3i,%3i]\n",
+                                    sourceBox.base(0),sourceBox.bound(0),
+                                    sourceBox.base(1),sourceBox.bound(1),
+                                    sourceBox.base(2),sourceBox.bound(2),
+                                    sourceBox.base(3),sourceBox.bound(3));
+                }
 
-      	assert( myBox>=0 && myBox<copyReceiveBoxes.size() );
-      	IndexBox & targetBox = copyReceiveBoxes[myBox];
+                assert( myBox>=0 && myBox<copyReceiveBoxes.size() );
+                IndexBox & targetBox = copyReceiveBoxes[myBox];
                 targetBox.setBaseBound( component,C.getBase(),C.getBound() );  // set component range 
 
-      	assert( sourceBox.size()==targetBox.size() );
-      	
-      	FOR_BOX_IJ(i0,i1,i2,i3,sourceBox, j0,j1,j2,j3,targetBox )
-      	{
-        	  uLocal(j0,j1,j2,j3) = uLocal(i0,i1,i2,i3);
-      	}
+                assert( sourceBox.size()==targetBox.size() );
+                
+                FOR_BOX_IJ(i0,i1,i2,i3,sourceBox, j0,j1,j2,j3,targetBox )
+                {
+                    uLocal(j0,j1,j2,j3) = uLocal(i0,i1,i2,i3);
+                }
 
             }
         }
@@ -1573,22 +1574,22 @@ updateGhostBoundaries( RealArray & uLocal, const Range & Components /* = nullRan
     
             for(int m=0; m<numReceive; m++  )
             {
-	// int bufSize=receiveStatus[m].MPI_TAG;
-      	int tag =receiveStatus[m].MPI_TAG;
+        // int bufSize=receiveStatus[m].MPI_TAG;
+                int tag =receiveStatus[m].MPI_TAG;
 
-      	int p = receiveStatus[m].MPI_SOURCE;
-      	assert( p>=0 && p<np );
+                int p = receiveStatus[m].MPI_SOURCE;
+                assert( p>=0 && p<np );
             
-      	if( receiveStatus[m].MPI_ERROR !=0  ) 
-      	{
-        	  if( debug )
-        	  {
-          	    fprintf(debugFile," Receive: m=%d, receiveStatus[m].MPI_ERROR=%d\n",m,(int)receiveStatus[m].MPI_ERROR);
-          	    fflush(debugFile);
-        	  }
-      	}
+                if( receiveStatus[m].MPI_ERROR !=0  ) 
+                {
+                    if( debug )
+                    {
+                        fprintf(debugFile," Receive: m=%d, receiveStatus[m].MPI_ERROR=%d\n",m,(int)receiveStatus[m].MPI_ERROR);
+                        fflush(debugFile);
+                    }
+                }
 
-      	int rtag;  
+                int rtag;  
         // convertTag(tag,rtag);
                 {
                     int d0,d1,d2,d3;
@@ -1620,43 +1621,43 @@ updateGhostBoundaries( RealArray & uLocal, const Range & Components /* = nullRan
         // int d0,d1,d2,d3;
         // decodeTag(tag,d0,d1,d2,d3);
         // if( debug & 2 ) 
-    	//   fprintf(debugFile,"Decode tag=%d : [d0,d1,d2,d3]=[%2i,%2i,%2i,%2i]\n",tag,d0,d1,d2,d3);
+        //   fprintf(debugFile,"Decode tag=%d : [d0,d1,d2,d3]=[%2i,%2i,%2i,%2i]\n",tag,d0,d1,d2,d3);
         // // The received tag specifies the location [d0,d1,d2,d3] of the box in the sender's domain
-	// // The corresponding location in my domain has negative values : [-d0,-d1,-d2,-d3]
-	// int rtag;
-	// encodeTag(rtag,-d0,-d1,-d2,-d3);
+        // // The corresponding location in my domain has negative values : [-d0,-d1,-d2,-d3]
+        // int rtag;
+        // encodeTag(rtag,-d0,-d1,-d2,-d3);
 
         // int mybox = receiveMap[rtag];  // which receiveBox 
                 int mybox = receiveMap.at(rtag);  // which receiveBox   (this version throws an exeception if rtag is not there)
                 if( debug & 2  ) 
-        	  fprintf(debugFile,"Encode tag=%d -> rtag=%d -> box number %d (from receiveMap[rtag]) \n",tag,rtag,mybox);
+                    fprintf(debugFile,"Encode tag=%d -> rtag=%d -> box number %d (from receiveMap[rtag]) \n",tag,rtag,mybox);
 
-      	if( debug & 2 )
-      	{
+                if( debug & 2 )
+                {
                     IndexBox & rBox = receiveBoxes[mybox];
                     int bufSize = rBox.size();
-        	  fprintf(debugFile,">>> myid=%i: RECEIVED buffer tag=%i from p=%i (mybox=%i,bufSize=%d, numReceive=%i)\n",
-              		  myid,tag,p,mybox,bufSize,numReceive);
-        	  for( int j=0; j<bufSize; j++ ) fprintf(debugFile,"%5.2f ",rBuff[mybox][j]);
-        	  fprintf(debugFile,"\n");
-      	}
+                    fprintf(debugFile,">>> myid=%i: RECEIVED buffer tag=%i from p=%i (mybox=%i,bufSize=%d, numReceive=%i)\n",
+                                    myid,tag,p,mybox,bufSize,numReceive);
+                    for( int j=0; j<bufSize; j++ ) fprintf(debugFile,"%5.2f ",rBuff[mybox][j]);
+                    fprintf(debugFile,"\n");
+                }
 
-	// fill in the entries of vLocal
-	// old: int n = receiveBoxIndex[p];
+        // fill in the entries of vLocal
+        // old: int n = receiveBoxIndex[p];
                 int n = mybox;
-      	assert( n>=0 && n<numReceive );
-      	IndexBox & rBox = receiveBoxes[n];
-      	assert( rBox.processor==p );
+                assert( n>=0 && n<numReceive );
+                IndexBox & rBox = receiveBoxes[n];
+                assert( rBox.processor==p );
 
-	// assign vLocal(rBox) = rBuff[m][0...]
-      	const real *buff = rBuff[mybox];
+        // assign vLocal(rBox) = rBuff[m][0...]
+                const real *buff = rBuff[mybox];
             
-      	int i=0;
-      	FOR_BOX(i0,i1,i2,i3,rBox)
-      	{
-        	  uLocal(i0,i1,i2,i3)=buff[i]; 
-        	  i++;
-      	}
+                int i=0;
+                FOR_BOX(i0,i1,i2,i3,rBox)
+                {
+                    uLocal(i0,i1,i2,i3)=buff[i]; 
+                    i++;
+                }
             }
 
         }
@@ -1671,7 +1672,7 @@ updateGhostBoundaries( RealArray & uLocal, const Range & Components /* = nullRan
 //       int bufSize=receiveStatus[m].MPI_TAG;
 
 //       fprintf(debugFile,"<- processor %i: received msg from processor %i, tag=%i p=%i values=",myID,
-// 	      receiveStatus[m].MPI_SOURCE,receiveStatus[m].MPI_TAG,p);
+//            receiveStatus[m].MPI_SOURCE,receiveStatus[m].MPI_TAG,p);
 //       for( j=0; j<nivd; j++ ) fprintf(debugFile,"%8.2e ",dbuff[p][j]);
 //       fprintf(debugFile,"\n");
 
@@ -1687,8 +1688,8 @@ updateGhostBoundaries( RealArray & uLocal, const Range & Components /* = nullRan
         {
             if( debug!=0 )
             {
-      	fprintf(debugFile,"+++ myid=%i: wait for all messges to be sent, numSend=%i\n",myid,numSend); 
-      	fflush(debugFile);
+                fprintf(debugFile,"+++ myid=%i: wait for all messges to be sent, numSend=%i\n",myid,numSend); 
+                fflush(debugFile);
             }
 
             MPI_Status *sendStatus = new MPI_Status[numSend]; 
@@ -1748,59 +1749,59 @@ updateGhostBoundaries( RealArray & uLocal, const Range & Components /* = nullRan
             assert( copySendBoxes.size() == copyReceiveBoxes.size() );
             for( int m=0; m<copySendBoxes.size(); m++ )
             {
-      	IndexBox & sourceBox = copySendBoxes[m];
+                IndexBox & sourceBox = copySendBoxes[m];
                 sourceBox.setBaseBound( component,C.getBase(),C.getBound() );  // set component range 
 
-      	int stag=sourceBox.tag, rtag;  
-      // 	convertTag(stag,rtag);
-            {
-                int d0,d1,d2,d3;
-        // decodeTag(stag,d0,d1,d2,d3);
-                  {
-                      int mytag=stag;
-                      d0 = (mytag %3) -1;
-                      mytag /=3; 
-                      d1 = (mytag %3) -1;
-                      mytag /=3; 
-                      d2 = (mytag %3) -1;
-                      mytag /=3; 
-                      d3 = (mytag %3) -1;
-           // check: 
-           // encodeTag( mytag,d0,d1,d2,d3);
-                            mytag = (d0+1)+3*( (d1+1)+ 3*( (d2+1) + 3*(d3+1) ) );
-                      if( mytag != stag )
+                int stag=sourceBox.tag, rtag;  
+        // convertTag(stag,rtag);
+                {
+                    int d0,d1,d2,d3;
+          // decodeTag(stag,d0,d1,d2,d3);
                       {
-                          printF("ERROR: decoding stag failed! FIX ME\n");
-                          OV_ABORT("ERROR");
+                          int mytag=stag;
+                          d0 = (mytag %3) -1;
+                          mytag /=3; 
+                          d1 = (mytag %3) -1;
+                          mytag /=3; 
+                          d2 = (mytag %3) -1;
+                          mytag /=3; 
+                          d3 = (mytag %3) -1;
+             // check: 
+             // encodeTag( mytag,d0,d1,d2,d3);
+                                mytag = (d0+1)+3*( (d1+1)+ 3*( (d2+1) + 3*(d3+1) ) );
+                          if( mytag != stag )
+                          {
+                              printF("ERROR: decoding stag failed! FIX ME\n");
+                              OV_ABORT("ERROR");
+                          }
                       }
-                  }
-        // The sourced tag specifies the location [d0,d1,d2,d3] of the box in the source domain
-        // The corresponding location in the target omain has negative values : [-d0,-d1,-d2,-d3]
-        // encodeTag(rtag,-d0,-d1,-d2,-d3);
-                      rtag = (-d0+1)+3*( (-d1+1)+ 3*( (-d2+1) + 3*(-d3+1) ) );
-            }
+          // The sourced tag specifies the location [d0,d1,d2,d3] of the box in the source domain
+          // The corresponding location in the target omain has negative values : [-d0,-d1,-d2,-d3]
+          // encodeTag(rtag,-d0,-d1,-d2,-d3);
+                          rtag = (-d0+1)+3*( (-d1+1)+ 3*( (-d2+1) + 3*(-d3+1) ) );
+                }
 
-	// if( debug & 2 )
-	// {
-	//   fprintf(debugFile,"copyOnProc: sourceBox.tag=%d --> rtag=%d: m=%d (source)\n",stag,rtag,m);
-	//   fflush(debugFile);
-	// }
+        // if( debug & 2 )
+        // {
+        //   fprintf(debugFile,"copyOnProc: sourceBox.tag=%d --> rtag=%d: m=%d (source)\n",stag,rtag,m);
+        //   fflush(debugFile);
+        // }
 
-      	int myBox = copyReceiveMap.at(rtag);  // copyReceiveBoxes[myBox] corresponds to copySendBox[m]
+                int myBox = copyReceiveMap.at(rtag);  // copyReceiveBoxes[myBox] corresponds to copySendBox[m]
 
-      	if( debug & 2 )
-        	  fprintf(debugFile,"copyOnProc: sourceBox.tag=%d --> rtag=%d: m=%d (source) ->  myBox=%d (target)\n",stag,rtag,m,myBox);
+                if( debug & 2 )
+                    fprintf(debugFile,"copyOnProc: sourceBox.tag=%d --> rtag=%d: m=%d (source) ->  myBox=%d (target)\n",stag,rtag,m,myBox);
 
-      	assert( myBox>=0 && myBox<copyReceiveBoxes.size() );
-      	IndexBox & targetBox = copyReceiveBoxes[myBox];
+                assert( myBox>=0 && myBox<copyReceiveBoxes.size() );
+                IndexBox & targetBox = copyReceiveBoxes[myBox];
                 targetBox.setBaseBound( component,C.getBase(),C.getBound() );  // set component range 
 
-      	assert( sourceBox.size()==targetBox.size() );
-      	
-      	FOR_BOX_IJ(i0,i1,i2,i3,sourceBox, j0,j1,j2,j3,targetBox )
-      	{
-        	  uLocal(j0,j1,j2,j3) = uLocal(i0,i1,i2,i3);
-      	}
+                assert( sourceBox.size()==targetBox.size() );
+                
+                FOR_BOX_IJ(i0,i1,i2,i3,sourceBox, j0,j1,j2,j3,targetBox )
+                {
+                    uLocal(j0,j1,j2,j3) = uLocal(i0,i1,i2,i3);
+                }
 
             }
         }

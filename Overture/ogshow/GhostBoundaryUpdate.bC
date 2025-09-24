@@ -75,6 +75,7 @@ GhostBoundaryUpdate::~GhostBoundaryUpdate()
 int GhostBoundaryUpdate::setDebug( int debug )
 {
   dbase.get<int>("debug")=debug;
+  return 0;
 }
 
 // =====================================================================================================
