@@ -117,7 +117,9 @@ GCC_VERSION_GT_10 = $(shell gcc -dumpversion | awk -F. '$$1 > 10')
 ifneq ($(GCC_VERSION_GT_10),)
   # stuff that requires gcc version > 10
   # we need this for old style fortran: 
-  FF_FLAGS += -fallow-argument-mismatch
+  # FF_FLAGS += -fallow-argument-mismatch
+  # compile as f77 code:  (there still may be warnings but not errors)
+  FF_FLAGS += -std=legacy
 endif
 
 
