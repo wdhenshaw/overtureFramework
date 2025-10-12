@@ -1,4 +1,10 @@
-This is Overture from the Sourceforge git repository.
+This is the Overture Framework git repository.
+
+o The primary git repository is on github (changed from sourceforge on Oct 12, 2025)
+
+o To clone the repo use
+  git clone https://github.com/wdhenshaw/overtureFramework.git overtureFramework
+
 
 o See INSTALL_UBUNTU for detailed installation instructions for Ubuntu.
 
