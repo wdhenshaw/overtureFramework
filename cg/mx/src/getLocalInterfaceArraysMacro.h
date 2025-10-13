@@ -419,8 +419,10 @@
   // Is this right? 
   if( isDispersive && dmp2.isNonlinearMaterial() )
   {
-    copyLocalInterfaceArrayMacro(q2Copy, q2CopyLocal, q2, q1, Iv2,Iv1);
-    copyLocalInterfaceArrayMacro(q2nCopy,q2nCopyLocal,q2n,q1n,Iv2,Iv1);
+    OV_ABORT("FINISH ME FOR NONLINEAR MATERIALS AND PARALLEL INTERFACES");
+    // NOTE q1 and q2 are NOT KNOWN HERE -- CHECK ME    
+    // copyLocalInterfaceArrayMacro(q2Copy, q2CopyLocal, q2, q1, Iv2,Iv1);
+    // copyLocalInterfaceArrayMacro(q2nCopy,q2nCopyLocal,q2n,q1n,Iv2,Iv1);
   }
 
   // ----
@@ -489,8 +491,10 @@
   // Is this right? 
   if( isDispersive && dmp1.isNonlinearMaterial() )
   {
-    copyLocalInterfaceArrayMacro(q1Copy, q1CopyLocal, q1, q2, Iv1,Iv2);
-    copyLocalInterfaceArrayMacro(q1nCopy,q1nCopyLocal,q1n,q2n,Iv1,Iv2);
+    OV_ABORT("FINISH ME FOR NONLINEAR MATERIALS AND PARALLEL INTERFACES");
+    // NOTE q1 and q2 are NOT KNOWN HERE -- CHECK ME
+    // copyLocalInterfaceArrayMacro(q1Copy, q1CopyLocal, q1, q2, Iv1,Iv2);
+    // copyLocalInterfaceArrayMacro(q1nCopy,q1nCopyLocal,q1n,q2n,Iv1,Iv2);
   }
 
 	

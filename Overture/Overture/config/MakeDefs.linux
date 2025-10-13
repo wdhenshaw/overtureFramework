@@ -147,8 +147,10 @@ FFLAGSSO= $(STD_OPT_FLAG) $(OverturePrecision) $(FF_FLAGS)  $(FLAGS) $(Include)
 OV_COMPILER_LIBS = $(OV_RPATH)$(COMPILER_LIB_DIRECTORY) -L$(COMPILER_LIB_DIRECTORY)
 
 # here are the hdf libraries (the configure script will change this line for use with hdf5)
-HDF_LIBS = $(OV_RPATH)$(HDF)/lib -L$(HDF)/lib -lmfhdf -ldf -ljpeg -lz 
-#xlc HDF_LIBS = $(OV_RPATH)$(HDF)/lib -L$(HDF)/lib -lmfhdf -ldf -lz 
+# Oct 2025 -- libjpeg.a no longer seems to be needed
+# HDF_LIBS = $(OV_RPATH)$(HDF)/lib -L$(HDF)/lib -lmfhdf -ldf -ljpeg -lz 
+
+HDF_LIBS = $(OV_RPATH)$(HDF)/lib -L$(HDF)/lib -lmfhdf -ldf -lz 
 
 FORTRAN_LIBS = 
 #gcc FORTRAN_LIBS =-lnsl -lg2c

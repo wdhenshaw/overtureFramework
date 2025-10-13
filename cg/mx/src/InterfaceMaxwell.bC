@@ -748,7 +748,6 @@ int InterfaceMaxwell::computeStencilCoefficients(int current, real t, real dt )
       q2mptr=q2mLocal.getDataPointer();
     }
 
-
     // ----------- PARALLEL COPY ---------
     //  Determine the local arrays that hold in the interface values.
     //  In parallel we build new local arrays with a copy of the values from the

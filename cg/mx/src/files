@@ -171,7 +171,7 @@ src/divergence.C : src/divergence.bC; $(BPP) -quiet -clean $<
 
 src/defineMaterialRegion.C : src/defineMaterialRegion.bC; $(BPP) -quiet -clean $<
 
-src/InterfaceMaxwell.C : src/InterfaceMaxwell.bC; $(BPP) -quiet -clean $<
+src/InterfaceMaxwell.C : src/InterfaceMaxwell.bC src/getLocalInterfaceArraysMacro.h; $(BPP) -quiet -clean $<
 
 src/SphereExactSolutions.C : src/SphereExactSolutions.bC; $(BPP) -quiet -clean $<
 

@@ -534,7 +534,6 @@ int InterfaceMaxwell::computeStencilCoefficients(int current, real t, real dt )
             q2mptr=q2mLocal.getDataPointer();
         }
 
-
     // ----------- PARALLEL COPY ---------
     //  Determine the local arrays that hold in the interface values.
     //  In parallel we build new local arrays with a copy of the values from the
@@ -909,6 +908,17 @@ int InterfaceMaxwell::computeStencilCoefficients(int current, real t, real dt )
                     ParallelUtility::copy(p2nCopy,Iv1,p2n,Iv2,nd);  // p2nCopy(Iv1)=p2n(Iv2)
                     p2nCopy.updateGhostBoundaries(); // *********** these are currently needed ********************   **FIX ME**
             }
+      // --- nonlinear variables ----
+            realArray q2Copy;  realSerialArray q2CopyLocal;  
+            realArray q2nCopy; realSerialArray q2nCopyLocal;  
+      // Is this right? 
+            if( isDispersive && dmp2.isNonlinearMaterial() )
+            {
+                OV_ABORT("FINISH ME FOR NONLINEAR MATERIALS AND PARALLEL INTERFACES");
+        // NOTE q1 and q2 are NOT KNOWN HERE -- CHECK ME    
+        // copyLocalInterfaceArrayMacro(q2Copy, q2CopyLocal, q2, q1, Iv2,Iv1);
+        // copyLocalInterfaceArrayMacro(q2nCopy,q2nCopyLocal,q2n,q1n,Iv2,Iv1);
+            }
       // ----
             width[side1]  =halfWidth;     // copy this many ghost pts
             width[1-side1]=extrapWidth;   //  copy extra interior values 
@@ -989,6 +999,17 @@ int InterfaceMaxwell::computeStencilCoefficients(int current, real t, real dt )
                     Iv2[3]=Iv1[3];
                     ParallelUtility::copy(p1nCopy,Iv2,p1n,Iv1,nd);  // p1nCopy(Iv2)=p1n(Iv1)
                     p1nCopy.updateGhostBoundaries(); // *********** these are currently needed ********************   **FIX ME**
+            }
+      // --- nonlinear variables ----
+            realArray q1Copy;  realSerialArray q1CopyLocal;  
+            realArray q1nCopy; realSerialArray q1nCopyLocal; 
+      // Is this right? 
+            if( isDispersive && dmp1.isNonlinearMaterial() )
+            {
+                OV_ABORT("FINISH ME FOR NONLINEAR MATERIALS AND PARALLEL INTERFACES");
+        // NOTE q1 and q2 are NOT KNOWN HERE -- CHECK ME
+        // copyLocalInterfaceArrayMacro(q1Copy, q1CopyLocal, q1, q2, Iv1,Iv2);
+        // copyLocalInterfaceArrayMacro(q1nCopy,q1nCopyLocal,q1n,q2n,Iv1,Iv2);
             }
             int includeGhost=0;  // do NOT include parallel ghost since we can't apply the stencil there
             ok1 = ParallelUtility::getLocalArrayBounds(u1,u1Local,I1,I2,I3,includeGhost);
