@@ -8,6 +8,45 @@
 #endif
 
 
+// ==================================================================================================
+/// \brief Set number of parallel ghost needed by guessing the order of accuracy from the grid name
+/// \return The number of parallel ghost points used
+// ==================================================================================================
+int ParallelGridUtility::
+setNumberOfParallelGhost( aString & gridName, int extra /* = 0 */ )
+{
+#ifdef USE_PPP
+  // Guess how many parallel ghost points we need
+  int order = 2;
+  if(      gridName.find("order4") !=std::string::npos ){ order=4; }
+  else if( gridName.find("order6") !=std::string::npos ){ order=6; }
+  else if( gridName.find("order8") !=std::string::npos ){ order=8; }
+  else if( gridName.find("order10")!=std::string::npos ){ order=10; }
+  else if( gridName.find("order12")!=std::string::npos ){ order=12; }
+  else{ }
+  int numParGhost = order/2 + extra;
+  
+  printF("ParallelGridUtility::setNumberOfParallelGhost: Guessing order=%d, extra=%d => numParGhost = %d\n",order,extra,numParGhost);
+
+  setNumberOfParallelGhost( numParGhost );
+
+  return numParGhost;
+#endif
+}
+
+// ==============================================================================
+/// \brief Set the number of parallel ghost
+// ==============================================================================
+void ParallelGridUtility::
+setNumberOfParallelGhost( int numParGhost )
+{
+#ifdef USE_PPP
+  MappedGrid::setMinimumNumberOfDistributedGhostLines(numParGhost); 
+#endif
+}
+
+
+
 // ==============================================================================
 //  Define redistribute functions for GridCollection's and CompositeGrid's
 // ==============================================================================

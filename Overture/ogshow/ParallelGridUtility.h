@@ -68,6 +68,13 @@ getLocalInterpolationData( CompositeGrid & cg, InterpolationData *&interpData );
 static void 
 sortLocalInterpolationPoints( CompositeGrid & cg );
 
+// Set number of parallel ghost needed by guessing the order of accuracy from the grid name
+static int
+setNumberOfParallelGhost( aString & gridName, int extra = 0 );
+
+// Set the number of parallel ghost
+static void
+setNumberOfParallelGhost( int numParGhost );
 
 };
 

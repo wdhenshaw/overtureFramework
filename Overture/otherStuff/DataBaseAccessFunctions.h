@@ -7,7 +7,6 @@ extern const aString nullString;
 
 class LoadBalancer;
 
-
 int initializeMappingList();
 int destructMappingList();
 
