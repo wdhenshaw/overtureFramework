@@ -47,6 +47,8 @@ DerivedFunctions(ShowFileReader & showFileReader_ )
   showFileReader=&showFileReader_;
 }
 
+// ==================================================================================
+// ==================================================================================
 void DerivedFunctions::
 initialize()
 {
@@ -393,6 +395,8 @@ computeDerivedFunctions( realCompositeGridFunction & u )
       int j=numberOfComponents+i;
       assert( derived(i,0)>=0 );
 
+      // printF(" derived(%d,0)=%d, twoNorm=%d\n",i,derived(i,0),(int)twoNorm);
+
       if( derived(i,0)>=xDerivative && derived(i,0)<=laplaceDerivative )
       {
         interpolationRequired=true;
@@ -467,7 +471,24 @@ computeDerivedFunctions( realCompositeGridFunction & u )
 
         v(I1,I2,I3,j) = fabs(v(I1,I2,I3,component));
 
-      }      
+      }
+      else if( derived(i,0)==twoNorm )
+      {
+        // --- two-norm of a vector of any length ---
+        int numComp=derived(i,1);
+        v(I1,I2,I3,j)=0.;
+        // printF("twoNorm: components=");
+        for( int n=0; n<numComp; n++ )
+        {
+          int component = derived(i,n+2);
+          assert( component>=0 && component<nc );
+          v(I1,I2,I3,j) += SQR(v(I1,I2,I3,component));
+          // printF(" %d, ",component);
+        }
+        // printF("\n");
+        v(I1,I2,I3,j) = sqrt( v(I1,I2,I3,j) );
+
+      }               
       else if( derived(i,0)==temperature )
       {
         bool foundRg = showFileReader->getGeneralParameter("Rg",Rg);
@@ -1474,9 +1495,9 @@ add(int derivative, const aString & name_,
     // allocate more space
 
     int newNumber=numberOfDerivedFunctions+10;
-    
-    derived.resize(newNumber,3);
-    derived(Range(derived.getBound(0)+1,newNumber-1),Range(0,2))=-1;
+    Range R =  numberOfDerivedFunctions==0 ? 3 : derived.getLength(1);
+    derived.resize(newNumber,R);
+    derived(Range(derived.getBound(0)+1,newNumber-1),R)=-1;
     aString *temp = new aString[newNumber];
     for( int i=0; i<numberOfDerivedFunctions; i++ )
       temp[i]=name[i];
@@ -1494,6 +1515,49 @@ add(int derivative, const aString & name_,
   return numberOfDerivedFunctions;
 }
 
+int DerivedFunctions::
+add(int derivative, const aString & name_, IntegerArray & iPar )
+// ============================================================================
+// /Description:
+//    Add a new entry to the list of derived functions.
+// /derivative (input) : derived type code.
+// /name\_ (input) : component name for this entry.
+// /n(:) (input) : extra info to save in the derived array.
+//\end{DerivedFunctionsInclude.tex}
+// ============================================================================
+{
+  int numPar = iPar.getLength(0); 
+  int num = numPar + 2;           // we store num+2 entries in the derived array
+  if( derived.getLength(0)<=numberOfDerivedFunctions || derived.getLength(1)<num )
+  {
+    // allocate more space
+
+    int newNumber=numberOfDerivedFunctions+10;
+    Range R = max(derived.getLength(1),num);
+    derived.resize(newNumber,R);                 // make sure this works if we have increased the size of R *wdh* Jan 18, 2026
+
+    derived(Range(derived.getBound(0)+1,newNumber-1),R)=-1;
+
+    aString *temp = new aString[newNumber];
+    for( int i=0; i<numberOfDerivedFunctions; i++ )
+      temp[i]=name[i];
+    delete [] name;
+    name = temp;
+  }
+  
+  name[numberOfDerivedFunctions]=name_;
+  
+  derived(numberOfDerivedFunctions,0)=derivative;
+  for( int n=0; n<numPar; n++ )
+  {
+    derived(numberOfDerivedFunctions,n+1)=iPar(n);
+  }
+
+  numberOfDerivedFunctions++;
+  return numberOfDerivedFunctions;
+}
+
+
 //\begin{>>DerivedFunctionsInclude.tex}{\subsection{remove}} 
 int DerivedFunctions::
 remove( int i )
@@ -1505,7 +1569,7 @@ remove( int i )
 {
   if( i>=0 && i<numberOfDerivedFunctions )
   {
-    Range I(i,numberOfDerivedFunctions-2), P(0,2);
+    Range I(i,numberOfDerivedFunctions-2), P=derived.getLength(1);
     derived(I,P)=derived(I+1,P);
 
   numberOfDerivedFunctions--;
@@ -1563,6 +1627,7 @@ update(GenericGraphicsInterface & gi,
     "<>other",
       "logarithm",
       "absoluteValue",
+      "twoNorm",
     "<>E&M variables",
       "energy density",
       "E field norm",
@@ -2033,6 +2098,47 @@ update(GenericGraphicsInterface & gi,
 
     }
 
+    else if( answer=="twoNorm" )
+    { 
+      printF("Two norm of a vector, sqrt( v1^2 + v2^2 + ... )\n");
+      aString twoNormName,answer2;
+      gi.inputString(twoNormName,"Enter the name of this two-norm derived type.");
+      printF("Setting twoNormName=[%s]\n",(const char*)twoNormName);
+      int numberOfTwoNormComponents=0;
+      gi.inputString(answer2,"Enter the number of components in the vector");
+      sScanF(answer2,"%i",&numberOfTwoNormComponents);
+      if( numberOfTwoNormComponents<=0 || numberOfTwoNormComponents>5 )
+      { 
+        if( numberOfTwoNormComponents<=0 )
+          printF("Error: numberOfTwoNormComponents<=0 continuing...\n",numberOfTwoNormComponents);
+        if( numberOfTwoNormComponents>5 )
+          printF("Error: numberOfTwoNormComponents>5, numberOfTwoNormComponents=%d. Fix me Bill! skipping this two norm...\n",numberOfTwoNormComponents);
+        continue;
+      }
+      printF("Setting number of components in two-norm vector =%d\n",numberOfTwoNormComponents);
+      gi.inputString(answer2,"Enter the component numbers: n1,n2,...");
+
+      int nv[5]={0,1,2,3,4};
+      sScanF(answer2,"%i %i %i %i %i",&nv[0],&nv[1],&nv[2],&nv[3],&nv[4]);
+
+      IntegerArray iPar(numberOfTwoNormComponents+1); // save parameters here
+      iPar(0) = numberOfTwoNormComponents;
+      printF("twoNorm vector components=");
+      for( int n=0; n<numberOfTwoNormComponents; n++ )
+      {
+        if( nv[n]<0 ){ printF("ERROR component nv[%d]=%d is less than 0, setting to 0\n",n,nv[n]); nv[n]=0; }
+        if( nv[n]>=numberOfComponents )
+        { 
+          printF("ERROR component nv[%d]=%d is >=numberOfComponents=%d, setting to %d\n",n,nv[n],numberOfComponents,numberOfComponents-1); 
+          nv[n]=numberOfComponents-1; 
+        }
+        printF(" %d, ",nv[n]);
+        iPar(n+1) = nv[n];
+      }
+      printF("\n");
+
+      add( twoNorm,twoNormName,iPar );
+    }
     else if( answer=="absoluteValue" )
     { 
       aString *cNames = new aString [numberOfComponents+3];

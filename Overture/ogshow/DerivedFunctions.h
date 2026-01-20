@@ -52,6 +52,7 @@ class DerivedFunctions
     displacementNorm,
     stressNorm,
     absoluteValue,
+    twoNorm,
     numberOfDerivedItems
   };
 
@@ -62,6 +63,8 @@ class DerivedFunctions
   
 
   int add( int derivative, const aString & name_, int n1=0, int n2=0 );
+
+  int add(int derivative, const aString & name_, IntegerArray & iPar );
 
   int getASolution(int & solutionNumber,
 		   MappedGrid & cg,

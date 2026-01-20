@@ -27,7 +27,10 @@
 #  ogen -noplot pillInABoxGrid.cmd -interp=e -order=4 -factor=8 -ml=4 [OK  7M 
 #  ogen -noplot pillInABoxGrid.cmd -interp=e -order=4 -factor=16 -ml=4 [
 #
+# For scattering:
+#  ogen -noplot pillInABoxGrid.cmd -prefix pillInABoxGridAngle90 -refinementBox=0 -xa=-1 -xb=1 -ya=-1 -yb=1 -za=-1 -zb=1 -angle=90 -interp=e -factor=2
 #
+$prefix="pillInABoxGrid";
 $sharpnessLB=40.;                     # corner sharpness
 $widthX=1.; $widthY=1.; $widthZ=1.;   # box size 
 $blf=5.; # boundary layer stretching factor
@@ -44,24 +47,30 @@ $extra=0;  # extra overlap needed for higher order
 $factorNurbs=1.; # factor for the Nurbs representation 
 $refinementBox=1; 
 $name=""; 
+$angle=0.; $rotationAxis=2; $xShift=0.; $yShift=0.; $zShift=0.; 
+$numGhost=-1;
 # 
 # get command line arguments
 GetOptions( "order=i"=>\$order,"factor=f"=> \$factor,"blf=f"=>\$blf,"refinementBox=i"=>\$refinementBox,\
             "interp=s"=> \$interp,"name=s"=> \$name,"ml=i"=>\$ml,"sharpnessLB=f"=> \$sharpnessLB,\
-            "widthX=f"=> \$widthX,"widthY=f"=> \$widthY,"widthZ=f"=> \$widthZ,\
+            "widthX=f"=> \$widthX,"widthY=f"=> \$widthY,"widthZ=f"=> \$widthZ,"prefix=s"=> \$prefix,\
             "xa=f"=>\$xa,"xb=f"=>\$xb,"ya=f"=>\$ya,"yb=f"=>\$yb,"za=f"=>\$za,"zb=f"=>\$zb,\
-            "xac=f"=>\$xac,"xbc=f"=>\$xbc,"yac=f"=>\$yac,"ybc=f"=>\$ybc,"zac=f"=>\$zac,"zbc=f"=>\$zbc );
+            "xac=f"=>\$xac,"xbc=f"=>\$xbc,"yac=f"=>\$yac,"ybc=f"=>\$ybc,"zac=f"=>\$zac,"zbc=f"=>\$zbc,\
+            "angle=f"=>\$angle,"numGhost=i"=>\$numGhost );
 # 
 if( $order eq 4 ){ $orderOfAccuracy="fourth order"; $ng=2; }\
 elsif( $order eq 6 ){ $orderOfAccuracy="sixth order"; $ng=4; }\
 elsif( $order eq 8 ){ $orderOfAccuracy="eighth order"; $ng=6; }
 if( $interp eq "e" ){ $interpType = "explicit for all grids"; }else{ $interpType = "implicit for all grids"; }
-$extra=$order-2;
+# $extra=$order-2;
+$extra=$order;
 if( $interp eq "e" ){ $extra=$extra+2; }
 # 
 $suffix = ".order$order"; 
+if( $numGhost ne -1 ){ $ng = $numGhost; } # overide number of ghost
+if( $numGhost ne -1 ){ $suffix .= ".ng$numGhost"; } 
 if( $ml ne 0 ){ $suffix .= ".ml$ml"; }
-if( $name eq "" ){$name = "pillInABoxGrid" . "$interp$factor" . $suffix . ".hdf";}
+if( $name eq "" ){$name = $prefix . "$interp$factor" . $suffix . ".hdf";}
 # 
 #
 # NOTE: x-bounds and y-bounds should be centered around 0: 
@@ -243,7 +252,6 @@ sub convertToNurbs\
    "exit"; \
 }
 #
-$angle=0.; $rotationAxis=2; $xShift=0.; $yShift=0.; $zShift=0.; 
 # convertToNurbs(flattenedTorusReoriented,flattenedTorusNurbs,$angle,$rotationAxis,$xShift,$yShift,$zShift);
 convertToNurbs(pistonOuterRing,pistonOuterRingNurbs,$angle,$rotationAxis,$xShift,$yShift,$zShift);
 $cmds

@@ -1,6 +1,9 @@
 // ==============================================================================================
 //  This class is used to assign unused points next to interpolation points so that wider
-//  stencils can be applied.
+//  stencils can be applied (e.g. with upwinding)
+//    Points can be assigned by
+//      (1) Extrapolation
+//      (2) interpolation
 //
 // ==============================================================================================
 
@@ -30,6 +33,14 @@ extern "C"
     const int&nda1a,const int&nda1b,const int&ndd1a,const int&ndd1b,
     const int&ia,const int&id, const int &vew, real & u,const int&ca,const int&cb, const int& ipar, const real&rpar );
 }
+
+#define FOR_3D(i1,i2,i3,I1,I2,I3) \
+int I1Base =I1.getBase(),   I2Base =I2.getBase(),  I3Base =I3.getBase();  \
+int I1Bound=I1.getBound(),  I2Bound=I2.getBound(), I3Bound=I3.getBound(); \
+for(i3=I3Base; i3<=I3Bound; i3++) \
+for(i2=I2Base; i2<=I2Bound; i2++) \
+for(i1=I1Base; i1<=I1Bound; i1++)
+
 
 int AssignInterpNeighbours::debug=0;
 static int numberOfReduceOrderOfExtrapMessages=0;
@@ -457,10 +468,12 @@ findInterpolationNeighbours( MappedGrid & mg )
        if( debug & 2 )
        {
 
-        printF("Grid %s: After findInterpNeighbours: numberOfInterpolationNeighbours=%d\n",
-          (const char*)mg.getName(),numberOfInterpolationNeighbours);
-        fprintf(debugFile,"Grid %s: After findInterpNeighbours: numberOfInterpolationNeighbours=%d\n",
-          (const char*)mg.getName(),numberOfInterpolationNeighbours);
+        int totalNumInterpNeighbours = ParallelUtility::getSum( numberOfInterpolationNeighbours);
+        printF("Grid %s: After findInterpNeighbours: total number of interp. neighbours (all procs)=%d\n",
+          (const char*)mg.getName(),totalNumInterpNeighbours);
+
+        fprintf(debugFile,"Grid %s: After findInterpNeighbours: numberOfInterpolationNeighbours=%d (this proc) (total=%d)\n",
+          (const char*)mg.getName(),numberOfInterpolationNeighbours,totalNumInterpNeighbours);
        }
 
        if( ierr!=0 )
@@ -488,7 +501,7 @@ findInterpolationNeighbours( MappedGrid & mg )
      // *********************************************
      if( debug & 2 )
      {
-       fprintf(debugFile," Bounds:  mask=[%i,%i][%i,%i] maskd=[%i,%i][%i,%i]\n",
+       fprintf(debugFile,"findInterpNeighbours: Local array bounds:  mask=[%i,%i][%i,%i] maskd=[%i,%i][%i,%i]\n",
                mask.getBase(0), mask.getBound(0),
                mask.getBase(1), mask.getBound(1),
                maskd.getBase(0), maskd.getBound(0),
@@ -525,10 +538,19 @@ findInterpolationNeighbours( MappedGrid & mg )
        //            = 2 : this point cannot extrap on this processor
        //            =-1 : this point is not needed
 
+       if( debug & 2 )
+        fprintf(debugFile," i=%3d: ia=(%d,%d) id=(%i,%i) status=%d (interp neighbour)\n",i,IA(i,0),IA(i,1),ID(i,0),ID(i,1),status(i));
+
+
+       // *wdh* Jan 8, 2026 : if we interpolate points we do not need to worry about extrapolating:
+       if( assignmentType==interpolateInterpolationNeighbours && (status(i)==2 || status(i)==-1)  )
+         status(i)=0;
+
        if( status(i)==0 )
        {
+
          #ifdef AIN_DEBUG
-         if( debug & 4 )
+         if( debug & 2 )
            fprintf(debugFile," myid=%i: pt i=%i, ia=(%i,%i) id=(%i,%i) is assigned from this proc.\n",
                    myid,i,IA(i,0),IA(i,1),ID(i,0),ID(i,1));
          #endif
@@ -1255,8 +1277,18 @@ setNumberOfValidGhostPoints( int numValidGhost )
 int AssignInterpNeighbours::
 setupInterpolation( CompositeGrid & cg )
 {
+  const int myid=max(0,Communication_Manager::My_Process_Number);
+  const int np=max(1,Communication_Manager::Number_Of_Processors);
+
+  if( debug >0 && debugFile==NULL )
+  {
+    aString fileName=sPrintF("finNP%ip%i.debug",np,myid);
+    debugFile=fopen((const char*)fileName,"w"); // open a different file on each proc.
+    printF("AssignInterpNeighbours: output written to debug file %s\n",(const char*)fileName);
+  }
+
   if( debug & 2 )
-    printF("AssignInterpNeighbours::   ***ENTERING***   setupInterpolation \n");
+    printF("AssignInterpNeighbours::   ***ENTERING***   setupInterpolation, np=%d \n",np);
 
   if( assignmentType != interpolateInterpolationNeighbours )
   {
@@ -1277,10 +1309,68 @@ setupInterpolation( CompositeGrid & cg )
   i3=0; 
 
   // -- estimate the number of interp neighbours based on the number of interp points ----
-  const int totalNumberOfInterpolationPoints = sum(cg.numberOfInterpolationPoints());  // ********** FIX ME FOR PARALLEL *****
+  int totalNumberOfInterpolationPoints = sum(cg.numberOfInterpolationPoints());  
   #ifdef USE_PPP
-    printf("\n #### AssignInterpNeighbours::setupInterpolation:WARNING: FIX ME FOR PARALLEL #####\n\n");
+    // printf("\n #### AssignInterpNeighbours::setupInterpolation:WARNING: FIX ME FOR PARALLEL totalNumberOfInterpolationPoints=%d #####\n\n",totalNumberOfInterpolationPoints);
+  
+    // *wdh* Jan 6, 2026 -- make a careful count of the the number of interpolation points on this processor
+    int numInterp=0; // Make a more careful count 
+    Index Iv[3], &I1=Iv[0], &I2=Iv[1], &I3=Iv[2];
+    for( int grid=0; grid<cg.numberOfComponentGrids(); grid++ )
+    {
+      MappedGrid & mg = cg[grid];
+      mg.update(MappedGrid::THEmask | MappedGrid::THEvertex | MappedGrid::THEcenter ); 
+
+
+      OV_GET_SERIAL_ARRAY(int,mg.mask(),maskLocal);
+      // displayMask(maskLocal,sPrintF("mask grid=%d",grid),debugFile);
+
+      int ni=0;
+      if( 1==1 || maskLocal.elementCount()>0 )
+      {
+        // for( int axis=0; axis<3; axis++ )
+        // {
+        //   Iv[axis] = Range(maskLocal.getBase(axis),maskLocal.getBound(axis));
+        //   printf("myid=%d: axis=%d, Iv=[%d,%d]\n",myid,axis,Iv[axis].getBase(),Iv[axis].getBound());
+        // }
+        getIndex(mg.dimension(),I1,I2,I3);
+        int includeGhost=1;
+        bool ok=ParallelUtility::getLocalArrayBounds(mg.mask(),maskLocal,I1,I2,I3,includeGhost);
+        if( ok )
+        {
+          int i1,i2,i3;
+          FOR_3D(i1,i2,i3,I1,I2,I3)
+          {
+            //   // printf("grid=%d: (i1,i2)=(%2d,%d) mask=%d ni=%3d\n",grid,i1,i2,maskLocal(i1,i2,i3),ni);
+            //   // if( maskLocal(i1,i2,i3) < 0 )
+
+            if( maskLocal(i1,i2,i3) & MappedGrid::ISinterpolationPoint )
+            {
+              ni++;
+            }
+          }
+        }
+      }
+      if( debug & 1 )
+        printf("setupInterpolation:myid=%d, grid=%d, num-interp-this-processor=%d (from mask)\n",myid,grid,ni);
+      numInterp += ni;
+
+      int niTotal = ParallelUtility::getSum(ni);
+      printF("setupInterpolation: grid=%d, total numInterp=%d (from mask), np=%d\n",grid,niTotal,np);
+
+    }  // end for grid  
+
+    if( debug & 1 )
+      printf("setupInterpolation:myid=%d, totalNumberOfInterpolationPoints=%d, numInterp=%d (total this processor)\n",
+          myid,totalNumberOfInterpolationPoints,numInterp);
+
+    totalNumberOfInterpolationPoints = numInterp;
+
+    int numTotalInterpAllProc = ParallelUtility::getSum(totalNumberOfInterpolationPoints);
+    printF("setupInterpolation: estimated total number of interp pts =%d (all grids, from mask, np=%d)\n",numTotalInterpAllProc,np);
   #endif
+
+
 
   const int estimatedNumberOfInterpolationNeighbours = int( totalNumberOfInterpolationPoints*1.5 + 100);
   RealArray xn(estimatedNumberOfInterpolationNeighbours,numberOfDimensions);  // x locations of interpolation neighbours 
@@ -1295,9 +1385,11 @@ setupInterpolation( CompositeGrid & cg )
   int numPts=0;  // counts total number of interp neighbours 
   for( int grid=0; grid<cg.numberOfComponentGrids(); grid++ )
   {
-    if( cg.numberOfInterpolationPoints(grid) == 0 )   // fix me for parallel
+    if( cg.numberOfInterpolationPoints(grid) == 0 ) 
     {
-      continue;
+      #ifndef USE_PPP
+        continue;  // only continue in serial
+      #endif
     }
 
     MappedGrid & mg = cg[grid];
@@ -1308,7 +1400,8 @@ setupInterpolation( CompositeGrid & cg )
 
     setInterpolationPoint( cg.interpolationPoint[grid] );
 
-    // -- find interpolation neighbours ----
+    // ------ find interpolation neighbours ----
+    //  (there is MPI communication in the next call)
     findInterpolationNeighbours( mg );
 
     IntegerArray & ia = *extrapolateInterpolationNeighbourPoints;
@@ -1319,8 +1412,8 @@ setupInterpolation( CompositeGrid & cg )
 
     if( debug & 2 )
     {
-      printf("\n >>> grid=%s: findInterpolationNeighbours:opt: numberOfInterpolationNeighbours=%i\n",
-            (const char*)mg.getName(),numberOfInterpolationNeighbours);
+      printf("\n >>> grid=%s: findInterpolationNeighbours:opt: numberOfInterpolationNeighbours=%i (myid=%d)\n",
+            (const char*)mg.getName(),numberOfInterpolationNeighbours,myid);
      
       IntegerArray & id = *extrapolateInterpolationNeighboursDirection;
      
@@ -1347,20 +1440,28 @@ setupInterpolation( CompositeGrid & cg )
        xn(numPts,dir) = xLocal(i1,i2,i3,dir);  
       numPts++;
     }
+
   } // end for grid 
 
   // Make the correct size
   xn.resize(numPts,numberOfDimensions);
 
   int & totalNumberOfInterpolationNeighbours = dbase.put<int>("totalNumberOfInterpolationNeighbours");
-  totalNumberOfInterpolationNeighbours = numPts; 
+
+  int totalNumPts = ParallelUtility::getSum( numPts );
+  // totalNumberOfInterpolationNeighbours = numPts; 
+  totalNumberOfInterpolationNeighbours = totalNumPts; 
 
   if( debug & 2 )
-    printF(">> INFO : estimatedNumberOfInterpolationNeighbours=%d, totalNumberOfInterpolationNeighbours=%d\n",
-           estimatedNumberOfInterpolationNeighbours,totalNumberOfInterpolationNeighbours);
+  {
+    printF(">> INFO : estimatedNumberOfInterpolationNeighbours=%d, totalNumberOfInterpolationNeighbours=%d (all procs)\n",
+           estimatedNumberOfInterpolationNeighbours,totalNumPts);
+  }
 
   if( debug & 4 )
-    display(xn,"xn - interpolation neighbour coordinates","%5.2f ");
+  {
+    ::display(xn,"xn - interpolation neighbour coordinates (this proc)",debugFile,"%5.2f ");
+  }
 
   if( ipog==NULL )
     ipog = new InterpolatePointsOnAGrid;
@@ -1454,6 +1555,9 @@ setupInterpolation( CompositeGrid & cg )
 int AssignInterpNeighbours::
 assignInterpolationNeighbours( realCompositeGridFunction & u, const Range & C, OGFunction *TZFlow,  real t  )
 {
+  const int myid=max(0,Communication_Manager::My_Process_Number);
+  const int np=max(1,Communication_Manager::Number_Of_Processors);
+
   if( debug & 1 ) 
   {
     printF("\n =================== assignInterpolationNeighbours ====================\n\n");
@@ -1462,9 +1566,20 @@ assignInterpolationNeighbours( realCompositeGridFunction & u, const Range & C, O
   int returnValue=0;
 
   CompositeGrid & cg = *u.getCompositeGrid();
+
+  if( cg.numberOfComponentGrids()==1 )
+    return returnValue;
+  
   if( !ipogIsInitialized )
   {
     setupInterpolation( cg );
+    if( debug & 1 )
+    {
+      printF("assignInterpolationNeighbours: DONE setupInterpolation. Now interpolate.\n");
+      fprintf(debugFile,"assignInterpolationNeighbours: DONE setupInterpolation. Now interpolate.\n");
+      fflush(0);
+    }
+
   }
 
   const int & totalNumberOfInterpolationNeighbours = dbase.get<int>("totalNumberOfInterpolationNeighbours");
@@ -1489,7 +1604,18 @@ assignInterpolationNeighbours( realCompositeGridFunction & u, const Range & C, O
   ui.redim(R,N);
 
   // -- interpolate the neighbours ----
+  // printf("myid=%d: call interpolator.interpolatePoints(u,ui)\n",myid); fflush(0);
+
   interpolator.interpolatePoints(u,ui);
+
+  // printf("myid=%d: DONE call interpolator.interpolatePoints(u,ui)\n",myid); fflush(0);
+
+  if( debug & 1 )
+  {
+    printF("assignInterpolationNeighbours: DONE interpolator.interpolatePoints. Now fill in values into array u.\n");
+    fprintf(debugFile,"assignInterpolationNeighbours: DONE interpolator.interpolatePoints. Now fill in values into array u.\n");
+    fflush(0);
+  }  
   
   // ----- Fill interpolated values back into u ------
 
@@ -1565,6 +1691,8 @@ assignInterpolationNeighbours( realCompositeGridFunction & u, const Range & C, O
             }
           }
         }
+        if( debug & 1 )
+          fprintf(debugFile,"interpNeighbours: grid=%i, maxErr=%8.2e (this proc)\n",grid,maxError);
 
       } // end if TZFlow
       start=end;
@@ -1572,11 +1700,33 @@ assignInterpolationNeighbours( realCompositeGridFunction & u, const Range & C, O
     } // end if numPerGrid>0
   } // end for grid
 
-  
+
+  if( debug & 1 )
+  {
+    printF("assignInterpolationNeighbours: DONE fill u, now updateParallelGhost and periodicUpdate\n");
+    fprintf(debugFile,"assignInterpolationNeighbours: DONE fill u, now updateParallelGhost and periodicUpdate\n");
+    fflush(0);
+  }  
   for( int grid=0; grid<cg.numberOfComponentGrids(); grid++ )
   {
     // If there are any neighbour points on this grid then we must perform a periodic update
-    const int numNeighbours = interpNeighbours[grid].getLength(0);    
+    int numNeighbours = interpNeighbours[grid].getLength(0);   
+    numNeighbours=ParallelUtility::getMaxValue(numNeighbours);  // *wdh* Jan 6, 2026 
+    if( debug & 1 )
+    {
+      printF(" grid=%d: numNeighbours=%d (all procs), periodicUpdateNeeded(grid)=%d\n",grid,numNeighbours,periodicUpdateNeeded(grid) );
+      fflush(0);
+    } 
+
+    // if( debug & 1 ) // **** TEMP ***
+    // {
+    //   if( grid==0 && myid<=1 )
+    //   {
+    //     OV_GET_SERIAL_ARRAY(real,u[grid],uLocal);
+    //     int i1=40, i2=24,i3=0;
+    //     fprintf(debugFile," Before updateGhost:  u=(%d,%d)=%12.4e\n",i1,i2,uLocal(i1,i2,i3));
+    //   }
+    // }
     if( numNeighbours>0 )
     {
       // **we could do this more efficiently!  **DO THIS FOR NOW**

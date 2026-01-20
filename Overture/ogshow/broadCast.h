@@ -5,6 +5,7 @@
 #include "aString.H"
 
 #ifndef USE_PPP
+  #undef MPI_COMM_WORLD
   #define MPI_COMM_WORLD 0
 #endif
 

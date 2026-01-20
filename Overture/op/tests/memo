@@ -2,6 +2,304 @@ set tcm3p = $op/tests/tcm3
 
 
 ***************************************************************************
+****** Sat Jan 10, 2026
+
+TEST 3D
+
+
+mpirun -np 1 ./testExtrapInterpNeighbours -g=box2.order2 -useNew=1 -interpolateNeighbours=1 -numParallelGhost=2 -debug=0
+
+***************************************************************************
+****** Fri Jan 9 2026
+
+
+FIXES TO TES ROUTINE FOR ORDER=4
+
+HANGS: 
+mpirun -np 3 xterm -e gdb -ex run --args ./testExtrapInterpNeighbours -g=cice4.order4.ng3 -useNew=1 -interpolateNeighbours=1 -numParallelGhost=3 -debug=0
+
+
+
+mpirun -np 2 ./testExtrapInterpNeighbours -g=cice4.order4.ng3 -useNew=1 -interpolateNeighbours=1 -numParallelGhost=3 -debug=0
+
+mpirun -np 2 ./testExtrapInterpNeighbours -g=cice4.order4.ng3 -useNew=1 -interpolateNeighbours=1 -numParallelGhost=3 -debug=0
+
+
+VALGRIND:
+
+mpirun -np 2 valgrind --suppressions=/home/henshw/valgrind.supp ./testExtrapInterpNeighbours -g=cice2.order2 -useNew=1 -interpolateNeighbours=1 -debug=0
+
+mpirun -np 2 valgrind --suppressions=/home/henshw/valgrind.supp ./testExtrapInterpNeighbours -g=cice2.order4.ng3 -useNew=1 -interpolateNeighbours=1 -numParallelGhost=3 -debug=0
+
+mpirun -np 2 valgrind --log-file=tein.out.np%p ./testExtrapInterpNeighbours -g=cice2.order4.ng3 -useNew=1 -interpolateNeighbours=1 -numParallelGhost=3 -debug=0
+
+
+valgrind --gen-suppressions=all ./testExtrapInterpNeighbours -g=cice2.order4.ng3 -useNew=1 -interpolateNeighbours=1 -numParallelGhost=3 -debug=0
+
+mpiexec -n 1 ./testExtrapInterpNeighbours -g=cice2.order4.ng3 -useNew=1 -interpolateNeighbours=1 -numParallelGhost=3 -debug=0
+
+----np=6
+setupInterpolation: grid=0, total numInterp=459 (from mask), np=6
+setupInterpolation: grid=1, total numInterp=268 (from mask), np=6
+setupInterpolation: estimated total number of interp pts =727 (all grids, from mask, np=6)
+cice2.order4.ng3/square///extrapInterpNeighbours                                            : err = 1.50e-05, cpu=0.0e+00(s)  
+cice2.order4.ng3/Annulus///extrapInterpNeighbours                                           : err = 1.33e-15, cpu=0.0e+00(s)  
+
+
+----np=4
+setupInterpolation: grid=0, total numInterp=336 (from mask), np=4
+setupInterpolation: grid=1, total numInterp=232 (from mask), np=4
+setupInterpolation: estimated total number of interp pts =568 (all grids, from mask, np=4)
+cice2.order4.ng3/square///extrapInterpNeighbours                                            : err = 1.50e-05, cpu=0.0e+00(s)  
+cice2.order4.ng3/Annulus///extrapInterpNeighbours                                           : err = 1.33e-15, cpu=0.0e+00(s)  
+
+----np=2
+setupInterpolation: grid=0, total numInterp=316 (from mask), np=2
+setupInterpolation: grid=1, total numInterp=216 (from mask), np=2
+setupInterpolation: estimated total number of interp pts =532 (all grids, from mask, np=2)
+cice2.order4.ng3/square///extrapInterpNeighbours                                            : err = 1.50e-05, cpu=0.0e+00(s)  
+cice2.order4.ng3/Annulus///extrapInterpNeighbours                                           : err = 1.33e-15, cpu=0.0e+00(s)  
+
+----np=1
+setupInterpolation: grid=0, total numInterp=296 (from mask)
+setupInterpolation: grid=1, total numInterp=208 (from mask)
+setupInterpolation: estimated total number of interp pts =504 (all grids, from mask)
+cice2.order4.ng3/square///extrapInterpNeighbours                                            : err = 1.50e-05, cpu=0.0e+00(s)  
+cice2.order4.ng3/Annulus///extrapInterpNeighbours                                           : err = 1.33e-15, cpu=0.0e+00(s)  
+
+***************************************************************************
+****** Thurs Jan 8, 2026
+
+**BUG FIXED** When interpolating, no need to check status on whether point can be extrapolated.
+
+
+mpiexec -n 3 ./testExtrapInterpNeighbours -g=cice2.order2 -useNew=1 -interpolateNeighbours=1 -debug=0
+
+
+
+mpiexec -n 3 xterm -e gdb -ex run --args ./testExtrapInterpNeighbours -g=cice2.order2 -useNew=1 -interpolateNeighbours=1
+
+
+
+
+
+
+mpiexec -n 3 ./testExtrapInterpNeighbours -g=cice2.order2 -useNew=1 -interpolateNeighbours=1 -debug=3
+
+np=3: BIG errors **FIX ME**
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -np=3 %%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+AssignInterpNeighbours: output written to debug file finNP3p0.debug
+AssignInterpNeighbours::   ***ENTERING***   setupInterpolation, np=3 
+setupInterpolation:myid=0, grid=0, num-interp-this-processor=21 (from mask)
+setupInterpolation:myid=1, grid=0, num-interp-this-processor=120 (from mask)
+setupInterpolation:myid=2, grid=0, num-interp-this-processor=25 (from mask)
+setupInterpolation: grid=0, total numInterp=0 (from mask)
+setupInterpolation:myid=0, grid=1, num-interp-this-processor=31 (from mask)
+setupInterpolation: grid=0, total numInterp=0 (from mask)
+setupInterpolation:myid=0, totalNumberOfInterpolationPoints=202, numInterp=52 (total this processor)
+setupInterpolation: estimated total number of interp pts =261 (all grids, from mask)
+setupInterpolation:myid=1, grid=1, num-interp-this-processor=33 (from mask)
+setupInterpolation:myid=1, totalNumberOfInterpolationPoints=202, numInterp=153 (total this processor)
+setupInterpolation:myid=2, grid=1, num-interp-this-processor=31 (from mask)
+setupInterpolation:myid=2, totalNumberOfInterpolationPoints=202, numInterp=56 (total this processor)
+Grid square: After findInterpNeighbours: total number of interp. neighbours (all procs)=112
+
+ >>> grid=square: findInterpolationNeighbours:opt: numberOfInterpolationNeighbours=3 (myid=0)
+
+ >>> grid=square: findInterpolationNeighbours:opt: numberOfInterpolationNeighbours=98 (myid=1)
+
+ >>> grid=square: findInterpolationNeighbours:opt: numberOfInterpolationNeighbours=11 (myid=2)
+Grid Annulus: After findInterpNeighbours: total number of interp. neighbours (all procs)=84
+
+ >>> grid=Annulus: findInterpolationNeighbours:opt: numberOfInterpolationNeighbours=28 (myid=0)
+
+ >>> grid=Annulus: findInterpolationNeighbours:opt: numberOfInterpolationNeighbours=29 (myid=1)
+
+ >>> grid=Annulus: findInterpolationNeighbours:opt: numberOfInterpolationNeighbours=27 (myid=2)
+>> INFO : estimatedNumberOfInterpolationNeighbours=178, totalNumberOfInterpolationNeighbours=196 (all procs)
+AssignInterpNeighbours::setupInterpolation: ALL neighbours were successfully interpolated (interpWidth=3).
+assignInterpolationNeighbours: DONE setupInterpolation. Now interpolate.
+assignInterpolationNeighbours: DONE interpolator.interpolatePoints. Now fill in values into array u.
+assignInterpolationNeighbours: DONE fill u, now updateParallelGhost and periodicUpdate
+interpNeighbours: 31 pts interpolated max error =2.01e-05 
+DONE interpNeighbours.assignInterpolationNeighbours
+ TEIN: myid=0 Error is large for neighbour pt j=(26,39,0) mask(j)=0 u=9.999000e+03 ue=2.750000e-01 err=1.00e+04
+     : grid=0, disc. pt i=(24,37,0) mask(i)=1
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -np=2 %%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+AssignInterpNeighbours: output written to debug file finNP2p0.debug
+AssignInterpNeighbours::   ***ENTERING***   setupInterpolation, np=2 
+setupInterpolation:myid=1, grid=0, num-interp-this-processor=65 (from mask)
+setupInterpolation:myid=0, grid=0, num-interp-this-processor=63 (from mask)
+setupInterpolation: grid=0, total numInterp=0 (from mask)
+setupInterpolation:myid=1, grid=1, num-interp-this-processor=46 (from mask)
+setupInterpolation:myid=0, grid=1, num-interp-this-processor=45 (from mask)
+setupInterpolation: grid=0, total numInterp=0 (from mask)
+setupInterpolation:myid=0, totalNumberOfInterpolationPoints=202, numInterp=108 (total this processor)
+setupInterpolation: estimated total number of interp pts =219 (all grids, from mask)
+setupInterpolation:myid=1, totalNumberOfInterpolationPoints=202, numInterp=111 (total this processor)
+Grid square: After findInterpNeighbours: total number of interp. neighbours (all procs)=112
+
+ >>> grid=square: findInterpolationNeighbours:opt: numberOfInterpolationNeighbours=55 (myid=0)
+
+ >>> grid=square: findInterpolationNeighbours:opt: numberOfInterpolationNeighbours=57 (myid=1)
+Grid Annulus: After findInterpNeighbours: total number of interp. neighbours (all procs)=84
+
+ >>> grid=Annulus: findInterpolationNeighbours:opt: numberOfInterpolationNeighbours=42 (myid=0)
+
+ >>> grid=Annulus: findInterpolationNeighbours:opt: numberOfInterpolationNeighbours=42 (myid=1)
+>> INFO : estimatedNumberOfInterpolationNeighbours=262, totalNumberOfInterpolationNeighbours=196 (all procs)
+AssignInterpNeighbours::setupInterpolation: ALL neighbours were successfully interpolated (interpWidth=3).
+assignInterpolationNeighbours: DONE setupInterpolation. Now interpolate.
+assignInterpolationNeighbours: DONE interpolator.interpolatePoints. Now fill in values into array u.
+assignInterpolationNeighbours: DONE fill u, now updateParallelGhost and periodicUpdate
+interpNeighbours: 97 pts interpolated max error =2.01e-05 
+DONE interpNeighbours.assignInterpolationNeighbours
+cice2.order2/square///extrapInterpNeighbours                                                : err = 2.01e-05, cpu=0.0e+00(s)  
+cice2.order2/Annulus///extrapInterpNeighbours                                               : err = 6.66e-16, cpu=0.0e+00(s)  
+
+
+%%%%%%%%%%%%%%%%%%%%%% -np=1 %%%%%%%%%%%%%%%%%%%%%
+
+AssignInterpNeighbours: output written to debug file finNP1p0.debug
+AssignInterpNeighbours::   ***ENTERING***   setupInterpolation, np=1 
+setupInterpolation:myid=0, grid=0, num-interp-this-processor=120 (from mask)
+setupInterpolation: grid=0, total numInterp=0 (from mask)
+setupInterpolation:myid=0, grid=1, num-interp-this-processor=87 (from mask)
+setupInterpolation: grid=0, total numInterp=0 (from mask)
+setupInterpolation:myid=0, totalNumberOfInterpolationPoints=202, numInterp=207 (total this processor)
+setupInterpolation: estimated total number of interp pts =207 (all grids, from mask)
+Grid square: After findInterpNeighbours: total number of interp. neighbours (all procs)=112
+
+ >>> grid=square: findInterpolationNeighbours:opt: numberOfInterpolationNeighbours=112 (myid=0)
+Grid Annulus: After findInterpNeighbours: total number of interp. neighbours (all procs)=84
+
+ >>> grid=Annulus: findInterpolationNeighbours:opt: numberOfInterpolationNeighbours=84 (myid=0)
+>> INFO : estimatedNumberOfInterpolationNeighbours=410, totalNumberOfInterpolationNeighbours=196 (all procs)
+AssignInterpNeighbours::setupInterpolation: ALL neighbours were successfully interpolated (interpWidth=3).
+assignInterpolationNeighbours: DONE setupInterpolation. Now interpolate.
+assignInterpolationNeighbours: DONE interpolator.interpolatePoints. Now fill in values into array u.
+assignInterpolationNeighbours: DONE fill u, now updateParallelGhost and periodicUpdate
+interpNeighbours: 196 pts interpolated max error =2.01e-05 
+DONE interpNeighbours.assignInterpolationNeighbours
+cice2.order2/square///extrapInterpNeighbours                                                : err = 2.01e-05, cpu=0.0e+00(s)  
+cice2.order2/Annulus///extrapInterpNeighbours                                               : err = 6.66e-16, cpu=0.0e+00(s)  
+
+
+
+***************************************************************************
+****** Wed Jan 7, 2026
+
+
+
+Look for a simpler case that fails...
+mpirun -np 6 ./testExtrapInterpNeighbours -g=cice2.order2 -useNew=1 -interpolateNeighbours=1
+
+np=3: BIG errors **FIX ME**
+
+np=1,2 : OK
+
+Ok
+mpirun -np 6 ./testExtrapInterpNeighbours -g=sise2.order2 -useNew=1 -interpolateNeighbours=1
+
+
+OK:
+mpirun -np 6 ./testExtrapInterpNeighbours -g=twoSquarese2.order2.hdf -useNew=1 -interpolateNeighbours=1
+
+
+THIS HANGS
+mpirun -np 6 ./testExtrapInterpNeighbours -g=cice4.order2 -useNew=1 -interpolateNeighbours=1
+
+
+
+***************************************************************************
+****** Mon/Tues Jan 5/6, 2026
+
+FIX AssignInterpNeighbours --
+
+BUGS FIXED 
+
+THIS HANGS
+mpirun -np 6 ./testExtrapInterpNeighbours -g=cice4.order2 -useNew=1 -interpolateNeighbours=1
+
+
+mpirun -np 3 ./testExtrapInterpNeighbours -g=cice4.order2 -useNew=1 -interpolateNeighbours=1
+
+cice4.order2/square///extrapInterpNeighbours                                                : err = 3.29e-06, cpu=0.0e+00(s)  
+cice4.order2/Annulus///extrapInterpNeighbours                                               : err = 6.66e-16, cpu=0.0e+00(s)  
+
+
+ ************************************************************************************************
+ ************** Test apparently successful, worst error =3.29e-06 ******************
+ **************************************************************************************************
+
+
+mpirun -np 2 ./testExtrapInterpNeighbours -g=sise2.order2 -useNew=1 -interpolateNeighbours=1
+
+
+mpiexec -n 3 xterm -e gdb -ex run --args ./testExtrapInterpNeighbours -g=sise2.order2 -useNew=1 -interpolateNeighbours=1
+
+mpiexec -n 3 ./testExtrapInterpNeighbours -g=sise2.order2 -useNew=1 -interpolateNeighbours=1
+
+mpiexec -n 3  ./testExtrapInterpNeighbours -g=sise2.order2 -useNew=1 -interpolateNeighbours=1
+
+
+TROUBLE HERE:
+
+mpiexec -n 1 ./testExtrapInterpNeighbours -g=sise2.order2 -useNew=1 -interpolateNeighbours=1 -debug=3
+
+
+
+mpiexec -n 3 xterm -e gdb -ex run --args ./testExtrapInterpNeighbours -g=cice4.order2 -useNew=1 -interpolateNeighbours=1
+
+mpirun -np 3 ./testExtrapInterpNeighbours -g=cice4.order2 -useNew=1 -interpolateNeighbours=1
+
+
+ #### AssignInterpNeighbours::setupInterpolation:WARNING: FIX ME FOR PARALLEL #####
+
+
+ #### AssignInterpNeighbours::setupInterpolation:WARNING: FIX ME FOR PARALLEL #####
+
+
+ #### AssignInterpNeighbours::setupInterpolation:WARNING: FIX ME FOR PARALLEL #####
+
+Abort(805463310) on node 0 (rank 0 in comm 0): Fatal error in internal_Test: Message truncated, error stack:
+internal_Test(91)........: MPI_Test(request=0x7ffd025b8ba4, flag=0x7ffd025b871c, status=0x7ffd025b8720) failed
+MPIR_Test(325)...........: 
+MPIDIG_recv_type_init(72): Message from rank 2 and tag 250413 truncated; 176 bytes received but buffer size is 2640
+Abort(872572174) on node 2 (rank 2 in comm 0): Fatal error in internal_Test: Message truncated, error stack:
+internal_Test(91)........: MPI_Test(request=0x7fff769a4334, flag=0x7fff769a3eac, status=0x7fff769a3eb0) failed
+MPIR_Test(325)...........: 
+MPIDIG_recv_type_init(72): Message from rank 0 and tag 580217 truncated; 176 bytes received but buffer size is 2640
+
+
+OK: 
+mpirun -np 1 ./testExtrapInterpNeighbours -g=sise2.order2 -useNew=1 -interpolateNeighbours=1
+
+
+OK: 
+mpirun -np 1 ./testExtrapInterpNeighbours -g=cice2.order2 -useNew=1 -interpolateNeighbours=1
+
+
+OK: 
+mpirun -np 1 ./testExtrapInterpNeighbours -g=cice2.order2 -useNew=1
+
+
+CHECK BUG IN ASSIGN INTERP NEIGHBOURS:
+HANGS: np=3, np=8
+mpiexec -n 3 $cgwh -noplot scat.cmd -g=cice4.order2 -ts=explicit -cfl=0.95 -nf=1 -amp=1 -kx=4 -ky=0 -kz=0 -adjustOmega=1 -orderInTime=2 -solver=none -tol=1e-11  -maxIterations=200 -numPeriods=4 -filterTimeDerivative=1 -damp=0  -bc=d -bc1=a -bc2=a -bc3=a -bc4=a -implicitUpwind=0 -debug=0 -show=junk.show -maxIterations=100 -upwind=1 -adjustHelmholtzForUpwinding=1 -filterD0t=1 -solverh=gmres -iluh=200 -rtolh=1e-10 -atolh=1e-10 -go=og
+
+#### AssignInterpNeighbours::setupInterpolation:WARNING: FIX ME FOR PARALLEL #####
+
+
+
+***************************************************************************
 ****** Sat July 9, 2022
 
 TEST HYPRE
