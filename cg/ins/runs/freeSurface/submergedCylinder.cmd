@@ -40,6 +40,9 @@ $iluLevels=1; $ogesDebug=0;
 $rtolp=1.e-4; $atolp=1.e-5;  # tolerances for the pressure solve
 $rtol=1.e-4; $atol=1.e-5;    # tolerances for the implicit solver
 $bc="a"; 
+$u0=1.; 
+$ua=0.1; $ub=1.;   # inflow velocity (ramped) -- work in progress
+$ta=0.; $tb=1;     # ramp times
 $surfaceTension=.1; $pAtmosphere=0.;
 $smoothSurface=1; $numberOfSurfaceSmooths=3;
 $freeSurfaceOption="none"; 
@@ -55,7 +58,7 @@ $surfacePredictor="leap-frog";
 # ----------------------------- get command line arguments ---------------------------------------
 GetOptions( "g=s"=>\$grid,"tf=f"=>\$tFinal,"degreex=i"=>\$degreex, "degreet=i"=>\$degreet, "model=s"=>\$model,\
  "tp=f"=>\$tPlot,"solver=s"=>\$solver,"psolver=s"=>\$psolver, "tz=s"=>\$tz, "show=s"=>\$show,\
- "order=i"=>\$order,"debug=i"=>\$debug, \
+ "order=i"=>\$order,"debug=i"=>\$debug,"u0=f"=>\$u0,"ua=f"=>\$ua,"ub=f"=>\$ub, \
  "ts=s"=>\$ts,"nu=f"=>\$nu,"cfl=f"=>\$cfl, "bg=s"=>\$backGround,"fullSystem=i"=>\$fullSystem, "go=s"=>\$go,\
  "noplot=s"=>\$noplot,"dtMax=f"=>\$dtMax,"project=i"=>\$project,"rf=i"=> \$refactorFrequency,"bcn=s"=>\$bcn,\
  "iv=s"=>\$implicitVariation,"dtMax=f"=>\$dtMax,"ad2=i"=>\$ad2,"ad22=f"=>\$ad22,"imp=f"=>\$implicitFactor,\
@@ -217,13 +220,64 @@ $cmds
 #-    exit
 # 
   boundary conditions
-    $u=1.; $T=1.; 
+    $T=1.; 
+    $ua=$u0; $ub=$u0; # do this for now 
     bcNumber5=noSlipWall, uniform(T=$T)
-    all=$bcn, uniform(T=$T)
+    #
+    all=$bcn, uniform(p=1)
     bcNumber4=freeSurfaceBoundaryCondition
-    bcNumber1=inflowWithVelocityGiven, uniform(u=$u,T=0.)
+    bcNumber1=inflowWithVelocityGiven, uniform(u=$ub,p=1)
+    # 
+    # bcNumber1=inflowWithVelocityGiven, ramp(ta=0.,tb=1.,ua=$ua,ub=$ub,va=0.,..)
+    # bcNumber1=inflowWithVelocityGiven, uniform(u=$ub,p=1), ramp(ta=0.,tb=1.,ua=$ua,ub=$ub,va=0.,..), userDefinedBoundaryData
+#
+#     $cmd="bcNumber1=inflowWithVelocityGiven, uniform(u=$ub,T=$T)";
+#     #
+#     bcNumber1=inflowWithVelocityGiven, parabolic(d=5.0, p=1.,u=$ua,T=$T), userDefinedBoundaryData
+#     $halfH=0.2;
+# #    bcNumber1=inflowWithVelocityGiven, parabolic(d=$halfH, p=1.,u=$uIn,T=$Tin)
+#      bcNumber1=inflowWithVelocityGiven, parabolic(d=$halfH, p=1.,u=$ua,p=1), userDefinedBoundaryData
+#      time function option
+#        ramp function
+#        ramp end values: 0,1 (start,end)
+#        ramp times: 0,1 (start,end)
+#        # ramp-order = number of time derivatives that are zero at ends
+#        ramp order: 3
+#      done
+#     done 
+#     done
+    #
+     # done
+    #
+    #  bcNumber1=inflowWithVelocityGiven, parabolic(d=0.5, p=1.,u=$ua,T=$T), userDefinedBoundaryData
+    #  time function option
+    #    ramp function
+    #    ramp end values: 0,1 (start,end)
+    #    ramp times: 0,1 (start,end)
+    #    # ramp-order = number of time derivatives that are zero at ends
+    #    ramp order: 3
+    #  exit
+    # done
+    # pause
+# 
+    # $bcOption="rampedVelocity";
+    # if( $bcOption eq "rampedVelocity" ){ \
+    #   $cmd="bcNumber1=inflowWithVelocityGiven, uniform(u=$ua,v=0,p=1), userDefinedBoundaryData\n" . \
+    #        "time function option\n" . \
+    #        " ramp function\n" . \
+    #        "   ramp end values: 0,1 (start,end)\n". \
+    #        "   ramp times: $ta,$tb (start,end)\n" .\
+    #        "   ramp order: 3\n" . \
+    #        "  exit\n" . \
+    #        "done\n"; };
+    # if( $bcOption eq "rampedVelocity" ){ \
+    #   $cmd="bcNumber1=inflowWithVelocityGiven, uniform(u=$ua,v=0,p=1), ramp(ta=$ta,tb=$tb,ua=$ua,ub=$ub,va=0.,vb=1.0,..), userDefinedBoundaryData\n" };
+    # #   
+    # $cmd
+    # pause 
+    #
 #    bcNumber2=outflow
-    bcNumber3=slipWall
+   bcNumber3=slipWall
    bcNumber2=outflow ,  pressure(1.*p+0.1*p.n=0.), userDefinedBoundaryData
    # set the pressure at outflow to a linear profile.
     # p = p0*(y-y1)/(y0-y1) + p1*(y-y0)/(y1-y0). (linear function: p(y0)=p0, p(y1)=p1).
@@ -243,7 +297,7 @@ $cmds
   done
 # 
   initial conditions
-   if( $tz eq "turn off twilight zone" ){ $ic = "uniform flow\n p=1., u=$u, T=0. \n done";}else{ $ic = "done"; }
+   if( $tz eq "turn off twilight zone" ){ $ic = "uniform flow\n p=1., u=$ua, T=0. \n done";}else{ $ic = "done"; }
    $ic 
   done
   debug $debug

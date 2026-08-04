@@ -850,7 +850,7 @@ inline void glDrawBuffer( GLenum mode ){};
 inline void glReadBuffer( GLenum mode ){};
 inline void glEnable( GLenum cap ){};
 inline void glDisable( GLenum cap ){};
-inline GLboolean glIsEnabled( GLenum cap ){};
+inline GLboolean glIsEnabled( GLenum cap ){return false;};
 inline void glEnableClientState( GLenum cap ){};  /* 1.1 */
 inline void glDisableClientState( GLenum cap ){};  /* 1.1 */
 inline void glGetBooleanv( GLenum pname, ... ){};
@@ -861,9 +861,9 @@ inline void glPushAttrib( GLbitfield mask ){};
 inline void glPopAttrib( void ){};
 inline void glPushClientAttrib( GLbitfield mask ){};  /* 1.1 */
 inline void glPopClientAttrib( void ){};  /* 1.1 */
-inline GLint glRenderMode( GLenum mode ){};
-inline GLenum glGetError( void ){};
-inline const GLubyte * glGetString( GLenum name ){};
+inline GLint glRenderMode( GLenum mode ){return 0;};
+inline GLenum glGetError( void ){ return 0;};
+inline const GLubyte * glGetString( GLenum name ){ return NULL; };
 inline void glFinish( void ){};
 inline void glFlush( void ){};
 inline void glHint( GLenum target, ... ){};
@@ -890,9 +890,9 @@ inline void glScaled( GLdouble x, ... ){};
 inline void glScalef( GLfloat x, ... ){};
 inline void glTranslated( GLdouble x, ... ){};
 inline void glTranslatef( GLfloat x, ... ){};
-inline GLboolean glIsList( GLuint list ){};
+inline GLboolean glIsList( GLuint list ){ return false;};
 inline void glDeleteLists( GLuint list, ... ){};
-inline GLuint glGenLists( GLsizei range ){};
+inline GLuint glGenLists( GLsizei range ){ return 0; };
 inline void glNewList( GLuint list, ... ){};
 inline void glEndList( void ){};
 inline void glCallList( GLuint list ){};
@@ -1118,8 +1118,8 @@ inline void glGenTextures( GLsizei n, ... ){};
 inline void glDeleteTextures( GLsizei n, ... ){};
 inline void glBindTexture( GLenum target, ... ){};
 inline void glPrioritizeTextures( GLsizei n, ... ){};
-inline GLboolean glAreTexturesResident( GLsizei n, ... ){};
-inline GLboolean glIsTexture( GLuint texture ){};
+inline GLboolean glAreTexturesResident( GLsizei n, ... ){return false;};
+inline GLboolean glIsTexture( GLuint texture ){return false;};
 inline void glTexSubImage1D( GLenum target, ... ){};
 inline void glTexSubImage2D( GLenum target, ... ){};
 inline void glCopyTexImage1D( GLenum target, ... ){};

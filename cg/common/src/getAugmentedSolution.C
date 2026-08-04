@@ -245,6 +245,15 @@ getAugmentedSolution( GridFunction & gf0, realCompositeGridFunction & v )
   checkArrayIDs(sPrintF("getAugmentedSolution: near end") ); 
 
   realCompositeGridFunction & ur = plotMoreComponents ? v : gf[current].u;
+
+  // if( 1==1 ) // 2026
+  // {
+  //   printF("DomainSolver::getAugmentedSolution: plotMoreComponents=%d\n",(int)plotMoreComponents);
+  //   GridCollection *pgc = ur.getGridCollection(false);  
+
+  //   printF("\n CCCCCCCCC DomainSolver::getAugmentedSolution: check for the gridCollection, ur.getGridCollection=%ld CCCCCCCCC\n\n",pgc);    
+
+  // }
 //   if( true ) // *wdh* 060228
 //   {
 //     gf0.u.display("\n\n getAugmentedSolution: gf0.u","%5.2f ");

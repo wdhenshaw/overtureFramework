@@ -31,6 +31,7 @@
 #  ogen -noplot submergedCylinderGrid -interp=e -xa=-4 -xb=9 -factor=4 -ml=1
 #  
 #
+$prefix = "submergedCylinderGrid"; 
 $amp=.0; $freq=1.; $periodic="n"; 
 $factor=1; $name="";  $ml=0; 
 $interp="i"; $interpType = "implicit for all grids"; 
@@ -41,9 +42,9 @@ $cx=0.; $cy=-1.; # center of the cylinder
 $freeSurfaceShare=100; # share value for free surface
 # 
 # get command line arguments
-GetOptions("name=s"=> \$name,"order=i"=>\$order,"factor=f"=>\$factor,"interp=s"=> \$interp,"case=s"=>\$case,\
+GetOptions("prefix=s"=> \$prefix,"order=i"=>\$order,"factor=f"=>\$factor,"interp=s"=> \$interp,"case=s"=>\$case,\
            "xa=f"=>\$xa,"xb=f"=>\$xb,"ya=f"=>\$ya,"yb=f"=>\$yb,"nExtra=i"=>\$nExtra,"factor2=f"=>\$factor2,\
-           "amp=f"=>\$amp,"freq=f"=>\$freq,"ml=i"=>\$ml,"periodic=s"=>\$periodic );
+           "amp=f"=>\$amp,"freq=f"=>\$freq,"ml=i"=>\$ml,"periodic=s"=>\$periodic,"cx=f"=>\$cx,"cy=f"=>\$cy );
 #
 # 
 if( $order eq 4 ){ $orderOfAccuracy="fourth order"; $ng=2; }\
@@ -53,7 +54,6 @@ if( $interp eq "e" ){ $interpType = "explicit for all grids"; }
 $suffix = ".order$order"; 
 if( $periodic eq "p" ){ $suffix .= ".p"; }
 if( $ml ne 0 ){ $suffix .= ".ml$ml"; }
-$prefix = "submergedCylinderGrid"; 
 if( $name eq "" ){$name = $prefix . "$interp$factor" . $suffix . ".hdf";}
 #
 # -- convert a number so that it is a power of 2 plus 1 --

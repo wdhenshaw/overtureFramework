@@ -7,6 +7,88 @@ set ogmgt = /home/liuc10/overtureFramework/Overture/ogmg/ogmgt
 set ogmgp = $ogmg/ogmgt
 
 
+
+****************************
+****** Sat Feb 28, 2026
+
+- MOVED check dir to checkOgmg
+- added make check and make check-quiet to main Makefile
+
+
+
+cg66:~/overtureFramework/Overture/ogmg> make check-quiet
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,
+========================================================
+============ ogmgt: All 24 tests successful =========
+========================================================
+
+
+
+make check --> has 4 errors
+
+running:  ../ogmgt noplot ./../cmd/singular.cmd -noplot -g=square32p.order2.hdf -nullVector=square32p.order2NullVector.hdf -predefined=0  > square32p2.out
+checkCheckFiles: files do not agree, maxDiff=2.000000e-04, file1=ogmg.check, file2=square32p2.check
+ Component 1: values: 3.8700e-02 (file1) and 3.8900e-02 (file2) differ by 2.00e-04.
+
+ ++++ The check files for "square32p2" do not agree +++++
+
+
+****************************
+****** Fri Feb 27, 2026
+
+START FIX FOR ORDER-4 WAVEHOLTZ IMPLICIT TIME-STEPPING
+
+ogmgt tz -noplot -g=square1024.order4 -autoChoose=1 -maxIt=9 -orderCoarse=2 -eqn=heat -debug=1
+
+Discrete boundary conditions: B=boundary, G1=ghost-1, G2=ghost-2, extrapN=extrap to order N
+  Dirichlet: l=0 : B=D,    G1=extrap4 , G2=extrap4 
+           : l>0 : B=D,    G1=extrap4 , G2=extrap4 
+  Neumann  : l=0 : B=PDE,  G1=N4      , G2=extrap5 
+           : l>0 : B=PDE,  G1=N2      , G2=N2      
+ Corner BC: l=0 : taylor4  , l>0 taylor4  
+
+ 
+Laplace:
+ogmgt tz -noplot -g=square1024.order4 -autoChoose=1 -maxIt=9 -orderCoarse=2 -debug=1
+
+Equation: Laplace.
+ Boundary conditions (Dirichlet/Neumann/mixed, etc.) set by user = 1.
+
+Discrete boundary conditions: B=boundary, G1=ghost-1, G2=ghost-2, extrapN=extrap to order N
+  Dirichlet: l=0 : B=D,    G1=PDE2    , G2=extrap4 
+           : l>0 : B=D,    G1=PDE2    , G2=extrap4 
+  Neumann  : l=0 : B=PDE,  G1=N4      , G2=PDE.n2  
+           : l>0 : B=PDE,  G1=N2      , G2=N2      
+
+
+
+
+ogmgt tz -noplot -g=square1024.order4 -autoChoose=1 -maxIt=9 -orderCoarse=2 -debug=0 -omega=1.05 -bsm=rb -bs=rb -nsm="2 1" -matlab=1
+
+
+****************************
+****** Tues Feb 10, 2024
+
+PARALLEL
+
+mpirun -np 2 $ogmgt tz -noplot -g=sise8.order2 -autoChoose=1 -maxIt=9 -orderCoarse=2 -debug=1 -ssr=0 -eqn=heat
+
+Iteration=1..9 : Total WU=4.93e+01, total res reduction=2.30e-14, ave CR=0.0305 ave ECR=0.529 np=2
+Iteration=1..9 : Total WU=4.93e+01, total res reduction=2.29e-14, ave CR=0.0305 ave ECR=0.529 np=1
+
+
+
+$ogmgt tz -noplot -g=sise8.order2 -autoChoose=1 -maxIt=9 -orderCoarse=2 -debug=1 -ssr=0 -eqn=heat
+
+Iteration=1..8 : Total WU=4.43e+01, total res reduction=4.77e-14, ave CR=0.0216 ave ECR=0.500 np=1
+
+$ogmgt tz -noplot -g=sise4.order2 -autoChoose=1 -maxIt=9 -orderCoarse=2 -debug=1 -ssr=0 -eqn=heat
+
+Iteration=1..8 : Total WU=4.59e+01, total res reduction=4.06e-14, ave CR=0.0212 ave ECR=0.511 np=1
+
+
+$ogmgt tz -noplot -g=darkCornerRoomGride16.order4.ml3.hdf -autoChoose=1 -eqn=heat -ssr=0  -orderCoarse=2 -debug=1 
+
 ****************************
 ****** Sun July 21, 2024
 

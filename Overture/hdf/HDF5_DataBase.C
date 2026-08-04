@@ -2989,6 +2989,8 @@ get( floatSerialArray &x, const aString &name, Index *Iv /* =NULL */ ) const
         if( issueWarnings )
             printf("HDF_DataBase:ERROR:get(floatSerialArray): cannot get entry with name = %s (directory=%s)\n",
                       (const char*)name,(const char*)fullGroupPath);
+    // *wdh* Jan 26, 2026 -- close these. Other-wise there can be an error later in closing the DataBase
+        H5Gclose(groupID);
         return 1;
     }
     hid_t dataspace = H5Dget_space(datasetID);
@@ -3170,6 +3172,8 @@ get( doubleSerialArray &x, const aString &name, Index *Iv /* =NULL */ ) const
         if( issueWarnings )
             printf("HDF_DataBase:ERROR:get(doubleSerialArray): cannot get entry with name = %s (directory=%s)\n",
                       (const char*)name,(const char*)fullGroupPath);
+    // *wdh* Jan 26, 2026 -- close these. Other-wise there can be an error later in closing the DataBase
+        H5Gclose(groupID);
         return 1;
     }
     hid_t dataspace = H5Dget_space(datasetID);
@@ -3351,6 +3355,8 @@ get( intSerialArray &x, const aString &name, Index *Iv /* =NULL */ ) const
         if( issueWarnings )
             printf("HDF_DataBase:ERROR:get(intSerialArray): cannot get entry with name = %s (directory=%s)\n",
                       (const char*)name,(const char*)fullGroupPath);
+    // *wdh* Jan 26, 2026 -- close these. Other-wise there can be an error later in closing the DataBase
+        H5Gclose(groupID);
         return 1;
     }
     hid_t dataspace = H5Dget_space(datasetID);

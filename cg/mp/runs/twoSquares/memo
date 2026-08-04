@@ -1,6 +1,27 @@
 
 
 *****************************************
+*********  Mon Aug 3, 2026
+
+RETURN TO CHT 
+
+TROUBLE SAVING A SHOW FILE FOR OTHER EXAMPLES.
+
+But this works: 
+cgmp aa -g=twoSquaresInterfacee1.order2.hdf -kappa1=1. -ktc1=1. -kappa2=.5 -ktc2=.5 -tf=.05 -tp=.01 -show=twoSquaresHeated.show
+
+ ============= Cgmp::saveShow for domain 0 (leftDomain) ==================
+solidA:*** saveShow:   saveAugmentedSolutionToShowFile ***
+***Save grid in the show file: numberOfComponentGrids=1
+ ++++++++++ save control sequences ? 
+
+ ============= Cgmp::saveShow for domain 1 (rightDomain) ==================
+solidB:*** saveShow:   saveAugmentedSolutionToShowFile ***
+***Save grid in the show file: numberOfComponentGrids=1
+ ++++++++++ save control sequences ? 
+
+
+*****************************************
 *********  Tues June 21, 2022
 
 TRY adaptive iterations: 

@@ -12,6 +12,9 @@ check:  buildGrids
 	ln -sf $(CG)/common/src/check.p .
 	check.p -solver=ogmgt
 
+check-quiet:  buildGrids
+	ln -sf $(CG)/common/src/check.p .
+	check.p -solver=ogmgt -verbose=0
 
 square64.order2.hdf:; ${Overture}/bin/ogen -noplot ${Overture}/sampleGrids/squareArg -nx=64
 
@@ -26,8 +29,6 @@ rhombus2.order4.ml2.hdf:; ${Overture}/bin/ogen -noplot ${Overture}/sampleGrids/r
 rhomboid2.order4.ml2.hdf:; ${Overture}/bin/ogen -noplot ${Overture}/sampleGrids/rhomboid.cmd -order=4 -factor=2 -ml=2
 
 valvee.hdf:; ${Overture}/bin/ogen -noplot ${Overture}/sampleGrids/valvee.cmd
-
-box32.hdf:; ${Overture}/bin/ogen -noplot ${Overture}/sampleGrids/box32.cmd
 
 sib.bbmg.hdf:; ${Overture}/bin/ogen -noplot ${Overture}/sampleGrids/sib.bbmg.cmd
 

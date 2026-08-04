@@ -89,10 +89,18 @@ saveShow( GridFunction & gf0 )
         Ogshow *domainShowSave = domainShow;
         domainShow=ogshow;  // the domain show file now points to the Cgmp show file
           
-        printF("\n ============= Cgmp::saveShow for domain %i (%s) ==================\n",d,
-               (const char*)cg.getDomainName(d));
+        printF("\n ============= Cgmp::saveShow for domain %i (%s) domainSolver[d]->current=%d ==================\n",d,
+               (const char*)cg.getDomainName(d),domainSolver[d]->current);
           
         GridFunction & ud = domainSolver[d]->gf[domainSolver[d]->current];
+
+        // if( 1==1 ) // Aug 3, 2026
+        // {
+        //    realCompositeGridFunction & ud = gf[domainSolver[d]->current].u;
+        //    GridCollection *pgc = ud.getGridCollection(false);  
+        //    printF("\n AAAAAAA CgMp::saveShow: check for the gridCollection, domain d=%d current=%d pgc=%ld AAAAA \n\n",d,domainSolver[d]->current,pgc);
+        // }
+
         domainSolver[d]->saveShow(ud);
           
         ogshow->saveParameters(dirName,frameSeriesParameters);

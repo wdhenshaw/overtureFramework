@@ -46,13 +46,13 @@ extern "C"
 // =====================================================================================================
 int
 xInterpolateOpt(int numberOfComponents,
-		const int *componentsToInterpolate_,
-		const real *positionToInterpolate_,
-		int *indexGuess_,
-		real *uInterpolated_, 
-		const realGridCollectionFunction & u,
-		const GridCollection & gc,
-		const int intopt)
+                const int *componentsToInterpolate_,
+                const real *positionToInterpolate_,
+                int *indexGuess_,
+                real *uInterpolated_, 
+                const realGridCollectionFunction & u,
+                const GridCollection & gc,
+                const int intopt)
 {
 
 #define componentsToInterpolate(i1) componentsToInterpolate_[i1]
@@ -151,8 +151,8 @@ xInterpolateOpt(int numberOfComponents,
       mrsab(axis,End  )=extendedIndexRange(End  ,axis);     
     }
     CGNRST(center.getBase(0),center.getBound(0),center.getBase(1),center.getBound(1),
-	   mrsab(0,0),center(center.getBase(0),center.getBase(1),center.getBase(2),0),
-	   x,y,ip,jp,distmn );
+           mrsab(0,0),center(center.getBase(0),center.getBase(1),center.getBase(2),0),
+           x,y,ip,jp,distmn );
     if( debug )
     {
       printf("xInterpolate: CGNRST: x=%e, y=%e, ip=%i, jp=%i \n",x,y,ip,jp);
@@ -172,19 +172,19 @@ xInterpolateOpt(int numberOfComponents,
       dy=y-CENTER(ip,jp,i3,axis2);
       if( jac==0 )
       { //...use rsxy array
-	dr=RX(ip,jp,i3,axis1,axis1)*dx+RX(ip,jp,i3,axis1,axis2)*dy;
-	ds=RX(ip,jp,i3,axis2,axis1)*dx+RX(ip,jp,i3,axis2,axis2)*dy;
-      }	  
+        dr=RX(ip,jp,i3,axis1,axis1)*dx+RX(ip,jp,i3,axis1,axis2)*dy;
+        ds=RX(ip,jp,i3,axis2,axis1)*dx+RX(ip,jp,i3,axis2,axis2)*dy;
+      }   
       else
       {// ...rsxy array is really xyrs
-	real deti=XR(ip,jp,i3,axis1,axis1)*XR(ip,jp,i3,axis2,axis2)-
-         	  XR(ip,jp,i3,axis1,axis2)*XR(ip,jp,i3,axis2,axis1);
-	if( deti==0. )
-	  cout << "xInterpolate:ERROR: det(x.r)==0 ! \n";
-	deti=1./deti;
-	    
-	dr=( XR(ip,jp,i3,axis2,axis2)*dx-XR(ip,jp,i3,axis1,axis2)*dy)*deti;
-	ds=(-XR(ip,jp,i3,axis2,axis1)*dx+XR(ip,jp,i3,axis1,axis1)*dy)*deti;
+        real deti=XR(ip,jp,i3,axis1,axis1)*XR(ip,jp,i3,axis2,axis2)-
+                  XR(ip,jp,i3,axis1,axis2)*XR(ip,jp,i3,axis2,axis1);
+        if( deti==0. )
+          cout << "xInterpolate:ERROR: det(x.r)==0 ! \n";
+        deti=1./deti;
+            
+        dr=( XR(ip,jp,i3,axis2,axis2)*dx-XR(ip,jp,i3,axis1,axis2)*dy)*deti;
+        ds=(-XR(ip,jp,i3,axis2,axis1)*dx+XR(ip,jp,i3,axis1,axis1)*dy)*deti;
       }
     }
     else 
@@ -193,22 +193,22 @@ xInterpolateOpt(int numberOfComponents,
       dy=y-CENTER(ip,jp,i3,axis2);
       if(jac==0)
       {// ...use rsxy array
-	dr=RX(ip,jp,i3,axis1,axis1)*dx+RX(ip,jp,i3,axis1,axis2)*dy;
-	ds=RX(ip,jp,i3,axis2,axis1)*dx+RX(ip,jp,i3,axis2,axis2)*dy;
+        dr=RX(ip,jp,i3,axis1,axis1)*dx+RX(ip,jp,i3,axis1,axis2)*dy;
+        ds=RX(ip,jp,i3,axis2,axis1)*dx+RX(ip,jp,i3,axis2,axis2)*dy;
       }
       else
       {//       ...rsxyc array is really xyrs
-	real deti=XR(ip,jp,i3,axis1,axis1)*XR(ip,jp,i3,axis2,axis2)-
-  	          XR(ip,jp,i3,axis1,axis2)*XR(ip,jp,i3,axis2,axis1);
-	if( deti==0. )
-	{
-	  cout << "xInterpolate:ERROR: det(x.r)==0 ! \n";
-	  printf(" centerDerivative=(%e,%e,%e,%e)\n",XR(ip,jp,i3,axis1,axis1),
-		 XR(ip,jp,i3,axis2,axis2), XR(ip,jp,i3,axis1,axis2),XR(ip,jp,i3,axis2,axis1));
-	}
-	deti=1./deti;
-	dr=( XR(ip,jp,i3,axis2,axis2)*dx-XR(ip,jp,i3,axis1,axis2)*dy)*deti;
-	ds=(-XR(ip,jp,i3,axis2,axis1)*dx+XR(ip,jp,i3,axis1,axis1)*dy)*deti;
+        real deti=XR(ip,jp,i3,axis1,axis1)*XR(ip,jp,i3,axis2,axis2)-
+                  XR(ip,jp,i3,axis1,axis2)*XR(ip,jp,i3,axis2,axis1);
+        if( deti==0. )
+        {
+          cout << "xInterpolate:ERROR: det(x.r)==0 ! \n";
+          printf(" centerDerivative=(%e,%e,%e,%e)\n",XR(ip,jp,i3,axis1,axis1),
+                 XR(ip,jp,i3,axis2,axis2), XR(ip,jp,i3,axis1,axis2),XR(ip,jp,i3,axis2,axis1));
+        }
+        deti=1./deti;
+        dr=( XR(ip,jp,i3,axis2,axis2)*dx-XR(ip,jp,i3,axis1,axis2)*dy)*deti;
+        ds=(-XR(ip,jp,i3,axis2,axis1)*dx+XR(ip,jp,i3,axis1,axis1)*dy)*deti;
       }
     }
 
@@ -228,10 +228,10 @@ xInterpolateOpt(int numberOfComponents,
     // ........periodic wrap
     if( (bool)gc[grid].isPeriodic(axis1) )
       if( fabs(dr)<1.5 )   // don't periodic wrap if we are a long way away
-	ip1=MODR(ip1,axis1);
+        ip1=MODR(ip1,axis1);
     if( (bool)gc[grid].isPeriodic(axis2) )
       if( fabs(ds)<1.5 )
-	jp1=MODR(jp1,axis2);
+        jp1=MODR(jp1,axis2);
       
     //.............Unable to interpolate if outside the current grid, but
     //             extrapolate (to zero order) if this is the closest point
@@ -245,19 +245,19 @@ xInterpolateOpt(int numberOfComponents,
       extrap=TRUE;
       if( distmn<dist || dist<0. )
       {
-	dist=distmn;
-	if(ip1<extendedIndexRange(Start,axis1) || ip1>extendedIndexRange(End,axis1))
-	  ip1=ip;
-	if(jp1<extendedIndexRange(Start,axis2) || jp1>extendedIndexRange(End,axis2))
-	  jp1=jp;
-	if( MASK(ip1,jp1)==0 ) 
-	{  // *wdh* 08108
-	  ip1=ip;
-	  jp1=jp;
-	}
+        dist=distmn;
+        if(ip1<extendedIndexRange(Start,axis1) || ip1>extendedIndexRange(End,axis1))
+          ip1=ip;
+        if(jp1<extendedIndexRange(Start,axis2) || jp1>extendedIndexRange(End,axis2))
+          jp1=jp;
+        if( MASK(ip1,jp1)==0 ) 
+        {  // *wdh* 08108
+          ip1=ip;
+          jp1=jp;
+        }
       }
       else
-	continue;    //  ....Unable to interpolate, try another grid
+        continue;    //  ....Unable to interpolate, try another grid
     }
     else
       extrap=FALSE;
@@ -292,8 +292,8 @@ xInterpolateOpt(int numberOfComponents,
     {
       int c0=componentsToInterpolate(n0);
       uInterpolated(n0)=
-	(1.-dsa)*((1.-dra)*UU(ip,jp ,i3,c0)+dra*UU(ip1,jp ,i3,c0))
-	 +  dsa *((1.-dra)*UU(ip,jp1,i3,c0)+dra*UU(ip1,jp1,i3,c0));
+        (1.-dsa)*((1.-dra)*UU(ip,jp ,i3,c0)+dra*UU(ip1,jp ,i3,c0))
+         +  dsa *((1.-dra)*UU(ip,jp1,i3,c0)+dra*UU(ip1,jp1,i3,c0));
     }
     // return the values used:
     indexGuess(0)=ip;
@@ -391,18 +391,18 @@ computeMaximumSpeed( const realGridCollectionFunction & uv, GridCollection & gc,
       int i1,i2,i3;
       FOR_3(i1,i2,i3,I1,I2,I3)
       {
-	if( MASK(i1,i2)!=0 && 
-	    COORD(i1,i2,i3,axis1) >= xa && COORD(i1,i2,i3,axis1) <= xb &&
-	    COORD(i1,i2,i3,axis2) >= ya && COORD(i1,i2,i3,axis2) <= yb )
-	{
-	  real speed=SQR(U(i1,i2,i3,uComponent))+SQR(U(i1,i2,i3,vComponent));
-	  if( speed > uMax )
-	    uMax=speed;
-	  else if( speed < uMin )
-	    uMin=speed;
-	}
+        if( MASK(i1,i2)!=0 && 
+            COORD(i1,i2,i3,axis1) >= xa && COORD(i1,i2,i3,axis1) <= xb &&
+            COORD(i1,i2,i3,axis2) >= ya && COORD(i1,i2,i3,axis2) <= yb )
+        {
+          real speed=SQR(U(i1,i2,i3,uComponent))+SQR(U(i1,i2,i3,vComponent));
+          if( speed > uMax )
+            uMax=speed;
+          else if( speed < uMin )
+            uMin=speed;
+        }
       }
-	      
+              
     }
   }
   uMax=sqrt(uMax);
@@ -421,10 +421,10 @@ computeMaximumSpeed( const realGridCollectionFunction & uv, GridCollection & gc,
 //! Draw all streamlines.
 void PlotIt::
 plotStreamLines(GenericGraphicsInterface &gi, const GridCollection & gc, 
-		const realGridCollectionFunction & uv, 
-		IntegerArray & componentsToInterpolate,
-		IntegerArray & maskForStreamLines_,
-		real arrowSize,
+                const realGridCollectionFunction & uv, 
+                IntegerArray & componentsToInterpolate,
+                IntegerArray & maskForStreamLines_,
+                real arrowSize,
                 GraphicsParameters & psp,
                 real & xa, real &ya, real & xb, real &yb, real &xba, real &yba, 
                 real &uMin, real &uMax, int &nrsmx,
@@ -439,7 +439,7 @@ plotStreamLines(GenericGraphicsInterface &gi, const GridCollection & gc,
   int indexGuessp[4]={1,1,0,0};
 
   glLineWidth(psp.size(GraphicsParameters::streamLineWidth)*psp.size(GraphicsParameters::lineWidth)*
- 		gi.getLineWidthScaleFactor());
+                gi.getLineWidthScaleFactor());
     
   for( int i=0; i<nxg; i++ )
   {
@@ -447,20 +447,20 @@ plotStreamLines(GenericGraphicsInterface &gi, const GridCollection & gc,
     {
       if( maskForStreamLines(i,j)==0 )  // no streamline has pass through this point
       {
-	real xtp=xa+xba*(i+.5)/nxg;  // ! starting point for streamline
-	real ytp=ya+yba*(j+.5)/nyg;
-	// first integrate backwards in time from this spot
-	real cfl=-.5;
-	drawAStreamLine(gi, gc, uv, &componentsToInterpolate(0), maskForStreamLines_, arrowSize, psp,
+        real xtp=xa+xba*(i+.5)/nxg;  // ! starting point for streamline
+        real ytp=ya+yba*(j+.5)/nyg;
+        // first integrate backwards in time from this spot
+        real cfl=-.5;
+        drawAStreamLine(gi, gc, uv, &componentsToInterpolate(0), maskForStreamLines_, arrowSize, psp,
                         ui, indexGuessp,
-			xa, ya,  xb, yb, xba, yba, uMin, uMax, cfl, nrsmx, nxg,  nyg, xtp, ytp,  intopt );
-	// ---  Now plot the streamline in the forward direction ---
-	xtp=xa+xba*(i+.5)/nxg;  
-	ytp=ya+yba*(j+.5)/nyg;
-	cfl= .5; 
-	drawAStreamLine(gi, gc, uv, &componentsToInterpolate(0), maskForStreamLines_, arrowSize, psp,
+                        xa, ya,  xb, yb, xba, yba, uMin, uMax, cfl, nrsmx, nxg,  nyg, xtp, ytp,  intopt );
+        // ---  Now plot the streamline in the forward direction ---
+        xtp=xa+xba*(i+.5)/nxg;  
+        ytp=ya+yba*(j+.5)/nyg;
+        cfl= .5; 
+        drawAStreamLine(gi, gc, uv, &componentsToInterpolate(0), maskForStreamLines_, arrowSize, psp,
                         ui, indexGuessp,
-			xa, ya,  xb, yb, xba, yba, uMin, uMax, cfl, nrsmx, nxg,  nyg,  xtp, ytp,  intopt );
+                        xa, ya,  xb, yb, xba, yba, uMin, uMax, cfl, nrsmx, nxg,  nyg,  xtp, ytp,  intopt );
 
       }
     }
@@ -483,10 +483,10 @@ plotStreamLines(GenericGraphicsInterface &gi, const GridCollection & gc,
 //=======================================================================
 void PlotIt:: 
 drawAStreamLine(GenericGraphicsInterface &gi, const GridCollection & gc, 
-		const realGridCollectionFunction & uv, 
-		int *componentsToInterpolate,
-		IntegerArray & maskForStreamLines_,
-		real arrowSize,
+                const realGridCollectionFunction & uv, 
+                int *componentsToInterpolate,
+                IntegerArray & maskForStreamLines_,
+                real arrowSize,
                 GraphicsParameters & psp,
                 real *uip, int *indexGuessp,
                 real & xa, real &ya, real & xb, real &yb, real &xba, real &yba, 
@@ -551,7 +551,7 @@ drawAStreamLine(GenericGraphicsInterface &gi, const GridCollection & gc,
     if( debug) printf("***Start a line x=%e, y=%e \n",x,y);
     
 //     glLineWidth(psp.size(GraphicsParameters::streamLineWidth)*psp.size(GraphicsParameters::lineWidth)*
-// 		gi.getLineWidthScaleFactor());
+//              gi.getLineWidthScaleFactor());
     if( glLines )
       glBegin(GL_LINES); 
     else
@@ -621,12 +621,12 @@ drawAStreamLine(GenericGraphicsInterface &gi, const GridCollection & gc,
       real uValue=(sqrt( SQR(UI(0))+SQR(UI(1)) )-uMin)*uvfact;
       if( psp.colourTable==GraphicsParameters::rainbow )
       {
-	index2 = min(max(int(uValue*255+.5),0),255);
-	if( index2!=index )
-	{
-	  index=index2;
-	  glColor3f(colourTable[index][0]/255.,colourTable[index][1]/255.,colourTable[index][2]/255.);
-	}
+        index2 = min(max(int(uValue*255+.5),0),255);
+        if( index2!=index )
+        {
+          index=index2;
+          glColor3f(colourTable[index][0]/255.,colourTable[index][1]/255.,colourTable[index][2]/255.);
+        }
       }
       else 
         gi.setColourFromTable( uValue,psp);
@@ -641,44 +641,44 @@ drawAStreamLine(GenericGraphicsInterface &gi, const GridCollection & gc,
       if( ixg>=0 && ixg<nxg && iyg>=0 && iyg<nyg )
       {
         if( ixg!=ixg0 || iyg!=iyg0 )
-	{
-	  // only 2 streamlines allowed per cell
-	  if( maskForStreamLines(ixg,iyg)>=2 )
-	    break;
-	  maskForStreamLines(ixg,iyg)++;
-	  ixg0=ixg;
-	  iyg0=iyg;
-	  if( maskForStreamLines(ixg,iyg)==1 &&  (ixg % lax)==0 && (iyg % lay)==0 )
-	  {
-	    // draw arrow ...   ** it did not make a big difference in cpu to turn these arrows off 
+        {
+          // only 2 streamlines allowed per cell
+          if( maskForStreamLines(ixg,iyg)>=2 )
+            break;
+          maskForStreamLines(ixg,iyg)++;
+          ixg0=ixg;
+          iyg0=iyg;
+          if( maskForStreamLines(ixg,iyg)==1 &&  (ixg % lax)==0 && (iyg % lay)==0 )
+          {
+            // draw arrow ...   ** it did not make a big difference in cpu to turn these arrows off 
             glEnd();   // end line so we can plot the arrow
 
             // real angle=atan2((double)UI(1),(double)UI(0))*180./Pi+90.;
             real xScale=XSCALE(x), yScale=YSCALE(y);
             real angle=atan2(double(UI(1)*psp.yScaleFactor),double(UI(0)*psp.xScaleFactor*aspectRatio))*180./Pi+90.;
             gi.setColour(GenericGraphicsInterface::textColour);  // arrow colour
-	    gi.xLabel("V",xScale,yScale,size,0,angle,psp);
+            gi.xLabel("V",xScale,yScale,size,0,angle,psp);
 
             glLineWidth(psp.size(GraphicsParameters::streamLineWidth)*
-			psp.size(GraphicsParameters::lineWidth)*
-			gi.getLineWidthScaleFactor());
+                        psp.size(GraphicsParameters::lineWidth)*
+                        gi.getLineWidthScaleFactor());
             if( glLines )
               glBegin(GL_LINES);   // restart the line
             else
               glBegin(GL_LINE_STRIP);   // restart the line
 
-	    real uValue=(sqrt( SQR(UI(0))+SQR(UI(1)) )-uMin)*uvfact;
-	    if( psp.colourTable==GraphicsParameters::rainbow )
-	    {
-	      index = min(max(int(uValue*255+.5),0),255);
-	      glColor3f(colourTable[index][0]/255.,colourTable[index][1]/255.,colourTable[index][2]/255.);
-	    }
-	    else 
-	      gi.setColourFromTable( uValue,psp);
+            real uValue=(sqrt( SQR(UI(0))+SQR(UI(1)) )-uMin)*uvfact;
+            if( psp.colourTable==GraphicsParameters::rainbow )
+            {
+              index = min(max(int(uValue*255+.5),0),255);
+              glColor3f(colourTable[index][0]/255.,colourTable[index][1]/255.,colourTable[index][2]/255.);
+            }
+            else 
+              gi.setColourFromTable( uValue,psp);
 
             glVertex2(xScale,yScale);
-	  }
-	}
+          }
+        }
       }
       //  try and check for closed loops, since we allow for 2 lines per cell we want
       // to prevent drawing a closed loop twice

@@ -97,7 +97,7 @@ userDefinedForcing( realArray & f, int iparam[], real rparam[] )
     {
       iv0[dir]=mg.gridIndexRange(0,dir);
       if( mg.isAllCellCentered() )
-	xab[0][dir]+=.5*dvx[dir];  // offset for cell centered
+      xab[0][dir]+=.5*dvx[dir];  // offset for cell centered
     }
   }
   // This macro defines the grid points for rectangular grids:
@@ -133,7 +133,7 @@ userDefinedForcing( realArray & f, int iparam[], real rparam[] )
       real t0   = gaussianParameters(7,m);
 
       if( false && t0 < 5.*dt )
-	printF("Gaussian source %i: setting a=%8.2e, beta=%8.2e, omega=%8.2e, p=%8.2e, x0=%8.2e, y0=%8.2e, "
+      printF("Gaussian source %i: setting a=%8.2e, beta=%8.2e, omega=%8.2e, p=%8.2e, x0=%8.2e, y0=%8.2e, "
                "z0=%8.2e, t0=%8.2e\n", m,a,beta,omega,p,x0,y0,z0,t0);
 
       const real cost=cos(2.*Pi*omega*(t-t0));
@@ -142,14 +142,14 @@ userDefinedForcing( realArray & f, int iparam[], real rparam[] )
       if( mg.numberOfDimensions()==2 )
       {
       
-	FOR_3D(i1,i2,i3,I1,I2,I3)
-	{
+      FOR_3D(i1,i2,i3,I1,I2,I3)
+      {
           real x= xLocal(i1,i2,i3,0), y=xLocal(i1,i2,i3,1);
           real rSq = SQR(x-x0)+SQR(y-y0);
-	  // real g = a*cost*exp( -beta*pow( rSq, p ) );
-	  real aExp = a*exp( -beta*pow( rSq, p ) );
-	  // real g = aExp*cost;
-	  real g = aExp*cost;
+        // real g = a*cost*exp( -beta*pow( rSq, p ) );
+        real aExp = a*exp( -beta*pow( rSq, p ) );
+        // real g = aExp*cost;
+        real g = aExp*cost;
           real rPow = p==1. ? 1 :  pow(rSq,p-1.);
 
           // *wdh* 2015/04/19 -- fixed to be divergence free for p!=1
@@ -163,49 +163,49 @@ userDefinedForcing( realArray & f, int iparam[], real rparam[] )
            
 
           // ---- this next section is currently not needed -- maybe in future ---
-	  // if( method==sosup )
-	  // {
+        // if( method==sosup )
+        // {
           //   // supply time derivative of the forcing 
           //   real gt = -(2.*Pi*omega)*aExp*sint;
-	  //   fLocal(i1,i2,i3,ext)+= -(y-y0)*rPow*gt;
-	  //   fLocal(i1,i2,i3,eyt)+=  (x-x0)*rPow*gt;
-	  //   fLocal(i1,i2,i3,hzt)+=              gt;
-	  // }
-	  
-	}
+        //   fLocal(i1,i2,i3,ext)+= -(y-y0)*rPow*gt;
+        //   fLocal(i1,i2,i3,eyt)+=  (x-x0)*rPow*gt;
+        //   fLocal(i1,i2,i3,hzt)+=              gt;
+        // }
+        
+      }
       }
       else
       {
-	// -- 3D ---
-	FOR_3D(i1,i2,i3,I1,I2,I3)
-	{
+      // -- 3D ---
+      FOR_3D(i1,i2,i3,I1,I2,I3)
+      {
           real x= xLocal(i1,i2,i3,0), y=xLocal(i1,i2,i3,1), z=xLocal(i1,i2,i3,2);
           real rSq =  SQR(x-x0)+SQR(y-y0)+SQR(z-z0);
-	  // real g = a*cost*exp( -beta*pow( rSq, p ) );
-	  real aExp = a*exp( -beta*pow( rSq, p ) );
-	  real g = aExp*cost;
-	  real rPow = pow(rSq,p-1.);
-	  
+        // real g = a*cost*exp( -beta*pow( rSq, p ) );
+        real aExp = a*exp( -beta*pow( rSq, p ) );
+        real g = aExp*cost;
+        real rPow = pow(rSq,p-1.);
+        
           // *wdh* 2015/04/19 --FIX ME to be DIV FREE
           //   Fx = -const* g_y + const* g_z 
           //   Fy =  const* g_x - const* g_z
           //   Fz =  const* g_y - const* g_x 
           // => (Fx)_x + (Fy)_y + (Fz)_z = 0 
-	  fLocal(i1,i2,i3,ex)+= ((z-z0)-(y-y0))*rPow*g;
-	  fLocal(i1,i2,i3,ey)+= ((x-x0)-(z-z0))*rPow*g;
-	  fLocal(i1,i2,i3,ez)+= ((y-y0)-(x-x0))*rPow*g;
+        fLocal(i1,i2,i3,ex)+= ((z-z0)-(y-y0))*rPow*g;
+        fLocal(i1,i2,i3,ey)+= ((x-x0)-(z-z0))*rPow*g;
+        fLocal(i1,i2,i3,ez)+= ((y-y0)-(x-x0))*rPow*g;
 
           // ---- this next section is currently not needed -- maybe in future ---
-	  // if( method==sosup )
-	  // {
+        // if( method==sosup )
+        // {
           //   // supply time derivative of the forcing 
           //   real gt = -(2.*Pi*omega)*aExp*sint;
-	  //   fLocal(i1,i2,i3,ex)+= ((z-z0)-(y-y0))*rPow*gt;
-	  //   fLocal(i1,i2,i3,ey)+= ((x-x0)-(z-z0))*rPow*gt;
-	  //   fLocal(i1,i2,i3,ez)+= ((y-y0)-(x-x0))*rPow*gt;
-	  // }
+        //   fLocal(i1,i2,i3,ex)+= ((z-z0)-(y-y0))*rPow*gt;
+        //   fLocal(i1,i2,i3,ey)+= ((x-x0)-(z-z0))*rPow*gt;
+        //   fLocal(i1,i2,i3,ez)+= ((y-y0)-(x-x0))*rPow*gt;
+        // }
 
-	}
+      }
       }
     }
   }
@@ -227,7 +227,7 @@ userDefinedForcing( realArray & f, int iparam[], real rparam[] )
       real t0   = gaussianParameters(7,m);
 
       if( false )
-	printF("Gaussian source %i: setting a=%8.2e, beta=%8.2e, omega=%8.2e, p=%8.2e, x0=%8.2e, y0=%8.2e, "
+      printF("Gaussian source %i: setting a=%8.2e, beta=%8.2e, omega=%8.2e, p=%8.2e, x0=%8.2e, y0=%8.2e, "
                "z0=%8.2e, t0=%8.2e\n", m,a,beta,omega,p,x0,y0,z0,t0);
 
       const real cost=cos(2.*Pi*omega*(t-t0));
@@ -236,16 +236,16 @@ userDefinedForcing( realArray & f, int iparam[], real rparam[] )
 
       if( mg.numberOfDimensions()==2 )
       {
-	FOR_3D(i1,i2,i3,I1,I2,I3)
-	{
+      FOR_3D(i1,i2,i3,I1,I2,I3)
+      {
           real x= xLocal(i1,i2,i3,0), y=xLocal(i1,i2,i3,1);
-	  // real g = a*cost*exp( -beta*pow( SQR(x-x0)+SQR(y-y0), p ) );
-	  real aExp = a*exp( -beta*pow( SQR(x-x0)+SQR(y-y0), p ) );
-	  // real g = aExp*cost;
-	  real g = aExp*sint;
+        // real g = a*cost*exp( -beta*pow( SQR(x-x0)+SQR(y-y0), p ) );
+        real aExp = a*exp( -beta*pow( SQR(x-x0)+SQR(y-y0), p ) );
+        // real g = aExp*cost;
+        real g = aExp*sint;
 
-	  if( t<=.5 ) // *wdh* TEST finite pulse 
-	  {
+        if( t<=.5 ) // *wdh* TEST finite pulse 
+        {
             // if( solveForAllFields )
             // {
             //   fLocal(i1,i2,i3,ez) +=  g;
@@ -256,49 +256,49 @@ userDefinedForcing( realArray & f, int iparam[], real rparam[] )
             fLocal(i1,i2,i3,ey)+=  (x-x0)*g;
             fLocal(i1,i2,i3,hz)+=         g;
             
-	  }
-	  
-	  
-	  // fLocal(i1,i2,i3,ey)=0.; // *****************
+        }
+        
+        
+        // fLocal(i1,i2,i3,ey)=0.; // *****************
 
           // ---- this next section is currently not needed -- maybe in future ---
-	  // if( method==sosup )
-	  // {
+        // if( method==sosup )
+        // {
           //   // supply time derivative of the forcing 
           //   real gt = -(2.*Pi*omega)*aExp*sint;
-	  //   fLocal(i1,i2,i3,ex)+= -(y-y0)*gt;
-	  //   fLocal(i1,i2,i3,ey)+=  (x-x0)*gt;
-	  //   fLocal(i1,i2,i3,hz)+=         gt;
-	  // }	  
-	}
+        //   fLocal(i1,i2,i3,ex)+= -(y-y0)*gt;
+        //   fLocal(i1,i2,i3,ey)+=  (x-x0)*gt;
+        //   fLocal(i1,i2,i3,hz)+=         gt;
+        // }        
+      }
       }
       else
       {
-	// -- 3D ---
-	FOR_3D(i1,i2,i3,I1,I2,I3)
-	{
+      // -- 3D ---
+      FOR_3D(i1,i2,i3,I1,I2,I3)
+      {
           real x= xLocal(i1,i2,i3,0), y=xLocal(i1,i2,i3,1), z=xLocal(i1,i2,i3,2);
-	  // real g = a*cost*exp( -beta*pow( SQR(x-x0)+SQR(y-y0)+SQR(z-z0), p ) );
-	  real aExp = a*exp( -beta*pow( SQR(x-x0)+SQR(y-y0)+SQR(z-z0), p ) );
-	  real g = aExp*cost;
+        // real g = a*cost*exp( -beta*pow( SQR(x-x0)+SQR(y-y0)+SQR(z-z0), p ) );
+        real aExp = a*exp( -beta*pow( SQR(x-x0)+SQR(y-y0)+SQR(z-z0), p ) );
+        real g = aExp*cost;
 
-	  fLocal(i1,i2,i3,ex)+= ((z-z0)-(y-y0))*g;
-	  fLocal(i1,i2,i3,ey)+= ((x-x0)-(z-z0))*g;
-	  fLocal(i1,i2,i3,ez) =0.;  // *****************
-	  // fLocal(i1,i2,i3,ez)+= ((y-y0)-(x-x0))*g;
+        fLocal(i1,i2,i3,ex)+= ((z-z0)-(y-y0))*g;
+        fLocal(i1,i2,i3,ey)+= ((x-x0)-(z-z0))*g;
+        fLocal(i1,i2,i3,ez) =0.;  // *****************
+        // fLocal(i1,i2,i3,ez)+= ((y-y0)-(x-x0))*g;
 
           // ---- this next section is currently not needed -- maybe in future ---
-	  // if( method==sosup )
-	  // {
+        // if( method==sosup )
+        // {
           //   // supply time derivative of the forcing 
           //   real gt = -(2.*Pi*omega)*aExp*sint;
-	  //   fLocal(i1,i2,i3,ex)+= ((z-z0)-(y-y0))*gt;
-	  //   fLocal(i1,i2,i3,ey)+= ((x-x0)-(z-z0))*gt;
-	  //   fLocal(i1,i2,i3,ez) =0.;  // *****************
-	  // }	  
+        //   fLocal(i1,i2,i3,ex)+= ((z-z0)-(y-y0))*gt;
+        //   fLocal(i1,i2,i3,ey)+= ((x-x0)-(z-z0))*gt;
+        //   fLocal(i1,i2,i3,ez) =0.;  // *****************
+        // }        
 
 
-	}
+      }
       }
     }
   }
@@ -347,77 +347,77 @@ userDefinedForcing( realArray & f, int iparam[], real rparam[] )
     {
       FOR_3D(i1,i2,i3,I1,I2,I3)
       {
-	if( !isRectangular )
-	{
-	  x= xLocal(i1,i2,i3,0);
-	  y= xLocal(i1,i2,i3,1);
-	}
-	else
-	{
-	  x=XC(iv,0);
-	  y=XC(iv,1);
-	}
+      if( !isRectangular )
+      {
+        x= xLocal(i1,i2,i3,0);
+        y= xLocal(i1,i2,i3,1);
+      }
+      else
+      {
+        x=XC(iv,0);
+        y=XC(iv,1);
+      }
 
-	// if( method==nfdtd )
-	// {
+      // if( method==nfdtd )
+      // {
         // The forcing function is determined in mx/codes/manufacturedPulse.maple 
         #include "../codes/manufacturedPulseForcing2d.h"
-	fLocal(i1,i2,i3,ex) += FEX;
-	fLocal(i1,i2,i3,ey) += FEY;
-	fLocal(i1,i2,i3,hz) += FHZ;
+      fLocal(i1,i2,i3,ex) += FEX;
+      fLocal(i1,i2,i3,ey) += FEY;
+      fLocal(i1,i2,i3,hz) += FHZ;
 
         // ---- this next section is currently not needed -- maybe in future ---
-	// }
+      // }
         // else if( method=sosup )
-	// {
-	//   // The forcing function is determined in mx/codes/manufacturedPulse.maple 
+      // {
+      //   // The forcing function is determined in mx/codes/manufacturedPulse.maple 
         //   #include "../codes/manufacturedPulseForcingSosup2d.h"
-	//   fLocal(i1,i2,i3,ex ) += FEX;
-	//   fLocal(i1,i2,i3,ey ) += FEY;
-	//   fLocal(i1,i2,i3,hz ) += FHZ;
-	//   fLocal(i1,i2,i3,ext) += FEXT;
-	//   fLocal(i1,i2,i3,eyt) += FEYT;
-	//   fLocal(i1,i2,i3,hzt) += FHZT;
-	// }
+      //   fLocal(i1,i2,i3,ex ) += FEX;
+      //   fLocal(i1,i2,i3,ey ) += FEY;
+      //   fLocal(i1,i2,i3,hz ) += FHZ;
+      //   fLocal(i1,i2,i3,ext) += FEXT;
+      //   fLocal(i1,i2,i3,eyt) += FEYT;
+      //   fLocal(i1,i2,i3,hzt) += FHZT;
+      // }
       }
     }
     else
     {
       FOR_3D(i1,i2,i3,I1,I2,I3)
       {
-	if( !isRectangular )
-	{
-	  x= xLocal(i1,i2,i3,0);
-	  y= xLocal(i1,i2,i3,1);
-	  z= xLocal(i1,i2,i3,2);
-	}
-	else
-	{
-	  x=XC(iv,0);
-	  y=XC(iv,1);
-	  z=XC(iv,2);
-	}
-	//if( method==nfdtd )
-	// {
+      if( !isRectangular )
+      {
+        x= xLocal(i1,i2,i3,0);
+        y= xLocal(i1,i2,i3,1);
+        z= xLocal(i1,i2,i3,2);
+      }
+      else
+      {
+        x=XC(iv,0);
+        y=XC(iv,1);
+        z=XC(iv,2);
+      }
+      //if( method==nfdtd )
+      // {
           // The forcing function is determined in mx/codes/manufacturedPulse.maple 
           #include "../codes/manufacturedPulseForcing3d.h"
-	  fLocal(i1,i2,i3,ex) += FEX;
-  	  fLocal(i1,i2,i3,ey) += FEY;
-	  fLocal(i1,i2,i3,ez) += FEZ;
+        fLocal(i1,i2,i3,ex) += FEX;
+        fLocal(i1,i2,i3,ey) += FEY;
+        fLocal(i1,i2,i3,ez) += FEZ;
 
         // ---- this next section is currently not needed -- maybe in future --- 
-	// }
-	// else if( method=sosup )
-	// {
-	//   // The forcing function is determined in mx/codes/manufacturedPulse.maple 
+      // }
+      // else if( method=sosup )
+      // {
+      //   // The forcing function is determined in mx/codes/manufacturedPulse.maple 
         //   #include "../codes/manufacturedPulseForcingSosup3d.h"
-	//   fLocal(i1,i2,i3,ex ) += FEX;
-  	//   fLocal(i1,i2,i3,ey ) += FEY;
-	//   fLocal(i1,i2,i3,hz ) += FEZ;
-	//   fLocal(i1,i2,i3,ext) += FEXT;
-  	//   fLocal(i1,i2,i3,eyt) += FEYT;
-	//   fLocal(i1,i2,i3,hzt) += FEZT;
-	// }
+      //   fLocal(i1,i2,i3,ex ) += FEX;
+      //   fLocal(i1,i2,i3,ey ) += FEY;
+      //   fLocal(i1,i2,i3,hz ) += FEZ;
+      //   fLocal(i1,i2,i3,ext) += FEXT;
+      //   fLocal(i1,i2,i3,eyt) += FEYT;
+      //   fLocal(i1,i2,i3,hzt) += FEZT;
+      // }
       }
     }
     
@@ -504,7 +504,7 @@ setupUserDefinedForcing()
       numberOfGaussianSources=1;
 
       if( !db.has_key("gaussianParameters") )
-	db.put<RealArray>("gaussianParameters");
+      db.put<RealArray>("gaussianParameters");
 
       RealArray & gaussianParameters = db.get<RealArray>("gaussianParameters");
       gaussianParameters.redim(8,numberOfGaussianSources);
@@ -513,7 +513,7 @@ setupUserDefinedForcing()
       for( int m=0; m<numberOfGaussianSources; m++ )
       {
         real a=1., beta=10., omega=1., p=1., x0=0., y0=0., z0=0., t0=0.;
-	gi.inputString(answer2,sPrintF("Source %i: Enter a,beta,omega,p,x0,y0,z0,t0",m));
+      gi.inputString(answer2,sPrintF("Source %i: Enter a,beta,omega,p,x0,y0,z0,t0",m));
         sScanF(answer2,"%e %e %e %e %e %e %e %e",&a,&beta,&omega,&p,&x0,&y0,&z0,&t0);
 
         printF("Gaussian source %i: setting a=%8.2e, beta=%8.2e, omega=%8.2e, p=%8.2e, x0=%8.2e, y0=%8.2e, "
@@ -549,27 +549,27 @@ setupUserDefinedForcing()
 
       if( numberOfDimensions==2 )
       {
-	printF("The Gaussian source in 2D is of the form:\n"
+      printF("The Gaussian source in 2D is of the form:\n"
                " g(x,y,t) = a*sin(2*pi*omega*(t-t0) )*exp( -beta*[ (x-x0)^2 + (y-y0)^2 ]^p )\n"
                "     R = (x-x0)^2 + (y-y0)^2\n"
-	       " F(Ex) = -(y-y0)*R^(p-1)*g(x,y,t) \n"
-	       " F(Ey) =  (x-x0)*R^(p-1)**g(x,y,t) \n"
-	       " F(Hz) =         g(x,y,t) \n"
-	  );
+             " F(Ex) = -(y-y0)*R^(p-1)*g(x,y,t) \n"
+             " F(Ey) =  (x-x0)*R^(p-1)**g(x,y,t) \n"
+             " F(Hz) =         g(x,y,t) \n"
+        );
       }
       else
       {
-	printF("The Gaussian source in 3D is of the form:\n"
+      printF("The Gaussian source in 3D is of the form:\n"
                " g(x,y,z,t) = a*sin(2*pi*omega*(t-t0) )*exp( -beta*[ (x-x0)^2 + (y-y0)^2 + (z-z0)^2 ]^p )\n"
                "     R = (x-x0)^2 + (y-y0)^2\n"
-	       " F(Ex) = [(z-z0)-(y-y0)]*R^(p-1)**g(x,y,z,t) \n"
-	       " F(Ey) = [(x-x0)-(z-z0)]*R^(p-1)**g(x,y,z,t) \n"
-	       " F(Ez) = [(y-xy)-(x-x0)]*R^(p-1)**g(x,y,z,t) \n"
-	  );
+             " F(Ex) = [(z-z0)-(y-y0)]*R^(p-1)**g(x,y,z,t) \n"
+             " F(Ey) = [(x-x0)-(z-z0)]*R^(p-1)**g(x,y,z,t) \n"
+             " F(Ez) = [(y-xy)-(x-x0)]*R^(p-1)**g(x,y,z,t) \n"
+        );
       }
       
       if( !db.has_key("gaussianParameters") )
-	db.put<RealArray>("gaussianParameters");
+      db.put<RealArray>("gaussianParameters");
 
       RealArray & gaussianParameters = db.get<RealArray>("gaussianParameters");
       gaussianParameters.redim(8,numberOfGaussianSources);
@@ -578,7 +578,7 @@ setupUserDefinedForcing()
       for( int m=0; m<numberOfGaussianSources; m++ )
       {
         real a=1., beta=10., omega=1., p=1., x0=0., y0=0., z0=0., t0=0.;
-	gi.inputString(answer2,sPrintF("Source %i: Enter a,beta,omega,p,x0,y0,z0,t0",m));
+      gi.inputString(answer2,sPrintF("Source %i: Enter a,beta,omega,p,x0,y0,z0,t0",m));
         sScanF(answer2,"%e %e %e %e %e %e %e %e",&a,&beta,&omega,&p,&x0,&y0,&z0,&t0);
 
         printF("Gaussian source %i: setting a=%8.2e, beta=%8.2e, omega=%8.2e, p=%8.2e, x0=%8.2e, y0=%8.2e, "

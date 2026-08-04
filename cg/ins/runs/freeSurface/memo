@@ -23,7 +23,99 @@ list of work-arounds to fix issues:
  - took away stretch factor for overlapping grid
 
 
+**************************
+******* Wed July 29, 2026
 
+LOWER Cylinder
+ogen -noplot submergedCylinderGrid -prefix=submergedCylDepth1p5Grid -interp=e -xa=-4 -xb=9 -factor=4 -cy=-1.5
+ogen -noplot submergedCylinderGrid -prefix=submergedCylDepth1p25Grid -interp=e -xa=-4 -xb=9 -factor=4 -cy=-1.25
+
+
+setsid $cgins -noplot submergedCylinder -g=submergedCylDepth1p25Gride4.order2.hdf -dg="share=100" -nu=.005 -tf=20.0 -tp=0.05 -model=ins -numberOfSurfaceSmooths=5 -surfaceTension=0.005 -pGrad=-4.0 -project=0 -ad2=1 -psolver=yale -solver=yale -show=submergedCyld.show -u0=0.5 -go=go > submergedCyld.out
+
+
+**trouble near upper left corner --> wiggles
+setsid $cgins -noplot submergedCylinder -g=submergedCylDepth1p25Gride4.order2.hdf -dg="share=100" -nu=.005 -tf=20.0 -tp=0.05 -model=ins -numberOfSurfaceSmooths=5 -surfaceTension=0.005 -pGrad=-4.0 -project=0 -ad2=1 -psolver=yale -solver=yale -show=submergedCyld.show -u0=1.0 -go=go > submergedCyld.out
+
+
+Ramp inflow velocity to avoid large startup surface motion
+
+*Trouble ramping uniform inflow **
+
+
+$cgins -noplot submergedCylinder -g=submergedCylDepth1p25Gride4.order2.hdf -dg="share=100" -nu=.005 -tf=20.0 -tp=0.05 -model=ins -numberOfSurfaceSmooths=5 -surfaceTension=0.005 -pGrad=-4.0 -project=0 -ad2=1 -psolver=yale -solver=yale -show=submergedCylc.show -u0=1.0 -go=og
+
+Try to ramp inflow: trouble: 
+ERROR: getTimeDependentBoundaryConditions: something is wrong here
+ parameters.bcVariesInSpace(side=0,axis=0,grid=0)=0  pBoundaryData[side=0][axis=0]!=NULL =1 
+
+
+***************************
+******* Tues July 28, 2026
+
+Re-generate grids 
+ogen -noplot submergedCylinderGrid -interp=e -xa=-4 -xb=9 -factor=1
+ogen -noplot submergedCylinderGrid -interp=e -xa=-4 -xb=9 -factor=2 -ml=1
+ogen -noplot submergedCylinderGrid -interp=e -xa=-4 -xb=9 -factor=4 -ml=1
+
+RETURN TO FREE SURFACE
+
+DO NOT PROJECT INITIAL CONDITIONS
+TROUBLE WITH MG solver ??
+
+NOT SURE WHAT pGrad set linear profile in p at outflow ???
+
+CAN We DO A SLOw START?
+
+next:  longer
+setsid $cgins -noplot submergedCylinder -g=submergedCylinderGride4.order2.ml1.hdf -dg="share=100" -nu=.005 -tf=40.0 -tp=0.05 -model=ins -numberOfSurfaceSmooths=5 -surfaceTension=0.005 -pGrad=-4.0 -project=0 -ad2=1 -psolver=yale -solver=yale -show=submergedCylc.show -u0=0.5 -go=go > submergedCylc.out
+
+
+setsid $cgins -noplot submergedCylinder -g=submergedCylinderGride4.order2.ml1.hdf -dg="share=100" -nu=.005 -tf=20.0 -tp=0.05 -model=ins -numberOfSurfaceSmooths=5 -surfaceTension=0.005 -pGrad=-4.0 -project=0 -ad2=1 -psolver=yale -solver=yale -show=submergedCylc.show -u0=0.5 -go=go > submergedCylc.out
+
+Not OK 
+setsid $cgins -noplot submergedCylinder -g=submergedCylinderGride4.order2.ml1.hdf -dg="share=100" -nu=.005 -tf=20.0 -tp=0.05 -model=ins -numberOfSurfaceSmooths=5 -surfaceTension=0.005 -pGrad=-5.0 -project=0 -ad2=1 -psolver=yale -solver=yale -show=submergedCylc.show -u0=0.75 -go=go > submergedCylc.out
+
+
+
+Not OK 
+setsid $cgins -noplot submergedCylinder -g=submergedCylinderGride4.order2.ml1.hdf -dg="share=100" -nu=.005 -tf=20.0 -tp=0.05 -model=ins -numberOfSurfaceSmooths=5 -surfaceTension=0.005 -pGrad=-4.0 -project=0 -ad2=1 -psolver=yale -solver=yale -show=submergedCylc.show -u0=0.75 -go=go > submergedCylc.out
+
+
+next: OK  
+setsid $cgins -noplot submergedCylinder -g=submergedCylinderGride4.order2.ml1.hdf -dg="share=100" -nu=.005 -tf=20.0 -tp=0.05 -model=ins -numberOfSurfaceSmooths=5 -surfaceTension=0.005 -pGrad=-4.0 -project=0 -ad2=1 -psolver=yale -solver=yale -show=submergedCylc.show -u0=0.5 -go=go > submergedCylc.out
+
+
+
+next: OK  
+setsid $cgins -noplot submergedCylinder -g=submergedCylinderGride4.order2.ml1.hdf -dg="share=100" -nu=.005 -tf=20.0 -tp=0.05 -model=ins -numberOfSurfaceSmooths=5 -surfaceTension=0.01 -pGrad=-4.0 -project=0 -ad2=1 -psolver=yale -solver=yale -show=submergedCylc.show -u0=0.4 -go=go > submergedCylc.out
+
+
+OK
+setsid $cgins -noplot submergedCylinder -g=submergedCylinderGride4.order2.ml1.hdf -dg="share=100" -nu=.005 -tf=20.0 -tp=0.05 -model=ins -numberOfSurfaceSmooths=5 -surfaceTension=0.01 -pGrad=-4.0 -project=0 -ad2=1 -psolver=yale -solver=yale -show=submergedCylc.show -u0=0.3 -go=go > submergedCylc.out
+
+OK 
+$cgins -noplot submergedCylinder -g=submergedCylinderGride4.order2.ml1.hdf -dg="share=100" -nu=.005 -tf=20.0 -tp=0.05 -model=ins -numberOfSurfaceSmooths=5 -surfaceTension=0.01 -pGrad=-4.0 -project=0 -ad2=1 -psolver=yale -solver=yale -show=submergedCylc.show -u0=0.2 -go=go > submergedCylc.out
+
+
+ADD u0=inflow velocity
+u0=.1 : ok till t=2
+u0=0.2: ok till t=5
+u0=0.4
+$cgins -noplot submergedCylinder -g=submergedCylinderGride4.order2.ml1.hdf -dg="share=100" -nu=.005 -tf=20.0 -tp=0.05 -model=ins -numberOfSurfaceSmooths=5 -surfaceTension=0.01 -pGrad=-4.0 -project=0 -ad2=1 -psolver=yale -solver=yale -show=submergedCylc.show -u0=0.2 -go=go > submergedCylc.out
+
+$cgins submergedCylinder -g=submergedCylinderGride4.order2.ml1.hdf -dg="share=100" -nu=.005 -tf=2.0 -tp=0.02 -model=ins -numberOfSurfaceSmooths=5 -surfaceTension=0.01 -pGrad=-0.5 -project=0 -ad2=1 -psolver=yale -solver=yale -show=submergedCylc.show -go=og
+
+$cgins submergedCylinder -g=submergedCylinderGride4.order2.ml1.hdf -dg="share=100" -nu=.005 -tf=2.0 -tp=0.02 -model=ins -numberOfSurfaceSmooths=5 -surfaceTension=0.005 -pGrad=-4.0 -project=0 -ad2=1 -psolver=yale -solver=yale -show=submergedCylc.show -go=og
+
+
+pGrad=-5: .. grid faile around t=1.2 -- surface is extreme
+$cgins submergedCylinder -g=submergedCylinderGride4.order2.ml1.hdf -dg="share=100" -nu=.005 -tf=2.0 -tp=.1 -model=ins -numberOfSurfaceSmooths=5 -surfaceTension=.005 -pGrad=-5. -project=1 -ad2=1 -psolver=yale -solver=yale -show=submergedCylc.show -go=go
+
+cgins submergedCylinder -g=submergedCylinderGride4.order2.ml1.hdf -dg="share=100" -nu=.005 -tf=1.0 -tp=0.1 -model=ins -numberOfSurfaceSmooths=5 -surfaceTension=.005 -pGrad=-5.0 -go=go -project=1 -ad2=1 -show=submergedCylb.show 
+
+HERE IS A PREVIOUS RUN
+cgins -noplot submergedCylinder -g=submergedCylinderGride4.order2.ml1.hdf -dg="share=100" -nu=.005 -tf=50. -tp=.1 -model=ins -numberOfSurfaceSmooths=5 -surfaceTension=.005 -pGrad=-5. -go=go -project=1 -ad2=1 -show=submergedCylb.show   >! submergedCylb.out &
 
 
 ***************************

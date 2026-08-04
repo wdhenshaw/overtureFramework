@@ -129,7 +129,7 @@ getUt(const realMappedGridFunction & v,
       ::display(v,sPrintF("getUt: v BEFORE insimp for grid=%i",grid),pDebugFile,"%4.2f ");
     
       printF(" implicitOption = %i (0=all, 1=no implicit, 2=implicit-separate), useNewImplicitMethod=%i\n",
-	     parameters.dbase.get<Parameters::ImplicitOption >("implicitOption"),
+             parameters.dbase.get<Parameters::ImplicitOption >("implicitOption"),
              parameters.dbase.get<int>("useNewImplicitMethod"));
     }
     
@@ -328,21 +328,21 @@ getUt(const realMappedGridFunction & v,
       Index Ib1,Ib2,Ib3;
       for( int axis=0; axis<mg.numberOfDimensions(); axis++ )
       {
-	for( int side=0; side<=1; side++ )
-	{
-	  if( mg.boundaryCondition(side,axis)==Parameters::axisymmetric )
-	  {
-	    getBoundaryIndex(mg.gridIndexRange(),side,axis,Ib1,Ib2,Ib3);
+        for( int side=0; side<=1; side++ )
+        {
+          if( mg.boundaryCondition(side,axis)==Parameters::axisymmetric )
+          {
+            getBoundaryIndex(mg.gridIndexRange(),side,axis,Ib1,Ib2,Ib3);
             bool ok = ParallelUtility::getLocalArrayBounds(u,uLocal,Ib1,Ib2,Ib3);
             if( ok )
-  	      radiusInverse(Ib1,Ib2,Ib3)=0.;
-	  }
-	}
+              radiusInverse(Ib1,Ib2,Ib3)=0.;
+          }
+        }
       }
-	
+        
       if( debug() & 8 )
       {
-	display(radiusInverse,sPrintF("Cgins::getUt: radiusInverse, grid=%i, before assignOPT",grid),pDebugFile,"%8.5f ");
+        display(radiusInverse,sPrintF("Cgins::getUt: radiusInverse, grid=%i, before assignOPT",grid),pDebugFile,"%8.5f ");
       }
     }
 
@@ -366,14 +366,14 @@ getUt(const realMappedGridFunction & v,
       // printF("Cgins::getUt: Material properties do vary\n");
 
       std::vector<GridMaterialProperties> & materialProperties = 
-	parameters.dbase.get<std::vector<GridMaterialProperties> >("materialProperties");
+        parameters.dbase.get<std::vector<GridMaterialProperties> >("materialProperties");
 
       GridMaterialProperties & matProp = materialProperties[grid];
       materialFormat = matProp.getMaterialFormat();
       
       if( materialFormat==GridMaterialProperties::piecewiseConstantMaterialProperties )
       {
-	IntegerArray & matIndex = matProp.getMaterialIndexArray();
+        IntegerArray & matIndex = matProp.getMaterialIndexArray();
         matIndexPtr = matIndex.getDataPointer();
       }
       
@@ -385,26 +385,26 @@ getUt(const realMappedGridFunction & v,
     }
 
     int ipar[] ={parameters.dbase.get<int >("pc"), // 0
-		 parameters.dbase.get<int >("uc"),
-		 parameters.dbase.get<int >("vc"),
-		 parameters.dbase.get<int >("wc"),
-		 parameters.dbase.get<int >("kc"),
-		 parameters.dbase.get<int >("sc"),
-		 parameters.dbase.get<int >("tc"),
-		 grid,
-		 orderOfAccuracy,
-		 (int)parameters.gridIsMoving(grid), 
-		 useWhereMask,                       // 10 
-		 (int)gridIsImplicit,
-		 (int)parameters.dbase.get<Parameters::ImplicitMethod >("implicitMethod"),
-		 (int)parameters.dbase.get<Parameters::ImplicitOption >("implicitOption"),
-		 (int)parameters.isAxisymmetric(),
-		 (int)parameters.dbase.get<bool >("useSecondOrderArtificialDiffusion"),
-		 (int)useFourthOrderArtificialDiffusion,
-		 (int)parameters.dbase.get<bool >("advectPassiveScalar"),
-		 gridType,
-		 parameters.dbase.get<Parameters::TurbulenceModel >("turbulenceModel"),
-		 (int)parameters.dbase.get<InsParameters::PDEModel >("pdeModel"),  // 20 
+                 parameters.dbase.get<int >("uc"),
+                 parameters.dbase.get<int >("vc"),
+                 parameters.dbase.get<int >("wc"),
+                 parameters.dbase.get<int >("kc"),
+                 parameters.dbase.get<int >("sc"),
+                 parameters.dbase.get<int >("tc"),
+                 grid,
+                 orderOfAccuracy,
+                 (int)parameters.gridIsMoving(grid), 
+                 useWhereMask,                       // 10 
+                 (int)gridIsImplicit,
+                 (int)parameters.dbase.get<Parameters::ImplicitMethod >("implicitMethod"),
+                 (int)parameters.dbase.get<Parameters::ImplicitOption >("implicitOption"),
+                 (int)parameters.isAxisymmetric(),
+                 (int)parameters.dbase.get<bool >("useSecondOrderArtificialDiffusion"),
+                 (int)useFourthOrderArtificialDiffusion,
+                 (int)parameters.dbase.get<bool >("advectPassiveScalar"),
+                 gridType,
+                 parameters.dbase.get<Parameters::TurbulenceModel >("turbulenceModel"),
+                 (int)parameters.dbase.get<InsParameters::PDEModel >("pdeModel"),  // 20 
                  parameters.dbase.get<int >("vsc"), // 21 
                  parameters.dbase.get<int >("rc"),   // 22
                  debug(),
@@ -418,40 +418,40 @@ getUt(const realMappedGridFunction & v,
     parameters.getGravityVector( gravity,t );
 
     real rpar[]={mg.gridSpacing(0),mg.gridSpacing(1),mg.gridSpacing(2),
-		 dx[0],dx[1],dx[2],
-		 nu,
-		 parameters.dbase.get<real >("ad21"),
-		 parameters.dbase.get<real >("ad22"),
-		 parameters.dbase.get<real >("ad41"),
-		 parameters.dbase.get<real >("ad42"),
-		 parameters.dbase.get<real >("nuPassiveScalar"),
-		 adcPassiveScalar,
-		 parameters.dbase.get<real >("ad21n"),
-		 parameters.dbase.get<real >("ad22n"),
-		 parameters.dbase.get<real >("ad41n"),
-		 parameters.dbase.get<real >("ad42n"),
-		 0.,                    // 17 : was yEps, no longer used 
-		 gravity[0],
-		 gravity[1],
-		 gravity[2],
-		 thermalExpansivity,
-		 adcBoussinesq,    // ipar[22]
-		 kThermal,         // ipar[23]
+                 dx[0],dx[1],dx[2],
+                 nu,
+                 parameters.dbase.get<real >("ad21"),
+                 parameters.dbase.get<real >("ad22"),
+                 parameters.dbase.get<real >("ad41"),
+                 parameters.dbase.get<real >("ad42"),
+                 parameters.dbase.get<real >("nuPassiveScalar"),
+                 adcPassiveScalar,
+                 parameters.dbase.get<real >("ad21n"),
+                 parameters.dbase.get<real >("ad22n"),
+                 parameters.dbase.get<real >("ad41n"),
+                 parameters.dbase.get<real >("ad42n"),
+                 0.,                    // 17 : was yEps, no longer used 
+                 gravity[0],
+                 gravity[1],
+                 gravity[2],
+                 thermalExpansivity,
+                 adcBoussinesq,    // ipar[22]
+                 kThermal,         // ipar[23]
                  t 
     };
 
     int ierr=0;
     insdt(mg.numberOfDimensions(),
-	  I1.getBase(),I1.getBound(),
-	  I2.getBase(),I2.getBound(),
-	  I3.getBase(),I3.getBound(),
-	  uLocal.getBase(0),uLocal.getBound(0),uLocal.getBase(1),uLocal.getBound(1),
-	  uLocal.getBase(2),uLocal.getBound(2),uLocal.getBase(3),uLocal.getBound(3),
-	  *pMask, *pxy, *prsxy,*radiusInverse.getDataPointer(),
-	  *pu, *puu, *put, 
-	  *puti,*pgv, *pdw,
+          I1.getBase(),I1.getBound(),
+          I2.getBase(),I2.getBound(),
+          I3.getBase(),I3.getBound(),
+          uLocal.getBase(0),uLocal.getBound(0),uLocal.getBase(1),uLocal.getBound(1),
+          uLocal.getBase(2),uLocal.getBound(2),uLocal.getBase(3),uLocal.getBound(3),
+          *pMask, *pxy, *prsxy,*radiusInverse.getDataPointer(),
+          *pu, *puu, *put, 
+          *puti,*pgv, *pdw,
           ndMatProp,*matIndexPtr,*matValPtr,*matValPtr, 
-	  *mg.boundaryCondition().getDataPointer(), ipar[0], rpar[0], ierr );
+          *mg.boundaryCondition().getDataPointer(), ipar[0], rpar[0], ierr );
 
     
   }
@@ -497,15 +497,15 @@ getUt(const realMappedGridFunction & v,
 //       getIndex( mg.gridIndexRange(),I1,I2,I3);
 //       where( mg.mask()(I1,I2,I3)>0 )
 //       {
-// 	maxErr = max(maxErr, max(fabs(dvdtSave(I1,I2,I3,c)-dvdt(I1,I2,I3,c))));
-// 	maxErri = max( maxErri, max(fabs(dvdtImplicitSave(I1,I2,I3,c)-dvdtImplicit(I1,I2,I3,c))));
+//      maxErr = max(maxErr, max(fabs(dvdtSave(I1,I2,I3,c)-dvdt(I1,I2,I3,c))));
+//      maxErri = max( maxErri, max(fabs(dvdtImplicitSave(I1,I2,I3,c)-dvdtImplicit(I1,I2,I3,c))));
 //       }
 
 //       real eps=1.e-10;
 //       if( maxErr > eps || maxErri > eps )
 //       {
-// 	printF(" ********** getUt: impOption=%i grid=%i, component c=%i max diff in  dvdt = %8.2e, dvdtImplicit=%8.2e \n",
-// 	       parameters.dbase.get<Parameters::ImplicitOption >("implicitOption"),grid,c,maxErr,maxErri);
+//      printF(" ********** getUt: impOption=%i grid=%i, component c=%i max diff in  dvdt = %8.2e, dvdtImplicit=%8.2e \n",
+//             parameters.dbase.get<Parameters::ImplicitOption >("implicitOption"),grid,c,maxErr,maxErri);
 //       }
 //     }
   

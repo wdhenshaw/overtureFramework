@@ -14,42 +14,9 @@ echo to terminal 0
 #  -ts = time-stepping-method, be=backward-Euler, fe=forward-Euler, im=implicit-multistep
 #  -nc : number of correction steps for implicit predictor-corrector
 # 
-# Examples:   (grid innerOuter2d built with Overture/sampleGrids/io.cmd)
-# 
-#  cgmp io.cmd -g="innerOuter2d.hdf" -nu=.1 -kappa=.05 -tf=1. 
-#  cgmp io.cmd -g="innerOuter2d2.hdf" -nu=.05 -kThermal=.04 -ktcFluid=.03 -kappa=.02 -ktcSolid=.025
-#  cgmp io.cmd -g="innerOuter2d.hdf" -tz=trig -solver=yale 
-#  cgmp io.cmd -g="diskArray2x2ye1.order2.hdf" -nu=.05 -kappa=.01 -tp=.05 -solver=yale
-#  cgmp io.cmd -g="diskArray2x2ye2.order2.hdf" -nu=.02 -kappa=.005 -tp=.05 -solver=yale
-#
-# -- remember: do not make dt too big, set -rf 
-# cgmp io.cmd -g="innerOuter2d.hdf" -solver="yale" -nu=.1 -kappa=.05 -ktcSolid=.5 -tp=.05 -ts=imp -iv=full -coupled=0 -nc=20 -iTol=1.e-3 -debug=3 -dtMax=.01 -rf=5
-#  --- 3D ---
-#  cgmp io.cmd -g="innerOuter3d.hdf" -nu=.1 -kappa=.025 -tp=.05 
-#  cgmp io.cmd -g="innerOuter3d.hdf" -solver="best" -nu=.1 -kappa=.025 -ktcSolid=.5 -tp=.05 -dtMax=.01  -ts=imp -iv=full -coupled=0 -nc=10 -iTol=1.e-3 -rf=5 -debug=3 
-#
-#  --- parallel examples --
-#  srun -N1 -n1 -ppdebug $cgmpp io.cmd -g="innerOuter2d.hdf" -show="io.show" 
-#  srun -N1 -n1 -ppdebug $cgmpp io.cmd -g="diskArray2x2ye2.order2.hdf" -nu=.02 -kappa=.005 -tp=.05 -show="diskArray.show" 
-#  srun -N1 -n4 -ppdebug $cgmpp io.cmd -g="innerOuter3d.hdf" -nu=.1 -kappa=.025 -tp=.05 -bg=outerBox -show="io3d.show" 
-#
-# -- implicit
-#   cgmp io.cmd -g="innerOuter2d.hdf" -nu=.1 -kappa=.05 -tf=1. -ts=im -coupled=0 -iTol=1.e-3 -nc=30 -debug=3 -iOmega=.85 -tp=.01 
-#   cgmp io.cmd -g="innerOuter2d4.hdf" -nu=.01 -kappa=.1 -tf=1. -ts=im -coupled=0 -iTol=1.e-3 -nc=30 -debug=3 -tp=.01 
-#   cgmp noplot io.cmd -g="innerOuter2d8.hdf" -nu=.005 -ktcFluid=.01 -kappa=.1 -tf=1. -ts=im -coupled=0 -iTol=1.e-3 -nc=10 -debug=3 -tp=.05 -tf=.5 -dtMax=.01 -ad2=1 -solver=yale -show="io8.show" >! io8.out 
-#   cgmp io.cmd -g="innerOuter2d.hdf" -tf=1. -ts=im -coupled=1 -nc=4
-#   cgmp io.cmd -g="diskArray2x2ye1.order2.hdf" -nu=.05 -kappa=.01 -tp=.05 -solver=yale -ts=im -coupled=0 -nc=6 -debug=3
-#   cgmp io.cmd -g="innerOuter2d.hdf" -tf=1. -ts=im -coupled=0 -nc=8 -tp=.01 -dtMax=.01 -tz=trig -kThermal=1. -ktcFluid=1. -kappa=1. -ktcSolid=1. -solver=yale -debug=3 -iTol=1.e-6 -mixedInterface=1
-# -- convergence rates of the interface iterations:
-#    cgmp io.cmd -g="innerOuter2d4.hdf" -tf=1. -ts=im -coupled=0 -nc=8 -tp=.01 -dtMax=.01 -tz=trig -debug=3 
-#    cgmp io.cmd -g="innerOuter2d8.hdf" -tf=1. -ts=im -coupled=0 -nc=8 -tp=.01 -dtMax=.01 -tz=trig -kThermal=1. -ktcFluid=1. -kappa=.99 -ktcSolid=.99 -solver=best -debug=3 -iTol=1.e-6 -mixedInterface=1
-# 
-# -- compressible examples
-#  cgmp io.cmd -g="innerOuter2d2.hdf" -method=cns -mu=.05 -T0=300 -Twall=400
-#  cgmp io.cmd -g="innerOuter2d2.hdf" -method=cns -mu=.05 -T0=100 -Twall=200 -tp=.05 
-#
-#*** TROUBLE: mixed-BC plus changing dt
-# cgmp io.cmd -g="innerOuter2d.hdf" -tf=1. -ts=im -coupled=0 -nc=8 -tp=.05 -dtMax=.05 -tz=trig -kThermal=1. -ktcFluid=1. -kappa=1. -ktcSolid=.1 -solver=yale -debug=3 -iTol=1.e-6 -mixedInterface=1 
+# Examples:  
+#  ogen -noplot rpiGrid -interp=e -order=2 -factor=4 -xa=.25 -yb=3
+#  $cgmp -noplot rpiCHT.cmd -g=rpiGride4.order2.hdf -nu=.05 -kappa=.01 -tf=2 -tp=.05 -solver=yale -show=rpiCHT.show -go=go
 # 
 # --- set default values for parameters ---
 # 

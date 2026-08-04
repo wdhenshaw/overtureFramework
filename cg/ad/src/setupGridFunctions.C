@@ -40,8 +40,17 @@ setupGridFunctions()
     if( numberOfImplicitSolvers>0 )
       implicitSolver= new Oges [numberOfImplicitSolvers];
   }
+
+
   
-  return DomainSolver::setupGridFunctions();
+  int rt = DomainSolver::setupGridFunctions();
+
+  // printf("\n @@@@@@@@ Cgad::setupGridFunctions: check grid-collection \n");
+  // realCompositeGridFunction & ud = gf[current].u;
+  // GridCollection *pgc = ud.getGridCollection();  
+  // cout << "pgc =" << pgc << endl;
+
+  return rt;
 }
 
 

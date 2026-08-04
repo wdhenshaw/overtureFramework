@@ -4,7 +4,20 @@ include ../config/Makefile.$(VENDOR)
 # over-ride:
 # CC=insure
 
-all = ogmgt
+
+# By default Make this target:
+all: linkFiles ogmgt info;
+
+info:
+	@echo "INFO: type 'make check' or 'make check-quiet' to run all regression tests"
+
+check:
+	$(MAKE) -C checkOgmg
+
+check-quiet:
+	@$(MAKE) -s -C checkOgmg check-quiet
+
+
 
 # setenv compile [opt|dbg]
 # compile everything with optimization: (setenv compile opt)
@@ -93,8 +106,7 @@ endif
 
 
 
-all = linkFiles ogmgt
-all: $(all);
+
 
 
 linkFiles:

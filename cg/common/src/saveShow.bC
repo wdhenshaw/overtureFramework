@@ -216,6 +216,7 @@ saveShow( GridFunction & gf0 )
 
   const bool saveAugmentedSolutionToShowFile = parameters.dbase.get<bool>("saveAugmentedSolutionToShowFile");
   realCompositeGridFunction q;
+
   if( saveAugmentedSolutionToShowFile )
   {
     // --  New default way  --
@@ -223,6 +224,9 @@ saveShow( GridFunction & gf0 )
     printP("*** saveShow:   saveAugmentedSolutionToShowFile ***\n");
     
     realCompositeGridFunction & u = getAugmentedSolution(gf0,q);
+
+    // *wdh* This fixes a bug in saving the show file for multi-domain problems
+    q = getAugmentedSolution(gf0,q);  // Aug 3, 2026 -- do this for when we interpolate
 
   }
   else

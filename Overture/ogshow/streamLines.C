@@ -92,7 +92,7 @@ streamLines(GenericGraphicsInterface &gi, const realMappedGridFunction & uv,
 //\begin{>>PlotItInclude.tex}{\subsection{StreamLines of a CompositeGridFunction}} 
 void PlotIt::
 streamLines(GenericGraphicsInterface &gi, const realGridCollectionFunction & uv0, 
-	    GraphicsParameters & parameters)
+            GraphicsParameters & parameters)
 //==================================================================
 // /Description:
 //  Streamline plots of the "velocity pair" (u,v) (where u and v are
@@ -223,7 +223,7 @@ streamLines(GenericGraphicsInterface &gi, const realGridCollectionFunction & uv0
 void PlotIt::
 streamLines2d(GenericGraphicsInterface &gi, GridCollection & gc, 
               const realGridCollectionFunction & uv, 
-	      GraphicsParameters & parameters)
+              GraphicsParameters & parameters)
 {
   bool showTimings=false; // true;
 
@@ -250,13 +250,13 @@ streamLines2d(GenericGraphicsInterface &gi, GridCollection & gc,
                    // "plot",
                    "choose first velocity component",
                    "choose second velocity component",
-		    // "set min and max",
+                    // "set min and max",
                    // "choose new plot bounds",
-		    // "reset plot bounds",
+                    // "reset plot bounds",
                    // "set stream line stopping tolerance",
                    // "set streamline density",
-		   // "set arrow size",
-		    // "plot the grid",
+                   // "set arrow size",
+                    // "plot the grid",
                     ">colour table choices",
                     "rainbow",
                     "gray",
@@ -268,7 +268,7 @@ streamLines2d(GenericGraphicsInterface &gi, GridCollection & gc,
 //                     "plot the axes (toggle)",
 //                     "plot the back ground grid (toggle)",
                    "set origin for axes",
-		   "keep aspect ratio",
+                   "keep aspect ratio",
                    "do not keep aspect ratio",
                    // "erase",
                    // "erase and exit",
@@ -300,7 +300,7 @@ streamLines2d(GenericGraphicsInterface &gi, GridCollection & gc,
   real & arrowSize                    =psp.streamLineArrowSize;
   uMin=0.;  uMax=0.;
   bool recomputeVelocityMinMax=true;  // true if we need to compute the max, min of the velocity
-  const	aString topLabel1 = psp.topLabel1; // save original topLabel1
+  const aString topLabel1 = psp.topLabel1; // save original topLabel1
 
   bool plotStreamLines=true;
 
@@ -336,18 +336,18 @@ streamLines2d(GenericGraphicsInterface &gi, GridCollection & gc,
       {
         gridOptions(grid)=GraphicsParameters::plotGrid;
         // interp points on "grid" are plotted if plotInterpolationPoints==true and :
-	gridOptions(grid)|=GraphicsParameters::plotInterpolation;
+        gridOptions(grid)|=GraphicsParameters::plotInterpolation;
 
         if( psp.plotGridBlockBoundaries )
-	  gridOptions(grid)|=GraphicsParameters::plotBlockBoundaries;
-	if( psp.plotLinesOnGridBoundaries )
-	  gridOptions(grid)|=GraphicsParameters::plotBoundaryGridLines;
-	if( psp.plotShadedSurfaceGrids )
-	  gridOptions(grid)|=GraphicsParameters::plotShadedSurfaces;
-	if( psp.plotBackupInterpolationPoints )
-	  gridOptions(grid)|=GraphicsParameters::plotBackupInterpolation;
+          gridOptions(grid)|=GraphicsParameters::plotBlockBoundaries;
+        if( psp.plotLinesOnGridBoundaries )
+          gridOptions(grid)|=GraphicsParameters::plotBoundaryGridLines;
+        if( psp.plotShadedSurfaceGrids )
+          gridOptions(grid)|=GraphicsParameters::plotShadedSurfaces;
+        if( psp.plotBackupInterpolationPoints )
+          gridOptions(grid)|=GraphicsParameters::plotBackupInterpolation;
         if( psp.plotInteriorBoundaryPoints )
-	  gridOptions(grid)|=GraphicsParameters::plotInteriorBoundary;
+          gridOptions(grid)|=GraphicsParameters::plotInteriorBoundary;
 
         gridOptions(grid)|=GraphicsParameters::plotInteriorGridLines;
       }
@@ -378,11 +378,11 @@ streamLines2d(GenericGraphicsInterface &gi, GridCollection & gc,
       boundaryConditionList(numberOfBoundaryConditions++)=gc[grid].boundaryCondition(side,axis);
       for( int i=0; i<numberOfBoundaryConditions-1; i++ ) // check if it is already in the list
       {
-	if(boundaryConditionList(i)==gc[grid].boundaryCondition()(side,axis) )
-	{
-	  numberOfBoundaryConditions--;  // remove from the list
-	  break;
-	}
+        if(boundaryConditionList(i)==gc[grid].boundaryCondition()(side,axis) )
+        {
+          numberOfBoundaryConditions--;  // remove from the list
+          break;
+        }
       }
     }
   }
@@ -444,9 +444,9 @@ streamLines2d(GenericGraphicsInterface &gi, GridCollection & gc,
                             "reset min max",
                             "reset plot bounds",
                             "plot the grid",
-			    "erase",
-			    "erase and exit",
-			    ""};
+                            "erase",
+                            "erase and exit",
+                            ""};
     int numRows=4;
     dialog.setPushButtons( pbCommands, pbCommands, numRows ); 
 
@@ -540,8 +540,8 @@ streamLines2d(GenericGraphicsInterface &gi, GridCollection & gc,
       xo = yo = zo = GenericGraphicsInterface::defaultOrigin;
       if( answer2 !="" && answer2!=" ")
       {
-	sScanF(answer2,"%e %e %e",&xo, &yo, &zo);
-	gi.setAxesOrigin(xo, yo, zo);
+        sScanF(answer2,"%e %e %e",&xo, &yo, &zo);
+        gi.setAxesOrigin(xo, yo, zo);
       }
     }
     else if( answer=="keep aspect ratio" )
@@ -557,14 +557,14 @@ streamLines2d(GenericGraphicsInterface &gi, GridCollection & gc,
     else if(answer=="choose new plot bounds")
     {
       sPrintF(buff,"Current values: xMin=%e, xMax=%e, yMin=%e, yMax=%e",
-	   	   plotBound(Start,0),plotBound(End,0),plotBound(Start,1),plotBound(End,1));
+                   plotBound(Start,0),plotBound(End,0),plotBound(Start,1),plotBound(End,1));
       gi.outputString(buff);
       // outputString("Enter plot bounds: xMin xMax yMin yMax");
       gi.inputString(answer2,"Enter plot bounds: xMin xMax yMin yMax");
       // cout << "answer2 = " << answer2 << endl;
       real xa,xb,ya,yb;
       for( int i=0; i<answer2.length(); i++)
-	buff[i]=answer2[i];
+        buff[i]=answer2[i];
       // sScanF(answer2,"%e %e %e %e",&xa,&xb,&ya,&yb);
       sScanF(buff,"%e %e %e %e",&xa,&xb,&ya,&yb);
       // printf("xa=%e, xb=%e, ya=%e, yb=%e \n",xa,xb,ya,yb);
@@ -587,8 +587,8 @@ streamLines2d(GenericGraphicsInterface &gi, GridCollection & gc,
       gi.setGlobalBound(plotBound);
 
       if( dialogIsOn )
-	dialog.setTextLabel("plot bounds",sPrintF("%g %g %g %g",plotBound(Start,0),plotBound(End,0),plotBound(Start,1),
-						  plotBound(End,1)));
+        dialog.setTextLabel("plot bounds",sPrintF("%g %g %g %g",plotBound(Start,0),plotBound(End,0),plotBound(Start,1),
+                                                  plotBound(End,1)));
 
     }
     else if( answer=="choose first velocity component" )
@@ -602,14 +602,14 @@ streamLines2d(GenericGraphicsInterface &gi, GridCollection & gc,
         {
           sPrintF(buff,"component%i",uv.getComponentBase(0)+i);
           menu2[i]=buff;
-	}
+        }
       }
       menu2[numberOfComponents]="";   // null string terminates the menu
       uComponent = gi.getMenuItem(menu2,answer2);
       // make sure that the currentWindow is the same as startWindow! (It might get changed 
       // interactively by the user)
       if (gi.getCurrentWindow() != startWindow)
-	gi.setCurrentWindow(startWindow);
+        gi.setCurrentWindow(startWindow);
 
       uComponent+=uv.getComponentBase(0);
       delete [] menu2;
@@ -623,17 +623,17 @@ streamLines2d(GenericGraphicsInterface &gi, GridCollection & gc,
       {
         menu2[i]=uv.getName(uv.getComponentBase(0)+i);
         if( menu2[i] == "" || menu2[i]==" " )
-	{
+        {
           sPrintF(buff,"component%i",uv.getComponentBase(0)+i);
           menu2[i]=buff;
-	}
+        }
       }
       menu2[numberOfComponents]="";   // null string terminates the menu
       vComponent = gi.getMenuItem(menu2,answer2);
       // make sure that the currentWindow is the same as startWindow! (It might get changed 
       // interactively by the user)
       if (gi.getCurrentWindow() != startWindow)
-	gi.setCurrentWindow(startWindow);
+        gi.setCurrentWindow(startWindow);
 
       vComponent+=uv.getComponentBase(0);
       delete [] menu2;
@@ -647,11 +647,11 @@ streamLines2d(GenericGraphicsInterface &gi, GridCollection & gc,
                    uMin,uMax )); 
       if( answer2 !="" && answer2!=" ")
       {
-	sScanF(answer2,"%e %e",&minStreamLine,&maxStreamLine);
+        sScanF(answer2,"%e %e",&minStreamLine,&maxStreamLine);
         printf("New values are min = %e, max = %e \n",minStreamLine,maxStreamLine);
         minAndMaxStreamLinesSpecified=true;
         uMin=minStreamLine;
-	uMax=maxStreamLine;
+        uMax=maxStreamLine;
       }
       else
         minAndMaxStreamLinesSpecified=false;
@@ -690,17 +690,17 @@ streamLines2d(GenericGraphicsInterface &gi, GridCollection & gc,
     else if(  (len=answer.matches("plot bounds")) )
     {
       sScanF(answer(len,answer.length()-1),"%e %e %e %e",&plotBound(Start,0),&plotBound(End,0),&plotBound(Start,1),
-	     &plotBound(End,1));
+             &plotBound(End,1));
 
       dialog.setTextLabel("plot bounds",sPrintF("%g %g %g %g",plotBound(Start,0),plotBound(End,0),plotBound(Start,1),
-						plotBound(End,1)));
+                                                plotBound(End,1)));
 
       recomputeVelocityMinMax=true;
 
       psp.usePlotBounds=true;
       gi.resetGlobalBound(gi.getCurrentWindow());
       gi.setGlobalBound(plotBound);
-			  
+                          
     }
     else if( (len=answer.matches("streamline density")) )
     {
@@ -708,22 +708,22 @@ streamLines2d(GenericGraphicsInterface &gi, GridCollection & gc,
 
       if( nxgMax<=0 || nxgMax>10000 )
       {
-	printf("Error: streamline density=%i is <=0 or too large. Try a number between 1 and 10000\n",nxgMax);
-	nxgMax=40;
+        printf("Error: streamline density=%i is <=0 or too large. Try a number between 1 and 10000\n",nxgMax);
+        nxgMax=40;
       }
       else
       {
-	if( backGroundGridDimension(0)>0 && backGroundGridDimension(1)>0 )
-	{
-	  const int maxBack=max(backGroundGridDimension(Range(0,1)));
-	  backGroundGridDimension(0)=(int)max(2,nxgMax*backGroundGridDimension(0)/maxBack+.5);
-	  backGroundGridDimension(1)=(int)max(2,nxgMax*backGroundGridDimension(1)/maxBack+.5);
-	}
-	else
-	{
-	  backGroundGridDimension(0)=0;
-	  backGroundGridDimension(1)=0;
-	}
+        if( backGroundGridDimension(0)>0 && backGroundGridDimension(1)>0 )
+        {
+          const int maxBack=max(backGroundGridDimension(Range(0,1)));
+          backGroundGridDimension(0)=(int)max(2,nxgMax*backGroundGridDimension(0)/maxBack+.5);
+          backGroundGridDimension(1)=(int)max(2,nxgMax*backGroundGridDimension(1)/maxBack+.5);
+        }
+        else
+        {
+          backGroundGridDimension(0)=0;
+          backGroundGridDimension(1)=0;
+        }
       }
       dialog.setTextLabel("streamline density",sPrintF("%i",nxgMax));
       
@@ -738,13 +738,13 @@ streamLines2d(GenericGraphicsInterface &gi, GridCollection & gc,
       gi.inputString(answer2,sPrintF(buff,"Enter stopping tolerance for stream lines, (current=%e)",
                    streamLineStoppingTolerance )); 
       if( answer2 !="" && answer2!=" ")
-	sScanF(answer2,"%e",&streamLineStoppingTolerance);
+        sScanF(answer2,"%e",&streamLineStoppingTolerance);
     }
     else if( answer=="set arrow size" )
     {
       gi.inputString(answer2,sPrintF(buff,"Enter the arrow size, (current=%e)",arrowSize));
       if( answer2 !="" && answer2!=" ")
-	sScanF(answer2,"%e",&arrowSize);
+        sScanF(answer2,"%e",&arrowSize);
     }
     else if( answer=="set streamline density" )
     {
@@ -752,26 +752,26 @@ streamLines2d(GenericGraphicsInterface &gi, GridCollection & gc,
                    nxgMax)); 
       if( answer2 !="" )
       {
-	sScanF(answer2,"%i",&nxgMax);
+        sScanF(answer2,"%i",&nxgMax);
         if( nxgMax<=0 || nxgMax>10000 )
-	{
-	  printf("Error: streamline density=%i is <=0 or too large. Try a number between 1 and 10000\n",nxgMax);
-	  nxgMax=40;
-	}
-	else
-	{
+        {
+          printf("Error: streamline density=%i is <=0 or too large. Try a number between 1 and 10000\n",nxgMax);
+          nxgMax=40;
+        }
+        else
+        {
           if( backGroundGridDimension(0)>0 && backGroundGridDimension(1)>0 )
-	  {
+          {
             const int maxBack=max(backGroundGridDimension(Range(0,1)));
-	    backGroundGridDimension(0)=(int)max(2,nxgMax*backGroundGridDimension(0)/maxBack+.5);
-	    backGroundGridDimension(1)=(int)max(2,nxgMax*backGroundGridDimension(1)/maxBack+.5);
-	  }
-	  else
-	  {
-	    backGroundGridDimension(0)=0;
-	    backGroundGridDimension(1)=0;
-	  }
-	}
+            backGroundGridDimension(0)=(int)max(2,nxgMax*backGroundGridDimension(0)/maxBack+.5);
+            backGroundGridDimension(1)=(int)max(2,nxgMax*backGroundGridDimension(1)/maxBack+.5);
+          }
+          else
+          {
+            backGroundGridDimension(0)=0;
+            backGroundGridDimension(1)=0;
+          }
+        }
       }
       plotStreamLines=plotObject;  
     }
@@ -781,7 +781,7 @@ streamLines2d(GenericGraphicsInterface &gi, GridCollection & gc,
              numberOfGhostLinesToPlot)); 
       if( answer2 !="" && answer2!=" ")
       {
-	sScanF(answer2,"%i ",&numberOfGhostLinesToPlot);
+        sScanF(answer2,"%i ",&numberOfGhostLinesToPlot);
         gi.outputString(sPrintF(buff,"Plot %i ghost lines\n",numberOfGhostLinesToPlot));
       }
     }
@@ -818,13 +818,13 @@ streamLines2d(GenericGraphicsInterface &gi, GridCollection & gc,
     {
       if( uComponent<uv.getComponentBase(0) || uComponent>uv.getComponentBound(0))
       {
-	cout << "PlotIt::streamLines:ERROR Invalid component for u : " << uComponent << endl;
+        cout << "PlotIt::streamLines:ERROR Invalid component for u : " << uComponent << endl;
         cout << "You must choose a valid component for u before the stream lines can be drawn\n";
         plotObject=false;
       }
       if( vComponent<uv.getComponentBase(0) || vComponent>uv.getComponentBound(0))
       {
-	cout << "PlotIt::streamLines:ERROR Invalid component for v : " << vComponent << endl;
+        cout << "PlotIt::streamLines:ERROR Invalid component for v : " << vComponent << endl;
         cout << "You must choose a valid component for v before the stream lines can be drawn\n";
         plotObject=false;
       }
@@ -838,169 +838,169 @@ streamLines2d(GenericGraphicsInterface &gi, GridCollection & gc,
 //       printF("StreamLines: aspectRatio = %e \n",gi.getAspectRatio());
 //       if( true )
 //       {
-// 	GL_GraphicsInterface & gigl = (GL_GraphicsInterface &)gi;
+//      GL_GraphicsInterface & gigl = (GL_GraphicsInterface &)gi;
 //         RealArray & gb = gigl.globalBound[0];
 //         real *rc = gigl.rotationCenter[0];
-// 	printF(" globalBound = [%e,%e][%e,%e][%e,%e]\n",gb(0,0),gb(1,0),gb(0,1),gb(1,1),gb(0,2),gb(1,2));
-// 	printF(" rotationCenter = [%e,%e,%e]\n",rc[0],rc[1],rc[2]);
+//      printF(" globalBound = [%e,%e][%e,%e][%e,%e]\n",gb(0,0),gb(1,0),gb(0,1),gb(1,1),gb(0,2),gb(1,2));
+//      printF(" rotationCenter = [%e,%e,%e]\n",rc[0],rc[1],rc[2]);
 //       }
 
 
       if( plotStreamLines )
       {
-	glDeleteLists(list,1);  // clear the plot
+        glDeleteLists(list,1);  // clear the plot
 
       // printf(" uv.getName = %s \n",(const char*)uv.getName());
       // printf(" uv[0].getName = %s \n",(const char*)uv[0].getName());
       // printf(" uv.getName(0) = %s \n",(const char*)uv.getName(0));
       // printf(" uv[0].getName(0) = %s \n",(const char*)uv[0].getName(0));
       
-	componentsToInterpolate(0)=uComponent; // these are used by xInterpolate
-	componentsToInterpolate(1)=vComponent;
+        componentsToInterpolate(0)=uComponent; // these are used by xInterpolate
+        componentsToInterpolate(1)=vComponent;
 
-	int intopt=2+8;   //  intopt: 2=2nd order interpolation, 8=use xyrs array
+        int intopt=2+8;   //  intopt: 2=2nd order interpolation, 8=use xyrs array
 
-	xa=plotBound(Start,axis1); xb=plotBound(End,axis1); xba=xb-xa;
-	ya=plotBound(Start,axis2); yb=plotBound(End,axis2); yba=yb-ya;
+        xa=plotBound(Start,axis1); xb=plotBound(End,axis1); xba=xb-xa;
+        ya=plotBound(Start,axis2); yb=plotBound(End,axis2); yba=yb-ya;
 
-	nrsmx=0;
-	Range Axes(0,gc.numberOfDimensions()-1);
-	for( grid=0; grid<numberOfGrids; grid++)
-	  nrsmx=max(nrsmx,max(gc[grid].gridIndexRange()(End,Axes)-gc[grid].gridIndexRange()(Start,Axes)));
+        nrsmx=0;
+        Range Axes(0,gc.numberOfDimensions()-1);
+        for( grid=0; grid<numberOfGrids; grid++)
+          nrsmx=max(nrsmx,max(gc[grid].gridIndexRange()(End,Axes)-gc[grid].gridIndexRange()(Start,Axes)));
 
          //.......determine max and min value of sqrt( u**2+v**2 )    
-	if( !minAndMaxStreamLinesSpecified )
-	{
-	  if( recomputeVelocityMinMax )
-	  {
-	    recomputeVelocityMinMax=false;
+        if( !minAndMaxStreamLinesSpecified )
+        {
+          if( recomputeVelocityMinMax )
+          {
+            recomputeVelocityMinMax=false;
 
             computeMaximumSpeed( uv,gc,numberOfGhostLinesToPlot,uComponent,vComponent,xa,xb,ya,yb, uMin,uMax );
 
-	    if( dialogIsOn ) dialog.setTextLabel("min max",sPrintF(answer,"%g %g",uMin,uMax));
-	    
-	  }
-	}
-	else
-	{
-	  uMin=minStreamLine;
-	  uMax=maxStreamLine;
-	}
+            if( dialogIsOn ) dialog.setTextLabel("min max",sPrintF(answer,"%g %g",uMin,uMax));
+            
+          }
+        }
+        else
+        {
+          uMin=minStreamLine;
+          uMax=maxStreamLine;
+        }
       
-	// -----determine how big to make the background grid------
-	// *** this is wrong if we zoom in ****
-	if( backGroundGridDimension(0)>0 && backGroundGridDimension(1)>0 )
-	{
-	  nxg=backGroundGridDimension(0);
-	  nyg=backGroundGridDimension(1);
-	}
-	else
-	{
-	  real dwx=plotBound(End,axis1)-plotBound(Start,axis1);
-	  real dwy=plotBound(End,axis2)-plotBound(Start,axis2);
+        // -----determine how big to make the background grid------
+        // *** this is wrong if we zoom in ****
+        if( backGroundGridDimension(0)>0 && backGroundGridDimension(1)>0 )
+        {
+          nxg=backGroundGridDimension(0);
+          nyg=backGroundGridDimension(1);
+        }
+        else
+        {
+          real dwx=plotBound(End,axis1)-plotBound(Start,axis1);
+          real dwy=plotBound(End,axis2)-plotBound(Start,axis2);
 
-	  // if( (nrsmx % 10 ) < 2 || (nrsmx % 10) >8  ) nrsmx=nrsmx+4;  // ******8
+          // if( (nrsmx % 10 ) < 2 || (nrsmx % 10) >8  ) nrsmx=nrsmx+4;  // ******8
 
-	  nxg=0;  // ****
-	  nyg=0;
+          nxg=0;  // ****
+          nyg=0;
 
-	  if( dwy>dwx )
-	  {
-	    nyg=min(nxgMax,nrsmx);
-	    nxg=(int)max(.3*nyg,nyg*dwx/dwy);
-	  }
-	  else
-	  {
-	    nxg=min(nxgMax,nrsmx);
-	    nyg=(int)max(.3*nxg,nxg*dwy/dwx);
-	  }
-	  nxg+=3;  // *********************************
-	  nyg+=3;
-	  backGroundGridDimension(0)=nxg;
-	  backGroundGridDimension(1)=nyg;
-	}      
-	// the array maskForStreamLines(ixg,iyg) is set >= 1 if a streamline passes through the cell (ixg,iyg)
-	// maskForStreamLines.redim(Range(-5,nxg+5),Range(-5,nyg+5)); maskForStreamLines=0;
-	IntegerArray maskForStreamLines;
-	maskForStreamLines.redim(nxg,nyg); maskForStreamLines=0;
+          if( dwy>dwx )
+          {
+            nyg=min(nxgMax,nrsmx);
+            nxg=(int)max(.3*nyg,nyg*dwx/dwy);
+          }
+          else
+          {
+            nxg=min(nxgMax,nrsmx);
+            nyg=(int)max(.3*nxg,nxg*dwy/dwx);
+          }
+          nxg+=3;  // *********************************
+          nyg+=3;
+          backGroundGridDimension(0)=nxg;
+          backGroundGridDimension(1)=nyg;
+        }      
+        // the array maskForStreamLines(ixg,iyg) is set >= 1 if a streamline passes through the cell (ixg,iyg)
+        // maskForStreamLines.redim(Range(-5,nxg+5),Range(-5,nyg+5)); maskForStreamLines=0;
+        IntegerArray maskForStreamLines;
+        maskForStreamLines.redim(nxg,nyg); maskForStreamLines=0;
 
 
 
-	glNewList(list,GL_COMPILE);
+        glNewList(list,GL_COMPILE);
 
         glPushName(gc.getGlobalID()); // assign a name for picking
 
         //......Plot boundary curves of the grid
         real uRaise=0.;
-	plotGridBoundaries(gi, gc, boundaryConditionList, numberOfBoundaryConditions, 0, uRaise, psp);
+        plotGridBoundaries(gi, gc, boundaryConditionList, numberOfBoundaryConditions, 0, uRaise, psp);
       
-	//............Plot Streamlines on each component grid............
-	if( uMax>uMin ) // no streamLines drawn if velocity is constant
-	{
-	  PlotIt::plotStreamLines(gi, gc, uv, componentsToInterpolate, maskForStreamLines, arrowSize, psp,
-	      	  xa, ya,  xb, yb, xba, yba, uMin, uMax, nrsmx, nxg,  nyg,  intopt );
-	}
-	glPopName();
-	glEndList();
+        //............Plot Streamlines on each component grid............
+        if( uMax>uMin ) // no streamLines drawn if velocity is constant
+        {
+          PlotIt::plotStreamLines(gi, gc, uv, componentsToInterpolate, maskForStreamLines, arrowSize, psp,
+                  xa, ya,  xb, yb, xba, yba, uMin, uMax, nrsmx, nxg,  nyg,  intopt );
+        }
+        glPopName();
+        glEndList();
       }
       
 //       if( psp.plotTitleLabels )
 //       {
-// 	// plot labels on top and bottom
-// 	aString topLabel=psp.topLabel;
-// 	if( psp.topLabel!="" || (uv.getName(uComponent)!="" && uv.getName(vComponent)!="") )
-// 	  psp.topLabel=psp.topLabel+" ("+uv.getName(uComponent)+","+uv.getName(vComponent)+")";
-// 	gi.plotLabels( psp );
-// 	psp.topLabel=topLabel;
+//      // plot labels on top and bottom
+//      aString topLabel=psp.topLabel;
+//      if( psp.topLabel!="" || (uv.getName(uComponent)!="" && uv.getName(vComponent)!="") )
+//        psp.topLabel=psp.topLabel+" ("+uv.getName(uComponent)+","+uv.getName(vComponent)+")";
+//      gi.plotLabels( psp );
+//      psp.topLabel=topLabel;
 //       }
 
       if( plotTitleLabels )
       {
- 	// plot labels on top and bottom
- 	aString topLabel=psp.topLabel;       // remember original values
-	// aString topLabel1 = psp.topLabel1;
-	
+        // plot labels on top and bottom
+        aString topLabel=psp.topLabel;       // remember original values
+        // aString topLabel1 = psp.topLabel1;
+        
         if( psp.labelComponent )
-	{
-	if( psp.topLabel!="" || (uv.getName(uComponent)!="" && uv.getName(vComponent)!="") )
-	  psp.topLabel=psp.topLabel+" ("+uv.getName(uComponent)+","+uv.getName(vComponent)+")";
-	}
-	
-	if( psp.labelMinMax )
-	{
-	  // label min max of components
+        {
+        if( psp.topLabel!="" || (uv.getName(uComponent)!="" && uv.getName(vComponent)!="") )
+          psp.topLabel=psp.topLabel+" ("+uv.getName(uComponent)+","+uv.getName(vComponent)+")";
+        }
+        
+        if( psp.labelMinMax )
+        {
+          // label min max of components
           aString label = "("+uv.getName(uComponent)+","+uv.getName(vComponent)+")";
-	  
-	  if(  max(fabs(uMax),fabs(uMin)) < .01 )
-	    label += sPrintF(buff,"=[%8.2e,%8.2e]",uMin,uMax);
-	  else if( max(fabs(uMax),fabs(uMin)) < 10. )
-	    label += sPrintF(buff,"=[%6.3f,%6.3f]",uMin,uMax);
-	  else if( max(fabs(uMax),fabs(uMin)) < 100. )
-	    label += sPrintF(buff,"=[%6.2f,%6.2f]",uMin,uMax);
-	  else if( max(fabs(uMax),fabs(uMin)) < 1000. )
-	    label += sPrintF(buff,"=[%6.1f,%6.1f]",uMin,uMax);
-	  else 
-	    label += sPrintF(buff,"=[%8.2e,%8.2e]",uMin,uMax);
-	  
+          
+          if(  max(fabs(uMax),fabs(uMin)) < .01 )
+            label += sPrintF(buff,"=[%8.2e,%8.2e]",uMin,uMax);
+          else if( max(fabs(uMax),fabs(uMin)) < 10. )
+            label += sPrintF(buff,"=[%6.3f,%6.3f]",uMin,uMax);
+          else if( max(fabs(uMax),fabs(uMin)) < 100. )
+            label += sPrintF(buff,"=[%6.2f,%6.2f]",uMin,uMax);
+          else if( max(fabs(uMax),fabs(uMin)) < 1000. )
+            label += sPrintF(buff,"=[%6.1f,%6.1f]",uMin,uMax);
+          else 
+            label += sPrintF(buff,"=[%8.2e,%8.2e]",uMin,uMax);
+          
 //           printf(" contour: psp.topLabel1=%s (before) label=%s, psp.labelMinMax=%i\n",
 //                   (const char*)psp.topLabel1,(const char*)label,psp.labelMinMax);
-	  
+          
           if( psp.labelMinMax==1 )
             psp.topLabel1 = label;  // set label
           else
             psp.topLabel1 = topLabel1 + " " + label;  // add to the label
-	}
+        }
 
-	gi.plotLabels( psp );
+        gi.plotLabels( psp );
 
-	psp.topLabel=topLabel;  // reset
+        psp.topLabel=topLabel;  // reset
         // no: psp.topLabel1=topLabel1;
       }
 
       // ----------Draw the colour Bar-----------------
       if( plotColourBar )
       {
-	int numberOfColourBarLabels=11;
+        int numberOfColourBarLabels=11;
         gi.drawColourBar(numberOfColourBarLabels,Overture::nullRealArray(),uMin,uMax,psp);
       }
       gi.redraw();

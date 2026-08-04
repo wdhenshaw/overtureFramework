@@ -387,7 +387,8 @@ computeDerivedFunctions( realCompositeGridFunction & u )
 
 
     getIndex(gc[grid].dimension(),I1,I2,I3);
-    bool ok = ParallelUtility::getLocalArrayBounds(vg,v,I1,I2,I3);
+    int includeParallelGhost=1; // Jan 23, 2026
+    bool ok = ParallelUtility::getLocalArrayBounds(vg,v,I1,I2,I3,includeParallelGhost);
     if( !ok ) continue;
 
     for( i=0; i<numberOfDerivedFunctions; i++ )
@@ -400,6 +401,9 @@ computeDerivedFunctions( realCompositeGridFunction & u )
       if( derived(i,0)>=xDerivative && derived(i,0)<=laplaceDerivative )
       {
         interpolationRequired=true;
+        int includeParallelGhost=0; 
+        ok = ParallelUtility::getLocalArrayBounds(vg,v,I1,I2,I3,includeParallelGhost);
+
         realSerialArray vx(I1,I2,I3);
         vx=0.;
         

@@ -1,3 +1,53 @@
+
+****************************************
+***** Mon Aug 3, 2026
+
+RETURN TO FSI ....
+
+SAVING A SHOW IS BROKEN: 
+$cgmp io.cmd -g=innerOutere2.order2.hdf -nu=.1 -kappa=.05 -tf=1.0 -solver=yale -show=oneDiskINS.show
+
+    if( 1==1 ) // Aug 3, 2026
+    {
+       GridCollection *pgc = q.getGridCollection(false);  
+       GridCollection *pgc2 = gf0.u.getGridCollection(false);
+
+       printF("\n BBBBBBB DomainSolver::saveShow: check for the gridCollection, gf0.u.getGridCollection=%ld  q.getGridCollection=%ld BBBBBB \n\n",pgc2,pgc);
+    }  
+    
+
+ ============= Cgmp::saveShow for domain 1 (innerDomain) domainSolver[d]->current=0 ==================
+saveShow: check for the gridCollection, pgc =0x7fffffffa060
+solid:*** saveShow:   saveAugmentedSolutionToShowFile ***
+***Save grid in the show file: numberOfComponentGrids=2
+doubleGridCollectionFunction:getGridCollection:ERROR: The pointer to the gridCollection is NULL 
+
+#3  0x00007fffeae42476 in __GI_raise (sig=sig@entry=6) at ../sysdeps/posix/raise.c:26
+#4  0x00007fffeae287f3 in __GI_abort () at ./stdlib/abort.c:79
+#5  0x00005555557acf1f in Overture::abort (message=...) at OvertureInit.C:387
+#6  0x00007fffef2efb0e in doubleGridCollectionFunction::getGridCollection (this=0x7fffffff6d70, abortIfNull=true) at doubleGridCollectionFunction.C:1167
+#7  0x00007ffff03fb8fc in Ogshow::saveSolution (this=0x555555eb00f0, u_=..., name=..., frameForGrid=1) at Ogshow.C:1419
+#8  0x00007ffff1d10b5f in DomainSolver::saveShow (this=0x555555fd8f30, gf0=...) at src/saveShow.C:703
+#9  0x00005555555d4ec8 in Cgmp::saveShow (this=0x555555ef9f70, gf0=...) at src/saveShow.C:104
+#10 0x00005555555c9961 in Cgmp::solve (this=0x555555ef9f70) at src/solve.C:69
+#11 0x00005555555afb65 in main (argc=9, argv=0x7fffffffdf08) at src/cgmpMain.C:213
+
+
+
+
+ ============= Cgmp::saveShow for domain 0 (outerDomain) ==================
+***Save grid in the show file: numberOfComponentGrids=2
+
+ ============= Cgmp::saveShow for domain 1 (innerDomain) ==================
+solid:*** saveShow:   saveAugmentedSolutionToShowFile ***
+***Save grid in the show file: numberOfComponentGrids=2
+doubleGridCollectionFunction:getGridCollection:ERROR: The pointer to the gridCollection is NULL 
+
+This is OK
+$cgmp io.cmd -g=innerOutere2.order2.hdf -nu=.1 -kappa=.05 -tf=1.0 -solver=yale 
+
+
+
 ****************************************
 ***** March 31, 2021
 

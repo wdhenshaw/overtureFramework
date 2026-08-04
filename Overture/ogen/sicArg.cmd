@@ -36,13 +36,15 @@
 # Order 8 
 #     ogen -noplot sicArg -order=8 -numGhost=5 -interp=e -factor=4
 #
+$prefix = "sic"; 
 $order=2; $factor=1; $interp="i"; $fixedRadius=-1; $ml=0; # default values 
 $orderOfAccuracy = "second order"; $ng=2; $interpType = "implicit for all grids";
 $numGhost=-1;  # if this value is set, then use this number of ghost points
+$addExtraGhost=1; # add some extra ghost for singular problems which need to add an extra equation
 # 
 # get command line arguments
-GetOptions( "order=i"=>\$order,"factor=i"=>\$factor,"interp=s"=>\$interp,\
-            "fixedRadius=f"=>\$fixedRadius,"numGhost=i"=> \$numGhost,"ml=i"=>\$ml );
+GetOptions( "order=i"=>\$order,"factor=i"=>\$factor,"prefix=s"=>\$prefix,"interp=s"=>\$interp,\
+            "fixedRadius=f"=>\$fixedRadius,"numGhost=i"=> \$numGhost,"ml=i"=>\$ml,"addExtraGhost=i"=> \$addExtraGhost );
 # 
 if( $order eq 4 ){ $orderOfAccuracy="fourth order"; $ng=2; }\
 elsif( $order eq 6 ){ $orderOfAccuracy="sixth order"; $ng=4; }\
@@ -53,7 +55,6 @@ $suffix = ".order$order";
 if( $numGhost ne -1 ){ $ng = $numGhost; } # overide number of ghost
 if( $numGhost ne -1 ){ $suffix .= ".ng$numGhost"; } 
 if( $ml ne 0 ){ $suffix .= ".ml$ml"; }
-$prefix = "sic"; 
 if( $fixedRadius ne -1 ){ $prefix .= "Fixed"; }
 $name = $prefix . "$interp$factor" . $suffix . ".hdf";
 # 
@@ -114,7 +115,7 @@ generate an overlapping grid
       $orderOfAccuracy
     ghost points
       all
-      $ngp = $ng+1; 
+      if( $addExtraGhost eq 1 ){ $ngp = $ng+1; }else{ $ngp=$ng; }
       $ng $ng $ng $ngp $ng $ng 
   exit
 #  display intermediate results
