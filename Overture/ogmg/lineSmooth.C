@@ -264,9 +264,9 @@ smoothLine(const int & level, const int & grid,
 
 
   // *wdh* June 26, 2019 -- use correct order of accuracy 
-    const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevels");
+    const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevelSolves");
     const int orderOfThisLevel = level==0 ? orderOfAccuracy : orderOfCoarseLevelSolves;
-
+    assert( orderOfCoarseLevelSolves>0 ); // *wdh* Aug 6, 2026
 
     const int width = orderOfThisLevel+1;  // 3 or 5
 

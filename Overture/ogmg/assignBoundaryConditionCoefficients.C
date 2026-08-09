@@ -35,7 +35,7 @@ assignBoundaryConditionCoefficients( realMappedGridFunction & coeff, int grid, i
 //  
 // =============================================================================================
 {
-  // const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevels");
+  // const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevelSolves");
   // const int orderOfThisLevel = level==0 ? orderOfAccuracy : orderOfCoarseLevelSolves;
 
     assert( orderOfAccuracyThisGrid==2 || orderOfAccuracyThisGrid==4 );

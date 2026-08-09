@@ -394,7 +394,7 @@ updateToMatchGrid( CompositeGrid & mg_ )
     parameters.set(OgmgParameters::THEorderOfAccuracy,orderOfAccuracy);
     
     // By default the order of coarse levels solves is the same as the fine level -- this may change 
-    int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevels");
+    int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevelSolves");
     if( orderOfCoarseLevelSolves<0 )
       orderOfCoarseLevelSolves=orderOfAccuracy;
 
@@ -2845,7 +2845,7 @@ printStatistics(FILE *file_ /* =stdout */) const
 
     fPrintF(file," maximum number of iterations = %i.\n",parameters.maximumNumberOfIterations);
     fPrintF(file," order of accuracy = %i.\n",orderOfAccuracy);
-    fPrintF(file," order of coarse level operators = %i.\n",parameters.dbase.get<int>( "orderOfCoarseLevels"));
+    fPrintF(file," order of coarse level operators = %i.\n",parameters.dbase.get<int>( "orderOfCoarseLevelSolves"));
     
     fPrintF(file," number of levels = %i (%i extra levels, max-extra-levels=%i).\n",mgcg.numberOfMultigridLevels(),
             mgcg.numberOfMultigridLevels()-1,parameters.maximumNumberOfExtraLevels);
@@ -3431,7 +3431,7 @@ buildCoefficientArrays()
     {
       int level=level0+l;
 
-      const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevels");
+      const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevelSolves");
       const int orderOfThisLevel = level==0 ? orderOfAccuracy : orderOfCoarseLevelSolves;
 
       const int width = orderOfThisLevel+1;  // 3 or 5
@@ -3518,7 +3518,7 @@ buildCoefficientArrays()
     {
       int level=level0+l;
 
-      const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevels");
+      const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevelSolves");
       const int orderOfThisLevel = (level+1)==0 ? orderOfAccuracy : orderOfCoarseLevelSolves;
 
       const int width = orderOfThisLevel+1;  // 3 or 5
@@ -4263,6 +4263,10 @@ loadBalance( CompositeGrid & mg, CompositeGrid & mgcg )
 // ============================================================================================
 {
 
+  #ifndef USE_PPP
+    // *wdh* added Aug 7, 2026 -- trouble below when copying  gridDistributionList[grid]=mg->gridDistributionList[grid]; for cgmp 
+    return 0;
+  #endif
   // From GridCollection.C : 
   if( Ogmg::debug & 8 )
   {

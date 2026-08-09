@@ -248,7 +248,7 @@ init()
   orderOfAccuracy=-1;  // -1 means that the order has not been assigned yet
   
   // For high-order schemes we may use lower order on the coarser levels
-  if( !dbase.has_key("orderOfCoarseLevels") ){ dbase.put<int>( "orderOfCoarseLevels")=-1; }// 
+  if( !dbase.has_key("orderOfCoarseLevelSolves") ){ dbase.put<int>( "orderOfCoarseLevelSolves")=-1; }// 
 
   // Max iterations for the coarse grid solver: 
   if( !dbase.has_key("maxIterationsCoarseGrid") ){ dbase.put<int>( "maxIterationsCoarseGrid")=10000; }// -1 = use default
@@ -697,8 +697,8 @@ operator=(const OgmgParameters& x)
 
 
   // For high-order schemes we may use lower order on the coarser levels *wdh* added July 20, 2024
-  dbase.get<int>("orderOfCoarseLevels")=x.dbase.get<int>( "orderOfCoarseLevels"); 
-  // printF("\n @@@@@@@@@@ OgmgParameters::operator= setting orderOfCoarseLevels=%d @@@@@@@@@@@\n\n",dbase.get<int>("orderOfCoarseLevels"));
+  dbase.get<int>("orderOfCoarseLevelSolves")=x.dbase.get<int>( "orderOfCoarseLevelSolves"); 
+  // printF("\n @@@@@@@@@@ OgmgParameters::operator= setting orderOfCoarseLevels=%d @@@@@@@@@@@\n\n",dbase.get<int>("orderOfCoarseLevelSolves"));
   // Max iterations for the coarse grid solver: *wdh* added July 20, 2024
   dbase.get<int>("maxIterationsCoarseGrid")=x.dbase.get<int>("maxIterationsCoarseGrid");
 
@@ -1070,7 +1070,7 @@ set( OptionEnum option, int value, real rvalue )
     orderOfAccuracy=value;
     break;
   case THEorderOfCoarseGridSolves:
-    dbase.get<int>( "orderOfCoarseLevels")=value;
+    dbase.get<int>( "orderOfCoarseLevelSolves")=value;
     break;
   default:
     printF("OgmgParameters::set: Unknown option=%i! This should not happen\n",option);
@@ -1415,7 +1415,7 @@ get( OptionEnum option, int & value, real & rvalue ) const
     value=orderOfAccuracy;
     break;
   case THEorderOfCoarseGridSolves:
-    value=dbase.get<int>( "orderOfCoarseLevels");
+    value=dbase.get<int>( "orderOfCoarseLevelSolves");
     break;
     
   default:
@@ -1621,7 +1621,7 @@ buildOptionsDialog( DialogData & dialog )
   sPrintF(textStrings[nt],"%i",orderOfAccuracy);  nt++; 
 
   textLabels[nt] = "order of coarse level solves:";  
-  sPrintF(textStrings[nt],"%i",dbase.get<int>( "orderOfCoarseLevels"));  nt++; 
+  sPrintF(textStrings[nt],"%i",dbase.get<int>( "orderOfCoarseLevelSolves"));  nt++; 
 
   // null strings terminal list
   textLabels[nt]="";   textStrings[nt]="";  assert( nt<numberOfTextStrings );
@@ -1653,7 +1653,7 @@ update( GenericGraphicsInterface & gi, CompositeGrid & cg )
   updateToMatchGrid(cg);
 
   const int numberOfMultigridLevels = numberOfSubSmooths.getLength(1); // use this
-  int & orderOfCoarseLevelSolves = dbase.get<int>( "orderOfCoarseLevels");
+  int & orderOfCoarseLevelSolves = dbase.get<int>( "orderOfCoarseLevelSolves");
     
 
 

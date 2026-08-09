@@ -118,12 +118,12 @@ buildPredefinedEquations(CompositeGridOperators & cgop)
 {
   real time0=getCPU();
 
-  const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevels");
+  int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevelSolves");
   int order = orderOfAccuracy;
-  if( false )
-  {
-    order=orderOfCoarseLevelSolves;  // this will need to be fixed 
-  }
+
+  if( orderOfCoarseLevelSolves<0 )
+    orderOfCoarseLevelSolves=orderOfAccuracy;  // *wdh* Aug 6, 2026
+
   
 
   const int width = order+1;  // 3 or 5
@@ -285,7 +285,7 @@ buildPredefinedCoefficientMatrix( int level, bool buildRectangular, bool buildCu
   CompositeGrid & mgcg = multigridCompositeGrid();
   assert( level>=0 && level<mgcg.numberOfMultigridLevels() );
   
-  const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevels");
+  const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevelSolves");
   const int orderOfThisLevel = level==0 ? orderOfAccuracy : orderOfCoarseLevelSolves;
 
   if( debug & 8 )
@@ -535,7 +535,7 @@ buildPredefinedCoefficientMatrix( realMappedGridFunction & coeff, int grid, int 
   CompositeGrid & mgcg = multigridCompositeGrid();
   assert( level>=0 && level<mgcg.numberOfMultigridLevels() );
   
-  // const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevels");
+  // const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevelSolves");
   // const int orderOfThisLevel = level==0 ? orderOfAccuracy : orderOfCoarseLevelSolves;
   const int orderOfThisLevel=orderOfAccuracyThisGrid;
 
@@ -841,7 +841,7 @@ initializeConstantCoefficients()
           );
       
 
-      const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevels");
+      const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevelSolves");
       const int orderOfThisLevel = level==0 ? orderOfAccuracy : orderOfCoarseLevelSolves;
 
       for( int grid=0; grid<mgcg.multigridLevel[level].numberOfComponentGrids(); grid++ )
@@ -1158,7 +1158,7 @@ initializeConstantCoefficients()
             }
             else
             {
-              printF("Ogmg::predefined: invalid orderOfAccuracy=%d, orderOfThisLevel=%d\n",orderOfAccuracy,orderOfThisLevel);
+              printF("Ogmg::predefined: invalid orderOfAccuracy=%d, orderOfThisLevel=%d, level=%d, orderOfCoarseLevelSolves=%d\n",orderOfAccuracy,orderOfThisLevel,level,orderOfCoarseLevelSolves);
               Overture::abort("ERROR: invalid orderOfAccuracy");
             }
 

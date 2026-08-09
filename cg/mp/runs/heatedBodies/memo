@@ -1,3 +1,142 @@
+GRID:
+ml=3
+
+longer domain, taller too..
+ogen -noplot solidAnnulusInASquareGrid.cmd -prefix=solidAnnulusInARectangle -xb=5 -yb=1.5 -order=2 -interp=e -factor=4 -ml=2
+ogen -noplot solidAnnulusInASquareGrid.cmd -prefix=solidAnnulusInARectangle -xb=2 -yb=1.5 -order=2 -interp=e -factor=8 -ml=3
+
+****************************************
+***** Fri Aug 7, 2026
+
+
+TRY USING INFLOW AND OUTFLOW INSTEAD:
+
+>>>>>>> Bigger domain
+
+@@@@@ G8 
+plotStuff plotSolution -show=movingHeatedAnnulusRectangleG8.show -name=movingHeatedAnnulusRectangleG8 -sol=3
+
+$cgmp -noplot movingHeatedBody.cmd -g=solidAnnulusInARectanglee8.order2.ml3.hdf -method=ins -nu=0.0025 -kappa=0.005 -ad2=1 -tf=2 -tp=0.05 -bcTypeFluid=inflow -uInflow=1 -solver=yale -psolver=multigrid -ogmgAutoChoose=0 -show=movingHeatedAnnulusRectangleG8.show -tx=0 -ty=1 -amps=0.3  -go=go > movingHeatedAnnulusRectangleG8.out
+
+@@@@@@@@ G4 --> inflow at outflow 
+plotStuff plotSolution -show=movingHeatedAnnulusRectangleG4.show -name=movingHeatedAnnulusRectangleG4 -sol=3
+
+$cgmp -noplot movingHeatedBody.cmd -g=solidAnnulusInARectanglee4.order2.ml2.hdf -method=ins -nu=0.01 -kappa=0.02 -ad2=1 -tf=2 -tp=0.05 -bcTypeFluid=inflow -uInflow=1 -solver=yale -psolver=multigrid -ogmgAutoChoose=0 -show=movingHeatedAnnulusRectangleG4.show -tx=0 -ty=1 -amps=0.3  -go=go > movingHeatedAnnulusRectangleG4.out
+
+
+
+
+>>>>>>
+ plotStuff plotSolution -show=movingHeatedAnnulusG8.show -name=movingHeatedAnnulusG4 -sol=51 61 71
+
+setsid $cgmp -noplot movingHeatedBody.cmd -g=solidAnnulusInASquareGride8.order2.ml3.hdf -method=ins -nu=0.0025 -kappa=0.005 -ad2=1 -tf=0.5 -tp=0.01 -bcTypeFluid=inflow -uInflow=1 -solver=yale -psolver=multigrid -ogmgAutoChoose=0 -show=movingHeatedAnnulusG8.show -go=go > movingHeatedAnnulusG8.out
+
+
+vertical motion 
+$cgmp movingHeatedBody.cmd -g=solidAnnulusInASquareGride8.order2.ml3.hdf -method=ins -nu=0.0025 -kappa=0.01 -ktcSolid=.5 -ad2=1 -tf=0.5 -tp=0.01 -bcTypeFluid=inflow -uInflow=1 -solver=yale -psolver=multigrid -ogmgAutoChoose=0 -show=movingHeatedAnnulusG8.show -tx=0 -ty=1 -amps=0.3 -go=og
+
+
+horizontal motion
+$cgmp movingHeatedBody.cmd -g=solidAnnulusInASquareGride8.order2.ml3.hdf -method=ins -nu=0.0025 -kappa=0.005 -ktcSolid=.05 -ad2=1 -tf=0.5 -tp=0.01 -bcTypeFluid=inflow -uInflow=1 -solver=yale -psolver=multigrid -ogmgAutoChoose=0 -show=movingHeatedAnnulusG8.show -tx=1 -ty=0 -amps=0.3 -go=og
+
+
+INFO + TURN OFF PETSC coarse grid solver ??
+$cgmp movingHeatedBody.cmd -g=solidAnnulusInASquareGride4.order2.ml2.hdf -method=ins -nu=0.01 -kappa=0.02 -tf=1.0 -tp=0.01 -bcTypeFluid=inflow -solver=yale -psolver=multigrid -ogmgAutoChoose=0 -go=og 
+
+CONT TEST MG 
+
+THIS DOES NOT WORK YET -- Ogmg coarse grid solver PETSc diverges 
+  --> Try a problem with NO MOVING GRIDS FIRST ... bad too 
+$cgmp -noplot movingHeatedBody.cmd -g=solidAnnulusInASquareGride4.order2.ml2.hdf -method=ins -nu=0.01 -kappa=0.02 -tf=1.0 -tp=0.01 -solver=yale -psolver=multigrid
+
+ MMMMMMMMMMMMMMMM  Ogmg: call buildExtraLevels: max MG levels = 3 (1=no coarser levels) MMMMMMMMMMMMMMMMMMMMMMM
+Operator averaging for grid=1, level=0, orderOfAccuracyFine=2, orderOfAccuracyCoarse=2
+Operator averaging for grid=1, level=1, orderOfAccuracyFine=2, orderOfAccuracyCoarse=2
+ adamsPC : after updateForMovingGrids t=0.000e+00: number of array ID's has increased to 2534
+ --- INFO: Fixup exposed points of u(t-dt) and recompute du/dt(t-dt) t=0.000e+00, tb=-7.143e-04 ----- 
+     The extra work involved in recomputing du/dt(t-dt) can be avoided by using the option 'first order predictor'.
+--DS-- predictTimeIndependentVariables (pressure) at t=7.143e-04 (dt0=7.143e-04, dtb=7.143e-04) cex2a= 2.00 cex2b=-1.00 mNew=2 mCur=0 mOld=1
+PETScEquationSolver:ERROR: Solution diverged! reason=-3: 
+     KSP_DIVERGED_NULL                = -2,
+     KSP_DIVERGED_ITS                 = -3,
+     KSP_DIVERGED_DTOL                = -4,
+     KSP_DIVERGED_BREAKDOWN           = -5,
+     KSP_DIVERGED_BREAKDOWN_BICG      = -6,
+     KSP_DIVERGED_NONSYMMETRIC        = -7,
+     KSP_DIVERGED_INDEFINITE_PC       = -8,
+     KSP_DIVERGED_NAN                 = -9,
+     KSP_DIVERGED_INDEFINITE_MAT      = -10
+     KSP_DIVERGED_PC_FAILED           = -11
+
+
+
+****************************************
+***** Thurs Aug 6, 2026
+
+TEST MG 
+ADD MG option to grid
+BUG FOUND IN solidAnnulusInASquareGrid.cmd
+
+ogen -noplot solidAnnulusInASquareGrid -order=2 -interp=e -factor=4 -ml=2
+
+TRY MULTIGRID --> TROUBLE .. got bak to an easier example in cgins
+
+$cgmp -noplot movingHeatedBody.cmd -g=solidAnnulusInASquareGride4.order2.ml2.hdf -method=ins -nu=0.01 -kappa=0.02 -tf=1.0 -tp=0.01 -solver=yale -psolver=multigrid
+
+ pressure equation solver: solver=multigrid, solver=[iterative solver + ], 
+cgmp: src/DomainSolver.C:319: virtual void DomainSolver::outputHeader(): Assertion `ogmgPar!=NULL' failed.
+
+ MMMMMMMMMMMMMMMM  Ogmg: call buildExtraLevels: max MG levels = 3 (1=no coarser levels) MMMMMMMMMMMMMMMMMMMMMMM
+
+Program received signal SIGSEGV, Segmentation fault.
+0x00007fffeeedf938 in GridDistribution::operator= (this=0x555556070030, x=...) at GridDistribution.C:53
+53	  pStart=x.pStart;
+(gdb) where
+#0  0x00007fffeeedf938 in GridDistribution::operator= (this=0x555556070030, x=...) at GridDistribution.C:53
+#1  0x00007fffee817fd1 in Ogmg::loadBalance(CompositeGrid&, CompositeGrid&) () from /home/henshw/Overture.g/lib/libOgmg.so
+#2  0x00007fffee916d5a in Ogmg::buildExtraLevels(CompositeGrid&) () from /home/henshw/Overture.g/lib/libOgmg.so
+#3  0x00007fffee82231f in Ogmg::updateToMatchGrid(CompositeGrid&) () from /home/henshw/Overture.g/lib/libOgmg.so
+#4  0x0000555555643f43 in MultigridEquationSolver::setGrid (this=0x55555686fb60, cg=...) at /home/henshw/Overture.g/Oges/MultigridEquationSolver.C:77
+#5  0x00007ffff00019e4 in Oges::setGrid (this=0x555556489e10, cg0=..., outOfDate=false) at Oges.C:1690
+
+****************************************
+***** Wed Aug 5, 2026
+
+
+
+EVEN FINER GRID ? May need to use MG solver for pressure
+ogen -noplot solidAnnulusInASquareGrid -order=2 -interp=e -factor=8 
+setsid $cgmp -noplot movingHeatedBody.cmd -g=solidAnnulusInASquareGride8.order2.hdf -method=ins -nu=0.0025 -kappa=0.005 -tf=1.0 -tp=0.01 -solver=yale -show=movingHeatedAnnulusG8.show > movingHeatedAnnulusG8.out
+
+
+
+AD: diffussion coeff=kappa 
+    AB2 
+
+FINER grid -- not bad figures for proposal?
+$cgmp -noplot movingHeatedBody.cmd -g=solidAnnulusInASquareGride4.order2.hdf -method=ins -nu=0.01 -kappa=0.02 -tf=1.0 -tp=0.01 -solver=yale -show=movingHeatedAnnulusG4.show > movingHeatedAnnulusG4.out
+
+$cgmp movingHeatedBody.cmd -g=solidAnnulusInASquareGride4.order2.hdf -method=ins -nu=.01 -kappa=.02 -tf=1.0 -tp=0.01 -solver=yale -show=movingHeatedAnnulusG4.show
+
+****************************************
+***** Tues AUg 4, 2026
+
+START ON MOVING A HEATED BODY
+
+GRIDS: 
+ogen -noplot solidAnnulusInASquareGrid -order=2 -interp=e -factor=2 
+ogen -noplot solidAnnulusInASquareGrid -order=2 -interp=e -factor=4 
+
+TRY COMPRESSIBLE Navier-Stokes -- SEEMS TO RUN (NO GRAVITY THOUGH)
+
+cgmp movingHeatedBody.cmd -g=solidAnnulusInASquareGride2.order2.hdf -method=cns -mu=.05 -T0=300 -Twall=400 -tp=.01  -show=movingHeatedAnnulusCNS.show
+
+Solving: compressible Navier Stokes (Godunov)        
+
+
+
+INS + HEATED ANNULUS ... TRANSLATES ... WORKS !!
+$cgmp movingHeatedBody.cmd -g=solidAnnulusInASquareGride2.order2.hdf -method=ins -nu=.1 -kappa=.05 -tf=1.0 -tp=0.01 -solver=yale -show=movingHeatedAnnulus.show
 
 ****************************************
 ***** Mon Aug 3, 2026

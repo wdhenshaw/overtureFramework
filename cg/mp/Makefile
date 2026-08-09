@@ -97,7 +97,7 @@ PETSC_FILES_OBJ := $(addprefix $(OBJPREFIX),$(PETSC_FILES))
 CGMP_EXTRA_FILES = $(PETSC_FILES_OBJ)  /home/henshaw.0/Overture/gf/InterpolatePointsOnAGrid.o
 CGMP_EXTRA_FILES = $(PETSC_FILES_OBJ) /home/henshaw.0/Overture/gf/Interpolant.o
 CGMP_EXTRA_FILES = $(PETSC_FILES_OBJ) /home/henshaw.0/Overture/ogshow/ShowFileReader.o 
-CGMP_EXTRA_FILES = $(PETSC_FILES_OBJ)
+CGMP_EXTRA_FILES = $(PETSC_FILES_OBJ) ../../Overture/ogmg/Ogmg.o ../../Overture/ogmg/operatorAveraging.o
 
 # libCommon:=$(CGBUILDPREFIX)common/lib/libCgCommon.so
 libCommon:=$(CGBUILDPREFIX)common/libCgCommon

@@ -8,6 +8,37 @@ set ogmgp = $ogmg/ogmgt
 
 
 
+
+****************************
+****** Thurs Aug 6, 2026
+
+CHECK OGMG **trouble when using in cgins and cgmp ??
+
+LOOKS OK:
+ogmgt tz -noplot -g=tcilce4.order2.ml3.hdf -autoChoose=1 -maxIt=9 -orderCoarse=2 -debug=1
+
+MMMMMMMMMMMMMMMM  Ogmg: call buildExtraLevels: max MG levels = 4 (1=no coarser levels) MMMMMMMMMMMMMMMMMMMMMMM
+ ===>After mgSolver.updateToMatchGrid(cg) my total =   4.5 M,  memory per-processor: [min,max]=[40.207,40.207] Mb 
+
+ ===>Before build coeff my total =   5.1 M,  memory per-processor: [min,max]=[41.5469,41.5469] Mb 
+
+Operator averaging for grid=1, level=0, orderOfAccuracyFine=2, orderOfAccuracyCoarse=2
+Operator averaging for grid=2, level=0, orderOfAccuracyFine=2, orderOfAccuracyCoarse=2
+Operator averaging for grid=1, level=1, orderOfAccuracyFine=2, orderOfAccuracyCoarse=2
+Operator averaging for grid=2, level=1, orderOfAccuracyFine=2, orderOfAccuracyCoarse=2
+Operator averaging for grid=1, level=2, orderOfAccuracyFine=2, orderOfAccuracyCoarse=2
+Operator averaging for grid=2, level=2, orderOfAccuracyFine=2, orderOfAccuracyCoarse=2
+
+Iteration=1..9 : Total WU=5.55e+01, total res reduction=3.94e-13, ave CR=0.0419 ave ECR=0.598 np=1
+
+
+ogmgt tz -noplot -g=square1024.order4 -autoChoose=1 -maxIt=9 -orderCoarse=2 -debug=1
+
+Iteration=1..9 : Total WU=4.75e+01, total res reduction=1.27e-15, ave CR=0.0221 ave ECR=0.485 np=1
+  MaxRes=3.55e-09, TR10=4.60e-02 (time to reduce residual by a factor of 10) TR10/(M/np)=4.34e-02
+
+
+
 ****************************
 ****** Sat Feb 28, 2026
 

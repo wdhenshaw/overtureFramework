@@ -1,6 +1,27 @@
 NOTE: See ../tcilc2 for more runs 
 
 
+
+
+*************************************
+****** Tues Aug 6, 2026
+
+TEST USING MG for psolver and solver 
+
+NOT tcilc.cmd is in ins/cmd ADD TO THIS FOLDER
+LOOKS OK 
+cgins -noplot tcilc -g=tcilce4.order2.ml3.hdf -nu=.001 -tp=.01 -tf=10 -solver=mg -psolver=mg -show=tcilc2mg.show -go=og
+
+
+pressure equation solver: solver=multigrid, solver=[iterative solver + ], 
+                         : rel-tol=1.00e-03, abs-tol=1.00e-04, max iterations=20 (0=choose default)
+                         : convergence: max-defect < (rel-tol)*L2NormRHS + abs-tol.
+
+Must be coarse grid solver: 
+ PETScEquationSolver::solve:WARNING numberOfIterations=0! Could be trouble for MG, maybe decrease atol
+
+
+
 *************************************
 ****** Sun July 11, 2021
 

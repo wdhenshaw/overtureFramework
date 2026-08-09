@@ -1,5 +1,31 @@
 
+********************************************
+********* Thurs Aug 6, 2026
 
+RETURN FOR FSI-CHT
+
+TEST MG solver 
+
+**TROUBLE** ... BUG FIXED IN OGMG ... WORKS NOW 
+cgins -noplot cic -g=cice4.order2.ml2 -inflow=parabolic -wall=noSlip -ad2=1 -psolver=mg
+
+
+ MMMMMMMMMMMMMMMM  Ogmg: call buildExtraLevels: max MG levels = 4 (1=no coarser levels) MMMMMMMMMMMMMMMMMMMMMMM
+predefined: numberOfComponentGrids=2 numberOfLevels=4
+cMG: grid=0 stencilSize=0
+cMG: grid=1 stencilSize=10
+cMG: grid=2 stencilSize=0
+cMG: grid=3 stencilSize=1
+cMG: grid=4 stencilSize=0
+cMG: grid=5 stencilSize=1
+cMG: grid=6 stencilSize=1
+cMG: grid=7 stencilSize=1
+Ogmg::predefined: invalid orderOfAccuracy=2, orderOfThisLevel=-1
+ERROR: invalid orderOfAccuracy
+
+
+
+********************************************
 *** 2015/04/17:
 
 NOTE: unstable if nu is too small. -nu=1. OK

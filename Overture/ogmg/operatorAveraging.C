@@ -36,7 +36,7 @@ operatorAveraging(RealCompositeGridFunction & coeff, const int & level)
   CompositeGrid & mgcg = multigridCompositeGrid();
   CompositeGrid & cg = *coeff.getCompositeGrid();
 
-  const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevels");
+  const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevelSolves");
   const int orderOfAccuracyFine   = level==0 ? orderOfAccuracy : orderOfCoarseLevelSolves;
   const int orderOfAccuracyCoarse = (level+1)==0 ? orderOfAccuracy : orderOfCoarseLevelSolves;
   const int orderOfThisLevel      = (level+1)==0 ? orderOfAccuracy : orderOfCoarseLevelSolves;
@@ -228,12 +228,12 @@ operatorAveraging(RealMappedGridFunction & coeffFine,
     
   }
 
-  const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevels");
+  const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevelSolves");
   const int orderOfAccuracyFine   = level==0 ? orderOfAccuracy : orderOfCoarseLevelSolves;
   const int orderOfAccuracyCoarse = (level+1)==0 ? orderOfAccuracy : orderOfCoarseLevelSolves;
   const int orderOfThisLevel      = (level+1)==0 ? orderOfAccuracy : orderOfCoarseLevelSolves;
 
-  if( true )
+  if( false )
   {
     printF("Operator averaging for grid=%i, level=%i, orderOfAccuracyFine=%i, orderOfAccuracyCoarse=%i\n",
            grid,level,orderOfAccuracyFine,orderOfAccuracyCoarse );
@@ -1480,8 +1480,10 @@ averageCoefficients(Index & I1, Index & I2, Index & I3,
 
     const int ndc=cFine.getLength(0);
 
-    const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevels");
+    const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevelSolves");
     const int orderOfThisLevel           = orderOfCoarseLevelSolves;
+
+    assert( orderOfCoarseLevelSolves>0 ); // *wdh* AUg 6, 2026
 
     const int width = orderOfThisLevel+1; 
     const int halfWidth = (width-1)/2;  // stencilHalfWidth

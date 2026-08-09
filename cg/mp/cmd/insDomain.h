@@ -122,7 +122,7 @@ setup $domainName
   # This next option may be temporary, until we figure out the right thing to do: June, 25, 2018
   added mass velocity BC: $addedMassVelocityBC
   use moving grid sub-iterations $useTP
-#
+# 
   zfMuByH $zfMuByH 
   zfRhoHByDt $zfRhoHByDt
   zfMono $zfMono 
@@ -168,30 +168,45 @@ $setAxi="";
 # 
     maximum number of iterations for implicit interpolation
       10
+echo to terminal 0
   pressure solver options
-     $psolver
-     # yale
-     # these tolerances are chosen for PETSc
-     relative tolerance
-      $rtolp
-     absolute tolerance
-      $atolp
-    maximum allowable increase in the residual
-       $ogesDtol
-     debug 
-       $pdebug
-    exit
+   $ogesSolver=$psolver; $ogesRtol=$rtolp; $ogesAtol=$atolp; $ogesPC=$pc; $ogesDebug=$pdebug;
+   # ******* TEMP: 
+   # NOTE: reduce the relative tol for AMG 
+   if( $cgSolver eq "hypre" ){ $ogmgCoarseGridSolver="algebraic multigrid"; $ogmgCoarseGridMaxIterations=100; $ogmgRtolcg=1.e-5; $ogmgAutoChoose=0; }
+   # ******* END TEMP 
+   include $ENV{CG}/ins/cmd/ogesOptions.h
+  exit
 # 
   implicit time step solver options
-     $solver
-     # these tolerances are chosen for PETSc
-     relative tolerance
-      $rtoli
-     absolute tolerance
-      $atoli
-     debug 
-       $idebug
-    exit
+   $ogesSolver=$solver; $ogesRtol=$rtoli; $ogesAtol=$atoli; $ogesPC=$pc; $ogesDebug=$idebug;
+   include $ENV{CG}/ins/cmd/ogesOptions.h
+  exit
+echo to terminal 1      
+#   pressure solver options
+#      $psolver
+#      # yale
+#      # these tolerances are chosen for PETSc
+#      relative tolerance
+#       $rtolp
+#      absolute tolerance
+#       $atolp
+#     maximum allowable increase in the residual
+#        $ogesDtol
+#      debug 
+#        $pdebug
+#     exit
+# # 
+#   implicit time step solver options
+#      $solver
+#      # these tolerances are chosen for PETSc
+#      relative tolerance
+#       $rtoli
+#      absolute tolerance
+#       $atoli
+#      debug 
+#        $idebug
+#     exit
 #
   boundary conditions...
    order of extrap for outflow $orderOfExtrapForOutflow (-1=default)

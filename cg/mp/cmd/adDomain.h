@@ -6,7 +6,7 @@
 #   $solverName : name given to the domain (e.g. solid)
 #   $tz, $degreeSpace, $degreeTime, $fx, $fy, $fz, $ft
 #   $ts : forward Euler, implicit, adams PC
-#   $kappa, 
+#   $kappa, : thermal diffusivity
 #   $ktc    : thermal conductivity
 #   $advx, $advy, $advz : constant advection coefficients
 #   $T0     : initial condition given to the temperature
@@ -68,6 +68,7 @@ if( $advx eq "" ){ $advx=0.; }
 if( $advy eq "" ){ $advy=0.; }
 if( $advz eq "" ){ $advz=0.; }
 if( $implicitAdvection eq "" ){ $implicitAdvection=0; }
+if( $moveCmds eq "" ){ $moveCmds="#"; }
 #
 # ------- start new domain ----------
 #  Cgad solid
@@ -99,6 +100,9 @@ use new time-stepping startup $useNewTimeSteppingStartup
     treat advection implicitly $implicitAdvection
     assign known solution at boundaries $assignKnown
   done
+  # 
+    $moveCmds
+  #   
   #
   project interface temperature $projectT
   #

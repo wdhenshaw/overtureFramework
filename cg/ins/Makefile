@@ -127,6 +127,15 @@ PETSC_FILES_OBJ := $(addprefix $(OBJPREFIX),$(PETSC_FILES))
 $(PETSC_FILES_OBJ) : $(OBJPREFIX)%.o : %.C
 	$(CXX) $(CXX_FLAGSO) -o $@ -c $<
 
+# OGMG = Ogmg.o smooth.o defect.o fineToCoarse.o coarseToFine.o ogmgTests.o ogmgUtil.o lineSmooth.o  \
+#       boundaryConditions.o OgmgParameters.o operatorAveraging.o buildExtraLevels.o checkGrid.o displayMaskLaTeX.o \
+#       defectOpt.o smoothOpt.o singular.o averageOpt.o bcOpt.o predefined.o lineSmoothOpt.o smoothBoundary.o \
+#       assignBoundaryConditionCoefficients.o \
+#       defect2dOrder2.o defect2dOrder4.o defect3dOrder2.o defect3dOrder4.o  \
+#       smoothRB2dOrder2.o  smoothRB2dOrder4.o smoothRB3dOrder2.o smoothRB3dOrder4.o \
+#       smoothJAC2dOrder2.o  smoothJAC2dOrder4.o smoothJAC3dOrder2.o smoothJAC3dOrder4.o \
+#       smOpt.o smRB2dOrder2.o  smRB2dOrder4.o smRB3dOrder2.o smRB3dOrder4.o buildExtraLevelsNew.o bc3dOrder4.o	
+
 # Here is where I optionally link in other files for debugging: 
 CGINS_EXTRA_FILES = $(PETSC_FILES_OBJ) ../../Overture/gf/ParallelOverlappingGridInterpolator.o
 CGINS_EXTRA_FILES = $(PETSC_FILES_OBJ) ../../Overture/op/bc/neumann.o
@@ -135,6 +144,8 @@ CGINS_EXTRA_FILES = $(PETSC_FILES_OBJ) ../../Overture/mapping/UnstructuredMappin
 CGINS_EXTRA_FILES = $(PETSC_FILES_OBJ) ../../Overture/mapping/stencilWalk.o
 CGINS_EXTRA_FILES = $(PETSC_FILES_OBJ) ../../Overture/hype/applyBoundaryConditions.o
 CGINS_EXTRA_FILES = $(PETSC_FILES_OBJ) ../../Overture/oges/generateMatrix.o
+CGINS_EXTRA_FILES = $(PETSC_FILES_OBJ) ../../Overture/ogmg/Ogmg.o ../../Overture/ogmg/buildExtraLevels.o ../../Overture/ogmg/predefined.o ../../Overture/ogmg/operatorAveraging.o ../../Overture/ogmg/defect.o ../../Overture/ogmg/smooth.o
+# 
 CGINS_EXTRA_FILES = $(PETSC_FILES_OBJ) 
 # make cgins in the bin dir:
 $(BINDIR)cgins: lib_build $(OBJDIR)cginsMain.o $(CGINS_EXTRA_FILES) $(libCommon)

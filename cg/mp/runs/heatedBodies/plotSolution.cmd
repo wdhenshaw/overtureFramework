@@ -1,5 +1,9 @@
 # 
 # Plot results from heated bodies
+# *new way:
+#   plotStuff plotSolution -show=movingHeatedAnnulusG4.show -name=movingHeatedAnnulusG4 -sol=51 61 71
+#
+#
 #   plotStuff plotSolution -show=fourHeatedDisks.show -name=fourHeatedDiskTempt0p7 -solution=15 -Tmin=0 -Tmax=10
 #   plotStuff plotSolution -show=16HeatedDisks.show -name=16HeatedDiskTempt0p7 -solution=15 -Tmin=0 -Tmax=10
 #
@@ -11,11 +15,13 @@
 #   plotStuff plotSolution -show=rpiCHT.show -name=rpiCHTt0p75 -solution=16 -Tmin=0 -Tmax=10 -domain1=fluidDomain -domain2=solidDomain
 #   plotStuff plotSolution -show=rpiCHT.show -name=rpiCHTt1p0 -solution=21 -Tmin=0 -Tmax=10 -domain1=fluidDomain -domain2=solidDomain
 # 
-$show="fourHeatedDisks.show"; $name="fourHeatedDisks"; $Tmin=0; $Tmax=-1; $numToPlot=1; 
+$show="fourHeatedDisks.show"; $name="fourHeatedDisks"; 
+$Tmin=0; $Tmax=-1; $field="T"; $res=1024;
 $domain1="outerDomain"; $domain2="innerDomain"; 
-* ----------------------------- get command line arguments --------------------------------------- 
+@sol= ();  # list of solutions to plot, this must be null for GetOptions to work, defaults are given below
+# ----------------------------- get command line arguments --------------------------------------- 
 GetOptions( "show=s"=>\$show, "name=s"=>\$name,"solution=i"=>\$solution,"Tmin=f"=>\$Tmin,"Tmax=f"=>\$Tmax ,\
-            "numToPlot=i"=>\$numToPlot,"domain1=s"=>\$domain1,"domain2=s"=>\$domain2 ); 
+            "numToPlot=i"=>\$numToPlot,"domain1=s"=>\$domain1,"domain2=s"=>\$domain2,"sol=i{1,}"=>\@sol, "field=s"=>\$field ); 
 # 
 $show 
 # 
@@ -27,7 +33,8 @@ frame series:$domain1
 # 
 # previous 
 # plot:stressNorm 
-solution: $solution
+DISPLAY AXES:0 0
+solution:$sol[0]
 #
 plot:T
 contour 
@@ -36,6 +43,10 @@ contour
   if( $Tmax>$Tmin ){ $cmd="min max $Tmin $Tmax"; }else{ $cmd="#"; }
   $cmd
 exit
+# plot streamlines if chosen
+if( $field eq "streamLines" ){ $cmd="erase\n stream lines\n  streamline density $numStreamLines\n arrow size $arrowSize\n exit"; }else{ $cmd="#"; }
+$cmd
+#
 frame series:$domain2
 contour
   plot contour lines (toggle)
@@ -43,6 +54,17 @@ contour
   if( $Tmax>$Tmin ){ $cmd="min max $Tmin $Tmax"; }else{ $cmd="#"; }
   $cmd
 exit
+#
+pause
+if( $res ne 1024 ){ $cmd="hardcopy vertical resolution:0 $res\n hardcopy horizontal resolution:0 $res\n line width scale factor:0 3"; }else{ $cmd="#"; }
+$cmd 
+#
+$cmd="#"; 
+for( $i=0; $i<=$#sol; $i++ ){ $cmd .= "\n solution:$sol[$i]\n \$plotName = $name . \"$field$sol[$i].ps\"; \n hardcopy file name:0 \$plotName\n hardcopy save:0"; }
+$cmd
+
+
+
 pause
 # --- movie:
 DISPLAY AXES:0 0

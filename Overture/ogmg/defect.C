@@ -160,7 +160,7 @@ defectNorm(const int & level, const int & grid, int option /* =0 */, int approxi
   getIndex(mg.extendedIndexRange(),I1,I2,I3);  // this may be ok 
   // getIndex(mg.gridIndexRange(),I1,I2,I3);         // *wdh* 100716
 
-  const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevels");
+  const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevelSolves");
   const int orderOfThisLevel = level==0 ? orderOfAccuracy : orderOfCoarseLevelSolves;
   real fractionOfPointsComputed=1.;
   
@@ -293,8 +293,10 @@ getDefect(const int & level,
   MappedGrid & mg = mgcg.multigridLevel[level][grid];  
   const int numberOfDimensions = mg.numberOfDimensions();
   
-  const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevels");
+  const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevelSolves");
   const int orderOfThisLevel = level==0 ? orderOfAccuracy : orderOfCoarseLevelSolves;
+
+  assert( orderOfCoarseLevelSolves>0 ); // *wdh* Aug 6, 2026
 
   real defectNorm=0.;
   

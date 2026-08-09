@@ -902,7 +902,7 @@ if( movingGridProblem() )
         numExposed(grid,0)= exposedPoints.getNumberOfExposedPoints(grid);
     }
     
-    if( true )
+    if( false )
     {
       printF("gf[%i]: t=%9.3e, exposed points=[",mCur,gf[mCur].t);
       for( int grid=0; grid<gf[mCur].cg.numberOfComponentGrids(); grid++ )

@@ -2193,6 +2193,10 @@ hardCopy(const aString & fileName, /* =nullString */
   }
   else
   {
+
+    printF("hardCopy:redraw for frame buffer...\n");
+    redraw(true); // *wdh* Aug 9, 2026
+
     // read the frame buffer, resolution determined by the window size.
     GLint x=0,y=0;  // lower corner of image
     GLsizei width, height;

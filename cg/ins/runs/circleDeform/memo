@@ -1,0 +1,25 @@
+
+*********************************
+****** Thurs Aug 6, 2026
+
+Examples: 
+Vorticity:
+ plotStuff plotCircleDeform.cmd -show=iceDeformG8.show -name=iceDeformG8 -field=vorticity -vorMin=-50 -vorMax=50 -sol=100 200
+ 
+Streamlines:
+ plotStuff plotCircleDeform.cmd -show=iceDeformG8.show -name=iceDeformG8 -field=streamLines -numStreamLines=200 -arrowSize=.1 -res=2048 -sol=100 200
+
+
+*********************************
+****** Wed Aug 5, 2026
+
+Possible figures for the proposal
+
+
+ ogen -noplot circleDeformGrid.cmd -prefix=circleDeformLongChannelGrid -interp=e -xb=5 -factor=8
+
+.002 --> .001 -->.0005 
+ cgins -noplot circleDeform -g=circleDeformLongChannelGride8.order2.hdf -dg=ice -deformFrequency=0.25 -nu=7.0e-4 -ad2=1 -tf=20.0 -tp=.01 -model=ins -show=iceDeformG8.show -go=go > iceDeformG8.out
+
+
+ plotStuff plotCircleDeform.cmd -show=iceDeformG8.show -vorMin=-100 -vorMax=100 

@@ -675,7 +675,7 @@ smoothJacobi(const int & level, const int & grid, int smootherChoice /* = 0 */ )
   
 
   // *wdh* June 26, 2019 -- use correct order of accuracy 
-  const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevels");
+  const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevelSolves");
   const int orderOfThisLevel = level==0 ? orderOfAccuracy : orderOfCoarseLevelSolves;
 
 
@@ -1013,7 +1013,7 @@ smoothRedBlack(const int & level, const int & grid)
 
   bool useJacobiRedBlack= smootherType == OgmgParameters::redBlackJacobi;
 
-  const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevels");
+  const int & orderOfCoarseLevelSolves = parameters.dbase.get<int>( "orderOfCoarseLevelSolves");
   const int orderOfThisLevel = level==0 ? orderOfAccuracy : orderOfCoarseLevelSolves;
 
   // const aString fmt = "%8.4f ";

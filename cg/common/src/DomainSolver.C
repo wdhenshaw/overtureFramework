@@ -316,13 +316,22 @@ outputHeader()
         else
         {
           OgmgParameters* ogmgPar = poisson->parameters.getOgmgParameters();
-          assert( ogmgPar!=NULL );
-          ogmgPar->get(OgmgParameters::THEresidualTolerance,rtol);  // note: residual
-          ogmgPar->get(OgmgParameters::THEabsoluteTolerance,atol);
-          ogmgPar->get(OgmgParameters::THEmaximumNumberOfIterations,maximumNumberOfIterations);
+          if( ogmgPar!=NULL )
+          {
+            ogmgPar->get(OgmgParameters::THEresidualTolerance,rtol);  // note: residual
+            ogmgPar->get(OgmgParameters::THEabsoluteTolerance,atol);
+            ogmgPar->get(OgmgParameters::THEmaximumNumberOfIterations,maximumNumberOfIterations);
+          }
+          else
+          {
+            rtol=-1; atol=-1; maximumNumberOfIterations=1;
+          }
         }
-        fPrintF(file,"                         : rel-tol=%8.2e, abs-tol=%8.2e, max iterations=%i (0=choose default)\n",
-                rtol,atol,maximumNumberOfIterations);
+        if( rtol>0 )
+        {
+          fPrintF(file,"                         : rel-tol=%8.2e, abs-tol=%8.2e, max iterations=%i (0=choose default)\n",
+                  rtol,atol,maximumNumberOfIterations);
+        }
         if( poisson->parameters.getSolverType()==OgesParameters::multigrid )
         { // Here is the MG convergence criteria: 
           fPrintF(file,"                         : convergence: max-defect < (rel-tol)*L2NormRHS + abs-tol.\n");

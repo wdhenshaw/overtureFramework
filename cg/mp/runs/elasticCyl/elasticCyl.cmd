@@ -82,6 +82,7 @@ if( $ktcFluid < 0. ){ $ktcFluid=$kThermalFluid;} if( $ktcSolid < 0. ){ $ktcSolid
 $grid
 # ----------  define deforming bodies by a share flag of 100 ----
 # ----------  NOTE: we parameterize the boundary by index so grid points match! ---
+# NOTE: these MOVE COMMANDS ARE USED IN insDomain.h below
 $moveCmds = \
   "turn on moving grids\n" . \
   "specify grids to move\n" . \
